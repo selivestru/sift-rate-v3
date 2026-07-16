@@ -1,0 +1,25 @@
+{
+  "name": "siftrate",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "api/**/*.{js,ts}": [
+      "bun run --cwd ./api lint",
+      "bun run --cwd ./api format"
+    ],
+    "app/**/*.{js,jsx,ts,tsx}": [
+      "bun run --cwd ./app fmt:fix",
+      "bun run --cwd ./app lint:fix"
+    ],
+    "app/**/*.{json,css,scss}": [
+      "bun run --cwd ./app fmt:fix"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8"
+  }
+}
