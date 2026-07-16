@@ -1,1 +1,149 @@
 @import 'tailwindcss';
+@import '@heroui/styles';
+
+@theme inline {
+  --animate-blur-morph-in: blur-morph-in 300ms ease-out forwards;
+  --animate-blur-morph-out: blur-morph-out 200ms ease-in forwards;
+}
+
+:root {
+  --header-height: 64px;
+
+  --font-sans: 'Geist Variable', sans-serif;
+
+  --expo-out: linear(
+    0 0%,
+    0.1684 2.66%,
+    0.3165 5.49%,
+    0.446 8.52%,
+    0.5581 11.78%,
+    0.6535 15.29%,
+    0.7341 19.11%,
+    0.8011 23.3%,
+    0.8557 27.93%,
+    0.8962 32.68%,
+    0.9283 38.01%,
+    0.9529 44.08%,
+    0.9711 51.14%,
+    0.9833 59.06%,
+    0.9915 68.74%,
+    1 100%
+  );
+}
+
+:root,
+.light,
+.default,
+[data-theme='light'],
+[data-theme='default'] {
+  --accent: oklch(54.09% 0.2471 299.89);
+  --accent-foreground: oklch(99.11% 0 0);
+  --background: oklch(97.02% 0.01 299.89);
+  --border: oklch(90% 0.01 299.89);
+  --danger: oklch(65.32% 0.2375 31.27);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(94% 0.01 299.89);
+  --default-foreground: oklch(21.03% 0.0059 299.89);
+  --field-background: oklch(100% 0.005 299.89);
+  --field-border: transparent;
+  --field-foreground: oklch(21.03% 0.01 299.89);
+  --field-placeholder: oklch(55.17% 0.02 299.89);
+  --focus: oklch(54.09% 0.2471 299.89);
+  --foreground: oklch(21.03% 0.01 299.89);
+  --muted: oklch(55.17% 0.02 299.89);
+  --overlay: oklch(100% 0.003 299.89);
+  --overlay-foreground: oklch(21.03% 0.01 299.89);
+  --scrollbar: oklch(87.1% 0.01 299.89);
+  --segment: oklch(100% 0.01 299.89);
+  --segment-foreground: oklch(21.03% 0.01 299.89);
+  --separator: oklch(92% 0.01 299.89);
+  --success: oklch(73.29% 0.1974 156.34);
+  --success-foreground: oklch(21.03% 0.0059 156.34);
+  --surface: oklch(100% 0.005 299.89);
+  --surface-foreground: oklch(21.03% 0.01 299.89);
+  --surface-secondary: oklch(95.24% 0.008 299.89);
+  --surface-secondary-foreground: oklch(21.03% 0.01 299.89);
+  --surface-tertiary: oklch(93.73% 0.008 299.89);
+  --surface-tertiary-foreground: oklch(21.03% 0.01 299.89);
+  --warning: oklch(78.19% 0.1617 77.86);
+  --warning-foreground: oklch(21.03% 0.0059 77.86);
+
+  --radius: 0.5rem;
+  --field-radius: 0.75rem;
+}
+
+.dark,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --accent: oklch(54.09% 0.2471 299.89);
+  --accent-foreground: oklch(99.11% 0 0);
+  --background: oklch(12% 0.01 299.89);
+  --border: oklch(28% 0.01 299.89);
+  --danger: oklch(59.4% 0.2006 30.16);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(27.4% 0.01 299.89);
+  --default-foreground: oklch(99.11% 0 0);
+  --field-background: oklch(21.03% 0.02 299.89);
+  --field-border: transparent;
+  --field-foreground: oklch(99.11% 0.01 299.89);
+  --field-placeholder: oklch(70.5% 0.02 299.89);
+  --focus: oklch(54.09% 0.2471 299.89);
+  --foreground: oklch(99.11% 0.01 299.89);
+  --muted: oklch(70.5% 0.02 299.89);
+  --overlay: oklch(21.03% 0.02 299.89);
+  --overlay-foreground: oklch(99.11% 0.01 299.89);
+  --scrollbar: oklch(70.5% 0.01 299.89);
+  --segment: oklch(39.64% 0.01 299.89);
+  --segment-foreground: oklch(99.11% 0.01 299.89);
+  --separator: oklch(25% 0.01 299.89);
+  --success: oklch(73.29% 0.1974 156.34);
+  --success-foreground: oklch(21.03% 0.0059 156.34);
+  --surface: oklch(21.03% 0.02 299.89);
+  --surface-foreground: oklch(99.11% 0.01 299.89);
+  --surface-secondary: oklch(25.7% 0.015 299.89);
+  --surface-secondary-foreground: oklch(99.11% 0.01 299.89);
+  --surface-tertiary: oklch(27.21% 0.015 299.89);
+  --surface-tertiary-foreground: oklch(99.11% 0.01 299.89);
+  --warning: oklch(82.03% 0.1416 81.87);
+  --warning-foreground: oklch(21.03% 0.0059 81.87);
+}
+
+body {
+  @apply bg-background text-foreground font-sans antialiased;
+}
+
+@keyframes blur-morph-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes blur-morph-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(10px);
+  }
+}
+
+@layer components {
+  .dropdown__popover[data-entering] {
+    @apply animate-blur-morph-in;
+  }
+
+  .dropdown__popover[data-exiting] {
+    @apply animate-blur-morph-out;
+  }
+}

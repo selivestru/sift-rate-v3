@@ -1,10 +1,16 @@
-import { TanstackQuery } from './TanstackQuery'
-import { TanstackRouter } from './TanstackRouter'
+import { Toast } from '@heroui/react'
+
+import { AnimationProvider } from './AnimationProvider'
+import { TanstackQueryProvider } from './TanstackQueryProvider'
+import { TanstackRouterProvider } from './TanstackRouterProvider'
 
 export const Providers = () => {
   return (
-    <TanstackQuery>
-      <TanstackRouter />
-    </TanstackQuery>
+    <TanstackQueryProvider>
+      <AnimationProvider>
+        <TanstackRouterProvider />
+        <Toast.Provider placement="top" />
+      </AnimationProvider>
+    </TanstackQueryProvider>
   )
 }
