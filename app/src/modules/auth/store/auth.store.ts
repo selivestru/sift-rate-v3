@@ -22,7 +22,7 @@ export const useAuthStore = create<Store>()((set) => ({
     email: 'sifmeop@gmail.com',
     username: 'sifmeop',
     avatarUrl: 'https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg',
-    subscription: 'FREE',
+    subscription: 'MONTHLY',
   },
   isAuthenticated: false,
   isLoading: false,

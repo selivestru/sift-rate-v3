@@ -1,0 +1,88 @@
+import { cn } from '@heroui/styles'
+import { Link } from '@tanstack/react-router'
+import { ChevronRightIcon, LibraryIcon } from 'lucide-react'
+
+import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+
+import { librarySections } from '../constants/library-sections'
+
+export const LibraryPage = () => {
+  return (
+    <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-7 sm:p-6">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-56 opacity-90"
+        aria-hidden
+        style={{
+          background:
+            'radial-gradient(ellipse 90% 80% at 20% 0%, oklch(54.09% 0.2 299.89 / 0.18), transparent 70%), radial-gradient(ellipse 70% 60% at 90% 10%, oklch(54.09% 0.14 280 / 0.12), transparent 65%)',
+        }}
+      />
+
+      <BlurMorphSections className="relative z-10 flex flex-col gap-2">
+        <BlurMorphSectionsItem>
+          <div className="flex items-center gap-2.5">
+            <span className="bg-accent/12 text-accent flex size-9 items-center justify-center rounded-xl">
+              <LibraryIcon className="size-4" strokeWidth={1.75} />
+            </span>
+            <p className="text-muted text-xs font-medium tracking-wide uppercase">Library</p>
+          </div>
+        </BlurMorphSectionsItem>
+        <BlurMorphSectionsItem>
+          <h1 className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">
+            Your collection
+          </h1>
+        </BlurMorphSectionsItem>
+        <BlurMorphSectionsItem>
+          <p className="text-muted max-w-sm text-sm leading-relaxed">
+            Personal archive tools. Ordered, private, yours.
+          </p>
+        </BlurMorphSectionsItem>
+      </BlurMorphSections>
+
+      <BlurMorphSections className="border-border/80 divide-border/70 relative z-10 divide-y overflow-hidden rounded-2xl border">
+        {librarySections.map((section) => (
+          <BlurMorphSectionsItem key={section.to}>
+            <Link
+              to={section.to}
+              className={cn(
+                'group bg-surface/40 hover:bg-surface-secondary/60 flex items-center gap-4 px-4 py-4 transition-colors duration-200 sm:gap-5 sm:px-5 sm:py-5',
+                'focus-visible:ring-accent/40 focus-visible:bg-surface-secondary/60 focus-visible:ring-2 focus-visible:outline-none',
+              )}
+            >
+              <span className="text-muted/70 w-7 shrink-0 font-mono text-xs tabular-nums">
+                {section.index}
+              </span>
+
+              <span
+                className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-black/5 dark:border-white/10"
+                style={{
+                  color: section.color,
+                  backgroundColor: `${section.color}14`,
+                }}
+              >
+                <section.icon className="size-5" strokeWidth={1.75} />
+              </span>
+
+              <div className="min-w-0 flex-1 space-y-0.5">
+                <p className="text-foreground text-sm font-semibold tracking-tight sm:text-base">
+                  {section.label}
+                </p>
+                <p className="text-muted truncate text-sm leading-relaxed">{section.description}</p>
+              </div>
+
+              <ChevronRightIcon className="text-muted group-hover:text-foreground size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
+          </BlurMorphSectionsItem>
+        ))}
+      </BlurMorphSections>
+
+      <BlurMorphSections className="relative z-10">
+        <BlurMorphSectionsItem>
+          <p className="text-muted text-xs leading-relaxed">
+            Looking for something new? Head to Discover. Life holds the story behind the shelf.
+          </p>
+        </BlurMorphSectionsItem>
+      </BlurMorphSections>
+    </div>
+  )
+}
