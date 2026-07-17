@@ -1,7 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { WelcomePage } from '~/pages/welcome'
-
 export const Route = createFileRoute('/welcome')({
   beforeLoad: ({ context }) => {
     const { user } = context.auth
@@ -18,5 +16,5 @@ export const Route = createFileRoute('/welcome')({
 })
 
 function RouteComponent() {
-  return <WelcomePage />
+  return <div>Welcome</div>
 }
