@@ -18,7 +18,6 @@
 
     /* Paths */
     "paths": {
-      "~/assets/*": ["./public/assets/*"],
       "~/pages/*": ["./src/pages/*"],
       "~/modules/*": ["./src/modules/*"],
       "~/common/*": ["./src/common/*"],

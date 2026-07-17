@@ -11,7 +11,7 @@ export const Header = () => {
         <div className="flex items-center gap-3 max-md:mr-auto">
           <div className="bg-accent size-12 rounded-xl" />
           <Link to="/" className="text-xl font-bold">
-            sifrate
+            SiftRate
           </Link>
         </div>
 

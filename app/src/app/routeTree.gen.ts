@@ -17,7 +17,30 @@ import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AppWheelRouteImport } from './routes/_app/wheel'
+import { Route as AppUsernameRouteImport } from './routes/_app/$username'
+import { Route as AppLifeRouteRouteImport } from './routes/_app/life/route'
+import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
 import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
+import { Route as AppDiscoverIndexRouteImport } from './routes/_app/discover/index'
+import { Route as AppLifeWrappedRouteImport } from './routes/_app/life/wrapped'
+import { Route as AppLifeTimelineRouteImport } from './routes/_app/life/timeline'
+import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
+import { Route as AppLibraryRatingsRouteImport } from './routes/_app/library/ratings'
+import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
+import { Route as AppLibraryListsIndexRouteImport } from './routes/_app/library/lists/index'
+import { Route as AppDiscoverTv_showIndexRouteImport } from './routes/_app/discover/tv_show/index'
+import { Route as AppDiscoverTrackIndexRouteImport } from './routes/_app/discover/track/index'
+import { Route as AppDiscoverMovieIndexRouteImport } from './routes/_app/discover/movie/index'
+import { Route as AppDiscoverGameIndexRouteImport } from './routes/_app/discover/game/index'
+import { Route as AppDiscoverBookIndexRouteImport } from './routes/_app/discover/book/index'
+import { Route as AppDiscoverAlbumIndexRouteImport } from './routes/_app/discover/album/index'
+import { Route as AppLibraryListsListIdRouteImport } from './routes/_app/library/lists/$listId'
+import { Route as AppDiscoverTv_showExternalIdRouteImport } from './routes/_app/discover/tv_show/$externalId'
+import { Route as AppDiscoverTrackExternalIdRouteImport } from './routes/_app/discover/track/$externalId'
+import { Route as AppDiscoverMovieExternalIdRouteImport } from './routes/_app/discover/movie/$externalId'
+import { Route as AppDiscoverGameExternalIdRouteImport } from './routes/_app/discover/game/$externalId'
+import { Route as AppDiscoverBookExternalIdRouteImport } from './routes/_app/discover/book/$externalId'
+import { Route as AppDiscoverAlbumExternalIdRouteImport } from './routes/_app/discover/album/$externalId'
 
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
@@ -58,43 +81,232 @@ const AppWheelRoute = AppWheelRouteImport.update({
   path: '/wheel',
   getParentRoute: () => AppRoute,
 } as any)
+const AppUsernameRoute = AppUsernameRouteImport.update({
+  id: '/$username',
+  path: '/$username',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLifeRouteRoute = AppLifeRouteRouteImport.update({
+  id: '/life',
+  path: '/life',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLifeIndexRoute = AppLifeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
 const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
   id: '/library/',
   path: '/library/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDiscoverIndexRoute = AppDiscoverIndexRouteImport.update({
+  id: '/discover/',
+  path: '/discover/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLifeWrappedRoute = AppLifeWrappedRouteImport.update({
+  id: '/wrapped',
+  path: '/wrapped',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppLifeTimelineRoute = AppLifeTimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppLifeMemoriesRoute = AppLifeMemoriesRouteImport.update({
+  id: '/memories',
+  path: '/memories',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppLibraryRatingsRoute = AppLibraryRatingsRouteImport.update({
+  id: '/library/ratings',
+  path: '/library/ratings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
+  id: '/library/planned',
+  path: '/library/planned',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryListsIndexRoute = AppLibraryListsIndexRouteImport.update({
+  id: '/library/lists/',
+  path: '/library/lists/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverTv_showIndexRoute = AppDiscoverTv_showIndexRouteImport.update({
+  id: '/discover/tv_show/',
+  path: '/discover/tv_show/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverTrackIndexRoute = AppDiscoverTrackIndexRouteImport.update({
+  id: '/discover/track/',
+  path: '/discover/track/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverMovieIndexRoute = AppDiscoverMovieIndexRouteImport.update({
+  id: '/discover/movie/',
+  path: '/discover/movie/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverGameIndexRoute = AppDiscoverGameIndexRouteImport.update({
+  id: '/discover/game/',
+  path: '/discover/game/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverBookIndexRoute = AppDiscoverBookIndexRouteImport.update({
+  id: '/discover/book/',
+  path: '/discover/book/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverAlbumIndexRoute = AppDiscoverAlbumIndexRouteImport.update({
+  id: '/discover/album/',
+  path: '/discover/album/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryListsListIdRoute = AppLibraryListsListIdRouteImport.update({
+  id: '/library/lists/$listId',
+  path: '/library/lists/$listId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiscoverTv_showExternalIdRoute =
+  AppDiscoverTv_showExternalIdRouteImport.update({
+    id: '/discover/tv_show/$externalId',
+    path: '/discover/tv_show/$externalId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppDiscoverTrackExternalIdRoute =
+  AppDiscoverTrackExternalIdRouteImport.update({
+    id: '/discover/track/$externalId',
+    path: '/discover/track/$externalId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppDiscoverMovieExternalIdRoute =
+  AppDiscoverMovieExternalIdRouteImport.update({
+    id: '/discover/movie/$externalId',
+    path: '/discover/movie/$externalId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppDiscoverGameExternalIdRoute =
+  AppDiscoverGameExternalIdRouteImport.update({
+    id: '/discover/game/$externalId',
+    path: '/discover/game/$externalId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppDiscoverBookExternalIdRoute =
+  AppDiscoverBookExternalIdRouteImport.update({
+    id: '/discover/book/$externalId',
+    path: '/discover/book/$externalId',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppDiscoverAlbumExternalIdRoute =
+  AppDiscoverAlbumExternalIdRouteImport.update({
+    id: '/discover/album/$externalId',
+    path: '/discover/album/$externalId',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
   '/welcome': typeof WelcomeRoute
+  '/life': typeof AppLifeRouteRouteWithChildren
+  '/$username': typeof AppUsernameRoute
   '/wheel': typeof AppWheelRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/library/planned': typeof AppLibraryPlannedRoute
+  '/library/ratings': typeof AppLibraryRatingsRoute
+  '/life/memories': typeof AppLifeMemoriesRoute
+  '/life/timeline': typeof AppLifeTimelineRoute
+  '/life/wrapped': typeof AppLifeWrappedRoute
+  '/discover/': typeof AppDiscoverIndexRoute
   '/library/': typeof AppLibraryIndexRoute
+  '/life/': typeof AppLifeIndexRoute
+  '/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
+  '/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
+  '/discover/game/$externalId': typeof AppDiscoverGameExternalIdRoute
+  '/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
+  '/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
+  '/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
+  '/library/lists/$listId': typeof AppLibraryListsListIdRoute
+  '/discover/album/': typeof AppDiscoverAlbumIndexRoute
+  '/discover/book/': typeof AppDiscoverBookIndexRoute
+  '/discover/game/': typeof AppDiscoverGameIndexRoute
+  '/discover/movie/': typeof AppDiscoverMovieIndexRoute
+  '/discover/track/': typeof AppDiscoverTrackIndexRoute
+  '/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
+  '/library/lists/': typeof AppLibraryListsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
   '/welcome': typeof WelcomeRoute
+  '/$username': typeof AppUsernameRoute
   '/wheel': typeof AppWheelRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
+  '/library/planned': typeof AppLibraryPlannedRoute
+  '/library/ratings': typeof AppLibraryRatingsRoute
+  '/life/memories': typeof AppLifeMemoriesRoute
+  '/life/timeline': typeof AppLifeTimelineRoute
+  '/life/wrapped': typeof AppLifeWrappedRoute
+  '/discover': typeof AppDiscoverIndexRoute
   '/library': typeof AppLibraryIndexRoute
+  '/life': typeof AppLifeIndexRoute
+  '/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
+  '/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
+  '/discover/game/$externalId': typeof AppDiscoverGameExternalIdRoute
+  '/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
+  '/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
+  '/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
+  '/library/lists/$listId': typeof AppLibraryListsListIdRoute
+  '/discover/album': typeof AppDiscoverAlbumIndexRoute
+  '/discover/book': typeof AppDiscoverBookIndexRoute
+  '/discover/game': typeof AppDiscoverGameIndexRoute
+  '/discover/movie': typeof AppDiscoverMovieIndexRoute
+  '/discover/track': typeof AppDiscoverTrackIndexRoute
+  '/discover/tv_show': typeof AppDiscoverTv_showIndexRoute
+  '/library/lists': typeof AppLibraryListsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
   '/welcome': typeof WelcomeRoute
+  '/_app/life': typeof AppLifeRouteRouteWithChildren
+  '/_app/$username': typeof AppUsernameRoute
   '/_app/wheel': typeof AppWheelRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/library/planned': typeof AppLibraryPlannedRoute
+  '/_app/library/ratings': typeof AppLibraryRatingsRoute
+  '/_app/life/memories': typeof AppLifeMemoriesRoute
+  '/_app/life/timeline': typeof AppLifeTimelineRoute
+  '/_app/life/wrapped': typeof AppLifeWrappedRoute
+  '/_app/discover/': typeof AppDiscoverIndexRoute
   '/_app/library/': typeof AppLibraryIndexRoute
+  '/_app/life/': typeof AppLifeIndexRoute
+  '/_app/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
+  '/_app/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
+  '/_app/discover/game/$externalId': typeof AppDiscoverGameExternalIdRoute
+  '/_app/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
+  '/_app/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
+  '/_app/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
+  '/_app/library/lists/$listId': typeof AppLibraryListsListIdRoute
+  '/_app/discover/album/': typeof AppDiscoverAlbumIndexRoute
+  '/_app/discover/book/': typeof AppDiscoverBookIndexRoute
+  '/_app/discover/game/': typeof AppDiscoverGameIndexRoute
+  '/_app/discover/movie/': typeof AppDiscoverMovieIndexRoute
+  '/_app/discover/track/': typeof AppDiscoverTrackIndexRoute
+  '/_app/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
+  '/_app/library/lists/': typeof AppLibraryListsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,32 +314,100 @@ export interface FileRouteTypes {
     | '/auth'
     | '/'
     | '/welcome'
+    | '/life'
+    | '/$username'
     | '/wheel'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/library/planned'
+    | '/library/ratings'
+    | '/life/memories'
+    | '/life/timeline'
+    | '/life/wrapped'
+    | '/discover/'
     | '/library/'
+    | '/life/'
+    | '/discover/album/$externalId'
+    | '/discover/book/$externalId'
+    | '/discover/game/$externalId'
+    | '/discover/movie/$externalId'
+    | '/discover/track/$externalId'
+    | '/discover/tv_show/$externalId'
+    | '/library/lists/$listId'
+    | '/discover/album/'
+    | '/discover/book/'
+    | '/discover/game/'
+    | '/discover/movie/'
+    | '/discover/track/'
+    | '/discover/tv_show/'
+    | '/library/lists/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/welcome'
+    | '/$username'
     | '/wheel'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
     | '/'
+    | '/library/planned'
+    | '/library/ratings'
+    | '/life/memories'
+    | '/life/timeline'
+    | '/life/wrapped'
+    | '/discover'
     | '/library'
+    | '/life'
+    | '/discover/album/$externalId'
+    | '/discover/book/$externalId'
+    | '/discover/game/$externalId'
+    | '/discover/movie/$externalId'
+    | '/discover/track/$externalId'
+    | '/discover/tv_show/$externalId'
+    | '/library/lists/$listId'
+    | '/discover/album'
+    | '/discover/book'
+    | '/discover/game'
+    | '/discover/movie'
+    | '/discover/track'
+    | '/discover/tv_show'
+    | '/library/lists'
   id:
     | '__root__'
     | '/auth'
     | '/_app'
     | '/welcome'
+    | '/_app/life'
+    | '/_app/$username'
     | '/_app/wheel'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
     | '/_app/'
+    | '/_app/library/planned'
+    | '/_app/library/ratings'
+    | '/_app/life/memories'
+    | '/_app/life/timeline'
+    | '/_app/life/wrapped'
+    | '/_app/discover/'
     | '/_app/library/'
+    | '/_app/life/'
+    | '/_app/discover/album/$externalId'
+    | '/_app/discover/book/$externalId'
+    | '/_app/discover/game/$externalId'
+    | '/_app/discover/movie/$externalId'
+    | '/_app/discover/track/$externalId'
+    | '/_app/discover/tv_show/$externalId'
+    | '/_app/library/lists/$listId'
+    | '/_app/discover/album/'
+    | '/_app/discover/book/'
+    | '/_app/discover/game/'
+    | '/_app/discover/movie/'
+    | '/_app/discover/track/'
+    | '/_app/discover/tv_show/'
+    | '/_app/library/lists/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -194,11 +474,172 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWheelRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/$username': {
+      id: '/_app/$username'
+      path: '/$username'
+      fullPath: '/$username'
+      preLoaderRoute: typeof AppUsernameRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/life': {
+      id: '/_app/life'
+      path: '/life'
+      fullPath: '/life'
+      preLoaderRoute: typeof AppLifeRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/life/': {
+      id: '/_app/life/'
+      path: '/'
+      fullPath: '/life/'
+      preLoaderRoute: typeof AppLifeIndexRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
     '/_app/library/': {
       id: '/_app/library/'
       path: '/library'
       fullPath: '/library/'
       preLoaderRoute: typeof AppLibraryIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/': {
+      id: '/_app/discover/'
+      path: '/discover'
+      fullPath: '/discover/'
+      preLoaderRoute: typeof AppDiscoverIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/life/wrapped': {
+      id: '/_app/life/wrapped'
+      path: '/wrapped'
+      fullPath: '/life/wrapped'
+      preLoaderRoute: typeof AppLifeWrappedRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/life/timeline': {
+      id: '/_app/life/timeline'
+      path: '/timeline'
+      fullPath: '/life/timeline'
+      preLoaderRoute: typeof AppLifeTimelineRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/life/memories': {
+      id: '/_app/life/memories'
+      path: '/memories'
+      fullPath: '/life/memories'
+      preLoaderRoute: typeof AppLifeMemoriesRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/library/ratings': {
+      id: '/_app/library/ratings'
+      path: '/library/ratings'
+      fullPath: '/library/ratings'
+      preLoaderRoute: typeof AppLibraryRatingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library/planned': {
+      id: '/_app/library/planned'
+      path: '/library/planned'
+      fullPath: '/library/planned'
+      preLoaderRoute: typeof AppLibraryPlannedRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library/lists/': {
+      id: '/_app/library/lists/'
+      path: '/library/lists'
+      fullPath: '/library/lists/'
+      preLoaderRoute: typeof AppLibraryListsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/tv_show/': {
+      id: '/_app/discover/tv_show/'
+      path: '/discover/tv_show'
+      fullPath: '/discover/tv_show/'
+      preLoaderRoute: typeof AppDiscoverTv_showIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/track/': {
+      id: '/_app/discover/track/'
+      path: '/discover/track'
+      fullPath: '/discover/track/'
+      preLoaderRoute: typeof AppDiscoverTrackIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/movie/': {
+      id: '/_app/discover/movie/'
+      path: '/discover/movie'
+      fullPath: '/discover/movie/'
+      preLoaderRoute: typeof AppDiscoverMovieIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/game/': {
+      id: '/_app/discover/game/'
+      path: '/discover/game'
+      fullPath: '/discover/game/'
+      preLoaderRoute: typeof AppDiscoverGameIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/book/': {
+      id: '/_app/discover/book/'
+      path: '/discover/book'
+      fullPath: '/discover/book/'
+      preLoaderRoute: typeof AppDiscoverBookIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/album/': {
+      id: '/_app/discover/album/'
+      path: '/discover/album'
+      fullPath: '/discover/album/'
+      preLoaderRoute: typeof AppDiscoverAlbumIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library/lists/$listId': {
+      id: '/_app/library/lists/$listId'
+      path: '/library/lists/$listId'
+      fullPath: '/library/lists/$listId'
+      preLoaderRoute: typeof AppLibraryListsListIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/tv_show/$externalId': {
+      id: '/_app/discover/tv_show/$externalId'
+      path: '/discover/tv_show/$externalId'
+      fullPath: '/discover/tv_show/$externalId'
+      preLoaderRoute: typeof AppDiscoverTv_showExternalIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/track/$externalId': {
+      id: '/_app/discover/track/$externalId'
+      path: '/discover/track/$externalId'
+      fullPath: '/discover/track/$externalId'
+      preLoaderRoute: typeof AppDiscoverTrackExternalIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/movie/$externalId': {
+      id: '/_app/discover/movie/$externalId'
+      path: '/discover/movie/$externalId'
+      fullPath: '/discover/movie/$externalId'
+      preLoaderRoute: typeof AppDiscoverMovieExternalIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/game/$externalId': {
+      id: '/_app/discover/game/$externalId'
+      path: '/discover/game/$externalId'
+      fullPath: '/discover/game/$externalId'
+      preLoaderRoute: typeof AppDiscoverGameExternalIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/book/$externalId': {
+      id: '/_app/discover/book/$externalId'
+      path: '/discover/book/$externalId'
+      fullPath: '/discover/book/$externalId'
+      preLoaderRoute: typeof AppDiscoverBookExternalIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/discover/album/$externalId': {
+      id: '/_app/discover/album/$externalId'
+      path: '/discover/album/$externalId'
+      fullPath: '/discover/album/$externalId'
+      preLoaderRoute: typeof AppDiscoverAlbumExternalIdRouteImport
       parentRoute: typeof AppRoute
     }
   }
@@ -220,16 +661,72 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface AppLifeRouteRouteChildren {
+  AppLifeMemoriesRoute: typeof AppLifeMemoriesRoute
+  AppLifeTimelineRoute: typeof AppLifeTimelineRoute
+  AppLifeWrappedRoute: typeof AppLifeWrappedRoute
+  AppLifeIndexRoute: typeof AppLifeIndexRoute
+}
+
+const AppLifeRouteRouteChildren: AppLifeRouteRouteChildren = {
+  AppLifeMemoriesRoute: AppLifeMemoriesRoute,
+  AppLifeTimelineRoute: AppLifeTimelineRoute,
+  AppLifeWrappedRoute: AppLifeWrappedRoute,
+  AppLifeIndexRoute: AppLifeIndexRoute,
+}
+
+const AppLifeRouteRouteWithChildren = AppLifeRouteRoute._addFileChildren(
+  AppLifeRouteRouteChildren,
+)
+
 interface AppRouteChildren {
+  AppLifeRouteRoute: typeof AppLifeRouteRouteWithChildren
+  AppUsernameRoute: typeof AppUsernameRoute
   AppWheelRoute: typeof AppWheelRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppLibraryPlannedRoute: typeof AppLibraryPlannedRoute
+  AppLibraryRatingsRoute: typeof AppLibraryRatingsRoute
+  AppDiscoverIndexRoute: typeof AppDiscoverIndexRoute
   AppLibraryIndexRoute: typeof AppLibraryIndexRoute
+  AppDiscoverAlbumExternalIdRoute: typeof AppDiscoverAlbumExternalIdRoute
+  AppDiscoverBookExternalIdRoute: typeof AppDiscoverBookExternalIdRoute
+  AppDiscoverGameExternalIdRoute: typeof AppDiscoverGameExternalIdRoute
+  AppDiscoverMovieExternalIdRoute: typeof AppDiscoverMovieExternalIdRoute
+  AppDiscoverTrackExternalIdRoute: typeof AppDiscoverTrackExternalIdRoute
+  AppDiscoverTv_showExternalIdRoute: typeof AppDiscoverTv_showExternalIdRoute
+  AppLibraryListsListIdRoute: typeof AppLibraryListsListIdRoute
+  AppDiscoverAlbumIndexRoute: typeof AppDiscoverAlbumIndexRoute
+  AppDiscoverBookIndexRoute: typeof AppDiscoverBookIndexRoute
+  AppDiscoverGameIndexRoute: typeof AppDiscoverGameIndexRoute
+  AppDiscoverMovieIndexRoute: typeof AppDiscoverMovieIndexRoute
+  AppDiscoverTrackIndexRoute: typeof AppDiscoverTrackIndexRoute
+  AppDiscoverTv_showIndexRoute: typeof AppDiscoverTv_showIndexRoute
+  AppLibraryListsIndexRoute: typeof AppLibraryListsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppLifeRouteRoute: AppLifeRouteRouteWithChildren,
+  AppUsernameRoute: AppUsernameRoute,
   AppWheelRoute: AppWheelRoute,
   AppIndexRoute: AppIndexRoute,
+  AppLibraryPlannedRoute: AppLibraryPlannedRoute,
+  AppLibraryRatingsRoute: AppLibraryRatingsRoute,
+  AppDiscoverIndexRoute: AppDiscoverIndexRoute,
   AppLibraryIndexRoute: AppLibraryIndexRoute,
+  AppDiscoverAlbumExternalIdRoute: AppDiscoverAlbumExternalIdRoute,
+  AppDiscoverBookExternalIdRoute: AppDiscoverBookExternalIdRoute,
+  AppDiscoverGameExternalIdRoute: AppDiscoverGameExternalIdRoute,
+  AppDiscoverMovieExternalIdRoute: AppDiscoverMovieExternalIdRoute,
+  AppDiscoverTrackExternalIdRoute: AppDiscoverTrackExternalIdRoute,
+  AppDiscoverTv_showExternalIdRoute: AppDiscoverTv_showExternalIdRoute,
+  AppLibraryListsListIdRoute: AppLibraryListsListIdRoute,
+  AppDiscoverAlbumIndexRoute: AppDiscoverAlbumIndexRoute,
+  AppDiscoverBookIndexRoute: AppDiscoverBookIndexRoute,
+  AppDiscoverGameIndexRoute: AppDiscoverGameIndexRoute,
+  AppDiscoverMovieIndexRoute: AppDiscoverMovieIndexRoute,
+  AppDiscoverTrackIndexRoute: AppDiscoverTrackIndexRoute,
+  AppDiscoverTv_showIndexRoute: AppDiscoverTv_showIndexRoute,
+  AppLibraryListsIndexRoute: AppLibraryListsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

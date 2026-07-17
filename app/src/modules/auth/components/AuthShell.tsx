@@ -22,7 +22,7 @@ export const AuthShell = ({ children }: React.PropsWithChildren) => {
           </header>
 
           <main className="relative z-10 flex flex-1 items-center justify-center px-5 py-10 sm:px-8">
-            <div className="bg-block border-border/60 relative w-full max-w-105 rounded-2xl border p-6 shadow-[0_12px_40px_oklch(21.03%_0.01_299.89/0.06)] sm:p-8 dark:shadow-[0_16px_48px_oklch(0%_0_0/0.4)]">
+            <div className="bg-block border-border/60 relative w-full max-w-105 rounded-2xl border p-6 sm:p-8">
               <div
                 className="pointer-events-none absolute -inset-px -z-10 rounded-2xl bg-[radial-gradient(ellipse_at_50%_0%,oklch(54.09%_0.2471_299.89/0.12),transparent_70%)] opacity-80 blur-md"
                 aria-hidden

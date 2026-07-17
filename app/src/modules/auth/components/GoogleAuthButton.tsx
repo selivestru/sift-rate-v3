@@ -1,6 +1,6 @@
 import { Button } from '@heroui/react'
 
-import GoogleIcon from '~/assets/icons/google.svg?react'
+import GoogleIcon from '~/common/assets/icons/google.svg?react'
 import { env } from '~/common/constants/env'
 
 export const GoogleAuthButton = () => {

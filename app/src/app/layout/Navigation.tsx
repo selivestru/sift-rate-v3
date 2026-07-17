@@ -4,15 +4,16 @@ import { LockIcon } from 'lucide-react'
 
 import { navItems, type NavItemConfig } from '~/common/constants/navigation'
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { useAuthStore, type Subscription } from '~/modules/auth'
 
 interface NavItemProps {
   item: NavItemConfig
+  currentSubscription: Subscription
   nested?: boolean
-  currentSubscription?: any // TODO: Subscription
   onNavigate?: () => void
 }
 
-function NavItem({ item, nested, currentSubscription, onNavigate }: NavItemProps) {
+function NavItem({ item, currentSubscription, nested, onNavigate }: NavItemProps) {
   const isLocked = item.subscriptionRequired ? currentSubscription === 'FREE' : false
 
   return (
@@ -23,7 +24,7 @@ function NavItem({ item, nested, currentSubscription, onNavigate }: NavItemProps
         disabled={isLocked}
         activeOptions={{ exact: true }}
         className={cn(
-          'text-muted relative flex items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition-colors',
+          'text-muted relative flex items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition-colors duration-300',
           'focus-visible:ring-sidebar-ring/40 focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           nested ? 'text-muted/80 h-9' : 'h-10',
           isLocked
@@ -65,7 +66,7 @@ interface NavigationProps {
 }
 
 export const Navigation = ({ onNavigate }: NavigationProps) => {
-  const currentSubscription = 'FREE'
+  const currentSubscription = useAuthStore((state) => state.user?.subscription ?? 'FREE')
 
   return (
     <nav>
