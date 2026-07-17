@@ -27,7 +27,7 @@ export const NavDrawer = () => {
               <Drawer.Heading>Menu</Drawer.Heading>
             </Drawer.Header>
             <Drawer.Body>
-              <Navigation onNavigate={() => setIsOpen(false)} />
+              <Navigation indicatorId="nav-drawer" onNavigate={() => setIsOpen(false)} />
             </Drawer.Body>
           </Drawer.Dialog>
         </Drawer.Content>

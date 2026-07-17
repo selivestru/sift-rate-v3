@@ -1,10 +1,13 @@
 import { Avatar, Dropdown, Label, Separator } from '@heroui/react'
+import { useNavigate } from '@tanstack/react-router'
 import { LogOut } from 'lucide-react'
 
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
 
 export const Profile = () => {
+  const navigate = useNavigate()
+
   const { username, email, avatarUrl } = useAuthStore((state) => state.user!)
 
   return (
@@ -29,7 +32,16 @@ export const Profile = () => {
           </div>
         </div>
         <Dropdown.Menu>
-          <Dropdown.Item id="profile" textValue="Profile">
+          <Dropdown.Item
+            id="profile"
+            textValue="Profile"
+            onAction={() =>
+              navigate({
+                to: '/$username',
+                params: { username: username! },
+              })
+            }
+          >
             <Label>Profile</Label>
           </Dropdown.Item>
           <Separator />
