@@ -40,7 +40,7 @@ export const navItems: NavItemConfig[] = [
     label: 'Discover',
     icon: CompassIcon,
     description: 'Find media to archive',
-    color: '#06B6D4',
+    color: '#14B8A6',
     children: [
       {
         to: '/discover/movie',

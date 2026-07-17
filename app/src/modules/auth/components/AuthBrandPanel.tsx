@@ -45,7 +45,7 @@ export const AuthBrandPanel = () => {
         <div className="auth-blob absolute -bottom-20 left-1/4 size-64 rounded-full bg-[oklch(65%_0.12_280/0.18)] blur-3xl" />
       </div>
 
-      <div className="relative z-10">
+      <div className="z-px relative">
         <div className="flex items-center gap-2.5">
           <span className="bg-accent text-accent-foreground flex size-9 items-center justify-center rounded-xl text-sm font-semibold">
             C
@@ -54,7 +54,7 @@ export const AuthBrandPanel = () => {
         </div>
       </div>
 
-      <div className="relative z-10 max-w-lg space-y-8">
+      <div className="z-px relative max-w-lg space-y-8">
         <div className="space-y-3">
           <h1 className="text-foreground text-3xl font-semibold tracking-tight text-balance lg:text-4xl">
             Media is part of your life
@@ -97,7 +97,7 @@ export const AuthBrandPanel = () => {
         </ul>
       </div>
 
-      <p className="text-muted relative z-10 text-xs">
+      <p className="text-muted z-px relative text-xs">
         Your archive. Their reviews. Shared moments.
       </p>
     </div>

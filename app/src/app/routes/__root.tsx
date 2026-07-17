@@ -18,7 +18,7 @@ function RootComponent() {
   return (
     <>
       <AppBackdrop />
-      <div className="relative z-10">
+      <div className="z-px relative">
         <Outlet />
       </div>
     </>

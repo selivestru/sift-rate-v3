@@ -18,7 +18,7 @@ export const LibraryPage = () => {
         }}
       />
 
-      <BlurMorphSections className="relative z-10 flex flex-col gap-2">
+      <BlurMorphSections className="z-px relative flex flex-col gap-2">
         <BlurMorphSectionsItem>
           <div className="flex items-center gap-2.5">
             <span className="bg-accent/12 text-accent flex size-9 items-center justify-center rounded-xl">
@@ -39,14 +39,17 @@ export const LibraryPage = () => {
         </BlurMorphSectionsItem>
       </BlurMorphSections>
 
-      <BlurMorphSections className="border-border/80 divide-border/70 relative z-10 divide-y overflow-hidden rounded-2xl border">
+      <BlurMorphSections className="border-border/80 z-px relative divide-y overflow-hidden rounded-2xl border">
         {librarySections.map((section) => (
           <BlurMorphSectionsItem key={section.to}>
             <Link
               to={section.to}
+              style={{
+                '--media-color': section.color,
+              }}
               className={cn(
-                'group bg-surface/40 hover:bg-surface-secondary/60 flex items-center gap-4 px-4 py-4 transition-colors duration-200 sm:gap-5 sm:px-5 sm:py-5',
-                'focus-visible:ring-accent/40 focus-visible:bg-surface-secondary/60 focus-visible:ring-2 focus-visible:outline-none',
+                'group bg-surface/40 hover:bg-(--media-color)/5 flex items-center gap-4 px-4 py-4 transition-colors duration-200 sm:gap-5 sm:px-5 sm:py-5',
+                'focus-visible:ring-accent/40 focus-visible:bg-(--media-color)/5 focus-visible:ring-2 focus-visible:outline-none',
               )}
             >
               <span className="text-muted/70 w-7 shrink-0 font-mono text-xs tabular-nums">
@@ -76,7 +79,7 @@ export const LibraryPage = () => {
         ))}
       </BlurMorphSections>
 
-      <BlurMorphSections className="relative z-10">
+      <BlurMorphSections className="z-px relative">
         <BlurMorphSectionsItem>
           <p className="text-muted text-xs leading-relaxed">
             Looking for something new? Head to Discover. Life holds the story behind the shelf.

@@ -24,7 +24,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }:
         to={item.to}
         onClick={onNavigate}
         disabled={isLocked}
-        activeOptions={{ exact: true }}
+        activeOptions={{ exact: true, includeSearch: false }}
         className={cn(
           'text-muted relative flex items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition-colors duration-300',
           'focus-visible:ring-sidebar-ring/40 focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',

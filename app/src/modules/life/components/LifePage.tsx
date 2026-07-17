@@ -27,7 +27,7 @@ export const LifePage = () => {
         }}
       />
 
-      <BlurMorphSections className="relative z-10 flex flex-col gap-4">
+      <BlurMorphSections className="z-px relative flex flex-col gap-4">
         <BlurMorphSectionsItem>
           <div className="flex items-center gap-2.5">
             <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
@@ -50,13 +50,13 @@ export const LifePage = () => {
         </BlurMorphSectionsItem>
       </BlurMorphSections>
 
-      <BlurMorphSections className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+      <BlurMorphSections className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {lifeChapters.map((chapter) => (
           <BlurMorphSectionsItem key={chapter.to} className={chapterCardClass[chapter.kind]}>
             <Link
               to={chapter.to}
               className={cn(
-                'group border-border/60 bg-surface/50 relative flex h-full min-h-40 flex-col overflow-hidden rounded-3xl border p-5 transition-colors duration-300',
+                'group border-border/50 bg-surface/50 relative flex h-full min-h-40 flex-col overflow-hidden rounded-3xl border p-5 transition-colors duration-300',
                 'hover:border-border hover:bg-surface focus-visible:ring-accent/40 focus-visible:ring-2 focus-visible:outline-none',
                 'sm:min-h-44 sm:p-6',
               )}
@@ -89,7 +89,7 @@ export const LifePage = () => {
 
               <div
                 className={cn(
-                  'relative z-10 flex flex-1 flex-col',
+                  'relative z-px flex flex-1 flex-col',
                   chapter.kind === 'timeline' && 'pl-7 sm:pl-8',
                 )}
               >
@@ -121,7 +121,7 @@ export const LifePage = () => {
         ))}
       </BlurMorphSections>
 
-      <BlurMorphSections className="relative z-10">
+      <BlurMorphSections className="z-px relative">
         <BlurMorphSectionsItem>
           <p className="text-muted text-xs leading-relaxed">
             Life is the story. Library keeps the shelves. Discover finds the next chapter.

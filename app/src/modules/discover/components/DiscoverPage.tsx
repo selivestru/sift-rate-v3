@@ -1,6 +1,6 @@
 import { cn } from '@heroui/styles'
 import { Link } from '@tanstack/react-router'
-import { CompassIcon } from 'lucide-react'
+import { ChevronRightIcon, CompassIcon } from 'lucide-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
@@ -15,14 +15,14 @@ export const DiscoverPage = () => {
         aria-hidden
         style={{
           background:
-            'radial-gradient(ellipse 90% 80% at 20% 0%, oklch(70% 0.14 210 / 0.2), transparent 70%), radial-gradient(ellipse 70% 60% at 90% 10%, oklch(65% 0.12 250 / 0.12), transparent 65%)',
+            'radial-gradient(ellipse 90% 80% at 18% 0%, oklch(58% 0.11 165 / 0.18), transparent 70%), radial-gradient(ellipse 70% 55% at 92% 8%, oklch(62% 0.06 190 / 0.1), transparent 65%)',
         }}
       />
 
-      <BlurMorphSections className="relative z-10 flex flex-col gap-3">
+      <BlurMorphSections className="z-px relative flex flex-col gap-3">
         <BlurMorphSectionsItem>
           <div className="flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-500 dark:text-cyan-300">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(58%_0.11_165/0.14)] text-[oklch(42%_0.1_165)] dark:text-[oklch(78%_0.09_165)]">
               <CompassIcon className="size-4" strokeWidth={1.75} />
             </span>
             <p className="text-muted text-xs font-medium tracking-wide uppercase">Discover</p>
@@ -40,7 +40,7 @@ export const DiscoverPage = () => {
         </BlurMorphSectionsItem>
       </BlurMorphSections>
 
-      <BlurMorphSections className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3">
+      <BlurMorphSections className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3">
         {mediaTypeDestinations.map((item) => {
           const meta = mediaTypeMeta[item.type]
           const Icon = meta.icon
@@ -49,60 +49,38 @@ export const DiscoverPage = () => {
             <BlurMorphSectionsItem key={item.to}>
               <Link
                 to={item.to}
-                className={cn(
-                  'group border-border/70 bg-surface-secondary/50 relative flex h-full min-h-36 flex-col justify-between overflow-hidden rounded-2xl border p-4 sm:min-h-40 sm:p-5',
-                  'origin-center transition-all duration-300 ease-out',
-                  'hover:z-10 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-surface-secondary/80',
-                  'active:scale-[0.98] active:translate-y-0',
-                  'focus-visible:ring-accent/40 focus-visible:z-10 focus-visible:ring-2 focus-visible:outline-none',
-                )}
                 style={{
                   '--media-color': meta.color,
                 }}
+                className={cn(
+                  'group border-border/50 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border p-4 sm:p-5 bg-surface/50',
+                  'transition-all duration-300 ease-out',
+                  'hover:-translate-y-0.5 hover:border-(--media-color)/50',
+                  'active:translate-y-0 active:scale-[0.99]',
+                  'focus-visible:ring-accent/40 focus-visible:z-px focus-visible:ring-2 focus-visible:outline-none',
+                )}
               >
-                <div
-                  className="pointer-events-none absolute -top-10 -right-10 size-40 rounded-full opacity-70 blur-3xl transition-[opacity,transform] duration-300 ease-out group-hover:scale-125 group-hover:opacity-100"
-                  style={{ backgroundColor: meta.color }}
-                  aria-hidden
-                />
-
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 opacity-60 transition-opacity duration-300 group-hover:opacity-90"
-                  style={{
-                    background: `linear-gradient(
-                      to top,
-                      color-mix(in oklab, ${meta.color} 75%, transparent),
-                      color-mix(in oklab, ${meta.color} 20%, transparent),
-                      transparent
-                    )`,
-                  }}
-                  aria-hidden
-                />
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{
-                    boxShadow: `inset 0 0 0 1px color-mix(in oklab, ${meta.color} 55%, transparent), 0 12px 32px color-mix(in oklab, ${meta.color} 28%, transparent)`,
-                  }}
-                  aria-hidden
-                />
-
-                <div className="relative z-10 flex items-start justify-between gap-3">
+                <div className="z-px relative flex items-start justify-between gap-3">
                   <span
-                    className="flex size-10 items-center justify-center rounded-xl border border-white/15 bg-black/5 shadow-sm backdrop-blur-sm transition-transform duration-300 ease-out group-hover:scale-105 dark:bg-white/10"
-                    style={{ color: meta.color }}
+                    className="flex size-10 items-center justify-center rounded-xl"
+                    style={{
+                      color: meta.color,
+                      backgroundColor: `color-mix(in oklab, ${meta.color} 14%, transparent)`,
+                    }}
                   >
                     <Icon className="size-5" strokeWidth={1.75} />
                   </span>
-                  <span
-                    className="text-muted text-xs font-medium transition-colors duration-300 group-hover:text-(--media-color)"
+                  <ChevronRightIcon
+                    className="text-muted size-4 shrink-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-(--media-color)"
+                    strokeWidth={1.75}
                     aria-hidden
-                  >
-                    Open
-                  </span>
+                  />
                 </div>
 
-                <div className="relative z-10 mt-8 space-y-1">
-                  <p className="text-lg font-semibold tracking-tight">{meta.label}</p>
+                <div className="z-px relative mt-8 space-y-1">
+                  <p className="text-foreground text-lg font-semibold tracking-tight">
+                    {meta.label}
+                  </p>
                   <p className="text-muted text-sm leading-relaxed">{item.description}</p>
                 </div>
               </Link>
@@ -111,7 +89,7 @@ export const DiscoverPage = () => {
         })}
       </BlurMorphSections>
 
-      <BlurMorphSections className="relative z-10">
+      <BlurMorphSections className="z-px relative">
         <BlurMorphSectionsItem>
           <p className="text-muted border-border/60 border-t pt-4 text-xs leading-relaxed">
             Discover is for finding something new. Your ratings and lists live in Library.

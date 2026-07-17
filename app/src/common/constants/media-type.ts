@@ -37,7 +37,7 @@ export const mediaTypeMeta: Record<MediaType, MediaTypeMeta> = {
     type: MEDIA_TYPES.TV_SHOW,
     label: 'TV Shows',
     icon: TvIcon,
-    color: '#22D3EE',
+    color: '#818CF8',
   },
   GAME: {
     type: MEDIA_TYPES.GAME,

@@ -11,7 +11,7 @@ export const AuthShell = ({ children }: React.PropsWithChildren) => {
         </BlurMorphSectionsItem>
 
         <BlurMorphSectionsItem className="relative flex min-h-dvh flex-col">
-          <header className="border-border/40 relative z-10 flex items-center gap-2.5 border-b px-5 py-4 lg:hidden">
+          <header className="border-border/40 z-px relative flex items-center gap-2.5 border-b px-5 py-4 lg:hidden">
             <span className="bg-accent text-accent-foreground flex size-8 items-center justify-center rounded-lg text-xs font-semibold">
               C
             </span>
@@ -21,10 +21,10 @@ export const AuthShell = ({ children }: React.PropsWithChildren) => {
             </div>
           </header>
 
-          <main className="relative z-10 flex flex-1 items-center justify-center px-5 py-10 sm:px-8">
+          <main className="z-px relative flex flex-1 items-center justify-center px-5 py-10 sm:px-8">
             <div className="bg-block border-border/60 relative w-full max-w-105 rounded-2xl border p-6 sm:p-8">
               <div
-                className="pointer-events-none absolute -inset-px -z-10 rounded-2xl bg-[radial-gradient(ellipse_at_50%_0%,oklch(54.09%_0.2471_299.89/0.12),transparent_70%)] opacity-80 blur-md"
+                className="-z-px pointer-events-none absolute -inset-px rounded-2xl bg-[radial-gradient(ellipse_at_50%_0%,oklch(54.09%_0.2471_299.89/0.12),transparent_70%)] opacity-80 blur-md"
                 aria-hidden
               />
               {children}
