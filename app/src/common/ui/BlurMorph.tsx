@@ -62,7 +62,13 @@ export const BlurMorphListItem = ({ children, ...props }: BlurMorphProps) => {
 
 export const BlurMorphSections = ({ children, ...props }: BlurMorphProps) => {
   return (
-    <m.div variants={containerVariants} initial="hidden" animate="visible" {...props}>
+    <m.div
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      {...props}
+    >
       {children}
     </m.div>
   )

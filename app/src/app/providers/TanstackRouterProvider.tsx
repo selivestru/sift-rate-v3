@@ -1,8 +1,17 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
+
+import { useAuthStore } from '~/modules/auth'
 
 import { routeTree } from '../routeTree.gen'
 
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  context: {
+    auth: undefined!,
+    queryClient: undefined!,
+  },
+})
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -11,5 +20,8 @@ declare module '@tanstack/react-router' {
 }
 
 export const TanstackRouterProvider = () => {
-  return <RouterProvider router={router} />
+  const auth = useAuthStore()
+  const queryClient = useQueryClient()
+
+  return <RouterProvider router={router} context={{ auth, queryClient }} />
 }

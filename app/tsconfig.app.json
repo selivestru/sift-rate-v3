@@ -18,6 +18,7 @@
 
     /* Paths */
     "paths": {
+      "~/pages/*": ["./src/pages/*"],
       "~/modules/*": ["./src/modules/*"],
       "~/common/*": ["./src/common/*"],
       "~/*": ["./src/*"]
