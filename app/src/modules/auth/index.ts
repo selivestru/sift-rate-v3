@@ -1,2 +1,6 @@
+export * from './components/AuthShell'
+export * from './components/ForgotPasswordForm'
+export * from './components/LoginForm'
+export * from './components/RegisterForm'
 export * from './store/auth.store'
 export * from './types/user.type'

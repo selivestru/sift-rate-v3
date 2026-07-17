@@ -1,10 +1,10 @@
-# Chronicle — agent guide
+# SiftRate — agent guide
 
-Chronicle is an SSR web platform for a personal media-life archive: movies, TV shows, games, books, albums, and tracks. Users sign in with Google, pick a unique username, then get a protected space to search media, rate it, and use related personal tools.
+SiftRate is an SSR web platform for a personal media-life archive: movies, TV shows, games, books, albums, and tracks. Users sign in with Google, pick a unique username, then get a protected space to search media, rate it, and use related personal tools.
 
 ## Product idea
 
-Chronicle is not another IMDb, Letterboxd, or Backloggd. Every feature should reinforce the core idea: **"Media is part of your life"**. Users do not just rate media — they gradually build a digital archive of their life through media, track how taste changes, and turn watching / reading / listening into a life timeline.
+SiftRate is not another IMDb, Letterboxd, or Backloggd. Every feature should reinforce the core idea: **"Media is part of your life"**. Users do not just rate media — they gradually build a digital archive of their life through media, track how taste changes, and turn watching / reading / listening into a life timeline.
 
 That direction matters for prioritization: when decisions are ambiguous, prefer what serves a personal archive over a classic rating aggregator.
 

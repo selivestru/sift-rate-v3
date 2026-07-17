@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
+import { AuthShell } from '~/modules/auth'
+
 export const Route = createFileRoute('/auth')({
   beforeLoad: ({ context }) => {
     const { user } = context.auth
@@ -13,8 +15,8 @@ export const Route = createFileRoute('/auth')({
 
 function RouteComponent() {
   return (
-    <div className="grid min-h-dvh w-full place-items-center">
+    <AuthShell>
       <Outlet />
-    </div>
+    </AuthShell>
   )
 }

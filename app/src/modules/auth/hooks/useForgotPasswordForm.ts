@@ -4,14 +4,15 @@ import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
 
-import { registerSchema, type RegisterInput } from '../schema/auth.schema'
+import { forgotPasswordSchema, type ForgotPasswordInput } from '../schema/auth.schema'
 import { applyApiFormError } from '../utils/applyApiFormError'
-import { useRegisterMutation } from './useRegisterMutation'
+import { useForgotPasswordMutation } from './useForgotPasswordMutation'
 
-const REGISTER_FIELDS = ['email', 'username', 'password', 'confirmPassword'] as const
+const FORGOT_FIELDS = ['email'] as const
 
-export const useRegisterForm = () => {
-  const mutation = useRegisterMutation()
+export const useForgotPasswordForm = () => {
+  const mutation = useForgotPasswordMutation()
+  const [isSuccess, setIsSuccess] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
   const {
@@ -19,14 +20,11 @@ export const useRegisterForm = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<RegisterInput>({
+  } = useForm<ForgotPasswordInput>({
     defaultValues: {
       email: '',
-      username: '',
-      password: '',
-      confirmPassword: '',
     },
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(forgotPasswordSchema),
   })
 
   const onSubmit = handleSubmit(async (data) => {
@@ -34,13 +32,14 @@ export const useRegisterForm = () => {
 
     try {
       await mutation.mutateAsync(data)
+      setIsSuccess(true)
     } catch (err) {
       const apiError = await getApiError(err)
       applyApiFormError({
         apiError,
         setError,
         setServerError,
-        fields: REGISTER_FIELDS,
+        fields: FORGOT_FIELDS,
       })
     }
   })
@@ -50,6 +49,7 @@ export const useRegisterForm = () => {
     errors,
     onSubmit,
     isLoading: mutation.isPending,
+    isSuccess,
     serverError,
   }
 }

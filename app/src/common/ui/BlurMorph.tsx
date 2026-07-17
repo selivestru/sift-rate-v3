@@ -1,4 +1,4 @@
-import { AnimatePresence, m, stagger, type HTMLMotionProps, type Variants } from 'motion/react'
+import { AnimatePresence, m, stagger, type Variants } from 'motion/react'
 
 const containerVariants: Variants = {
   hidden: {},
@@ -27,27 +27,14 @@ const itemVariants: Variants = {
   },
 }
 
-interface BlurMorphProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  children: React.ReactNode
-  mode?: 'sync' | 'popLayout' | 'wait'
-  layout?: boolean
+interface BlurMorphProps extends React.PropsWithChildren {
+  className?: string
 }
 
-export const BlurMorphList = ({
-  children,
-  mode = 'popLayout',
-  layout = true,
-  ...props
-}: BlurMorphProps) => {
+export const BlurMorphList = ({ children, ...props }: BlurMorphProps) => {
   return (
-    <m.div
-      layout={layout}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      {...props}
-    >
-      <AnimatePresence mode={mode}>{children}</AnimatePresence>
+    <m.div layout variants={containerVariants} initial="hidden" animate="visible" {...props}>
+      <AnimatePresence mode="popLayout">{children}</AnimatePresence>
     </m.div>
   )
 }

@@ -18,6 +18,7 @@
 
     /* Paths */
     "paths": {
+      "~/assets/*": ["./public/assets/*"],
       "~/pages/*": ["./src/pages/*"],
       "~/modules/*": ["./src/modules/*"],
       "~/common/*": ["./src/common/*"],
@@ -30,5 +31,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "vite-env.d.ts"]
 }

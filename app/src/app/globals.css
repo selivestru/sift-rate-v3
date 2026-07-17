@@ -4,6 +4,9 @@
 @theme inline {
   --animate-blur-morph-in: blur-morph-in 300ms ease-out forwards;
   --animate-blur-morph-out: blur-morph-out 200ms ease-in forwards;
+
+  --color-body: var(--body);
+  --color-block: var(--block);
 }
 
 :root {
@@ -68,6 +71,9 @@
   --warning: oklch(78.19% 0.1617 77.86);
   --warning-foreground: oklch(21.03% 0.0059 77.86);
 
+  --body: oklch(94.8% 0.012 299.89);
+  --block: oklch(99.4% 0.004 299.89);
+
   --radius: 0.5rem;
   --field-radius: 0.75rem;
 }
@@ -106,10 +112,17 @@
   --surface-tertiary-foreground: oklch(99.11% 0.01 299.89);
   --warning: oklch(82.03% 0.1416 81.87);
   --warning-foreground: oklch(21.03% 0.0059 81.87);
+
+  --body: oklch(9.5% 0.012 299.89);
+  --block: oklch(16.2% 0.018 299.89);
+}
+
+html {
+  @apply min-h-dvh;
 }
 
 body {
-  @apply bg-background text-foreground font-sans antialiased;
+  @apply bg-body text-foreground relative min-h-dvh font-sans antialiased;
 }
 
 @keyframes blur-morph-in {
@@ -145,5 +158,35 @@ body {
 
   .dropdown__popover[data-exiting] {
     @apply animate-blur-morph-out;
+  }
+}
+
+@keyframes auth-blob-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(14px, -20px, 0) scale(1.06);
+  }
+}
+
+.auth-blob {
+  animation: auth-blob-drift 16s ease-in-out infinite;
+}
+
+.auth-blob-delay {
+  animation-delay: -8s;
+}
+
+.auth-blob-delay-2 {
+  animation-delay: -4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-blob,
+  .auth-blob-delay,
+  .auth-blob-delay-2 {
+    animation: none;
   }
 }
