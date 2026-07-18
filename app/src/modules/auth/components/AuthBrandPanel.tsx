@@ -1,4 +1,3 @@
-import { Chip } from '@heroui/react'
 import {
   CompassIcon,
   LayersIcon,
@@ -6,6 +5,8 @@ import {
   StarIcon,
   type LucideIcon,
 } from 'lucide-react'
+
+import { Badge } from '~/common/ui/Badge'
 
 const mediaTypes = ['Movies', 'TV', 'Tracks', 'Albums', 'Games', 'Books'] as const
 
@@ -71,13 +72,12 @@ export const AuthBrandPanel = () => {
         <ul className="flex flex-wrap gap-2">
           {mediaTypes.map((label) => (
             <li key={label}>
-              <Chip
+              <Badge
                 variant="secondary"
-                size="sm"
                 className="bg-surface/70 border-border/60 border backdrop-blur-sm"
               >
-                <Chip.Label>{label}</Chip.Label>
-              </Chip>
+                {label}
+              </Badge>
             </li>
           ))}
         </ul>

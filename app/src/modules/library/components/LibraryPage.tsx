@@ -1,8 +1,8 @@
-import { cn } from '@heroui/styles'
 import { Link } from '@tanstack/react-router'
 import { ChevronRightIcon, LibraryIcon } from 'lucide-react'
 
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { cn } from '~/common/utils/cn'
 
 import { librarySections } from '../constants/library-sections'
 

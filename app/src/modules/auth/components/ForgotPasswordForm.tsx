@@ -1,7 +1,7 @@
-import { Button, Spinner } from '@heroui/react'
 import { Link } from '@tanstack/react-router'
 
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { Button } from '~/common/ui/Button'
 
 import { useForgotPasswordForm } from '../hooks/useForgotPasswordForm'
 import { AuthFormAlert } from './AuthFormAlert'
@@ -56,8 +56,7 @@ export const ForgotPasswordForm = () => {
             {...register('email')}
           />
 
-          <Button type="submit" fullWidth isDisabled={isLoading} isPending={isLoading}>
-            {isLoading && <Spinner color="current" />}
+          <Button fullWidth type="submit" isLoading={isLoading}>
             {isLoading ? 'Sending…' : 'Send reset link'}
           </Button>
         </form>

@@ -1,4 +1,4 @@
-import { Toast } from '@heroui/react'
+import { Toaster } from '~/common/ui/Sonner'
 
 import { AnimationProvider } from './AnimationProvider'
 import { TanstackQueryProvider } from './TanstackQueryProvider'
@@ -9,7 +9,7 @@ export const Providers = () => {
     <TanstackQueryProvider>
       <AnimationProvider>
         <TanstackRouterProvider />
-        <Toast.Provider placement="top" />
+        <Toaster />
       </AnimationProvider>
     </TanstackQueryProvider>
   )

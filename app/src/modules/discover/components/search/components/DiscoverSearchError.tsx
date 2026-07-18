@@ -1,4 +1,7 @@
-import { Alert, Button } from '@heroui/react'
+import { CircleXIcon } from 'lucide-react'
+
+import { Alert, AlertTitle } from '~/common/ui/Alert'
+import { Button } from '~/common/ui/Button'
 
 interface DiscoverSearchErrorProps {
   message?: string
@@ -11,13 +14,11 @@ export const DiscoverSearchError = ({
 }: DiscoverSearchErrorProps) => {
   return (
     <div className="flex flex-col gap-3">
-      <Alert status="danger">
-        <Alert.Indicator />
-        <Alert.Content>
-          <Alert.Title>{message}</Alert.Title>
-        </Alert.Content>
+      <Alert variant="danger">
+        <CircleXIcon />
+        <AlertTitle>{message}</AlertTitle>
       </Alert>
-      <Button variant="secondary" className="w-fit" onPress={onRetry}>
+      <Button variant="secondary" onClick={onRetry}>
         Retry
       </Button>
     </div>

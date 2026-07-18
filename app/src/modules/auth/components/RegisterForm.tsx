@@ -1,7 +1,7 @@
-import { Button, Spinner } from '@heroui/react'
 import { Link } from '@tanstack/react-router'
 
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { Button } from '~/common/ui/Button'
 
 import { useRegisterForm } from '../hooks/useRegisterForm'
 import { AuthDivider } from './AuthDivider'
@@ -69,8 +69,7 @@ export const RegisterForm = () => {
             {...register('confirmPassword')}
           />
 
-          <Button type="submit" fullWidth isDisabled={isLoading} isPending={isLoading}>
-            {isLoading && <Spinner color="current" />}
+          <Button type="submit" fullWidth isLoading={isLoading}>
             {isLoading ? 'Creating account…' : 'Create account'}
           </Button>
         </form>

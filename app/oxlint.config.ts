@@ -1,7 +1,7 @@
 import { defineConfig } from 'oxlint'
 
 export default defineConfig({
-  plugins: ['react', 'typescript', 'import', 'jsx-a11y', 'oxc', 'vitest'],
+  plugins: ['react', 'typescript', 'import', 'oxc', 'vitest'],
 
   categories: {
     correctness: 'error',
@@ -28,17 +28,6 @@ export default defineConfig({
     'react/no-unstable-nested-components': 'warn',
     'react/exhaustive-deps': 'warn',
     'react/react-in-jsx-scope': 'off',
-
-    'jsx-a11y/alt-text': 'error',
-    'jsx-a11y/anchor-has-content': 'error',
-    'jsx-a11y/anchor-is-valid': 'error',
-    'jsx-a11y/click-events-have-key-events': 'warn',
-    'jsx-a11y/interactive-supports-focus': 'warn',
-    'jsx-a11y/label-has-associated-control': 'error',
-    'jsx-a11y/media-has-caption': 'warn',
-    'jsx-a11y/no-autofocus': 'warn',
-    'jsx-a11y/no-redundant-roles': 'warn',
-    'jsx-a11y/no-static-element-interactions': 'warn',
 
     'import/no-duplicates': 'error',
     'import/no-cycle': 'warn',

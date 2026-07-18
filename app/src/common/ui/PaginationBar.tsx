@@ -1,5 +1,6 @@
-import { cn } from '@heroui/styles'
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react'
+
+import { cn } from '../utils/cn'
 
 interface PaginationBarProps {
   page: number

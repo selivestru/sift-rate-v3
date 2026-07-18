@@ -1,6 +1,9 @@
-import { Button, SearchField, Spinner } from '@heroui/react'
-import { SearchIcon } from 'lucide-react'
+import { SearchIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
+
+import { Button } from '~/common/ui/Button'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '~/common/ui/InputGroup'
+import { Spinner } from '~/common/ui/Spinner'
 
 interface DiscoverSearchFormProps {
   initialQuery: string
@@ -35,16 +38,24 @@ export const DiscoverSearchForm = ({
       onSubmit={handleSubmit}
       className="grid w-full grid-cols-1 grid-rows-2 gap-2 sm:grid-cols-[1fr_150px] sm:grid-rows-1"
     >
-      <SearchField fullWidth value={draft} onChange={setDraft} aria-label="Search">
-        <SearchField.Group className="h-10">
-          <SearchField.SearchIcon />
-          <SearchField.Input className="h-full" placeholder={placeholder} />
-          <SearchField.ClearButton onPress={handleClear} />
-        </SearchField.Group>
-      </SearchField>
+      <InputGroup>
+        <InputGroupAddon align="inline-start">
+          <SearchIcon />
+        </InputGroupAddon>
+        <InputGroupInput
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder={placeholder}
+        />
+        <InputGroupAddon align="inline-end">
+          <Button onClick={handleClear}>
+            <XIcon className="size-4" />
+          </Button>
+        </InputGroupAddon>
+      </InputGroup>
 
       <Button fullWidth type="submit" size="lg" isDisabled={!canSubmit || isFetching}>
-        {isFetching ? <Spinner size="sm" color="current" /> : <SearchIcon className="size-4" />}
+        {isFetching ? <Spinner color="current" /> : <SearchIcon className="size-4" />}
         Search
       </Button>
     </form>

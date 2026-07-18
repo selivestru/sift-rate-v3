@@ -1,5 +1,6 @@
-import { Button, Spinner } from '@heroui/react'
 import { Link } from '@tanstack/react-router'
+
+import { Button } from '~/common/ui/Button'
 
 import { useLoginForm } from '../hooks/useLoginForm'
 import { AuthDivider } from './AuthDivider'
@@ -48,8 +49,7 @@ export const LoginForm = () => {
           {...register('password')}
         />
 
-        <Button type="submit" fullWidth isDisabled={isLoading} isPending={isLoading}>
-          {isLoading && <Spinner color="current" />}
+        <Button fullWidth type="submit" isLoading={isLoading}>
           {isLoading ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>

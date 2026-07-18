@@ -1,8 +1,8 @@
-import { cn } from '@heroui/styles'
 import { useNavigate } from '@tanstack/react-router'
 
 import type { MediaType } from '~/common/constants/media-type'
 import { PaginationBar } from '~/common/ui/PaginationBar'
+import { cn } from '~/common/utils/cn'
 
 import type { DiscoverSearchConfigByMediaType } from '../configs/discover-search.configs'
 import { useDiscoverSearchQuery } from '../hooks/useDiscoverSearchQuery'

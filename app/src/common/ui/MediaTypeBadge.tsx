@@ -1,6 +1,5 @@
-import { cn } from '@heroui/styles'
-
 import { mediaTypeMeta, type MediaType } from '../constants/media-type'
+import { cn } from '../utils/cn'
 
 interface MediaBadgeProps {
   mediaType: MediaType

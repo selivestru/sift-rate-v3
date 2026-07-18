@@ -1,10 +1,10 @@
-import { cn } from '@heroui/styles'
 import { Link } from '@tanstack/react-router'
 import { LockIcon } from 'lucide-react'
 import { m } from 'motion/react'
 
 import { navItems, type NavItemConfig } from '~/common/constants/navigation'
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { cn } from '~/common/utils/cn'
 import { useAuthStore, type Subscription } from '~/modules/auth'
 
 interface NavItemProps {
@@ -12,10 +12,9 @@ interface NavItemProps {
   currentSubscription: Subscription
   indicatorId: string
   nested?: boolean
-  onNavigate?: () => void
 }
 
-function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }: NavItemProps) {
+function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProps) {
   const isLocked = item.subscriptionRequired ? currentSubscription === 'FREE' : false
 
   return (
@@ -23,7 +22,6 @@ function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }:
       <Link
         to={item.to}
         params={item.params}
-        onClick={onNavigate}
         disabled={isLocked}
         activeOptions={{ exact: true, includeSearch: false }}
         className={cn(
@@ -85,7 +83,6 @@ function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }:
               item={child}
               currentSubscription={currentSubscription}
               indicatorId={indicatorId}
-              onNavigate={onNavigate}
             />
           ))}
         </ul>
@@ -95,11 +92,10 @@ function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }:
 }
 
 interface NavigationProps {
-  onNavigate?: () => void
   indicatorId?: string
 }
 
-export const Navigation = ({ onNavigate, indicatorId = 'nav-active' }: NavigationProps) => {
+export const Navigation = ({ indicatorId = 'nav-active' }: NavigationProps) => {
   const currentSubscription = useAuthStore((state) => state.user?.subscription ?? 'FREE')
 
   return (
@@ -111,7 +107,6 @@ export const Navigation = ({ onNavigate, indicatorId = 'nav-active' }: Navigatio
             item={item}
             currentSubscription={currentSubscription}
             indicatorId={indicatorId}
-            onNavigate={onNavigate}
           />
         ))}
       </BlurMorphSections>

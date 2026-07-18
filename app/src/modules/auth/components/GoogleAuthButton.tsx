@@ -1,7 +1,6 @@
-import { Button } from '@heroui/react'
-
 import GoogleIcon from '~/common/assets/icons/google.svg?react'
 import { env } from '~/common/constants/env'
+import { Button } from '~/common/ui/Button'
 
 export const GoogleAuthButton = () => {
   const handlePress = () => {
@@ -9,8 +8,14 @@ export const GoogleAuthButton = () => {
   }
 
   return (
-    <Button type="button" variant="secondary" fullWidth className="h-11" onPress={handlePress}>
-      <GoogleIcon />
+    <Button
+      fullWidth
+      type="button"
+      variant="secondary"
+      className="h-11"
+      startIcon={<GoogleIcon />}
+      onClick={handlePress}
+    >
       Continue with Google
     </Button>
   )

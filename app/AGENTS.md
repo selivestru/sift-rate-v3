@@ -98,6 +98,20 @@ src/
 
 - **Do not write comments in code** (`//`, `/* */`, JSDoc) unless the user explicitly asked. Code and names should be self-explanatory. Exception — only what the user requested to add.
 - Use TypeScript and strict types; path `~/` maps to `src/` and should be preferred over long relative imports. Use `import type` for type-only imports.
+- **Never import React types** (`ComponentProps`, `ReactNode`, `CSSProperties`, `PropsWithChildren`, `ComponentType`, etc.) from `'react'`. Use the global `React.*` namespace with **no type import** — e.g. `React.ComponentProps<'div'>`, `React.ReactNode`. Runtime APIs still need normal imports: `import { useState, useMemo } from 'react'`. Never write `import * as React from 'react'` only for types.
+
+```ts
+// ✅ good
+export const Input = (props: React.ComponentProps<'input'>) => { ... }
+
+// ❌ bad
+import type { ComponentProps } from 'react'
+export const Input = (props: ComponentProps<'input'>) => { ... }
+
+// ❌ bad
+import * as React from 'react'
+```
+
 - Primary convention: named exports and arrow components/functions (`export const Component = () => {}`). Local route components in existing code use `function RouteComponent()`; do not rewrite that without reason, but follow the primary convention in new shared code.
 - Do not use default export for app code. Exceptions exist for required Vite / oxfmt / oxlint config and TanStack Query devtools — not a template for modules.
 - Use `??` for fallback only on `null`/`undefined`; do not replace intentional falsy logic with it.

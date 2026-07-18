@@ -1,37 +1,35 @@
-import { Button, Drawer } from '@heroui/react'
 import { MenuIcon } from 'lucide-react'
-import { useState } from 'react'
+
+import { Button } from '~/common/ui/Button'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '~/common/ui/Drawer'
 
 import { Navigation } from './Navigation'
 
 export const NavDrawer = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
   return (
-    <>
-      <Button
-        isIconOnly
-        variant="secondary"
-        aria-label="Open menu"
-        onPress={() => setIsOpen(true)}
-        className="hidden max-md:flex"
+    <Drawer>
+      <DrawerTrigger
+        render={
+          <Button
+            // isIconOnly // TODO: fix
+            variant="secondary"
+            aria-label="Open menu"
+            className="hidden max-md:flex"
+          >
+            <MenuIcon />
+          </Button>
+        }
       >
         <MenuIcon />
-      </Button>
-
-      <Drawer.Backdrop isOpen={isOpen} onOpenChange={setIsOpen} variant="blur">
-        <Drawer.Content placement="left">
-          <Drawer.Dialog aria-label="Navigation">
-            <Drawer.CloseTrigger />
-            <Drawer.Header>
-              <Drawer.Heading>Menu</Drawer.Heading>
-            </Drawer.Header>
-            <Drawer.Body>
-              <Navigation indicatorId="nav-drawer" onNavigate={() => setIsOpen(false)} />
-            </Drawer.Body>
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Backdrop>
-    </>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Menu</DrawerTitle>
+        </DrawerHeader>
+        <div className="p-4">
+          <Navigation indicatorId="nav-drawer" />
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }

@@ -9,33 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
-import { Route as AuthRegisterRouteImport } from './routes/auth/register'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
 import { Route as AppLifeRouteRouteImport } from './routes/_app/life/route'
-import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
-import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AppDiscoverIndexRouteImport } from './routes/_app/discover/index'
-import { Route as AppLifeWrappedRouteImport } from './routes/_app/life/wrapped'
-import { Route as AppLifeTimelineRouteImport } from './routes/_app/life/timeline'
-import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
-import { Route as AppLibraryRatingsRouteImport } from './routes/_app/library/ratings'
+import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
 import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
-import { Route as AppLibraryListsIndexRouteImport } from './routes/_app/library/lists/index'
+import { Route as AppLibraryRatingsRouteImport } from './routes/_app/library/ratings'
+import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
+import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
+import { Route as AppLifeTimelineRouteImport } from './routes/_app/life/timeline'
+import { Route as AppLifeWrappedRouteImport } from './routes/_app/life/wrapped'
 import { Route as AppDiscoverMediaTypeIndexRouteImport } from './routes/_app/discover/$mediaType/index'
-import { Route as AppLibraryListsListIdRouteImport } from './routes/_app/library/lists/$listId'
 import { Route as AppDiscoverMediaTypeExternalIdRouteImport } from './routes/_app/discover/$mediaType/$externalId'
+import { Route as AppLibraryListsIndexRouteImport } from './routes/_app/library/lists/index'
+import { Route as AppLibraryListsListIdRouteImport } from './routes/_app/library/lists/$listId'
 
-const WelcomeRoute = WelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -45,25 +40,15 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AppUsernameRoute = AppUsernameRouteImport.update({
   id: '/$username',
@@ -75,39 +60,29 @@ const AppLifeRouteRoute = AppLifeRouteRouteImport.update({
   path: '/life',
   getParentRoute: () => AppRoute,
 } as any)
-const AppLifeIndexRoute = AppLifeIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppLifeRouteRoute,
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
-  id: '/library/',
-  path: '/library/',
-  getParentRoute: () => AppRoute,
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AppDiscoverIndexRoute = AppDiscoverIndexRouteImport.update({
   id: '/discover/',
   path: '/discover/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppLifeWrappedRoute = AppLifeWrappedRouteImport.update({
-  id: '/wrapped',
-  path: '/wrapped',
-  getParentRoute: () => AppLifeRouteRoute,
-} as any)
-const AppLifeTimelineRoute = AppLifeTimelineRouteImport.update({
-  id: '/timeline',
-  path: '/timeline',
-  getParentRoute: () => AppLifeRouteRoute,
-} as any)
-const AppLifeMemoriesRoute = AppLifeMemoriesRouteImport.update({
-  id: '/memories',
-  path: '/memories',
-  getParentRoute: () => AppLifeRouteRoute,
-} as any)
-const AppLibraryRatingsRoute = AppLibraryRatingsRouteImport.update({
-  id: '/library/ratings',
-  path: '/library/ratings',
+const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
@@ -115,10 +90,30 @@ const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
   path: '/library/planned',
   getParentRoute: () => AppRoute,
 } as any)
-const AppLibraryListsIndexRoute = AppLibraryListsIndexRouteImport.update({
-  id: '/library/lists/',
-  path: '/library/lists/',
+const AppLibraryRatingsRoute = AppLibraryRatingsRouteImport.update({
+  id: '/library/ratings',
+  path: '/library/ratings',
   getParentRoute: () => AppRoute,
+} as any)
+const AppLifeIndexRoute = AppLifeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppLifeMemoriesRoute = AppLifeMemoriesRouteImport.update({
+  id: '/memories',
+  path: '/memories',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppLifeTimelineRoute = AppLifeTimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppLifeWrappedRoute = AppLifeWrappedRouteImport.update({
+  id: '/wrapped',
+  path: '/wrapped',
+  getParentRoute: () => AppLifeRouteRoute,
 } as any)
 const AppDiscoverMediaTypeIndexRoute =
   AppDiscoverMediaTypeIndexRouteImport.update({
@@ -126,17 +121,22 @@ const AppDiscoverMediaTypeIndexRoute =
     path: '/discover/$mediaType/',
     getParentRoute: () => AppRoute,
   } as any)
-const AppLibraryListsListIdRoute = AppLibraryListsListIdRouteImport.update({
-  id: '/library/lists/$listId',
-  path: '/library/lists/$listId',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppDiscoverMediaTypeExternalIdRoute =
   AppDiscoverMediaTypeExternalIdRouteImport.update({
     id: '/discover/$mediaType/$externalId',
     path: '/discover/$mediaType/$externalId',
     getParentRoute: () => AppRoute,
   } as any)
+const AppLibraryListsIndexRoute = AppLibraryListsIndexRouteImport.update({
+  id: '/library/lists/',
+  path: '/library/lists/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryListsListIdRoute = AppLibraryListsListIdRouteImport.update({
+  id: '/library/lists/$listId',
+  path: '/library/lists/$listId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -282,13 +282,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/welcome': {
-      id: '/welcome'
-      path: '/welcome'
-      fullPath: '/welcome'
-      preLoaderRoute: typeof WelcomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -303,33 +296,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/': {
       id: '/_app/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
-    }
-    '/auth/register': {
-      id: '/auth/register'
-      path: '/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/forgot-password': {
-      id: '/auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
     }
     '/_app/$username': {
       id: '/_app/$username'
@@ -345,19 +324,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLifeRouteRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/life/': {
-      id: '/_app/life/'
-      path: '/'
-      fullPath: '/life/'
-      preLoaderRoute: typeof AppLifeIndexRouteImport
-      parentRoute: typeof AppLifeRouteRoute
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/_app/library/': {
-      id: '/_app/library/'
-      path: '/library'
-      fullPath: '/library/'
-      preLoaderRoute: typeof AppLibraryIndexRouteImport
-      parentRoute: typeof AppRoute
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_app/discover/': {
       id: '/_app/discover/'
@@ -366,32 +352,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDiscoverIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/life/wrapped': {
-      id: '/_app/life/wrapped'
-      path: '/wrapped'
-      fullPath: '/life/wrapped'
-      preLoaderRoute: typeof AppLifeWrappedRouteImport
-      parentRoute: typeof AppLifeRouteRoute
-    }
-    '/_app/life/timeline': {
-      id: '/_app/life/timeline'
-      path: '/timeline'
-      fullPath: '/life/timeline'
-      preLoaderRoute: typeof AppLifeTimelineRouteImport
-      parentRoute: typeof AppLifeRouteRoute
-    }
-    '/_app/life/memories': {
-      id: '/_app/life/memories'
-      path: '/memories'
-      fullPath: '/life/memories'
-      preLoaderRoute: typeof AppLifeMemoriesRouteImport
-      parentRoute: typeof AppLifeRouteRoute
-    }
-    '/_app/library/ratings': {
-      id: '/_app/library/ratings'
-      path: '/library/ratings'
-      fullPath: '/library/ratings'
-      preLoaderRoute: typeof AppLibraryRatingsRouteImport
+    '/_app/library/': {
+      id: '/_app/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof AppLibraryIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/library/planned': {
@@ -401,12 +366,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLibraryPlannedRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/library/lists/': {
-      id: '/_app/library/lists/'
-      path: '/library/lists'
-      fullPath: '/library/lists/'
-      preLoaderRoute: typeof AppLibraryListsIndexRouteImport
+    '/_app/library/ratings': {
+      id: '/_app/library/ratings'
+      path: '/library/ratings'
+      fullPath: '/library/ratings'
+      preLoaderRoute: typeof AppLibraryRatingsRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_app/life/': {
+      id: '/_app/life/'
+      path: '/'
+      fullPath: '/life/'
+      preLoaderRoute: typeof AppLifeIndexRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/life/memories': {
+      id: '/_app/life/memories'
+      path: '/memories'
+      fullPath: '/life/memories'
+      preLoaderRoute: typeof AppLifeMemoriesRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/life/timeline': {
+      id: '/_app/life/timeline'
+      path: '/timeline'
+      fullPath: '/life/timeline'
+      preLoaderRoute: typeof AppLifeTimelineRouteImport
+      parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/life/wrapped': {
+      id: '/_app/life/wrapped'
+      path: '/wrapped'
+      fullPath: '/life/wrapped'
+      preLoaderRoute: typeof AppLifeWrappedRouteImport
+      parentRoute: typeof AppLifeRouteRoute
     }
     '/_app/discover/$mediaType/': {
       id: '/_app/discover/$mediaType/'
@@ -415,18 +408,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDiscoverMediaTypeIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/library/lists/$listId': {
-      id: '/_app/library/lists/$listId'
-      path: '/library/lists/$listId'
-      fullPath: '/library/lists/$listId'
-      preLoaderRoute: typeof AppLibraryListsListIdRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/discover/$mediaType/$externalId': {
       id: '/_app/discover/$mediaType/$externalId'
       path: '/discover/$mediaType/$externalId'
       fullPath: '/discover/$mediaType/$externalId'
       preLoaderRoute: typeof AppDiscoverMediaTypeExternalIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library/lists/': {
+      id: '/_app/library/lists/'
+      path: '/library/lists'
+      fullPath: '/library/lists/'
+      preLoaderRoute: typeof AppLibraryListsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/library/lists/$listId': {
+      id: '/_app/library/lists/$listId'
+      path: '/library/lists/$listId'
+      fullPath: '/library/lists/$listId'
+      preLoaderRoute: typeof AppLibraryListsListIdRouteImport
       parentRoute: typeof AppRoute
     }
   }

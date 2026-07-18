@@ -1,8 +1,8 @@
-import { cn } from '@heroui/styles'
 import { Link } from '@tanstack/react-router'
 import { SparklesIcon } from 'lucide-react'
 
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { cn } from '~/common/utils/cn'
 import { useAuthStore } from '~/modules/auth'
 
 import { lifeChapters, type LifeChapterKind } from '../constants/life-chapters'

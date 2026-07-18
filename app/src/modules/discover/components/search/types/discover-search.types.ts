@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react'
-
 import type { MediaType } from '~/common/constants/media-type'
 
 export interface DiscoverSearchParams {
@@ -71,7 +69,7 @@ export interface DiscoverSearchConfig<T> {
   pageSize: number
   queryKey: string[]
   queryFn: (params: DiscoverSearchParams) => Promise<DiscoverSearchPageResult<T>>
-  Card: ComponentType<{ item: T }>
-  Skeleton: ComponentType
+  Card: React.ComponentType<{ item: T }>
+  Skeleton: React.ComponentType
   getItemKey: (item: T) => string
 }

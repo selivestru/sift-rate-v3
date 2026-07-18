@@ -1,4 +1,6 @@
-import { Alert } from '@heroui/react'
+import { CircleXIcon } from 'lucide-react'
+
+import { Alert, AlertTitle } from '~/common/ui/Alert'
 
 interface AuthFormAlertProps {
   message: string
@@ -6,11 +8,9 @@ interface AuthFormAlertProps {
 
 export const AuthFormAlert = ({ message }: AuthFormAlertProps) => {
   return (
-    <Alert status="danger">
-      <Alert.Indicator />
-      <Alert.Content>
-        <Alert.Title>{message}</Alert.Title>
-      </Alert.Content>
+    <Alert variant="danger">
+      <CircleXIcon />
+      <AlertTitle>{message}</AlertTitle>
     </Alert>
   )
 }

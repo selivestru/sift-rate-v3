@@ -1,5 +1,6 @@
-import { cn } from '@heroui/styles'
 import { StarIcon } from 'lucide-react'
+
+import { cn } from '../utils/cn'
 
 interface RatingBadgeProps {
   rating: number

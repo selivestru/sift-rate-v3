@@ -1,4 +1,4 @@
-import { Separator } from '@heroui/react'
+import { Separator } from '~/common/ui/Separator'
 
 export const AuthDivider = () => {
   return (

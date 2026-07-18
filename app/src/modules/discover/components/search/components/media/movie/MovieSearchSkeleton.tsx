@@ -1,4 +1,4 @@
-import { Skeleton } from '@heroui/react'
+import { Skeleton } from '~/common/ui/Skeleton'
 
 export const MovieSearchSkeleton = () => {
   return (

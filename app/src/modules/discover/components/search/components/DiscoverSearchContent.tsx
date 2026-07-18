@@ -1,6 +1,5 @@
-import { cn } from '@heroui/styles'
-
 import { mediaTypeMeta } from '~/common/constants/media-type'
+import { cn } from '~/common/utils/cn'
 
 import type { DiscoverSearchConfig } from '../types/discover-search.types'
 import { DiscoverSearchEmpty } from './DiscoverSearchEmpty'

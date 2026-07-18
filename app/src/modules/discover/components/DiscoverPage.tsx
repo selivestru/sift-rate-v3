@@ -1,9 +1,9 @@
-import { cn } from '@heroui/styles'
 import { Link } from '@tanstack/react-router'
 import { ChevronRightIcon, CompassIcon } from 'lucide-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
 import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { cn } from '~/common/utils/cn'
 
 import { mediaTypeDestinations } from '../constants/media-types'
 
