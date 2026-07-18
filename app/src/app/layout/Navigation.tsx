@@ -22,6 +22,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }:
     <BlurMorphSectionsItem>
       <Link
         to={item.to}
+        params={item.params}
         onClick={onNavigate}
         disabled={isLocked}
         activeOptions={{ exact: true, includeSearch: false }}
@@ -79,7 +80,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested, onNavigate }:
         <ul className="border-sidebar-border/60 mt-1 ml-5 flex flex-col gap-0.5 border-l pl-2">
           {item.children.map((child) => (
             <NavItem
-              key={child.to}
+              key={child.params?.mediaType ?? child.to}
               nested
               item={child}
               currentSubscription={currentSubscription}

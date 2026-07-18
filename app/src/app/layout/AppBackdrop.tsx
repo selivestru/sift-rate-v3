@@ -17,9 +17,9 @@ export const AppBackdrop = () => {
         }}
       />
 
-      <div className="auth-blob absolute -top-24 right-[-10%] size-88 rounded-full bg-[oklch(54.09%_0.2471_299.89/0.22)] blur-3xl" />
-      <div className="auth-blob auth-blob-delay absolute top-[38%] left-[-18%] size-72 rounded-full bg-[oklch(54.09%_0.2_320/0.16)] blur-3xl" />
-      <div className="auth-blob auth-blob-delay-2 absolute -right-16 bottom-[-8%] size-80 rounded-full bg-[oklch(62%_0.14_280/0.14)] blur-3xl" />
+      <div className="absolute -top-24 right-[-10%] size-88 rounded-full bg-[oklch(54.09%_0.2471_299.89/0.22)] blur-3xl" />
+      <div className="absolute top-[38%] left-[-18%] size-72 rounded-full bg-[oklch(54.09%_0.2_320/0.16)] blur-3xl" />
+      <div className="absolute -right-16 bottom-[-8%] size-80 rounded-full bg-[oklch(62%_0.14_280/0.14)] blur-3xl" />
 
       <div className="absolute top-[18%] right-[12%] size-28 rounded-full border border-[oklch(54.09%_0.2_299.89/0.14)] opacity-70" />
       <div className="absolute top-[22%] right-[16%] size-16 rounded-full border border-[oklch(54.09%_0.18_320/0.12)] opacity-50" />

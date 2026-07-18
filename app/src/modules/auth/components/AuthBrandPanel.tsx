@@ -40,9 +40,9 @@ export const AuthBrandPanel = () => {
   return (
     <div className="relative flex h-full flex-col justify-between overflow-hidden p-8 lg:p-12">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="auth-blob absolute -top-24 -left-16 size-72 rounded-full bg-[oklch(54.09%_0.2471_299.89/0.28)] blur-3xl" />
-        <div className="auth-blob auth-blob-delay absolute top-1/3 -right-20 size-80 rounded-full bg-[oklch(54.09%_0.2_320/0.2)] blur-3xl" />
-        <div className="auth-blob absolute -bottom-20 left-1/4 size-64 rounded-full bg-[oklch(65%_0.12_280/0.18)] blur-3xl" />
+        <div className="absolute -top-24 -left-16 size-72 rounded-full bg-[oklch(54.09%_0.2471_299.89/0.28)] blur-3xl" />
+        <div className="absolute top-1/3 -right-20 size-80 rounded-full bg-[oklch(54.09%_0.2_320/0.2)] blur-3xl" />
+        <div className="absolute -bottom-20 left-1/4 size-64 rounded-full bg-[oklch(65%_0.12_280/0.18)] blur-3xl" />
       </div>
 
       <div className="z-px relative">

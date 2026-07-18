@@ -19,6 +19,34 @@ export const MEDIA_TYPES = {
 
 export type MediaType = (typeof MEDIA_TYPES)[keyof typeof MEDIA_TYPES]
 
+export const MEDIA_TYPE_SLUGS = {
+  movie: MEDIA_TYPES.MOVIE,
+  tv_show: MEDIA_TYPES.TV_SHOW,
+  game: MEDIA_TYPES.GAME,
+  book: MEDIA_TYPES.BOOK,
+  album: MEDIA_TYPES.ALBUM,
+  track: MEDIA_TYPES.TRACK,
+} as const
+
+export type MediaTypeSlug = keyof typeof MEDIA_TYPE_SLUGS
+
+export const mediaTypeToSlug = {
+  [MEDIA_TYPES.MOVIE]: 'movie',
+  [MEDIA_TYPES.TV_SHOW]: 'tv_show',
+  [MEDIA_TYPES.GAME]: 'game',
+  [MEDIA_TYPES.BOOK]: 'book',
+  [MEDIA_TYPES.ALBUM]: 'album',
+  [MEDIA_TYPES.TRACK]: 'track',
+} as const satisfies Record<MediaType, MediaTypeSlug>
+
+export const isMediaTypeSlug = (value: string): value is MediaTypeSlug => {
+  return value in MEDIA_TYPE_SLUGS
+}
+
+export const getMediaTypeFromSlug = (slug: MediaTypeSlug): MediaType => {
+  return MEDIA_TYPE_SLUGS[slug]
+}
+
 export interface MediaTypeMeta {
   type: MediaType
   label: string

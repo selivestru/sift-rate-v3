@@ -1,6 +1,6 @@
 import type { z } from 'zod'
 
-export function getStorageItem<T>(key: string, schema: z.ZodType<T>, fallback: T): T {
+export const getStorageItem = <T>(key: string, schema: z.ZodType<T>, fallback: T): T => {
   try {
     const raw = localStorage.getItem(key)
     if (raw === null) return fallback
@@ -10,13 +10,13 @@ export function getStorageItem<T>(key: string, schema: z.ZodType<T>, fallback: T
   }
 }
 
-export function setStorageItem<T>(key: string, value: T): void {
+export const setStorageItem = <T>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value))
   } catch {}
 }
 
-export function removeStorageItem(key: string): void {
+export const removeStorageItem = (key: string): void => {
   try {
     localStorage.removeItem(key)
   } catch {}

@@ -14,7 +14,7 @@ import {
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
 
-import { mediaTypeMeta } from './media-type'
+import { mediaTypeMeta, mediaTypeToSlug, type MediaTypeSlug } from './media-type'
 
 export interface NavItemConfig {
   to: keyof FileRoutesByTo
@@ -23,6 +23,7 @@ export interface NavItemConfig {
   description: string
   subscriptionRequired?: boolean
   color: string
+  params?: { mediaType: MediaTypeSlug }
   children?: NavItemConfig[]
 }
 
@@ -42,42 +43,48 @@ export const navItems: NavItemConfig[] = [
     color: '#14B8A6',
     children: [
       {
-        to: '/discover/movie',
+        to: '/discover/$mediaType',
+        params: { mediaType: mediaTypeToSlug.MOVIE },
         label: mediaTypeMeta.MOVIE.label,
         icon: mediaTypeMeta.MOVIE.icon,
         description: 'Films to watch and archive',
         color: mediaTypeMeta.MOVIE.color,
       },
       {
-        to: '/discover/tv_show',
+        to: '/discover/$mediaType',
+        params: { mediaType: mediaTypeToSlug.TV_SHOW },
         label: mediaTypeMeta.TV_SHOW.label,
         icon: mediaTypeMeta.TV_SHOW.icon,
         description: 'Series and seasons',
         color: mediaTypeMeta.TV_SHOW.color,
       },
       {
-        to: '/discover/game',
+        to: '/discover/$mediaType',
+        params: { mediaType: mediaTypeToSlug.GAME },
         label: mediaTypeMeta.GAME.label,
         icon: mediaTypeMeta.GAME.icon,
         description: 'Playthroughs ahead',
         color: mediaTypeMeta.GAME.color,
       },
       {
-        to: '/discover/book',
+        to: '/discover/$mediaType',
+        params: { mediaType: mediaTypeToSlug.BOOK },
         label: mediaTypeMeta.BOOK.label,
         icon: mediaTypeMeta.BOOK.icon,
         description: 'Pages and shelves',
         color: mediaTypeMeta.BOOK.color,
       },
       {
-        to: '/discover/album',
+        to: '/discover/$mediaType',
+        params: { mediaType: mediaTypeToSlug.ALBUM },
         label: mediaTypeMeta.ALBUM.label,
         icon: mediaTypeMeta.ALBUM.icon,
         description: 'Full listens',
         color: mediaTypeMeta.ALBUM.color,
       },
       {
-        to: '/discover/track',
+        to: '/discover/$mediaType',
+        params: { mediaType: mediaTypeToSlug.TRACK },
         label: mediaTypeMeta.TRACK.label,
         icon: mediaTypeMeta.TRACK.icon,
         description: 'Single moments',
