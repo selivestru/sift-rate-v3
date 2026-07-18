@@ -7,12 +7,11 @@ const PASSWORD_DIGIT = /\d/
 const PASSWORD_SPECIAL = /[^A-Za-z0-9]/
 
 export const emailSchema = z
-  .string()
+  .email()
   .trim()
   .min(1, 'Email is required')
   .max(254, 'Email must be at most 254 characters')
   .toLowerCase()
-  .email('Enter a valid email address')
 
 export const usernameSchema = z
   .string()

@@ -21,11 +21,8 @@ export const ForgotPasswordForm = () => {
           />
         </BlurMorphSectionsItem>
         <BlurMorphSectionsItem>
-          <p className="text-muted text-center text-sm">
-            <Link
-              to="/auth/login"
-              className="text-foreground hover:text-accent font-medium transition-colors"
-            >
+          <p className="text-muted-foreground text-center text-sm">
+            <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
               Back to sign in
             </Link>
           </p>
@@ -62,15 +59,13 @@ export const ForgotPasswordForm = () => {
         </form>
       </BlurMorphSectionsItem>
 
-      <BlurMorphSectionsItem>
-        <p className="text-muted text-center text-sm">
-          <Link
-            to="/auth/login"
-            className="text-foreground hover:text-accent font-medium transition-colors"
-          >
-            Back to sign in
-          </Link>
-        </p>
+      <BlurMorphSectionsItem className="text-center">
+        <Link
+          to="/auth/login"
+          className="hover:text-primary text-muted-foreground text-sm font-medium transition-colors"
+        >
+          Back to sign in
+        </Link>
       </BlurMorphSectionsItem>
     </BlurMorphSections>
   )

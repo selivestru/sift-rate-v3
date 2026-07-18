@@ -11,7 +11,7 @@ export const NavDrawer = () => {
       <DrawerTrigger
         render={
           <Button
-            // isIconOnly // TODO: fix
+            isIconOnly
             variant="secondary"
             aria-label="Open menu"
             className="hidden max-md:flex"

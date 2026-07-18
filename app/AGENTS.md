@@ -136,6 +136,8 @@ Client variables (must use `VITE_` prefix):
 - Prefer restraint: semantic tokens, large soft radii, clear hierarchy, minimal chrome outside the shell.
 - Product copy and UI should support “media as life”, not only ratings tables.
 
+Interactive control patterns (sizes, variants, props) are documented — see [`DESIGN.md`](./DESIGN.md).
+
 ## Feature modules
 
 Feature code belongs in `src/modules/<name>/`, not in routes or random `components/` trees.

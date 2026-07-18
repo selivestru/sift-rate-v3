@@ -41,7 +41,7 @@ export const LoginForm = () => {
           labelEnd={
             <Link
               to="/auth/forgot-password"
-              className="text-muted hover:text-foreground text-xs font-medium transition-colors"
+              className="text-muted-foreground hover:text-foreground text-xs font-medium transition-colors"
             >
               Forgot password?
             </Link>
@@ -54,12 +54,9 @@ export const LoginForm = () => {
         </Button>
       </form>
 
-      <p className="text-muted text-center text-sm">
+      <p className="text-muted-foreground text-center text-sm">
         Don&apos;t have an account?{' '}
-        <Link
-          to="/auth/register"
-          className="text-foreground hover:text-accent font-medium transition-colors"
-        >
+        <Link to="/auth/register" className="hover:text-primary font-medium transition-colors">
           Sign up
         </Link>
       </p>

@@ -25,16 +25,18 @@ export const DiscoverPage = () => {
             <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(58%_0.11_165/0.14)] text-[oklch(42%_0.1_165)] dark:text-[oklch(78%_0.09_165)]">
               <CompassIcon className="size-4" strokeWidth={1.75} />
             </span>
-            <p className="text-muted text-xs font-medium tracking-wide uppercase">Discover</p>
+            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              Discover
+            </p>
           </div>
         </BlurMorphSectionsItem>
         <BlurMorphSectionsItem>
-          <h1 className="text-foreground text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
             Explore the catalog
           </h1>
         </BlurMorphSectionsItem>
         <BlurMorphSectionsItem>
-          <p className="text-muted max-w-md text-sm leading-relaxed text-pretty">
+          <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty">
             Pick a medium and start searching. Six doors into one endless library.
           </p>
         </BlurMorphSectionsItem>
@@ -56,7 +58,7 @@ export const DiscoverPage = () => {
                   'transition-all duration-300 ease-out',
                   'hover:-translate-y-0.5 hover:border-(--media-color)/50 hover:bg-(--media-color)/5',
                   'active:translate-y-0 active:scale-[0.99]',
-                  'focus-visible:ring-accent/40 focus-visible:z-px focus-visible:ring-2 focus-visible:outline-none',
+                  'focus-visible:ring-primary/40 focus-visible:z-px focus-visible:ring-2 focus-visible:outline-none',
                 )}
               >
                 <div className="z-px relative flex items-start justify-between gap-3">
@@ -70,17 +72,17 @@ export const DiscoverPage = () => {
                     <Icon className="size-5" strokeWidth={1.75} />
                   </span>
                   <ChevronRightIcon
-                    className="text-muted size-4 shrink-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-(--media-color)"
+                    className="text-muted-foreground size-4 shrink-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-(--media-color)"
                     strokeWidth={1.75}
                     aria-hidden
                   />
                 </div>
 
                 <div className="z-px relative mt-8 space-y-1">
-                  <p className="text-foreground text-lg font-semibold tracking-tight">
-                    {meta.label}
+                  <p className="text-lg font-semibold tracking-tight">{meta.label}</p>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {item.description}
                   </p>
-                  <p className="text-muted text-sm leading-relaxed">{item.description}</p>
                 </div>
               </Link>
             </BlurMorphSectionsItem>
@@ -90,7 +92,7 @@ export const DiscoverPage = () => {
 
       <BlurMorphSections className="z-px relative">
         <BlurMorphSectionsItem>
-          <p className="text-muted border-border/60 border-t pt-4 text-xs leading-relaxed">
+          <p className="text-muted-foreground border-border/60 border-t pt-4 text-xs leading-relaxed">
             Discover is for finding something new. Your ratings and lists live in Library.
           </p>
         </BlurMorphSectionsItem>

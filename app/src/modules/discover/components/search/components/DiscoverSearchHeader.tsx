@@ -36,16 +36,18 @@ export const DiscoverSearchHeader = ({
         >
           <Icon className="size-4" strokeWidth={1.75} />
         </span>
-        <p className="text-muted text-xs font-medium tracking-wide uppercase">{meta.label}</p>
+        <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+          {meta.label}
+        </p>
       </div>
 
-      <h1 className="text-foreground text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
-        {title}
-      </h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">{title}</h1>
 
-      <p className="text-muted max-w-md text-sm leading-relaxed text-pretty">{description}</p>
+      <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty">
+        {description}
+      </p>
 
-      <p className="text-muted h-4 text-xs tabular-nums">
+      <p className="text-muted-foreground h-4 text-xs tabular-nums">
         {resultCount !== undefined &&
           (resultCount === 0
             ? 'No results'

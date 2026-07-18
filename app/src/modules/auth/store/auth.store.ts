@@ -16,8 +16,9 @@ interface AuthActions {
 type Store = AuthState & AuthActions
 
 export const useAuthStore = create<Store>()((set) => ({
+  // TODO: remove
+  // user: null,
   user: {
-    // TODO: remove
     id: '1',
     email: 'sifmeop@gmail.com',
     username: 'sifmeop',

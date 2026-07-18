@@ -6,8 +6,8 @@ interface AuthFormHeaderProps {
 export const AuthFormHeader = ({ title, subtitle }: AuthFormHeaderProps) => {
   return (
     <div className="space-y-1.5">
-      <h1 className="text-foreground text-2xl font-semibold tracking-tight">{title}</h1>
-      <p className="text-muted text-sm leading-relaxed">{subtitle}</p>
+      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+      <p className="text-muted-foreground text-sm leading-relaxed">{subtitle}</p>
     </div>
   )
 }

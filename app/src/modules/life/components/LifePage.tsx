@@ -33,16 +33,18 @@ export const LifePage = () => {
             <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
               <SparklesIcon className="size-4" strokeWidth={1.75} />
             </span>
-            <p className="text-muted text-xs font-medium tracking-wide uppercase">Life</p>
+            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              Life
+            </p>
           </div>
         </BlurMorphSectionsItem>
         <BlurMorphSectionsItem>
-          <h1 className="text-foreground max-w-lg text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+          <h1 className="max-w-lg text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
             Your media life
           </h1>
         </BlurMorphSectionsItem>
         <BlurMorphSectionsItem>
-          <p className="text-muted max-w-md text-sm leading-relaxed text-pretty sm:text-base">
+          <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty sm:text-base">
             {username
               ? `A warm record of the films, shows, games, books, and music that shaped ${username}.`
               : 'A warm record of the media that shaped you.'}
@@ -57,7 +59,7 @@ export const LifePage = () => {
               to={chapter.to}
               className={cn(
                 'group border-border/50 bg-surface/50 relative flex h-full min-h-40 flex-col overflow-hidden rounded-3xl border p-5 transition-colors duration-300',
-                'hover:border-border hover:bg-surface focus-visible:ring-accent/40 focus-visible:ring-2 focus-visible:outline-none',
+                'hover:border-border hover:bg-surface focus-visible:ring-primary/40 focus-visible:ring-2 focus-visible:outline-none',
                 'sm:min-h-44 sm:p-6',
               )}
             >
@@ -97,7 +99,7 @@ export const LifePage = () => {
                   <span className="flex size-9 items-center justify-center rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-300">
                     <chapter.icon className="size-4" strokeWidth={1.75} />
                   </span>
-                  <span className="text-muted text-[11px] font-medium tracking-wide uppercase">
+                  <span className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
                     {chapter.motif}
                   </span>
                 </div>
@@ -105,13 +107,13 @@ export const LifePage = () => {
                 <div className="mt-auto space-y-1.5 pt-8">
                   <p
                     className={cn(
-                      'text-foreground font-semibold tracking-tight',
+                      'font-semibold tracking-tight',
                       chapter.kind === 'timeline' ? 'text-2xl sm:text-3xl' : 'text-xl',
                     )}
                   >
                     {chapter.label}
                   </p>
-                  <p className="text-muted text-sm leading-relaxed text-pretty">
+                  <p className="text-muted-foreground text-sm leading-relaxed text-pretty">
                     {chapter.description}
                   </p>
                 </div>
@@ -123,7 +125,7 @@ export const LifePage = () => {
 
       <BlurMorphSections className="z-px relative">
         <BlurMorphSectionsItem>
-          <p className="text-muted text-xs leading-relaxed">
+          <p className="text-muted-foreground text-xs leading-relaxed">
             Life is the story. Library keeps the shelves. Discover finds the next chapter.
           </p>
         </BlurMorphSectionsItem>

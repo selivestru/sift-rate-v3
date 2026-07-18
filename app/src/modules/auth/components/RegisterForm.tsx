@@ -76,12 +76,9 @@ export const RegisterForm = () => {
       </BlurMorphSectionsItem>
 
       <BlurMorphSectionsItem>
-        <p className="text-muted text-center text-sm">
+        <p className="text-muted-foreground text-center text-sm">
           Already have an account?{' '}
-          <Link
-            to="/auth/login"
-            className="text-foreground hover:text-accent font-medium transition-colors"
-          >
+          <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
             Sign in
           </Link>
         </p>

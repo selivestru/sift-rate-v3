@@ -25,12 +25,12 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
         disabled={isLocked}
         activeOptions={{ exact: true, includeSearch: false }}
         className={cn(
-          'text-muted relative flex items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition-colors duration-300',
-          'focus-visible:ring-sidebar-ring/40 focus-visible:ring-offset-sidebar focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-          nested ? 'text-muted/80 h-9' : 'h-10',
+          'text-muted-foreground relative flex items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition-colors duration-300',
+          'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          nested ? 'h-9' : 'h-10',
           isLocked
             ? 'cursor-not-allowed opacity-50'
-            : 'hover:bg-accent-soft/40 hover:text-sidebar-accent-foreground',
+            : 'hover:bg-primary-soft hover:text-foreground',
         )}
       >
         {({ isActive }) => (
@@ -38,7 +38,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
             {isActive && (
               <m.span
                 layoutId={indicatorId}
-                className="bg-accent-soft absolute inset-0 rounded-xl"
+                className="bg-primary-soft absolute inset-0 rounded-xl"
                 transition={{
                   type: 'spring',
                   stiffness: 380,
@@ -50,7 +50,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
             {isActive && (
               <m.span
                 layoutId={`${indicatorId}-bar`}
-                className="bg-accent absolute top-1/2 left-0.5 z-10 h-4 w-0.5 -translate-y-1/2 rounded-full"
+                className="bg-primary z-px absolute top-1/2 left-0.5 h-4 w-0.5 -translate-y-1/2 rounded-full"
                 transition={{
                   type: 'spring',
                   stiffness: 380,
@@ -60,22 +60,16 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
               />
             )}
             <item.icon
-              className={cn(
-                'relative z-10 size-5 shrink-0',
-                nested && 'size-4',
-                isActive && 'text-foreground',
-              )}
+              className={cn('size-5 shrink-0', nested && 'size-4', isActive && 'text-foreground')}
             />
-            <span className={cn('relative z-10 flex-1', isActive && 'text-foreground')}>
-              {item.label}
-            </span>
-            {isLocked && <LockIcon className="relative z-10 size-4 shrink-0 opacity-70" />}
+            <span className={cn('flex-1', isActive && 'text-foreground')}>{item.label}</span>
+            {isLocked && <LockIcon className="size-4 shrink-0 opacity-70" />}
           </>
         )}
       </Link>
 
       {item.children && (
-        <ul className="border-sidebar-border/60 mt-1 ml-5 flex flex-col gap-0.5 border-l pl-2">
+        <ul className="border-border/60 mt-1 ml-5 flex flex-col gap-0.5 border-l pl-2">
           {item.children.map((child) => (
             <NavItem
               key={child.params?.mediaType ?? child.to}

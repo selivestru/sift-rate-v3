@@ -48,23 +48,23 @@ export const AuthBrandPanel = () => {
 
       <div className="z-px relative">
         <div className="flex items-center gap-2.5">
-          <span className="bg-accent text-accent-foreground flex size-9 items-center justify-center rounded-xl text-sm font-semibold">
+          <span className="bg-primary flex size-9 items-center justify-center rounded-xl text-sm font-semibold">
             C
           </span>
-          <span className="text-foreground text-lg font-semibold tracking-tight">SiftRate</span>
+          <span className="text-lg font-semibold tracking-tight">SiftRate</span>
         </div>
       </div>
 
       <div className="z-px relative max-w-lg space-y-8">
         <div className="space-y-3">
-          <h1 className="text-foreground text-3xl font-semibold tracking-tight text-balance lg:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-balance lg:text-4xl">
             Media is part of your life
           </h1>
-          <p className="text-muted text-base leading-relaxed text-pretty lg:text-[1.05rem]">
+          <p className="text-muted-foreground text-base leading-relaxed text-pretty lg:text-[1.05rem]">
             SiftRate is a social media tracking platform. Build a personal history through the
             films, shows, games, books, and music that shaped you.
           </p>
-          <p className="text-muted text-sm leading-relaxed text-pretty lg:text-base">
+          <p className="text-muted-foreground text-sm leading-relaxed text-pretty lg:text-base">
             Rate and review, then explore what others wrote and join the conversation with comments.
           </p>
         </div>
@@ -72,12 +72,7 @@ export const AuthBrandPanel = () => {
         <ul className="flex flex-wrap gap-2">
           {mediaTypes.map((label) => (
             <li key={label}>
-              <Badge
-                variant="secondary"
-                className="bg-surface/70 border-border/60 border backdrop-blur-sm"
-              >
-                {label}
-              </Badge>
+              <Badge>{label}</Badge>
             </li>
           ))}
         </ul>
@@ -85,19 +80,19 @@ export const AuthBrandPanel = () => {
         <ul className="space-y-4">
           {capabilities.map(({ icon: Icon, title, description }) => (
             <li key={title} className="flex gap-3">
-              <span className="bg-accent/12 text-accent flex size-9 shrink-0 items-center justify-center rounded-xl">
+              <span className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-xl">
                 <Icon className="size-4" strokeWidth={1.75} />
               </span>
               <div className="min-w-0 space-y-0.5 pt-0.5">
-                <p className="text-foreground text-sm font-medium">{title}</p>
-                <p className="text-muted text-sm leading-relaxed">{description}</p>
+                <p className="text-sm font-medium">{title}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
               </div>
             </li>
           ))}
         </ul>
       </div>
 
-      <p className="text-muted z-px relative text-xs">
+      <p className="text-muted-foreground z-px relative text-xs">
         Your archive. Their reviews. Shared moments.
       </p>
     </div>

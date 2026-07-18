@@ -80,7 +80,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
             className={cn(
               'flex size-9 items-center justify-center rounded-xl text-sm font-medium transition-all duration-300 ease-out cursor-pointer',
               p === page
-                ? 'bg-accent/15 border-accent/30 text-accent scale-102 border shadow-sm'
+                ? 'bg-primary/15 border-primary/30 text-primary scale-102 border shadow-sm'
                 : 'text-muted-foreground hover:bg-foreground/10 hover:text-foreground hover:scale-102 active:scale-97',
             )}
             aria-current={p === page ? 'page' : undefined}

@@ -2,7 +2,7 @@ import { SearchIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '~/common/ui/Button'
-import { InputGroup, InputGroupAddon, InputGroupInput } from '~/common/ui/InputGroup'
+import { Input } from '~/common/ui/Input'
 import { Spinner } from '~/common/ui/Spinner'
 
 interface DiscoverSearchFormProps {
@@ -30,32 +30,29 @@ export const DiscoverSearchForm = ({
   }
 
   const handleClear = () => {
-    onSearch('')
+    setDraft('')
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid w-full grid-cols-1 grid-rows-2 gap-2 sm:grid-cols-[1fr_150px] sm:grid-rows-1"
+      className="grid w-full grid-cols-1 grid-rows-2 gap-2 sm:grid-cols-[1fr_120px] sm:grid-rows-1"
     >
-      <InputGroup>
-        <InputGroupAddon align="inline-start">
-          <SearchIcon />
-        </InputGroupAddon>
-        <InputGroupInput
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          placeholder={placeholder}
-        />
-        <InputGroupAddon align="inline-end">
-          <Button onClick={handleClear}>
-            <XIcon className="size-4" />
-          </Button>
-        </InputGroupAddon>
-      </InputGroup>
+      <Input
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        endIcon={
+          draft.length > 0 && (
+            <Button isIconOnly variant="ghost" size="sm" onClick={handleClear}>
+              <XIcon className="size-4" />
+            </Button>
+          )
+        }
+        placeholder={placeholder}
+      />
 
-      <Button fullWidth type="submit" size="lg" isDisabled={!canSubmit || isFetching}>
-        {isFetching ? <Spinner color="current" /> : <SearchIcon className="size-4" />}
+      <Button fullWidth type="submit" isDisabled={!canSubmit || isFetching}>
+        {isFetching ? <Spinner className="text-foreground" /> : <SearchIcon className="size-4" />}
         Search
       </Button>
     </form>
