@@ -7,7 +7,6 @@ import {
   HomeIcon,
   LibraryIcon,
   ListIcon,
-  LoaderPinwheelIcon,
   SparklesIcon,
   StarIcon,
   type LucideIcon,
@@ -149,12 +148,5 @@ export const navItems: NavItemConfig[] = [
         subscriptionRequired: true,
       },
     ],
-  },
-  {
-    to: '/wheel',
-    label: 'Wheel',
-    icon: LoaderPinwheelIcon,
-    description: 'Decision wheel',
-    color: '#EC4899',
   },
 ]

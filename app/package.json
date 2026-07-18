@@ -10,7 +10,7 @@
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --check",
     "fmt:fix": "oxfmt",
-    "preview": "vite preview",
+    "preview": "vite preview --host 0.0.0.0",
     "doctor": "npx react-doctor@latest",
     "oxc": "bun format:fix && bun lint:fix"
   },

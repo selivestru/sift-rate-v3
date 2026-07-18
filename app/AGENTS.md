@@ -238,7 +238,7 @@ Item motion: opacity + blur + slight scale (`0.98` → `1`), duration ~0.3s.
 
 Single source: `src/common/constants/navigation.ts`.
 
-Top-level areas: Home, Discover, Library (Ratings / Lists / Planned), Life (Timeline / Wrapped / Memories, subscription-gated), Wheel.
+Top-level areas: Home, Discover, Library (Ratings / Lists / Planned), Life (Timeline / Wrapped / Memories, subscription-gated).
 
 - `subscriptionRequired` items show a lock and disable navigation for `FREE` users.
 - Life route group also guards in `beforeLoad` (redirect to `/` when free / unauthenticated).
@@ -272,7 +272,7 @@ Rules:
 
 - Public imports from other layers should go through the module barrel when practical.
 - Routes stay thin: load guards + render module/page components.
-- New domains (library, discover, wheel, life) should follow the same shape rather than inventing a new folder taxonomy.
+- New domains (library, discover, life) should follow the same shape rather than inventing a new folder taxonomy.
 
 ## Routes and product areas
 
@@ -286,7 +286,6 @@ File routes: `src/app/routes/`. Many authenticated destinations are still scaffo
 | Discover | `/discover`, `/discover/{movie\|tv_show\|game\|book\|album\|track}`, `.../$externalId`         | Find media to archive by type and external id                  | Route scaffolds            |
 | Library  | `/library`, `/library/ratings`, `/library/lists`, `/library/lists/$listId`, `/library/planned` | Personal library, ratings archive, ranked lists, planned queue | Route scaffolds            |
 | Life     | `/life`, `/life/timeline`, `/life/wrapped`, `/life/memories`                                   | Media-life story (timeline, recaps, memories); paid            | Guards + scaffolds         |
-| Wheel    | `/wheel`                                                                                       | Personal decision wheel tool                                   | Stub page                  |
 | Profile  | `/$username`                                                                                   | Public/personal profile by username                            | Stub                       |
 
 Auth notes:

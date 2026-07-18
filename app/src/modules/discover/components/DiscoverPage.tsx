@@ -55,7 +55,7 @@ export const DiscoverPage = () => {
                 className={cn(
                   'group border-border/50 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border p-4 sm:p-5 bg-surface/50',
                   'transition-all duration-300 ease-out',
-                  'hover:-translate-y-0.5 hover:border-(--media-color)/50',
+                  'hover:-translate-y-0.5 hover:border-(--media-color)/50 hover:bg-(--media-color)/5',
                   'active:translate-y-0 active:scale-[0.99]',
                   'focus-visible:ring-accent/40 focus-visible:z-px focus-visible:ring-2 focus-visible:outline-none',
                 )}

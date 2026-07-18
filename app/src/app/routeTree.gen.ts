@@ -16,7 +16,6 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
-import { Route as AppWheelRouteImport } from './routes/_app/wheel'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
 import { Route as AppLifeRouteRouteImport } from './routes/_app/life/route'
 import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
@@ -75,11 +74,6 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
   getParentRoute: () => AuthRouteRoute,
-} as any)
-const AppWheelRoute = AppWheelRouteImport.update({
-  id: '/wheel',
-  path: '/wheel',
-  getParentRoute: () => AppRoute,
 } as any)
 const AppUsernameRoute = AppUsernameRouteImport.update({
   id: '/$username',
@@ -214,7 +208,6 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/life': typeof AppLifeRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
-  '/wheel': typeof AppWheelRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -245,7 +238,6 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/$username': typeof AppUsernameRoute
-  '/wheel': typeof AppWheelRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -280,7 +272,6 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/_app/life': typeof AppLifeRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
-  '/_app/wheel': typeof AppWheelRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -316,7 +307,6 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/life'
     | '/$username'
-    | '/wheel'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
@@ -347,7 +337,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/welcome'
     | '/$username'
-    | '/wheel'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
@@ -381,7 +370,6 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/_app/life'
     | '/_app/$username'
-    | '/_app/wheel'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
@@ -466,13 +454,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/forgot-password'
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof AuthRouteRoute
-    }
-    '/_app/wheel': {
-      id: '/_app/wheel'
-      path: '/wheel'
-      fullPath: '/wheel'
-      preLoaderRoute: typeof AppWheelRouteImport
-      parentRoute: typeof AppRoute
     }
     '/_app/$username': {
       id: '/_app/$username'
@@ -682,7 +663,6 @@ const AppLifeRouteRouteWithChildren = AppLifeRouteRoute._addFileChildren(
 interface AppRouteChildren {
   AppLifeRouteRoute: typeof AppLifeRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
-  AppWheelRoute: typeof AppWheelRoute
   AppIndexRoute: typeof AppIndexRoute
   AppLibraryPlannedRoute: typeof AppLibraryPlannedRoute
   AppLibraryRatingsRoute: typeof AppLibraryRatingsRoute
@@ -707,7 +687,6 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppLifeRouteRoute: AppLifeRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
-  AppWheelRoute: AppWheelRoute,
   AppIndexRoute: AppIndexRoute,
   AppLibraryPlannedRoute: AppLibraryPlannedRoute,
   AppLibraryRatingsRoute: AppLibraryRatingsRoute,
