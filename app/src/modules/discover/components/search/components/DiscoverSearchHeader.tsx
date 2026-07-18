@@ -18,14 +18,6 @@ export const DiscoverSearchHeader = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-90"
-        aria-hidden
-        style={{
-          background: `radial-gradient(ellipse 90% 80% at 18% 0%, color-mix(in oklab, ${meta.color} 22%, transparent), transparent 70%), radial-gradient(ellipse 70% 55% at 92% 8%, color-mix(in oklab, ${meta.color} 10%, transparent), transparent 65%)`,
-        }}
-      />
-
       <div className="flex items-center gap-2.5">
         <span
           className="flex size-9 items-center justify-center rounded-xl"

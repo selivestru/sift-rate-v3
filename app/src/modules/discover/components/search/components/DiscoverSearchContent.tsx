@@ -1,4 +1,5 @@
 import { mediaTypeMeta } from '~/common/constants/media-type'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { cn } from '~/common/utils/cn'
 
 import type { DiscoverSearchConfig } from '../types/discover-search.types'
@@ -52,31 +53,35 @@ export const DiscoverSearchContent = <T,>({
 
   return (
     <div aria-live="polite" aria-busy={isFetching}>
-      {state === 'idle' && <DiscoverSearchIdle mediaLabel={mediaLabel} />}
+      <BlurMorph.Presence stateKey={state}>
+        {state === 'idle' && <DiscoverSearchIdle mediaLabel={mediaLabel} />}
 
-      {state === 'loading' && (
-        <div className={config.resultsClassName}>
-          {Array.from({ length: skeletonCount }, (_, index) => (
-            <Skeleton key={index} />
-          ))}
-        </div>
-      )}
+        {state === 'loading' && (
+          <div className={config.resultsClassName}>
+            {Array.from({ length: skeletonCount }, (_, index) => (
+              <Skeleton key={index} />
+            ))}
+          </div>
+        )}
 
-      {state === 'error' && <DiscoverSearchError onRetry={onRetry} />}
+        {state === 'error' && <DiscoverSearchError onRetry={onRetry} />}
 
-      {state === 'empty' && <DiscoverSearchEmpty query={query} />}
+        {state === 'empty' && <DiscoverSearchEmpty query={query} />}
 
-      {state === 'results' && (
-        <div
-          className={cn(config.resultsClassName, {
-            'animate-pulse pointer-events-none': isPlaceholderData,
-          })}
-        >
-          {items.map((item) => (
-            <Card key={config.getItemKey(item)} item={item} />
-          ))}
-        </div>
-      )}
+        {state === 'results' && (
+          <BlurMorph.List
+            className={cn(config.resultsClassName, {
+              'animate-pulse pointer-events-none': isPlaceholderData,
+            })}
+          >
+            {items.map((item) => (
+              <BlurMorph.ListItem key={config.getItemKey(item)}>
+                <Card item={item} />
+              </BlurMorph.ListItem>
+            ))}
+          </BlurMorph.List>
+        )}
+      </BlurMorph.Presence>
     </div>
   )
 }

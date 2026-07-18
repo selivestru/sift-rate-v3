@@ -1,16 +1,16 @@
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 
 import { AuthBrandPanel } from './AuthBrandPanel'
 
 export const AuthShell = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="relative min-h-dvh w-full overflow-hidden">
-      <BlurMorphSections className="relative grid min-h-dvh w-full lg:grid-cols-2">
-        <BlurMorphSectionsItem className="border-border/50 bg-surface-secondary/40 relative hidden border-r lg:block">
+      <BlurMorph.Sections className="relative grid min-h-dvh w-full lg:grid-cols-2">
+        <BlurMorph.SectionsItem className="border-border/50 bg-surface-secondary/40 relative hidden border-r lg:block">
           <AuthBrandPanel />
-        </BlurMorphSectionsItem>
+        </BlurMorph.SectionsItem>
 
-        <BlurMorphSectionsItem className="relative flex min-h-dvh flex-col">
+        <BlurMorph.SectionsItem className="relative flex min-h-dvh flex-col">
           <header className="border-border/40 z-px relative flex items-center gap-2.5 border-b px-5 py-4 lg:hidden">
             <span className="bg-primary flex size-8 items-center justify-center rounded-lg text-xs font-semibold">
               C
@@ -32,8 +32,8 @@ export const AuthShell = ({ children }: React.PropsWithChildren) => {
               {children}
             </div>
           </main>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
+        </BlurMorph.SectionsItem>
+      </BlurMorph.Sections>
     </div>
   )
 }

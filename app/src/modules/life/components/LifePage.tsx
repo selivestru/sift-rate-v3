@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { SparklesIcon } from 'lucide-react'
 
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore } from '~/modules/auth'
 
@@ -17,7 +17,7 @@ export const LifePage = () => {
   const username = useAuthStore((state) => state.user?.username)
 
   return (
-    <div className="relative flex flex-col gap-8 overflow-hidden p-4 sm:gap-10 sm:p-6">
+    <BlurMorph.Sections className="relative flex flex-col gap-8 overflow-hidden p-4 sm:gap-10 sm:p-6">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-56 opacity-90"
         aria-hidden
@@ -27,34 +27,26 @@ export const LifePage = () => {
         }}
       />
 
-      <BlurMorphSections className="z-px relative flex flex-col gap-4">
-        <BlurMorphSectionsItem>
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
-              <SparklesIcon className="size-4" strokeWidth={1.75} />
-            </span>
-            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Life
-            </p>
-          </div>
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
-          <h1 className="max-w-lg text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Your media life
-          </h1>
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
-          <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty sm:text-base">
-            {username
-              ? `A warm record of the films, shows, games, books, and music that shaped ${username}.`
-              : 'A warm record of the media that shaped you.'}
-          </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
+      <BlurMorph.SectionsItem className="z-px relative flex flex-col gap-4">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
+            <SparklesIcon className="size-4" strokeWidth={1.75} />
+          </span>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">Life</p>
+        </div>
+        <h1 className="max-w-lg text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+          Your media life
+        </h1>
+        <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty sm:text-base">
+          {username
+            ? `A warm record of the films, shows, games, books, and music that shaped ${username}.`
+            : 'A warm record of the media that shaped you.'}
+        </p>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSections className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+      <BlurMorph.Sections className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {lifeChapters.map((chapter) => (
-          <BlurMorphSectionsItem key={chapter.to} className={chapterCardClass[chapter.kind]}>
+          <BlurMorph.SectionsItem key={chapter.to} className={chapterCardClass[chapter.kind]}>
             <Link
               to={chapter.to}
               className={cn(
@@ -119,17 +111,15 @@ export const LifePage = () => {
                 </div>
               </div>
             </Link>
-          </BlurMorphSectionsItem>
+          </BlurMorph.SectionsItem>
         ))}
-      </BlurMorphSections>
+      </BlurMorph.Sections>
 
-      <BlurMorphSections className="z-px relative">
-        <BlurMorphSectionsItem>
-          <p className="text-muted-foreground text-xs leading-relaxed">
-            Life is the story. Library keeps the shelves. Discover finds the next chapter.
-          </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
-    </div>
+      <BlurMorph.SectionsItem>
+        <p className="text-muted-foreground text-xs leading-relaxed">
+          Life is the story. Library keeps the shelves. Discover finds the next chapter.
+        </p>
+      </BlurMorph.SectionsItem>
+    </BlurMorph.Sections>
   )
 }

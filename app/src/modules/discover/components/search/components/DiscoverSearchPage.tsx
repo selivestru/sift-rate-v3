@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 
-import type { MediaType } from '~/common/constants/media-type'
+import { mediaTypeMeta, type MediaType } from '~/common/constants/media-type'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { PaginationBar } from '~/common/ui/PaginationBar'
 import { cn } from '~/common/utils/cn'
 
@@ -23,6 +24,8 @@ export const DiscoverSearchPage = <TMediaType extends MediaType>({
   search,
 }: DiscoverSearchPageProps<TMediaType>) => {
   const navigate = useNavigate()
+
+  const meta = mediaTypeMeta[config.mediaType]
 
   const q = search.q ?? ''
   const page = search.page ?? 1
@@ -61,42 +64,56 @@ export const DiscoverSearchPage = <TMediaType extends MediaType>({
   }
 
   return (
-    <div
-      className={cn('flex flex-col gap-4 p-4 sm:p-6', {
+    <BlurMorph.Sections
+      className={cn('relative flex flex-col gap-4 p-4 sm:p-6', {
         'pointer-events-none': isFetching,
       })}
     >
-      <DiscoverSearchHeader
-        mediaType={config.mediaType}
-        title={config.title}
-        description={config.description}
-        resultCount={showResultCount ? total : undefined}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-90"
+        aria-hidden
+        style={{
+          background: `radial-gradient(ellipse 90% 80% at 18% 0%, color-mix(in oklab, ${meta.color} 22%, transparent), transparent 70%), radial-gradient(ellipse 70% 55% at 92% 8%, color-mix(in oklab, ${meta.color} 10%, transparent), transparent 65%)`,
+        }}
       />
 
-      <DiscoverSearchForm
-        initialQuery={q}
-        placeholder={config.searchPlaceholder}
-        isFetching={isFetching}
-        onSearch={commitSearch}
-      />
+      <BlurMorph.SectionsItem>
+        <DiscoverSearchHeader
+          mediaType={config.mediaType}
+          title={config.title}
+          description={config.description}
+          resultCount={showResultCount ? total : undefined}
+        />
+      </BlurMorph.SectionsItem>
 
-      <DiscoverSearchContent
-        config={config}
-        enabled={enabled}
-        isFirstFetch={isPending}
-        isError={isError}
-        isFetching={isFetching}
-        items={items}
-        query={q.trim()}
-        onRetry={refetch}
-        isPlaceholderData={isPlaceholderData}
-      />
+      <BlurMorph.SectionsItem>
+        <DiscoverSearchForm
+          initialQuery={q}
+          placeholder={config.searchPlaceholder}
+          isFetching={isFetching}
+          onSearch={commitSearch}
+        />
+      </BlurMorph.SectionsItem>
+
+      <BlurMorph.SectionsItem>
+        <DiscoverSearchContent
+          config={config}
+          enabled={enabled}
+          isFirstFetch={isPending}
+          isError={isError}
+          isFetching={isFetching}
+          items={items}
+          query={q.trim()}
+          onRetry={refetch}
+          isPlaceholderData={isPlaceholderData}
+        />
+      </BlurMorph.SectionsItem>
 
       {showPagination && (
-        <div className="z-px sticky right-0 bottom-4 left-0 flex justify-center">
+        <BlurMorph.SectionsItem className="z-px sticky right-0 bottom-4 left-0 flex justify-center">
           <PaginationBar page={page} totalPages={totalPages} onPageChange={changePage} />
-        </div>
+        </BlurMorph.SectionsItem>
       )}
-    </div>
+    </BlurMorph.Sections>
   )
 }

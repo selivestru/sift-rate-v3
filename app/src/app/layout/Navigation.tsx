@@ -3,7 +3,7 @@ import { LockIcon } from 'lucide-react'
 import { m } from 'motion/react'
 
 import { navItems, type NavItemConfig } from '~/common/constants/navigation'
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore, type Subscription } from '~/modules/auth'
 
@@ -18,7 +18,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
   const isLocked = item.subscriptionRequired ? currentSubscription === 'FREE' : false
 
   return (
-    <BlurMorphSectionsItem>
+    <BlurMorph.SectionsItem>
       <Link
         to={item.to}
         params={item.params}
@@ -81,7 +81,7 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
           ))}
         </ul>
       )}
-    </BlurMorphSectionsItem>
+    </BlurMorph.SectionsItem>
   )
 }
 
@@ -94,7 +94,7 @@ export const Navigation = ({ indicatorId = 'nav-active' }: NavigationProps) => {
 
   return (
     <nav>
-      <BlurMorphSections className="flex flex-col gap-1">
+      <BlurMorph.Sections className="flex flex-col gap-1">
         {navItems.map((item) => (
           <NavItem
             key={item.to}
@@ -103,7 +103,7 @@ export const Navigation = ({ indicatorId = 'nav-active' }: NavigationProps) => {
             indicatorId={indicatorId}
           />
         ))}
-      </BlurMorphSections>
+      </BlurMorph.Sections>
     </nav>
   )
 }

@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { Button } from '~/common/ui/Button'
 
 import { useRegisterForm } from '../hooks/useRegisterForm'
@@ -15,23 +15,23 @@ export const RegisterForm = () => {
   const { register, onSubmit, isLoading, errors, serverError } = useRegisterForm()
 
   return (
-    <BlurMorphSections className="flex flex-col gap-6">
-      <BlurMorphSectionsItem>
+    <BlurMorph.Sections className="flex flex-col gap-6">
+      <BlurMorph.SectionsItem>
         <AuthFormHeader
           title="Create your account"
           subtitle="Start building your media life archive"
         />
-      </BlurMorphSectionsItem>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSectionsItem>
+      <BlurMorph.SectionsItem>
         <GoogleAuthButton />
-      </BlurMorphSectionsItem>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSectionsItem>
+      <BlurMorph.SectionsItem>
         <AuthDivider />
-      </BlurMorphSectionsItem>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSectionsItem>
+      <BlurMorph.SectionsItem>
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           {serverError && <AuthFormAlert message={serverError} />}
 
@@ -73,16 +73,16 @@ export const RegisterForm = () => {
             {isLoading ? 'Creating account…' : 'Create account'}
           </Button>
         </form>
-      </BlurMorphSectionsItem>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSectionsItem>
+      <BlurMorph.SectionsItem>
         <p className="text-muted-foreground text-center text-sm">
           Already have an account?{' '}
           <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
             Sign in
           </Link>
         </p>
-      </BlurMorphSectionsItem>
-    </BlurMorphSections>
+      </BlurMorph.SectionsItem>
+    </BlurMorph.Sections>
   )
 }

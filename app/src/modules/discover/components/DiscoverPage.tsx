@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { ChevronRightIcon, CompassIcon } from 'lucide-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { cn } from '~/common/utils/cn'
 
 import { mediaTypeDestinations } from '../constants/media-types'
@@ -19,8 +19,8 @@ export const DiscoverPage = () => {
         }}
       />
 
-      <BlurMorphSections className="z-px relative flex flex-col gap-3">
-        <BlurMorphSectionsItem>
+      <BlurMorph.Sections className="z-px relative flex flex-col gap-3">
+        <BlurMorph.SectionsItem>
           <div className="flex items-center gap-2.5">
             <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(58%_0.11_165/0.14)] text-[oklch(42%_0.1_165)] dark:text-[oklch(78%_0.09_165)]">
               <CompassIcon className="size-4" strokeWidth={1.75} />
@@ -29,26 +29,26 @@ export const DiscoverPage = () => {
               Discover
             </p>
           </div>
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
+        </BlurMorph.SectionsItem>
+        <BlurMorph.SectionsItem>
           <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
             Explore the catalog
           </h1>
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
+        </BlurMorph.SectionsItem>
+        <BlurMorph.SectionsItem>
           <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty">
             Pick a medium and start searching. Six doors into one endless library.
           </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
+        </BlurMorph.SectionsItem>
+      </BlurMorph.Sections>
 
-      <BlurMorphSections className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3">
+      <BlurMorph.Sections className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3">
         {mediaTypeDestinations.map((item) => {
           const meta = mediaTypeMeta[item.type]
           const Icon = meta.icon
 
           return (
-            <BlurMorphSectionsItem key={item.mediaTypeSlug}>
+            <BlurMorph.SectionsItem key={item.mediaTypeSlug}>
               <Link
                 to="/discover/$mediaType"
                 params={{ mediaType: item.mediaTypeSlug }}
@@ -85,18 +85,18 @@ export const DiscoverPage = () => {
                   </p>
                 </div>
               </Link>
-            </BlurMorphSectionsItem>
+            </BlurMorph.SectionsItem>
           )
         })}
-      </BlurMorphSections>
+      </BlurMorph.Sections>
 
-      <BlurMorphSections className="z-px relative">
-        <BlurMorphSectionsItem>
+      <BlurMorph.Sections className="z-px relative">
+        <BlurMorph.SectionsItem>
           <p className="text-muted-foreground border-border/60 border-t pt-4 text-xs leading-relaxed">
             Discover is for finding something new. Your ratings and lists live in Library.
           </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
+        </BlurMorph.SectionsItem>
+      </BlurMorph.Sections>
     </div>
   )
 }

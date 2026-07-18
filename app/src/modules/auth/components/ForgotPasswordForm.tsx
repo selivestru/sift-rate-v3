@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { Button } from '~/common/ui/Button'
 
 import { useForgotPasswordForm } from '../hooks/useForgotPasswordForm'
@@ -13,34 +13,34 @@ export const ForgotPasswordForm = () => {
 
   if (isSuccess) {
     return (
-      <BlurMorphSections className="flex flex-col gap-6">
-        <BlurMorphSectionsItem>
+      <BlurMorph.Sections className="flex flex-col gap-6">
+        <BlurMorph.SectionsItem>
           <AuthFormHeader
             title="Check your email"
             subtitle="If an account exists for that address, we sent a reset link."
           />
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
+        </BlurMorph.SectionsItem>
+        <BlurMorph.SectionsItem>
           <p className="text-muted-foreground text-center text-sm">
             <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
               Back to sign in
             </Link>
           </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
+        </BlurMorph.SectionsItem>
+      </BlurMorph.Sections>
     )
   }
 
   return (
-    <BlurMorphSections className="flex flex-col gap-6">
-      <BlurMorphSectionsItem>
+    <BlurMorph.Sections className="flex flex-col gap-6">
+      <BlurMorph.SectionsItem>
         <AuthFormHeader
           title="Reset password"
           subtitle="Enter your email and we will send a reset link"
         />
-      </BlurMorphSectionsItem>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSectionsItem>
+      <BlurMorph.SectionsItem>
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           {serverError && <AuthFormAlert message={serverError} />}
 
@@ -57,16 +57,16 @@ export const ForgotPasswordForm = () => {
             {isLoading ? 'Sending…' : 'Send reset link'}
           </Button>
         </form>
-      </BlurMorphSectionsItem>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSectionsItem className="text-center">
+      <BlurMorph.SectionsItem className="text-center">
         <Link
           to="/auth/login"
           className="hover:text-primary text-muted-foreground text-sm font-medium transition-colors"
         >
           Back to sign in
         </Link>
-      </BlurMorphSectionsItem>
-    </BlurMorphSections>
+      </BlurMorph.SectionsItem>
+    </BlurMorph.Sections>
   )
 }

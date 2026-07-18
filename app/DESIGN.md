@@ -1,11 +1,12 @@
 # SiftRate UI design system
 
-Agent guide derived from **`Button`** and **`Input`** only. Match these controls when building or restyling UI.
+Agent guide for shared UI primitives. Match **`Button`** / **`Input`** for interactive controls; use **`BlurMorph`** for entrance and content-state motion.
 
 Sources:
 
 - `src/common/ui/Button.tsx`
 - `src/common/ui/Input.tsx`
+- `src/common/ui/BlurMorph.tsx`
 - Tokens: `src/app/globals.css`
 
 ---
@@ -155,6 +156,54 @@ Same ladder as Button: `xs` | `sm` | `default` | `lg`.
 
 ---
 
+## BlurMorph
+
+**File:** `src/common/ui/BlurMorph.tsx`  
+**Stack:** `motion/react` (`m` + `LazyMotion` strict) — not visual chrome; **motion primitive** for the archive UI.
+
+Button/Input define _how controls look_. BlurMorph defines _how blocks and content arrive_ — soft blur + slight scale, same **300ms** rhythm as control transitions (`duration-300` ↔ `DURATION_S = 0.3`). Supports “quiet personal archive”: restrained stagger, no loud SaaS motion. Respects `prefers-reduced-motion` (opacity-only).
+
+### Compound API
+
+| Member                                 | Role                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `BlurMorph.Sections` + `.SectionsItem` | Sequential **page/form blocks** on mount                                                   |
+| `BlurMorph.List` + `.ListItem`         | Sequential **data arrays**; `layout="position"` + `popLayout`                              |
+| `BlurMorph.Presence`                   | Morph exclusive **UI states** (`idle` / `loading` / `error` / `results`, …) via `stateKey` |
+
+Roots are **independent** (Sections / List / Presence each own enter). Nest freely: page Sections → Presence for async state → List for items.
+
+### Patterns
+
+```tsx
+<BlurMorph.Sections className="flex flex-col gap-4">
+  <BlurMorph.SectionsItem>Header</BlurMorph.SectionsItem>
+  <BlurMorph.SectionsItem>
+    <BlurMorph.Presence stateKey={state}>
+      {state === 'loading' && <Skeletons />}
+      {state === 'results' && (
+        <BlurMorph.List>
+          {items.map((item) => (
+            <BlurMorph.ListItem key={item.id}>
+              <Card item={item} />
+            </BlurMorph.ListItem>
+          ))}
+        </BlurMorph.List>
+      )}
+    </BlurMorph.Presence>
+  </BlurMorph.SectionsItem>
+</BlurMorph.Sections>
+```
+
+### Rules
+
+- Prefer BlurMorph over ad-hoc `m.div` / `AnimatePresence` for list/section/state enter-exit.
+- Stable `key` on every `ListItem`; change `Presence` `stateKey` when the visible mode changes.
+- Do not invent alternate blur/stagger recipes in features — extend BlurMorph if product needs change.
+- Not for high-frequency toggles, virtualized mega-lists, or control micro-interactions (hover/press stay on Button/Input CSS).
+
+---
+
 ## Agent checklist
 
 When adding or changing a control in this family:
@@ -166,3 +215,4 @@ When adding or changing a control in this family:
 - [ ] Light and dark both readable
 - [ ] Public boolean props named `is*`
 - [ ] Does not invent a third visual language beside Button/Input
+- [ ] Page/list/state enter motion goes through `BlurMorph`, not one-off motion recipes

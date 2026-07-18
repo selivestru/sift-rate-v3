@@ -1,14 +1,14 @@
 import { Link } from '@tanstack/react-router'
 import { ChevronRightIcon, LibraryIcon } from 'lucide-react'
 
-import { BlurMorphSections, BlurMorphSectionsItem } from '~/common/ui/BlurMorph'
+import { BlurMorph } from '~/common/ui/BlurMorph'
 import { cn } from '~/common/utils/cn'
 
 import { librarySections } from '../constants/library-sections'
 
 export const LibraryPage = () => {
   return (
-    <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-7 sm:p-6">
+    <BlurMorph.Sections className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-7 sm:p-6">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-56 opacity-90"
         aria-hidden
@@ -18,30 +18,24 @@ export const LibraryPage = () => {
         }}
       />
 
-      <BlurMorphSections className="z-px relative flex flex-col gap-2">
-        <BlurMorphSectionsItem>
-          <div className="flex items-center gap-2.5">
-            <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-xl">
-              <LibraryIcon className="size-4" strokeWidth={1.75} />
-            </span>
-            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-              Library
-            </p>
-          </div>
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Your collection</h1>
-        </BlurMorphSectionsItem>
-        <BlurMorphSectionsItem>
-          <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
-            Personal archive tools. Ordered, private, yours.
+      <BlurMorph.SectionsItem className="z-px relative flex flex-col gap-2">
+        <div className="flex items-center gap-2.5">
+          <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-xl">
+            <LibraryIcon className="size-4" strokeWidth={1.75} />
+          </span>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+            Library
           </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
+        </div>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Your collection</h1>
+        <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
+          Personal archive tools. Ordered, private, yours.
+        </p>
+      </BlurMorph.SectionsItem>
 
-      <BlurMorphSections className="border-border/80 z-px divide-border relative divide-y overflow-hidden rounded-2xl border">
+      <BlurMorph.Sections className="border-border/80 z-px divide-border relative divide-y overflow-hidden rounded-2xl border">
         {librarySections.map((section) => (
-          <BlurMorphSectionsItem key={section.to}>
+          <BlurMorph.SectionsItem key={section.to}>
             <Link
               to={section.to}
               style={{
@@ -75,17 +69,15 @@ export const LibraryPage = () => {
 
               <ChevronRightIcon className="text-muted-foreground group-hover:text-foreground size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
-          </BlurMorphSectionsItem>
+          </BlurMorph.SectionsItem>
         ))}
-      </BlurMorphSections>
+      </BlurMorph.Sections>
 
-      <BlurMorphSections className="z-px relative">
-        <BlurMorphSectionsItem>
-          <p className="text-muted-foreground text-xs leading-relaxed">
-            Looking for something new? Head to Discover. Life holds the story behind the shelf.
-          </p>
-        </BlurMorphSectionsItem>
-      </BlurMorphSections>
-    </div>
+      <BlurMorph.SectionsItem>
+        <p className="text-muted-foreground text-xs leading-relaxed">
+          Looking for something new? Head to Discover. Life holds the story behind the shelf.
+        </p>
+      </BlurMorph.SectionsItem>
+    </BlurMorph.Sections>
   )
 }

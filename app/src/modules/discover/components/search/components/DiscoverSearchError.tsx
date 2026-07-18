@@ -13,7 +13,7 @@ export const DiscoverSearchError = ({
   onRetry,
 }: DiscoverSearchErrorProps) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="mx-auto flex w-fit max-w-sm flex-col gap-3">
       <Alert variant="danger">
         <CircleXIcon />
         <AlertTitle>{message}</AlertTitle>
