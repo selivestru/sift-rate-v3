@@ -46,12 +46,12 @@ export const DiscoverPage = () => {
         {mediaTypeDestinations.map((item) => {
           const meta = mediaTypeMeta[item.type]
           const Icon = meta.icon
+          const to = `/discover/${item.mediaTypeSlug}`
 
           return (
             <BlurMorph.SectionsItem key={item.mediaTypeSlug}>
               <Link
-                to="/discover/$mediaType"
-                params={{ mediaType: item.mediaTypeSlug }}
+                to={to}
                 style={{ '--media-color': meta.color }}
                 className={cn(
                   'group border-border/50 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border p-4 sm:p-5 bg-surface/50',

@@ -1,28 +1,25 @@
 import { useNavigate } from '@tanstack/react-router'
 
-import { mediaTypeMeta, type MediaType } from '~/common/constants/media-type'
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { BlurMorph } from '~/common/ui/BlurMorph'
 import { PaginationBar } from '~/common/ui/PaginationBar'
 import { cn } from '~/common/utils/cn'
 
-import type { DiscoverSearchConfigByMediaType } from '../configs/discover-search.configs'
 import { useDiscoverSearchQuery } from '../hooks/useDiscoverSearchQuery'
+import type { DiscoverSearchConfig } from '../types/discover-search.types'
 import { DiscoverSearchContent } from './DiscoverSearchContent'
 import { DiscoverSearchForm } from './DiscoverSearchForm'
 import { DiscoverSearchHeader } from './DiscoverSearchHeader'
 
-interface DiscoverSearchPageProps<TMediaType extends MediaType = MediaType> {
-  config: DiscoverSearchConfigByMediaType[TMediaType]
+interface DiscoverSearchPageProps<T> {
+  config: DiscoverSearchConfig<T>
   search: {
     q?: string
     page?: number
   }
 }
 
-export const DiscoverSearchPage = <TMediaType extends MediaType>({
-  config,
-  search,
-}: DiscoverSearchPageProps<TMediaType>) => {
+export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPageProps<T>) => {
   const navigate = useNavigate()
 
   const meta = mediaTypeMeta[config.mediaType]

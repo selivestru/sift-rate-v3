@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRightIcon, StarIcon } from 'lucide-react'
 
-import { MEDIA_TYPES, mediaTypeMeta, mediaTypeToSlug } from '~/common/constants/media-type'
+import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
@@ -18,8 +18,8 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
 
   return (
     <Link
-      to="/discover/$mediaType/$externalId"
-      params={{ mediaType: mediaTypeToSlug[MEDIA_TYPES.ALBUM], externalId: item.id }}
+      to="/discover/book/$externalId"
+      params={{ externalId: item.id }}
       className={cn(
         'bg-card group relative flex items-stretch gap-0 overflow-hidden rounded-2xl transition-all duration-400 ease-out',
         'hover:scale-[1.01] hover:shadow-lg active:scale-[0.99]',
