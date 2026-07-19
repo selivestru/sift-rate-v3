@@ -31,7 +31,6 @@ export const DiscoverSearchForm = ({
 
   const handleClear = () => {
     setDraft('')
-    onSearch('')
   }
 
   return (

@@ -20,6 +20,8 @@ export const buttonVariants = cva(
           'border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground',
         ghost:
           'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
+        success:
+          'bg-success text-success-foreground hover:bg-success-hover focus-visible:border-success/40 focus-visible:ring-success/20',
       },
       size: {
         default: 'h-10 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5',
@@ -97,7 +99,7 @@ export const Button = ({
       data-slot="button"
       className={cn(
         buttonVariants({ variant, size, isIconOnly }),
-        fullWidth && 'w-full',
+        fullWidth ? 'w-full' : 'w-fit',
         className,
       )}
       render={render}

@@ -17,5 +17,5 @@ export const tvSearchConfig: DiscoverSearchConfig<TvSearchItem> = {
   queryFn: discoverApi.searchTvShows,
   Card: TvSearchCard,
   Skeleton: TvSearchSkeleton,
-  getItemKey: (item) => item.externalId,
+  getItemKey: (item) => item.id,
 }

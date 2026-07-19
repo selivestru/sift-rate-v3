@@ -11,11 +11,11 @@ export const trackSearchConfig: DiscoverSearchConfig<TrackSearchItem> = {
   description: 'Search single moments worth remembering.',
   searchPlaceholder: 'Search tracks…',
   resultsClassName: 'flex flex-col gap-2',
-  skeletonCount: 6,
+  skeletonCount: 10,
   pageSize: 10,
   queryKey: ['discover', 'search', 'track'],
   queryFn: discoverApi.searchTracks,
   Card: TrackSearchCard,
   Skeleton: TrackSearchSkeleton,
-  getItemKey: (item) => item.externalId,
+  getItemKey: (item) => item.id,
 }

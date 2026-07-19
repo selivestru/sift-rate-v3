@@ -46,7 +46,8 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
     <nav
       aria-label="pagination"
       className={cn(
-        'bg-foreground/5 border-border/50 inline-flex items-center gap-1 rounded-2xl border p-1.5 backdrop-blur-xl animate-blur-morph-in w-fit mx-auto',
+        'bg-card border-border/50 inline-flex items-center gap-1 rounded-2xl border p-1.5',
+        'animate-blur-morph-in',
       )}
     >
       <button

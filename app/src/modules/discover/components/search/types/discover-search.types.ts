@@ -14,49 +14,62 @@ export interface DiscoverSearchPageResult<T> {
 }
 
 export interface MovieSearchItem {
-  externalId: string
+  id: string
   title: string
-  year?: number
-  posterUrl?: string | null
+  year: string
+  posterUrl: string | null
+  rating: number
+  genres: string[]
+  overview: string
 }
 
 export interface TvSearchItem {
-  externalId: string
+  id: string
   title: string
-  year?: number
-  posterUrl?: string | null
-}
-
-export interface GameSearchItem {
-  externalId: string
-  title: string
-  year?: number
-  coverUrl?: string | null
-}
-
-export interface BookSearchItem {
-  externalId: string
-  title: string
-  author?: string
-  year?: number
-  coverUrl?: string | null
-}
-
-export interface AlbumSearchItem {
-  externalId: string
-  title: string
-  artist?: string
-  year?: number
-  coverUrl?: string | null
+  year: string
+  posterUrl: string | null
+  rating: number
+  genres: string[]
+  overview: string
 }
 
 export interface TrackSearchItem {
-  externalId: string
+  id: string
   title: string
-  artist?: string
-  album?: string
-  durationSec?: number
-  coverUrl?: string | null
+  artist: string
+  albumTitle: string
+  coverUrl: string | null
+  duration: number
+  rank: number | null
+}
+
+export interface AlbumSearchItem {
+  id: string
+  title: string
+  artist: string
+  coverUrl: string | null
+  nbTracks: number | null
+}
+
+export interface GameSearchItem {
+  id: string
+  title: string
+  year: string
+  coverUrl: string | null
+  rating: number | null
+  genres: string[]
+  platforms: string[]
+}
+
+export interface BookSearchItem {
+  id: string
+  title: string
+  authors: string[]
+  coverUrl: string | null
+  year: string
+  pageCount: number | null
+  categories: string[]
+  rating: number | null
 }
 
 export interface DiscoverSearchConfig<T> {

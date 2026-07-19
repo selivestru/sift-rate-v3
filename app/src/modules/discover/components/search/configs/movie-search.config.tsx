@@ -17,5 +17,5 @@ export const movieSearchConfig: DiscoverSearchConfig<MovieSearchItem> = {
   queryFn: discoverApi.searchMovies,
   Card: MovieSearchCard,
   Skeleton: MovieSearchSkeleton,
-  getItemKey: (item) => item.externalId,
+  getItemKey: (item) => item.id,
 }
