@@ -1,16 +1,16 @@
-import type { MediaType } from '~/common/constants/media-type'
+import type { MediaType, MediaTypeSlug } from '~/common/constants/media-type'
 
 export interface DiscoverSearchParams {
+  slug: MediaTypeSlug
   q: string
   page: number
   pageSize: number
 }
 
 export interface DiscoverSearchPageResult<T> {
-  items: T[]
-  total: number
-  page: number
-  pageSize: number
+  results: T[]
+  totalResults: number
+  totalPages: number
 }
 
 export interface MovieSearchItem {

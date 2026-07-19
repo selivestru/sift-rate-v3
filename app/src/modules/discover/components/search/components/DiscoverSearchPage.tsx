@@ -34,9 +34,9 @@ export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPagePro
       page,
     })
 
-  const items = data?.items ?? []
-  const total = data?.total ?? 0
-  const totalPages = Math.max(1, Math.ceil(total / pageSize))
+  const items = data?.results ?? []
+  const total = data?.totalResults ?? 0
+  const totalPages = data?.totalPages ?? 0
   const showResultCount = enabled && data !== undefined
   const showPagination = enabled && !isError && total > pageSize
 

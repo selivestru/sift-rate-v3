@@ -18,7 +18,7 @@ export const DiscoverSearchError = ({
         <CircleXIcon />
         <AlertTitle>{message}</AlertTitle>
       </Alert>
-      <Button variant="secondary" onClick={onRetry}>
+      <Button fullWidth variant="secondary" onClick={onRetry}>
         Retry
       </Button>
     </div>

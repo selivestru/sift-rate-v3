@@ -67,7 +67,7 @@ export const AlbumSearchCard = ({ item }: AlbumSearchCardProps) => {
         <MediaTypeBadge mediaType={MEDIA_TYPES.ALBUM} className="z-px absolute top-2.5 right-2.5" />
 
         {item.nbTracks !== null && (
-          <Badge variant="outline" className="z-px absolute top-2.5 left-2.5">
+          <Badge variant="blur" className="z-px absolute top-2.5 left-2.5">
             {item.nbTracks === 1 ? '1 track' : `${item.nbTracks} tracks`}
           </Badge>
         )}

@@ -1,3 +1,5 @@
+import { api } from '~/common/api'
+
 import type {
   AlbumSearchItem,
   BookSearchItem,
@@ -9,22 +11,22 @@ import type {
   TvSearchItem,
 } from '../components/search/types/discover-search.types'
 
-const emptyResult = async <T>(
-  params: DiscoverSearchParams,
-): Promise<DiscoverSearchPageResult<T>> => {
-  return {
-    items: [],
-    total: 0,
-    page: params.page,
-    pageSize: params.pageSize,
-  }
+const search = async <T>(params: DiscoverSearchParams): Promise<DiscoverSearchPageResult<T>> => {
+  const searchParams = new URLSearchParams()
+
+  searchParams.set('q', params.q)
+  searchParams.set('page', String(params.page))
+
+  return api<DiscoverSearchPageResult<T>>(`/media/${params.slug}`, {
+    searchParams,
+  }).json()
 }
 
 export const discoverApi = {
-  searchMovies: (params: DiscoverSearchParams) => emptyResult<MovieSearchItem>(params),
-  searchTvShows: (params: DiscoverSearchParams) => emptyResult<TvSearchItem>(params),
-  searchGames: (params: DiscoverSearchParams) => emptyResult<GameSearchItem>(params),
-  searchBooks: (params: DiscoverSearchParams) => emptyResult<BookSearchItem>(params),
-  searchAlbums: (params: DiscoverSearchParams) => emptyResult<AlbumSearchItem>(params),
-  searchTracks: (params: DiscoverSearchParams) => emptyResult<TrackSearchItem>(params),
+  searchMovies: (params: DiscoverSearchParams) => search<MovieSearchItem>(params),
+  searchTvShows: (params: DiscoverSearchParams) => search<TvSearchItem>(params),
+  searchGames: (params: DiscoverSearchParams) => search<GameSearchItem>(params),
+  searchBooks: (params: DiscoverSearchParams) => search<BookSearchItem>(params),
+  searchAlbums: (params: DiscoverSearchParams) => search<AlbumSearchItem>(params),
+  searchTracks: (params: DiscoverSearchParams) => search<TrackSearchItem>(params),
 }

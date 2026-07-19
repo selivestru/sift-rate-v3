@@ -25,15 +25,16 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
         'hover:scale-[1.005] hover:bg-(--card-color)/5 active:scale-[0.995]',
         'ring-border/60 ring-1 hover:ring-(--card-color)/25',
       )}
-      style={{
-        '--card-color': color,
-      }}
+      style={{ '--card-color': color }}
     >
       <div
-        className="bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg"
-        style={{
-          boxShadow: 'inset 0 0 0 1px color-mix(in oklab, var(--card-color) 20%, transparent)',
-        }}
+        className={cn(
+          'bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg',
+          {
+            'ring-1 transition-all duration-300 group-hover:ring-(--card-color) ring-ring/50':
+              !item.coverUrl,
+          },
+        )}
       >
         {item.coverUrl ? (
           <img
@@ -43,12 +44,14 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
             loading="lazy"
           />
         ) : (
-          <MediaTypeIcon className="text-muted-foreground size-5" />
+          <MediaTypeIcon className="text-muted-foreground size-5 group-hover:text-(--card-color)" />
         )}
 
-        <div className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <MediaTypeIcon />
-        </div>
+        {item.coverUrl && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <MediaTypeIcon color={color} />
+          </div>
+        )}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">

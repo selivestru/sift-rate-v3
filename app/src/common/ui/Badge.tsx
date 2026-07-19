@@ -13,6 +13,7 @@ export const badgeVariants = cva(
         danger:
           'bg-danger/10 text-danger focus-visible:ring-danger/20 dark:bg-danger/20 dark:focus-visible:ring-danger/40 [a]:hover:bg-danger/20',
         outline: 'border-border bg-input/30 [a]:hover:bg-muted [a]:hover:text-muted-foreground',
+        blur: 'bg-secondary/40 [a]:hover:bg-secondary/80 backdrop-blur-2xl',
       },
     },
     defaultVariants: {

@@ -7,8 +7,8 @@
   },
   "lint-staged": {
     "api/**/*.{js,ts}": [
-      "bun run --cwd ./api lint",
-      "bun run --cwd ./api format"
+      "bun run --cwd ./api lint:fix",
+      "bun run --cwd ./api format:fix"
     ],
     "app/**/*.{js,jsx,ts,tsx}": [
       "bun run --cwd ./app fmt:fix",

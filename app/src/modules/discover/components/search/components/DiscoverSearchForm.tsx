@@ -39,6 +39,9 @@ export const DiscoverSearchForm = ({
       className="grid w-full grid-cols-1 grid-rows-2 gap-2 sm:grid-cols-[1fr_120px] sm:grid-rows-1"
     >
       <Input
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         endIcon={
