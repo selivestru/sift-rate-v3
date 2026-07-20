@@ -1,24 +1,21 @@
 import { Link } from '@tanstack/react-router'
 import { LockIcon } from 'lucide-react'
-import { m } from 'motion/react'
 
 import { navItems, type NavItemConfig } from '~/common/constants/navigation'
-import { BlurMorph } from '~/common/ui/BlurMorph'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore, type Subscription } from '~/modules/auth'
 
 interface NavItemProps {
   item: NavItemConfig
   currentSubscription: Subscription
-  indicatorId: string
   nested?: boolean
 }
 
-function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProps) {
+function NavItem({ item, currentSubscription, nested }: NavItemProps) {
   const isLocked = item.subscriptionRequired ? currentSubscription === 'FREE' : false
 
   return (
-    <BlurMorph.SectionsItem>
+    <>
       <Link
         to={item.to}
         params={item.params}
@@ -32,33 +29,12 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
             ? 'cursor-not-allowed opacity-50'
             : 'hover:bg-primary-soft hover:text-foreground',
         )}
+        activeProps={{
+          className: 'bg-primary/50 text-foreground hover:bg-primary/50',
+        }}
       >
         {({ isActive }) => (
           <>
-            {isActive && (
-              <m.span
-                layoutId={indicatorId}
-                className="bg-primary-soft absolute inset-0 rounded-xl"
-                transition={{
-                  type: 'spring',
-                  stiffness: 380,
-                  damping: 32,
-                  mass: 0.8,
-                }}
-              />
-            )}
-            {isActive && (
-              <m.span
-                layoutId={`${indicatorId}-bar`}
-                className="bg-primary z-px absolute top-1/2 left-0.5 h-4 w-0.5 -translate-y-1/2 rounded-full"
-                transition={{
-                  type: 'spring',
-                  stiffness: 380,
-                  damping: 32,
-                  mass: 0.8,
-                }}
-              />
-            )}
             <item.icon
               className={cn('size-5 shrink-0', nested && 'size-4', isActive && 'text-foreground')}
             />
@@ -76,34 +52,24 @@ function NavItem({ item, currentSubscription, indicatorId, nested }: NavItemProp
               nested
               item={child}
               currentSubscription={currentSubscription}
-              indicatorId={indicatorId}
             />
           ))}
         </ul>
       )}
-    </BlurMorph.SectionsItem>
+    </>
   )
 }
 
-interface NavigationProps {
-  indicatorId?: string
-}
-
-export const Navigation = ({ indicatorId = 'nav-active' }: NavigationProps) => {
+export const Navigation = () => {
   const currentSubscription = useAuthStore((state) => state.user?.subscription ?? 'FREE')
 
   return (
     <nav>
-      <BlurMorph.Sections className="flex flex-col gap-1">
+      <ul className="flex flex-col gap-1">
         {navItems.map((item) => (
-          <NavItem
-            key={item.to}
-            item={item}
-            currentSubscription={currentSubscription}
-            indicatorId={indicatorId}
-          />
+          <NavItem key={item.to} item={item} currentSubscription={currentSubscription} />
         ))}
-      </BlurMorph.Sections>
+      </ul>
     </nav>
   )
 }

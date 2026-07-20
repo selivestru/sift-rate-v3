@@ -21,7 +21,7 @@ export const Profile = () => {
       <DropdownMenuTrigger
         nativeButton={false}
         render={
-          <Avatar>
+          <Avatar size="lg">
             <AvatarImage src={avatarUrl!} alt={username!} />
             <AvatarFallback>{getFirstLetter(username!)}</AvatarFallback>
           </Avatar>

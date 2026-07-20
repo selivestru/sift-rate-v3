@@ -51,7 +51,7 @@ src/
     api/               # ky client, getApiError
     constants/         # env, navigation
     hooks/             # e.g. useMediaQuery
-    ui/                # shared UI (BlurMorph)
+    ui/                # shared UI
     utils/             # storage, getFirstLetter
     assets/            # static assets (e.g. Google SVG)
   modules/             # feature modules (domain UI + logic)
@@ -86,7 +86,6 @@ src/
 | Forms           | react-hook-form + Zod + `@hookform/resolvers`             |
 | UI kit          | Shadcn                                                    |
 | Styling         | Tailwind CSS v4 (`@tailwindcss/vite`)                     |
-| Motion          | `motion` (`motion/react`)                                 |
 | Icons           | lucide-react                                              |
 | Font            | Geist Variable                                            |
 | Env validation  | `@t3-oss/env-core` + Zod                                  |

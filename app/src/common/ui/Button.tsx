@@ -99,7 +99,7 @@ export const Button = ({
       data-slot="button"
       className={cn(
         buttonVariants({ variant, size, isIconOnly }),
-        fullWidth ? 'w-full' : 'w-fit',
+        fullWidth && 'w-full',
         className,
       )}
       render={render}

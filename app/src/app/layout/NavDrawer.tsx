@@ -27,7 +27,7 @@ export const NavDrawer = () => {
           <DrawerTitle>Menu</DrawerTitle>
         </DrawerHeader>
         <div className="p-4">
-          <Navigation indicatorId="nav-drawer" />
+          <Navigation />
         </div>
       </DrawerContent>
     </Drawer>

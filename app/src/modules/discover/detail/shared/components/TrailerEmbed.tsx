@@ -1,0 +1,84 @@
+import { PlayIcon } from 'lucide-react'
+import { useState } from 'react'
+
+import { Button } from '~/common/ui/Button'
+import { cn } from '~/common/utils/cn'
+
+import type { MediaVideo } from '../types/media-detail.types'
+
+interface TrailerEmbedProps {
+  videos: MediaVideo[]
+  className?: string
+}
+
+const fadeTransition = { duration: 0.18, ease: 'easeOut' } as const
+
+export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
+  const [activeId, setActiveId] = useState(() => videos[0]?.id ?? '')
+  const [playing, setPlaying] = useState(false)
+
+  if (videos.length === 0) return null
+
+  const active = videos.find((v) => v.id === activeId) ?? videos[0]
+  const thumbUrl = `https://i.ytimg.com/vi/${active.key}/hqdefault.jpg`
+
+  return (
+    <div className={cn('flex flex-col gap-3', className)}>
+      <div className="bg-muted ring-foreground/10 relative aspect-video w-full overflow-hidden rounded-2xl ring-1">
+        <div key={`${active.id}-${playing ? 'play' : 'idle'}`} className="size-full">
+          {playing ? (
+            <iframe
+              title={active.name}
+              src={`https://www.youtube-nocookie.com/embed/${active.key}?autoplay=1&rel=0`}
+              className="size-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setPlaying(true)}
+              className="group relative size-full cursor-pointer"
+              aria-label={`Play trailer: ${active.name}`}
+            >
+              <img
+                src={thumbUrl}
+                alt=""
+                aria-hidden
+                className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/30" />
+              <span className="bg-background/90 text-foreground ring-foreground/10 absolute top-1/2 left-1/2 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg ring-1 backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
+                <PlayIcon className="size-6 fill-current" aria-hidden />
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {videos.length > 1 && (
+        <div className="flex flex-wrap gap-1.5">
+          {videos.map((video) => {
+            const isActive = video.id === active.id
+            return (
+              <Button
+                key={video.id}
+                type="button"
+                size="xs"
+                variant={isActive ? 'secondary' : 'outline'}
+                onClick={() => {
+                  setActiveId(video.id)
+                  setPlaying(false)
+                }}
+              >
+                {video.name}
+              </Button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}

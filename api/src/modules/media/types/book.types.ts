@@ -35,3 +35,82 @@ export interface BookSearchItem {
   categories: string[]
   rating: number | null
 }
+
+export interface BookRelatedItem {
+  id: string
+  title: string
+  coverUrl: string | null
+  year: string
+  rating: number | null
+}
+
+export interface BookDetail {
+  id: string
+  title: string
+  subtitle: string
+  authors: string[]
+  publisher: string
+  publishedDate: string
+  year: string
+  description: string
+  pageCount: number | null
+  categories: string[]
+  mainCategory: string
+  language: string
+  printType: string
+  isbn10: string
+  isbn13: string
+  googleRating: number | null
+  googleRatingsCount: number
+  coverUrl: string | null
+  previewUrl: string | null
+  infoUrl: string | null
+  buyUrl: string | null
+  isEbook: boolean
+  moreByAuthor: BookRelatedItem[]
+  primaryAuthor: string
+}
+
+export interface GoogleIndustryIdentifier {
+  type?: string
+  identifier?: string
+}
+
+export interface GoogleVolumeInfo {
+  title?: string
+  subtitle?: string
+  authors?: string[]
+  publisher?: string
+  publishedDate?: string
+  description?: string
+  industryIdentifiers?: GoogleIndustryIdentifier[]
+  pageCount?: number
+  printType?: string
+  mainCategory?: string
+  categories?: string[]
+  averageRating?: number
+  ratingsCount?: number
+  imageLinks?: GoogleImageLinks
+  language?: string
+  previewLink?: string
+  infoLink?: string
+  canonicalVolumeLink?: string
+}
+
+export interface GoogleSaleInfo {
+  isEbook?: boolean
+  buyLink?: string
+}
+
+export interface GoogleVolume {
+  id?: string
+  volumeInfo?: GoogleVolumeInfo
+  saleInfo?: GoogleSaleInfo
+  accessInfo?: {
+    webReaderLink?: string
+  }
+}
+
+export interface GoogleBooksListResponse {
+  items?: GoogleVolume[]
+}

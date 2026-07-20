@@ -28,7 +28,7 @@
   --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
   --danger-soft-foreground: color-mix(in oklab, var(--danger) 70%, var(--foreground) 40%);
   --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
-  --success: oklch(73.29% 0.1974 156.34);
+  --success: oklch(0.723 0.219 149.579);
   --warning: oklch(78.19% 0.1617 77.86);
   --surface: oklch(100% 0.005 299.89);
   --surface-secondary: oklch(95.24% 0.008 299.89);
@@ -59,7 +59,7 @@
   --danger-soft: color-mix(in oklab, var(--danger) 15%, transparent);
   --danger-soft-foreground: color-mix(in oklab, var(--danger) 70%, var(--foreground) 40%);
   --danger-soft-hover: color-mix(in oklab, var(--danger) 20%, transparent);
-  --success: oklch(73.29% 0.1974 156.34);
+  --success: oklch(0.723 0.219 149.579);
   --surface: oklch(21.03% 0.02 299.89);
   --surface-secondary: oklch(25.7% 0.015 299.89);
   --warning: oklch(82.03% 0.1416 81.87);
@@ -146,4 +146,8 @@ button:not(:disabled),
     filter: blur(10px);
     /* scale: 0.97; */
   }
+}
+
+@utility transition-backdrop {
+  transition-property: backdrop-filter;
 }

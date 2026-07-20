@@ -1,0 +1,62 @@
+import { TvIcon } from 'lucide-react'
+
+import { RatingBadge } from '~/common/ui/RatingBadge'
+
+import type { TvSeasonSummary } from '../types/tv-show-detail.types'
+
+interface TvSeasonCardProps {
+  season: TvSeasonSummary
+  accent: string
+}
+
+export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
+  const isSpecials = season.seasonNumber === 0
+  const label = isSpecials ? 'Specials' : `S${season.seasonNumber}`
+
+  return (
+    <div className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]">
+      <div className="bg-muted ring-foreground/10 group-hover:ring-foreground/25 relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 group-hover:shadow-lg">
+        {season.posterUrl ? (
+          <img
+            src={season.posterUrl}
+            alt={season.name}
+            className="size-full object-cover"
+            loading="lazy"
+            width={342}
+            height={513}
+          />
+        ) : (
+          <div className="flex size-full items-center justify-center">
+            <TvIcon className="text-muted-foreground size-8 opacity-60" aria-hidden />
+          </div>
+        )}
+
+        <div
+          className="absolute top-1.5 left-1.5 rounded-md px-2 py-0.5 text-xs font-bold tracking-wide text-white tabular-nums shadow-sm backdrop-blur-sm"
+          style={{ background: `color-mix(in oklab, ${accent} 85%, black)` }}
+        >
+          {label}
+        </div>
+
+        {season.tmdbRating > 0 && (
+          <RatingBadge
+            rating={season.tmdbRating}
+            size="xs"
+            className="absolute top-1.5 right-1.5"
+          />
+        )}
+      </div>
+
+      <div className="min-w-0 px-0.5">
+        <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
+          {season.name}
+        </p>
+        {season.episodeCount > 0 && (
+          <p className="text-muted-foreground text-xs tabular-nums">
+            {season.episodeCount} {season.episodeCount === 1 ? 'ep' : 'eps'}
+          </p>
+        )}
+      </div>
+    </div>
+  )
+}
