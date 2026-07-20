@@ -1,4 +1,4 @@
-import { HTTPError, NetworkError, TimeoutError } from 'ky'
+import { HTTPError, isHTTPError, isNetworkError, isTimeoutError } from 'ky'
 
 export interface ApiError {
   message: string
@@ -7,7 +7,7 @@ export interface ApiError {
 }
 
 interface ApiErrorBody {
-  message?: string
+  message?: string | string[]
   errors?: Record<string, string | string[]>
   fieldErrors?: Record<string, string | string[]>
 }
@@ -17,6 +17,21 @@ const NETWORK_MESSAGE = 'No internet connection'
 const FALLBACK_MESSAGE = 'Something went wrong'
 
 const SERVER_UNAVAILABLE_STATUSES = new Set([502, 503, 504, 0])
+
+const normalizeMessage = (message?: string | string[]): string => {
+  if (Array.isArray(message)) {
+    const parts = message.filter(
+      (item): item is string => typeof item === 'string' && item.length > 0,
+    )
+    return parts.length > 0 ? parts.join('. ') : FALLBACK_MESSAGE
+  }
+
+  if (typeof message === 'string' && message.length > 0) {
+    return message
+  }
+
+  return FALLBACK_MESSAGE
+}
 
 const normalizeFieldErrors = (
   errors?: Record<string, string | string[]>,
@@ -35,12 +50,60 @@ const normalizeFieldErrors = (
   return Object.keys(fieldErrors).length > 0 ? fieldErrors : undefined
 }
 
+const isApiErrorBody = (value: unknown): value is ApiErrorBody => {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+const parseBody = (data: unknown): ApiErrorBody | undefined => {
+  if (isApiErrorBody(data)) {
+    return data
+  }
+
+  if (typeof data === 'string' && data.length > 0) {
+    try {
+      const parsed: unknown = JSON.parse(data)
+      if (isApiErrorBody(parsed)) {
+        return parsed
+      }
+    } catch {
+      return { message: data }
+    }
+
+    return { message: data }
+  }
+
+  return undefined
+}
+
+const readHttpErrorBody = async (err: HTTPError): Promise<ApiErrorBody | undefined> => {
+  const fromData = parseBody(err.data)
+  if (fromData) {
+    return fromData
+  }
+
+  try {
+    if (err.response.bodyUsed) {
+      return undefined
+    }
+
+    const contentType = err.response.headers.get('content-type') ?? ''
+
+    if (contentType.includes('application/json')) {
+      return parseBody(await err.response.json())
+    }
+
+    return parseBody(await err.response.text())
+  } catch {
+    return undefined
+  }
+}
+
 export const getApiError = async (err: unknown): Promise<ApiError> => {
-  if (err instanceof NetworkError || err instanceof TimeoutError) {
+  if (isNetworkError(err) || isTimeoutError(err)) {
     return { message: SERVER_UNAVAILABLE_MESSAGE }
   }
 
-  if (err instanceof HTTPError) {
+  if (isHTTPError(err)) {
     const status = err.response.status
 
     if (SERVER_UNAVAILABLE_STATUSES.has(status)) {
@@ -50,19 +113,12 @@ export const getApiError = async (err: unknown): Promise<ApiError> => {
       }
     }
 
-    try {
-      const data = (await err.response.json()) as ApiErrorBody
+    const data = await readHttpErrorBody(err)
 
-      return {
-        message: data.message ?? FALLBACK_MESSAGE,
-        fieldErrors: normalizeFieldErrors(data.fieldErrors ?? data.errors),
-        status,
-      }
-    } catch {
-      return {
-        message: FALLBACK_MESSAGE,
-        status,
-      }
+    return {
+      message: normalizeMessage(data?.message),
+      fieldErrors: normalizeFieldErrors(data?.fieldErrors ?? data?.errors),
+      status,
     }
   }
 

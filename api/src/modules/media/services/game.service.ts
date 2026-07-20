@@ -159,17 +159,14 @@ export class GameService {
   ].join(',')
 
   constructor(
-    private readonly configService: ConfigService<EnvConfig>,
-    private readonly redisService: RedisService,
+    private readonly config: ConfigService<EnvConfig, true>,
+    private readonly redis: RedisService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<GameSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('game', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<GameSearchItem>>(
-      this.redisService,
-      cacheKey,
-    )
+    const cached = await getSearchCache<MediaSearchResponse<GameSearchItem>>(this.redis, cacheKey)
     if (cached) return cached
 
     const offset = (pageNum - 1) * 10 // TODO: fix pagination
@@ -207,7 +204,7 @@ export class GameService {
       totalPages: Math.min(totalPages, 10),
     }
 
-    await setSearchCache(this.redisService, cacheKey, result)
+    await setSearchCache(this.redis, cacheKey, result)
     return result
   }
 
@@ -220,7 +217,7 @@ export class GameService {
     const cacheKey = `game:${gameId}`
 
     try {
-      const cached = await this.redisService.get(cacheKey)
+      const cached = await this.redis.get(cacheKey)
       if (cached) {
         return JSON.parse(cached) as GameDetail
       }
@@ -249,12 +246,7 @@ export class GameService {
     const result = this.mapGameDetail(raw)
 
     try {
-      await this.redisService.set(
-        cacheKey,
-        JSON.stringify(result),
-        'EX',
-        this.GAME_CACHE_TTL_SECONDS,
-      )
+      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.GAME_CACHE_TTL_SECONDS)
     } catch {
       void 0
     }
@@ -263,25 +255,22 @@ export class GameService {
   }
 
   private async getAccessToken() {
-    const cached = await this.redisService.get(this.REDIS_TOKEN_KEY)
+    const cached = await this.redis.get(this.REDIS_TOKEN_KEY)
 
     if (cached) {
       return cached
     }
 
     const url = new URL(this.TWITCH_TOKEN_URL)
-    url.searchParams.set('client_id', this.configService.getOrThrow<string>('IGDB_CLIENT_ID'))
-    url.searchParams.set(
-      'client_secret',
-      this.configService.getOrThrow<string>('IGDB_CLIENT_SECRET'),
-    )
+    url.searchParams.set('client_id', this.config.get('IGDB_CLIENT_ID', { infer: true }))
+    url.searchParams.set('client_secret', this.config.get('IGDB_CLIENT_SECRET', { infer: true }))
     url.searchParams.set('grant_type', 'client_credentials')
 
     const response = await ky.post(url.toString()).json<TwitchTokenResponse>()
 
     const ttlMs = response.expires_in * 1000 - this.TOKEN_EXPIRY_BUFFER_MS
 
-    await this.redisService.set(this.REDIS_TOKEN_KEY, response.access_token, 'PX', ttlMs)
+    await this.redis.set(this.REDIS_TOKEN_KEY, response.access_token, 'PX', ttlMs)
 
     return response.access_token
   }
@@ -292,7 +281,7 @@ export class GameService {
     return ky
       .post(`${this.IGDB_API_URL}/${endpoint}`, {
         headers: {
-          'Client-ID': this.configService.getOrThrow<string>('IGDB_CLIENT_ID'),
+          'Client-ID': this.config.get('IGDB_CLIENT_ID', { infer: true }),
           Authorization: `Bearer ${accessToken}`,
           Accept: 'application/json',
         },

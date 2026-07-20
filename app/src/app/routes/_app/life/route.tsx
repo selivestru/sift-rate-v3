@@ -1,10 +1,10 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_app/life')({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: ({ context }) => {
     const { user } = context.auth
 
-    if (!user || user.subscription === 'FREE') {
+    if (!user || user.subscription !== 'FREE') {
       throw redirect({ to: '/' })
     }
   },

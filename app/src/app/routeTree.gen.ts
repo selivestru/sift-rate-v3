@@ -14,6 +14,7 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
+import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
 import { Route as AppLifeRouteRouteImport } from './routes/_app/life/route'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
@@ -65,6 +66,11 @@ const AppUsernameRoute = AppUsernameRouteImport.update({
   path: '/$username',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLifeRouteRoute = AppLifeRouteRouteImport.update({
   id: '/life',
   path: '/life',
@@ -91,19 +97,19 @@ const AppDiscoverIndexRoute = AppDiscoverIndexRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
-  id: '/library/',
-  path: '/library/',
-  getParentRoute: () => AppRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
-  id: '/library/planned',
-  path: '/library/planned',
-  getParentRoute: () => AppRoute,
+  id: '/planned',
+  path: '/planned',
+  getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 const AppLibraryRatingsRoute = AppLibraryRatingsRouteImport.update({
-  id: '/library/ratings',
-  path: '/library/ratings',
-  getParentRoute: () => AppRoute,
+  id: '/ratings',
+  path: '/ratings',
+  getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 const AppLifeIndexRoute = AppLifeIndexRouteImport.update({
   id: '/',
@@ -192,20 +198,21 @@ const AppDiscoverTv_showExternalIdRoute =
     getParentRoute: () => AppRoute,
   } as any)
 const AppLibraryListsIndexRoute = AppLibraryListsIndexRouteImport.update({
-  id: '/library/lists/',
-  path: '/library/lists/',
-  getParentRoute: () => AppRoute,
+  id: '/lists/',
+  path: '/lists/',
+  getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 const AppLibraryListsListIdRoute = AppLibraryListsListIdRouteImport.update({
-  id: '/library/lists/$listId',
-  path: '/library/lists/$listId',
-  getParentRoute: () => AppRoute,
+  id: '/lists/$listId',
+  path: '/lists/$listId',
+  getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
   '/welcome': typeof WelcomeRoute
+  '/library': typeof AppLibraryRouteRouteWithChildren
   '/life': typeof AppLifeRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -270,6 +277,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
   '/welcome': typeof WelcomeRoute
+  '/_app/library': typeof AppLibraryRouteRouteWithChildren
   '/_app/life': typeof AppLifeRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -305,6 +313,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/'
     | '/welcome'
+    | '/library'
     | '/life'
     | '/$username'
     | '/auth/forgot-password'
@@ -368,6 +377,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_app'
     | '/welcome'
+    | '/_app/library'
     | '/_app/life'
     | '/_app/$username'
     | '/auth/forgot-password'
@@ -441,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppUsernameRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/library': {
+      id: '/_app/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof AppLibraryRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/life': {
       id: '/_app/life'
       path: '/life'
@@ -478,24 +495,24 @@ declare module '@tanstack/react-router' {
     }
     '/_app/library/': {
       id: '/_app/library/'
-      path: '/library'
+      path: '/'
       fullPath: '/library/'
       preLoaderRoute: typeof AppLibraryIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppLibraryRouteRoute
     }
     '/_app/library/planned': {
       id: '/_app/library/planned'
-      path: '/library/planned'
+      path: '/planned'
       fullPath: '/library/planned'
       preLoaderRoute: typeof AppLibraryPlannedRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppLibraryRouteRoute
     }
     '/_app/library/ratings': {
       id: '/_app/library/ratings'
-      path: '/library/ratings'
+      path: '/ratings'
       fullPath: '/library/ratings'
       preLoaderRoute: typeof AppLibraryRatingsRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppLibraryRouteRoute
     }
     '/_app/life/': {
       id: '/_app/life/'
@@ -611,17 +628,17 @@ declare module '@tanstack/react-router' {
     }
     '/_app/library/lists/': {
       id: '/_app/library/lists/'
-      path: '/library/lists'
+      path: '/lists'
       fullPath: '/library/lists/'
       preLoaderRoute: typeof AppLibraryListsIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppLibraryRouteRoute
     }
     '/_app/library/lists/$listId': {
       id: '/_app/library/lists/$listId'
-      path: '/library/lists/$listId'
+      path: '/lists/$listId'
       fullPath: '/library/lists/$listId'
       preLoaderRoute: typeof AppLibraryListsListIdRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppLibraryRouteRoute
     }
   }
 }
@@ -640,6 +657,26 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
+)
+
+interface AppLibraryRouteRouteChildren {
+  AppLibraryPlannedRoute: typeof AppLibraryPlannedRoute
+  AppLibraryRatingsRoute: typeof AppLibraryRatingsRoute
+  AppLibraryIndexRoute: typeof AppLibraryIndexRoute
+  AppLibraryListsListIdRoute: typeof AppLibraryListsListIdRoute
+  AppLibraryListsIndexRoute: typeof AppLibraryListsIndexRoute
+}
+
+const AppLibraryRouteRouteChildren: AppLibraryRouteRouteChildren = {
+  AppLibraryPlannedRoute: AppLibraryPlannedRoute,
+  AppLibraryRatingsRoute: AppLibraryRatingsRoute,
+  AppLibraryIndexRoute: AppLibraryIndexRoute,
+  AppLibraryListsListIdRoute: AppLibraryListsListIdRoute,
+  AppLibraryListsIndexRoute: AppLibraryListsIndexRoute,
+}
+
+const AppLibraryRouteRouteWithChildren = AppLibraryRouteRoute._addFileChildren(
+  AppLibraryRouteRouteChildren,
 )
 
 interface AppLifeRouteRouteChildren {
@@ -661,51 +698,43 @@ const AppLifeRouteRouteWithChildren = AppLifeRouteRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppLibraryRouteRoute: typeof AppLibraryRouteRouteWithChildren
   AppLifeRouteRoute: typeof AppLifeRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
   AppIndexRoute: typeof AppIndexRoute
-  AppLibraryPlannedRoute: typeof AppLibraryPlannedRoute
-  AppLibraryRatingsRoute: typeof AppLibraryRatingsRoute
   AppDiscoverIndexRoute: typeof AppDiscoverIndexRoute
-  AppLibraryIndexRoute: typeof AppLibraryIndexRoute
   AppDiscoverAlbumExternalIdRoute: typeof AppDiscoverAlbumExternalIdRoute
   AppDiscoverBookExternalIdRoute: typeof AppDiscoverBookExternalIdRoute
   AppDiscoverGameExternalIdRoute: typeof AppDiscoverGameExternalIdRoute
   AppDiscoverMovieExternalIdRoute: typeof AppDiscoverMovieExternalIdRoute
   AppDiscoverTrackExternalIdRoute: typeof AppDiscoverTrackExternalIdRoute
   AppDiscoverTv_showExternalIdRoute: typeof AppDiscoverTv_showExternalIdRoute
-  AppLibraryListsListIdRoute: typeof AppLibraryListsListIdRoute
   AppDiscoverAlbumIndexRoute: typeof AppDiscoverAlbumIndexRoute
   AppDiscoverBookIndexRoute: typeof AppDiscoverBookIndexRoute
   AppDiscoverGameIndexRoute: typeof AppDiscoverGameIndexRoute
   AppDiscoverMovieIndexRoute: typeof AppDiscoverMovieIndexRoute
   AppDiscoverTrackIndexRoute: typeof AppDiscoverTrackIndexRoute
   AppDiscoverTv_showIndexRoute: typeof AppDiscoverTv_showIndexRoute
-  AppLibraryListsIndexRoute: typeof AppLibraryListsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppLibraryRouteRoute: AppLibraryRouteRouteWithChildren,
   AppLifeRouteRoute: AppLifeRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
   AppIndexRoute: AppIndexRoute,
-  AppLibraryPlannedRoute: AppLibraryPlannedRoute,
-  AppLibraryRatingsRoute: AppLibraryRatingsRoute,
   AppDiscoverIndexRoute: AppDiscoverIndexRoute,
-  AppLibraryIndexRoute: AppLibraryIndexRoute,
   AppDiscoverAlbumExternalIdRoute: AppDiscoverAlbumExternalIdRoute,
   AppDiscoverBookExternalIdRoute: AppDiscoverBookExternalIdRoute,
   AppDiscoverGameExternalIdRoute: AppDiscoverGameExternalIdRoute,
   AppDiscoverMovieExternalIdRoute: AppDiscoverMovieExternalIdRoute,
   AppDiscoverTrackExternalIdRoute: AppDiscoverTrackExternalIdRoute,
   AppDiscoverTv_showExternalIdRoute: AppDiscoverTv_showExternalIdRoute,
-  AppLibraryListsListIdRoute: AppLibraryListsListIdRoute,
   AppDiscoverAlbumIndexRoute: AppDiscoverAlbumIndexRoute,
   AppDiscoverBookIndexRoute: AppDiscoverBookIndexRoute,
   AppDiscoverGameIndexRoute: AppDiscoverGameIndexRoute,
   AppDiscoverMovieIndexRoute: AppDiscoverMovieIndexRoute,
   AppDiscoverTrackIndexRoute: AppDiscoverTrackIndexRoute,
   AppDiscoverTv_showIndexRoute: AppDiscoverTv_showIndexRoute,
-  AppLibraryListsIndexRoute: AppLibraryListsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

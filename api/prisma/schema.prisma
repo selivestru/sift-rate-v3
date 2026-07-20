@@ -8,6 +8,18 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AuthMethod {
+  CREDENTIALS
+  GOOGLE
+}
+
+enum Subscription {
+  FREE
+  MONTHLY
+  YEARLY
+  LIFETIME
+}
+
 enum MediaType {
   MOVIE
   TV_SHOW
@@ -17,10 +29,22 @@ enum MediaType {
   TRACK
 }
 
+enum ReviewVisibility {
+  PRIVATE
+  FRIENDS
+  PUBLIC
+}
+
 model User {
-  id        String   @id @default(uuid(7))
-  username  String?  @unique
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id           String       @id @default(uuid(7))
+  email        String
+  username     String?
+  passwordHash String?
+  method       AuthMethod   @default(CREDENTIALS)
+  subscription Subscription @default(FREE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@unique([email])
+  @@unique([username])
 }

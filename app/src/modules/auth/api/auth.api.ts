@@ -14,4 +14,10 @@ export const authApi = {
   forgotPassword: (body: ForgotPasswordInput) => {
     return api.post('/auth/forgot-password', { json: body }).json()
   },
+  me: () => {
+    return api.get<LoginResponse>('/auth/me').json()
+  },
+  logout: () => {
+    return api.post('/auth/logout')
+  },
 }

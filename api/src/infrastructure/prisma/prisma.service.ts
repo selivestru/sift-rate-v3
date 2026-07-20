@@ -7,9 +7,11 @@ import { PrismaClient } from '~/generated/prisma/client'
 
 @Injectable()
 export class PrismaService extends PrismaClient {
-  constructor(readonly configService: ConfigService<EnvConfig>) {
+  constructor(readonly configService: ConfigService<EnvConfig, true>) {
     const adapter = new PrismaPg({
-      connectionString: configService.getOrThrow('DATABASE_URL'),
+      connectionString: configService.get('DATABASE_URL', {
+        infer: true,
+      }),
     })
     super({ adapter })
   }

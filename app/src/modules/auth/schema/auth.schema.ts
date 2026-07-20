@@ -23,7 +23,7 @@ export const usernameSchema = z
 export const passwordSchema = z
   .string()
   .min(8, 'Password must be at least 8 characters')
-  .max(128, 'Password must be at most 128 characters')
+  .max(64, 'Password must be at most 64 characters')
   .refine((value) => PASSWORD_LOWER.test(value), {
     message: 'Password must include a lowercase letter',
   })
@@ -40,7 +40,7 @@ export const passwordSchema = z
 export const loginPasswordSchema = z
   .string()
   .min(1, 'Password is required')
-  .max(128, 'Password must be at most 128 characters')
+  .max(64, 'Password must be at most 64 characters')
 
 export const loginSchema = z.object({
   email: emailSchema,

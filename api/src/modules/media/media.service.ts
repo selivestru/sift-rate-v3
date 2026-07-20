@@ -9,10 +9,12 @@ import { MovieService } from './services/movie.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
 import { MediaType } from '~/generated/prisma/enums'
+import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
 @Injectable()
 export class MediaService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly movieService: MovieService,
     private readonly tvShowService: TvShowService,
     private readonly trackService: TrackService,

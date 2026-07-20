@@ -37,22 +37,19 @@ export class TvShowService {
   private readonly SIMILAR_LIMIT = 12
 
   constructor(
-    private readonly configService: ConfigService<EnvConfig>,
-    private readonly redisService: RedisService,
+    private readonly config: ConfigService<EnvConfig, true>,
+    private readonly redis: RedisService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<TvShowSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('tv', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<TvShowSearchItem>>(
-      this.redisService,
-      cacheKey,
-    )
+    const cached = await getSearchCache<MediaSearchResponse<TvShowSearchItem>>(this.redis, cacheKey)
     if (cached) return cached
 
     const url = new URL(this.TMDB_API_URL + '/search/tv')
 
-    url.searchParams.set('api_key', this.configService.getOrThrow<string>('TMDB_API_KEY'))
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('query', q)
     url.searchParams.set('language', 'en-US')
     url.searchParams.set('page', page)
@@ -73,7 +70,7 @@ export class TvShowService {
       totalPages: Math.min(response.total_pages, 10),
     }
 
-    await setSearchCache(this.redisService, cacheKey, result)
+    await setSearchCache(this.redis, cacheKey, result)
     return result
   }
 
@@ -81,7 +78,7 @@ export class TvShowService {
     const cacheKey = `tv:${id}`
 
     try {
-      const cached = await this.redisService.get(cacheKey)
+      const cached = await this.redis.get(cacheKey)
       if (cached) {
         return JSON.parse(cached) as TvShowDetail
       }
@@ -90,7 +87,7 @@ export class TvShowService {
     }
 
     const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
-    url.searchParams.set('api_key', this.configService.getOrThrow<string>('TMDB_API_KEY'))
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('language', 'en-US')
     url.searchParams.set('append_to_response', 'credits,videos,images,recommendations')
     url.searchParams.set('include_image_language', 'en,null')
@@ -111,7 +108,7 @@ export class TvShowService {
     const result = this.mapTvShowDetail(raw)
 
     try {
-      await this.redisService.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
+      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
     } catch {
       void 0
     }

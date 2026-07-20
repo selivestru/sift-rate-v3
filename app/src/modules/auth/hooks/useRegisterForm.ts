@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
+import { setStorageItem } from '~/common/utils/storage'
 
 import { registerSchema, type RegisterInput } from '../schema/auth.schema'
 import { applyApiFormError } from '../utils/applyApiFormError'
@@ -12,6 +14,8 @@ const REGISTER_FIELDS = ['email', 'username', 'password', 'confirmPassword'] as 
 
 export const useRegisterForm = () => {
   const mutation = useRegisterMutation()
+  const navigate = useNavigate()
+
   const [serverError, setServerError] = useState<string | null>(null)
 
   const {
@@ -34,6 +38,8 @@ export const useRegisterForm = () => {
 
     try {
       await mutation.mutateAsync(data)
+      setStorageItem('has_session', true)
+      navigate({ to: '/' })
     } catch (err) {
       const apiError = await getApiError(err)
       applyApiFormError({

@@ -1,14 +1,14 @@
-import { registerAs } from '@nestjs/config'
-
 import { z } from 'zod'
 
-const envSchema = z.object({
+export const envSchema = z.object({
   PORT: z.coerce.number(),
   NODE_ENV: z.enum(['development', 'production', 'test']),
   ORIGIN: z.url(),
 
   DATABASE_URL: z.string(),
   REDIS_URL: z.string(),
+
+  SESSION_SECRET: z.string(),
 
   TMDB_API_KEY: z.string(),
   IGDB_CLIENT_ID: z.string(),
@@ -18,8 +18,6 @@ const envSchema = z.object({
 
 export type EnvConfig = z.infer<typeof envSchema>
 
-export default registerAs('app', () => {
-  envSchema.parse(process.env)
-
-  return {}
-})
+export function validateEnv(config: Record<string, unknown>): EnvConfig {
+  return envSchema.parse(config)
+}

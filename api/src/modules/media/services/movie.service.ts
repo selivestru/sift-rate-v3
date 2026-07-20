@@ -35,22 +35,19 @@ export class MovieService {
   private readonly PRODUCER_JOBS = new Set(['Producer', 'Executive Producer'])
 
   constructor(
-    private readonly configService: ConfigService<EnvConfig>,
-    private readonly redisService: RedisService,
+    private readonly config: ConfigService<EnvConfig, true>,
+    private readonly redis: RedisService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<MovieSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('movie', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<MovieSearchItem>>(
-      this.redisService,
-      cacheKey,
-    )
+    const cached = await getSearchCache<MediaSearchResponse<MovieSearchItem>>(this.redis, cacheKey)
     if (cached) return cached
 
     const url = new URL(this.TMDB_API_URL + '/search/movie')
 
-    url.searchParams.set('api_key', this.configService.getOrThrow<string>('TMDB_API_KEY'))
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('query', q)
     url.searchParams.set('language', 'en-US')
     url.searchParams.set('page', page)
@@ -71,7 +68,7 @@ export class MovieService {
       totalPages: Math.min(response.total_pages, 10),
     }
 
-    await setSearchCache(this.redisService, cacheKey, result)
+    await setSearchCache(this.redis, cacheKey, result)
     return result
   }
 
@@ -79,7 +76,7 @@ export class MovieService {
     const cacheKey = `movie:${id}`
 
     try {
-      const cached = await this.redisService.get(cacheKey)
+      const cached = await this.redis.get(cacheKey)
       if (cached) {
         return JSON.parse(cached) as MovieDetail
       }
@@ -88,7 +85,7 @@ export class MovieService {
     }
 
     const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
-    url.searchParams.set('api_key', this.configService.getOrThrow<string>('TMDB_API_KEY'))
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('language', 'en-US')
     url.searchParams.set('append_to_response', 'credits,videos,images,recommendations')
     url.searchParams.set('include_image_language', 'en,null')
@@ -109,12 +106,7 @@ export class MovieService {
     const result = this.mapMovieDetail(raw)
 
     try {
-      await this.redisService.set(
-        cacheKey,
-        JSON.stringify(result),
-        'EX',
-        this.MOVIE_CACHE_TTL_SECONDS,
-      )
+      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.MOVIE_CACHE_TTL_SECONDS)
     } catch {
       void 0
     }

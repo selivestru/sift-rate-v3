@@ -12,9 +12,11 @@ import {
 } from '~/common/ui/DropdownMenu'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
+import { useLogout } from '~/modules/auth/hooks/useLogout'
 
 export const Profile = () => {
   const user = useAuthStore((state) => state.user!)
+  const { logout } = useLogout()
 
   return (
     <DropdownMenu>
@@ -27,7 +29,7 @@ export const Profile = () => {
           </Avatar>
         }
       />
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-fit">
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <Link
@@ -46,7 +48,7 @@ export const Profile = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="danger" className="justify-between">
+          <DropdownMenuItem variant="danger" className="justify-between" onClick={logout}>
             Log Out
             <LogOut />
           </DropdownMenuItem>

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 
 import { MediaController } from './media.controller'
 import { MediaService } from './media.service'
@@ -9,6 +9,7 @@ import { MovieService } from './services/movie.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
 
+@Global()
 @Module({
   controllers: [MediaController],
   providers: [
@@ -20,5 +21,6 @@ import { TvShowService } from './services/tv_show.service'
     GameService,
     BookService,
   ],
+  exports: [MediaService],
 })
 export class MediaModule {}

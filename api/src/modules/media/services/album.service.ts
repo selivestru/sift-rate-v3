@@ -21,13 +21,13 @@ export class AlbumService {
   private readonly DEEZER_API_URL = 'https://api.deezer.com'
   private readonly ALBUM_CACHE_TTL_SECONDS = 6 * 3600
 
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redis: RedisService) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<AlbumSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('album', q, pageNum)
     const cached = await getSearchCache<MediaSearchResponse<AlbumSearchItem>>(
-      this.redisService,
+      this.redis,
       cacheKey,
       { invalidateAcrossMusicRelease: true },
     )
@@ -56,7 +56,7 @@ export class AlbumService {
       totalPages: Math.min(totalPages, 10),
     }
 
-    await setSearchCache(this.redisService, cacheKey, result)
+    await setSearchCache(this.redis, cacheKey, result)
     return result
   }
 
@@ -64,7 +64,7 @@ export class AlbumService {
     const cacheKey = `album:${id}`
 
     try {
-      const cached = await this.redisService.get(cacheKey)
+      const cached = await this.redis.get(cacheKey)
       if (cached) {
         return JSON.parse(cached) as AlbumDetail
       }
@@ -104,12 +104,7 @@ export class AlbumService {
     }
 
     try {
-      await this.redisService.set(
-        cacheKey,
-        JSON.stringify(result),
-        'EX',
-        this.ALBUM_CACHE_TTL_SECONDS,
-      )
+      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.ALBUM_CACHE_TTL_SECONDS)
     } catch {
       void 0
     }

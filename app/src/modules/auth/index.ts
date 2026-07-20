@@ -1,3 +1,4 @@
+export * from './components/AuthBootstrap'
 export * from './components/AuthShell'
 export * from './components/ForgotPasswordForm'
 export * from './components/LoginForm'

@@ -11,8 +11,6 @@ interface TrailerEmbedProps {
   className?: string
 }
 
-const fadeTransition = { duration: 0.18, ease: 'easeOut' } as const
-
 export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
   const [activeId, setActiveId] = useState(() => videos[0]?.id ?? '')
   const [playing, setPlaying] = useState(false)
@@ -28,6 +26,7 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
         <div key={`${active.id}-${playing ? 'play' : 'idle'}`} className="size-full">
           {playing ? (
             <iframe
+              sandbox=""
               title={active.name}
               src={`https://www.youtube-nocookie.com/embed/${active.key}?autoplay=1&rel=0`}
               className="size-full"

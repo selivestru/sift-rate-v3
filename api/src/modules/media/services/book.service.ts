@@ -25,17 +25,14 @@ export class BookService {
   private readonly MORE_BY_AUTHOR_LIMIT = 12
 
   constructor(
-    private readonly configService: ConfigService<EnvConfig>,
-    private readonly redisService: RedisService,
+    private readonly config: ConfigService<EnvConfig, true>,
+    private readonly redis: RedisService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<BookSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('book', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<BookSearchItem>>(
-      this.redisService,
-      cacheKey,
-    )
+    const cached = await getSearchCache<MediaSearchResponse<BookSearchItem>>(this.redis, cacheKey)
     if (cached) return cached
 
     const url = new URL(this.GOOGLE_BOOKS_API_URL + '/volumes')
@@ -43,7 +40,7 @@ export class BookService {
     url.searchParams.set('q', q)
     url.searchParams.set('startIndex', String((pageNum - 1) * 10)) // TODO: fix pagination
     url.searchParams.set('maxResults', String(10)) // TODO: fix pagination
-    url.searchParams.set('key', this.configService.getOrThrow<string>('GOOGLE_BOOKS_API_KEY'))
+    url.searchParams.set('key', this.config.get('GOOGLE_BOOKS_API_KEY', { infer: true }))
 
     const response = await ky<BookSearchResult>(url.toString()).json()
 
@@ -73,7 +70,7 @@ export class BookService {
       totalPages: Math.min(totalPages, 10),
     }
 
-    await setSearchCache(this.redisService, cacheKey, result)
+    await setSearchCache(this.redis, cacheKey, result)
     return result
   }
 
@@ -86,7 +83,7 @@ export class BookService {
     const cacheKey = `book:${bookId}`
 
     try {
-      const cached = await this.redisService.get(cacheKey)
+      const cached = await this.redis.get(cacheKey)
       if (cached) {
         return JSON.parse(cached) as BookDetail
       }
@@ -95,7 +92,7 @@ export class BookService {
     }
 
     const url = new URL(`${this.GOOGLE_BOOKS_API_URL}/volumes/${encodeURIComponent(bookId)}`)
-    url.searchParams.set('key', this.configService.getOrThrow<string>('GOOGLE_BOOKS_API_KEY'))
+    url.searchParams.set('key', this.config.get('GOOGLE_BOOKS_API_KEY', { infer: true }))
 
     let raw: GoogleVolume
 
@@ -120,12 +117,7 @@ export class BookService {
     const result = this.mapBookDetail(raw, moreByAuthor)
 
     try {
-      await this.redisService.set(
-        cacheKey,
-        JSON.stringify(result),
-        'EX',
-        this.BOOK_CACHE_TTL_SECONDS,
-      )
+      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.BOOK_CACHE_TTL_SECONDS)
     } catch {
       void 0
     }
@@ -255,7 +247,7 @@ export class BookService {
     url.searchParams.set('printType', 'books')
     url.searchParams.set('maxResults', String(this.MORE_BY_AUTHOR_LIMIT))
     url.searchParams.set('orderBy', 'relevance')
-    url.searchParams.set('key', this.configService.getOrThrow<string>('GOOGLE_BOOKS_API_KEY'))
+    url.searchParams.set('key', this.config.get('GOOGLE_BOOKS_API_KEY', { infer: true }))
 
     try {
       const response = await ky.get(url.toString()).json<GoogleBooksListResponse>()

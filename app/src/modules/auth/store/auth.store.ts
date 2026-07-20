@@ -1,4 +1,7 @@
+import z from 'zod'
 import { create } from 'zustand'
+
+import { getStorageItem } from '~/common/utils/storage'
 
 import type { User } from '../types/user.type'
 
@@ -18,7 +21,7 @@ type Store = AuthState & AuthActions
 export const useAuthStore = create<Store>()((set) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: getStorageItem('has_session', z.boolean(), false),
 
   setUser: (user) =>
     set({
