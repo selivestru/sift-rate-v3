@@ -16,15 +16,7 @@ interface AuthActions {
 type Store = AuthState & AuthActions
 
 export const useAuthStore = create<Store>()((set) => ({
-  // TODO: remove
-  // user: null,
-  user: {
-    id: '1',
-    email: 'sifmeop@gmail.com',
-    username: 'sifmeop',
-    avatarUrl: 'https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg',
-    subscription: 'MONTHLY',
-  },
+  user: null,
   isAuthenticated: false,
   isLoading: false,
 

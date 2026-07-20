@@ -7,12 +7,15 @@ import { useAuthStore, type Subscription } from '~/modules/auth'
 
 interface NavItemProps {
   item: NavItemConfig
+  isAuthenticated: boolean
   currentSubscription: Subscription
   nested?: boolean
 }
 
-function NavItem({ item, currentSubscription, nested }: NavItemProps) {
-  const isLocked = item.subscriptionRequired ? currentSubscription === 'FREE' : false
+function NavItem({ item, isAuthenticated, currentSubscription, nested }: NavItemProps) {
+  const isLocked =
+    (item.authRequired && !isAuthenticated) ||
+    (item.subscriptionRequired ? currentSubscription === 'FREE' : false)
 
   return (
     <>
@@ -48,9 +51,10 @@ function NavItem({ item, currentSubscription, nested }: NavItemProps) {
         <ul className="border-border/60 mt-1 ml-5 flex flex-col gap-0.5 border-l pl-2">
           {item.children.map((child) => (
             <NavItem
-              key={child.params?.mediaType ?? child.to}
               nested
+              key={child.params?.mediaType ?? child.to}
               item={child}
+              isAuthenticated={isAuthenticated}
               currentSubscription={currentSubscription}
             />
           ))}
@@ -61,13 +65,19 @@ function NavItem({ item, currentSubscription, nested }: NavItemProps) {
 }
 
 export const Navigation = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const currentSubscription = useAuthStore((state) => state.user?.subscription ?? 'FREE')
 
   return (
     <nav>
       <ul className="flex flex-col gap-1">
         {navItems.map((item) => (
-          <NavItem key={item.to} item={item} currentSubscription={currentSubscription} />
+          <NavItem
+            key={item.to}
+            item={item}
+            isAuthenticated={isAuthenticated}
+            currentSubscription={currentSubscription}
+          />
         ))}
       </ul>
     </nav>

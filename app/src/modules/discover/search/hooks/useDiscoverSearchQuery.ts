@@ -20,7 +20,7 @@ export const useDiscoverSearchQuery = <T>({
   const enabled = trimmedQuery.length >= 2
 
   const query = useQuery({
-    queryKey: [...config.queryKey, trimmedQuery, page, pageSize],
+    queryKey: [...config.queryKey, trimmedQuery, page],
     queryFn: () =>
       config.queryFn({
         slug: mediaTypeToSlug[config.mediaType],

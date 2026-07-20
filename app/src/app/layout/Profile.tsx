@@ -14,7 +14,7 @@ import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
 
 export const Profile = () => {
-  const { username, email, avatarUrl } = useAuthStore((state) => state.user!)
+  const user = useAuthStore((state) => state.user!)
 
   return (
     <DropdownMenu>
@@ -22,8 +22,8 @@ export const Profile = () => {
         nativeButton={false}
         render={
           <Avatar size="lg">
-            <AvatarImage src={avatarUrl!} alt={username!} />
-            <AvatarFallback>{getFirstLetter(username!)}</AvatarFallback>
+            <AvatarImage src={user.avatarUrl!} alt={user.username!} />
+            <AvatarFallback>{getFirstLetter(user.username!)}</AvatarFallback>
           </Avatar>
         }
       />
@@ -32,16 +32,16 @@ export const Profile = () => {
           <DropdownMenuItem>
             <Link
               to="/$username"
-              params={{ username: username! }}
+              params={{ username: user.username! }}
               className="flex items-center gap-2"
             >
               <Avatar>
-                <AvatarImage src={avatarUrl!} alt={username!} />
-                <AvatarFallback>{getFirstLetter(username!)}</AvatarFallback>
+                <AvatarImage src={user.avatarUrl!} alt={user.username!} />
+                <AvatarFallback>{getFirstLetter(user.username!)}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-0">
-                <p className="text-sm font-medium">{username}</p>
-                <p className="text-muted-foreground text-xs">{email}</p>
+                <p className="text-sm font-medium">{user.username}</p>
+                <p className="text-muted-foreground text-xs">{user.email}</p>
               </div>
             </Link>
           </DropdownMenuItem>

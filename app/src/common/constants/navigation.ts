@@ -21,6 +21,7 @@ export interface NavItemConfig {
   label: string
   icon: LucideIcon
   description: string
+  authRequired?: boolean
   subscriptionRequired?: boolean
   color: string
   params?: { mediaType: MediaTypeSlug }
@@ -98,6 +99,7 @@ export const navItems: NavItemConfig[] = [
     icon: LibraryIcon,
     description: 'Your media library',
     color: '#8B5CF6',
+    authRequired: true,
     children: [
       {
         to: '/library/ratings',
@@ -105,6 +107,7 @@ export const navItems: NavItemConfig[] = [
         icon: StarIcon,
         description: 'Rating archive',
         color: '#F59E0B',
+        authRequired: true,
       },
       {
         to: '/library/lists',
@@ -112,6 +115,7 @@ export const navItems: NavItemConfig[] = [
         icon: ListIcon,
         description: 'Ordered personal rankings',
         color: '#3B82F6',
+        authRequired: true,
       },
       {
         to: '/library/planned',
@@ -119,6 +123,7 @@ export const navItems: NavItemConfig[] = [
         icon: CalendarCheckIcon,
         description: 'Watch and play later',
         color: '#10B981',
+        authRequired: true,
       },
     ],
   },
@@ -128,6 +133,7 @@ export const navItems: NavItemConfig[] = [
     icon: SparklesIcon,
     description: 'Your media life story',
     color: '#F43F5E',
+    authRequired: true,
     subscriptionRequired: true,
     children: [
       {
@@ -136,6 +142,7 @@ export const navItems: NavItemConfig[] = [
         icon: ClockIcon,
         description: 'Review timeline',
         color: '#F43F5E',
+        authRequired: true,
         subscriptionRequired: true,
       },
       {
@@ -144,6 +151,7 @@ export const navItems: NavItemConfig[] = [
         icon: GiftIcon,
         description: 'Monthly and yearly recaps',
         color: '#A855F7',
+        authRequired: true,
         subscriptionRequired: true,
       },
       {
@@ -152,6 +160,7 @@ export const navItems: NavItemConfig[] = [
         icon: BrainIcon,
         description: 'Moments worth keeping',
         color: '#06B6D4',
+        authRequired: true,
         subscriptionRequired: true,
       },
     ],

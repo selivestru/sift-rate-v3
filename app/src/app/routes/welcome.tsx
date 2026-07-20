@@ -4,11 +4,7 @@ export const Route = createFileRoute('/welcome')({
   beforeLoad: ({ context }) => {
     const { user } = context.auth
 
-    if (!user) {
-      throw redirect({ to: '/auth/login' })
-    }
-
-    if (user.username) {
+    if (!user || user.username) {
       throw redirect({ to: '/' })
     }
   },
