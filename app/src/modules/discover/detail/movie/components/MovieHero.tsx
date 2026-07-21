@@ -8,6 +8,7 @@ import { formatDate } from '~/common/utils/formatDate'
 import { formatRuntime } from '~/common/utils/formatRuntime'
 
 import { MediaCoverLightbox } from '../../shared'
+import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { MovieDetail } from '../types/movie-detail.types'
 
 interface MovieHeroProps {
@@ -56,7 +57,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
         />
       )}
 
-      <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-end sm:gap-5 sm:p-6 sm:pt-8">
+      <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-start sm:gap-5 sm:p-6 sm:pt-8">
         <div className="bg-muted ring-foreground/10 relative aspect-2/3 w-40 shrink-0 overflow-hidden rounded-xl shadow-xl ring-1 sm:w-52">
           <MediaCoverLightbox
             src={movie.posterUrl}
@@ -136,6 +137,8 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
               </div>
             </div>
           )}
+
+          <MediaStateButtons externalId={movie.id} mediaType={MEDIA_TYPES.MOVIE} />
 
           {movie.genres.length > 0 && (
             <div className="flex flex-wrap gap-1.5">

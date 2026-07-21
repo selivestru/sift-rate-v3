@@ -14,6 +14,13 @@ export const envSchema = z.object({
   IGDB_CLIENT_ID: z.string(),
   IGDB_CLIENT_SECRET: z.string(),
   GOOGLE_BOOKS_API_KEY: z.string(),
+
+  S3_BUCKET: z.string().min(1),
+  S3_REGION: z.string().min(1),
+  S3_ACCESS_KEY_ID: z.string().min(1),
+  S3_SECRET_ACCESS_KEY: z.string().min(1),
+  /** Public base for objects, no trailing slash (CDN or virtual-host S3 URL). */
+  S3_PUBLIC_BASE_URL: z.url(),
 })
 
 export type EnvConfig = z.infer<typeof envSchema>

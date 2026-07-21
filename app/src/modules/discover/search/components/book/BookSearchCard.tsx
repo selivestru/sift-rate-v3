@@ -23,10 +23,10 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
       className={cn(
         'bg-card group relative flex items-stretch gap-0 overflow-hidden rounded-2xl transition-all duration-400 ease-out',
         'hover:scale-[1.01] hover:shadow-lg active:scale-[0.99]',
-        'ring-border/60 ring-1 hover:ring-(--card-color)/25',
+        'ring-border/60 ring-1 hover:ring-(--card-accent)/25',
       )}
       style={{
-        '--card-color': color,
+        '--card-accent': color,
       }}
     >
       <div className="bg-muted relative aspect-2/3 w-24 shrink-0 overflow-hidden rounded-l-2xl sm:w-32">
@@ -49,7 +49,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
         />
       </div>
 
-      <span className="absolute inset-y-0 left-24 z-20 w-1 bg-(--card-color)/25 transition-colors duration-300 group-hover:bg-(--card-color) sm:left-32" />
+      <span className="absolute inset-y-0 left-24 z-20 w-1 bg-(--card-accent)/25 transition-colors duration-300 group-hover:bg-(--card-accent) sm:left-32" />
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-3 pl-4">
         <MediaTypeBadge mediaType={MEDIA_TYPES.BOOK} className="w-fit py-0.5 text-[10px]" />
@@ -66,7 +66,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
           {item.year && <span className="tabular-nums">{item.year}</span>}
           {item.pageCount != null && <span className="tabular-nums">· {item.pageCount} pp</span>}
           {item.rating != null && (
-            <span className="flex items-center gap-0.5 font-medium text-(--card-color) tabular-nums">
+            <span className="flex items-center gap-0.5 font-medium text-(--card-accent) tabular-nums">
               <StarIcon className="size-3.5 fill-current" />
               {item.rating.toFixed(1)}
             </span>

@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
+import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { setStorageItem } from '~/common/utils/storage'
 
 import { registerSchema, type RegisterInput } from '../schema/auth.schema'
-import { applyApiFormError } from '../utils/applyApiFormError'
 import { useRegisterMutation } from './useRegisterMutation'
 
 const REGISTER_FIELDS = ['email', 'username', 'password', 'confirmPassword'] as const
@@ -40,8 +40,8 @@ export const useRegisterForm = () => {
       await mutation.mutateAsync(data)
       setStorageItem('has_session', true)
       navigate({ to: '/' })
-    } catch (err) {
-      const apiError = await getApiError(err)
+    } catch (error) {
+      const apiError = await getApiError(error)
       applyApiFormError({
         apiError,
         setError,

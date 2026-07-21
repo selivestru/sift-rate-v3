@@ -83,7 +83,7 @@ export class TvShowService {
         return JSON.parse(cached) as TvShowDetail
       }
     } catch {
-      void 0
+      // ignore
     }
 
     const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
@@ -110,7 +110,7 @@ export class TvShowService {
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
     } catch {
-      void 0
+      // ignore
     }
 
     return result

@@ -1,3 +1,4 @@
+import { Media, PlannedItem, Review, User } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
 
 export type MediaTypeSlug = Lowercase<MediaType>
@@ -39,4 +40,28 @@ export interface MediaSearchResponse<T> {
   results: T[]
   totalResults: number
   totalPages: number
+}
+
+export interface MediaSnapshot {
+  title: string
+  posterUrl: string | null
+}
+
+export interface EnsureMediaResult {
+  media: Media
+  inserted: boolean
+}
+
+export type MediaStateResponse = {
+  review: Review | null
+  plannedItem: PlannedItem | null
+}
+
+type MediaReview = Review & {
+  user: Pick<User, 'id' | 'username' | 'avatarUrl'>
+}
+
+export interface MediaReviewsResponse {
+  data: MediaReview[]
+  nextCursor: string | null
 }

@@ -6,6 +6,7 @@ import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 
 import { MediaCoverLightbox } from '../../shared'
+import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { TvShowDetail } from '../types/tv-show-detail.types'
 
 interface TvShowHeroProps {
@@ -62,7 +63,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
         />
       )}
 
-      <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-end sm:gap-5 sm:p-6 sm:pt-8">
+      <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-start sm:gap-5 sm:p-6 sm:pt-8">
         <div className="bg-muted ring-foreground/10 relative aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl shadow-xl ring-1 sm:w-48">
           <MediaCoverLightbox
             src={show.posterUrl}
@@ -146,6 +147,8 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
               </div>
             </div>
           )}
+
+          <MediaStateButtons externalId={show.id} mediaType={MEDIA_TYPES.TV_SHOW} />
 
           {show.genres.length > 0 && (
             <div className="flex flex-wrap gap-1.5">

@@ -7,7 +7,7 @@ import { librarySections } from '../constants/library-sections'
 
 export const LibraryPage = () => {
   return (
-    <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-7 sm:p-6">
+    <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-8 sm:p-6">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-56 opacity-90"
         aria-hidden
@@ -17,7 +17,7 @@ export const LibraryPage = () => {
         }}
       />
 
-      <div className="z-px relative flex flex-col gap-2">
+      <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-xl">
             <LibraryIcon className="size-4" strokeWidth={1.75} />

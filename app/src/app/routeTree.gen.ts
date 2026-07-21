@@ -22,7 +22,7 @@ import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AppDiscoverIndexRouteImport } from './routes/_app/discover/index'
 import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
 import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
-import { Route as AppLibraryRatingsRouteImport } from './routes/_app/library/ratings'
+import { Route as AppLibraryReviewsRouteImport } from './routes/_app/library/reviews'
 import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
 import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
 import { Route as AppLifeTimelineRouteImport } from './routes/_app/life/timeline'
@@ -106,9 +106,9 @@ const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
   path: '/planned',
   getParentRoute: () => AppLibraryRouteRoute,
 } as any)
-const AppLibraryRatingsRoute = AppLibraryRatingsRouteImport.update({
-  id: '/ratings',
-  path: '/ratings',
+const AppLibraryReviewsRoute = AppLibraryReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
   getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 const AppLifeIndexRoute = AppLifeIndexRouteImport.update({
@@ -219,7 +219,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/library/planned': typeof AppLibraryPlannedRoute
-  '/library/ratings': typeof AppLibraryRatingsRoute
+  '/library/reviews': typeof AppLibraryReviewsRoute
   '/life/memories': typeof AppLifeMemoriesRoute
   '/life/timeline': typeof AppLifeTimelineRoute
   '/life/wrapped': typeof AppLifeWrappedRoute
@@ -250,7 +250,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/library/planned': typeof AppLibraryPlannedRoute
-  '/library/ratings': typeof AppLibraryRatingsRoute
+  '/library/reviews': typeof AppLibraryReviewsRoute
   '/life/memories': typeof AppLifeMemoriesRoute
   '/life/timeline': typeof AppLifeTimelineRoute
   '/life/wrapped': typeof AppLifeWrappedRoute
@@ -285,7 +285,7 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
   '/_app/library/planned': typeof AppLibraryPlannedRoute
-  '/_app/library/ratings': typeof AppLibraryRatingsRoute
+  '/_app/library/reviews': typeof AppLibraryReviewsRoute
   '/_app/life/memories': typeof AppLifeMemoriesRoute
   '/_app/life/timeline': typeof AppLifeTimelineRoute
   '/_app/life/wrapped': typeof AppLifeWrappedRoute
@@ -320,7 +320,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/library/planned'
-    | '/library/ratings'
+    | '/library/reviews'
     | '/life/memories'
     | '/life/timeline'
     | '/life/wrapped'
@@ -351,7 +351,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/'
     | '/library/planned'
-    | '/library/ratings'
+    | '/library/reviews'
     | '/life/memories'
     | '/life/timeline'
     | '/life/wrapped'
@@ -385,7 +385,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/_app/'
     | '/_app/library/planned'
-    | '/_app/library/ratings'
+    | '/_app/library/reviews'
     | '/_app/life/memories'
     | '/_app/life/timeline'
     | '/_app/life/wrapped'
@@ -507,11 +507,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLibraryPlannedRouteImport
       parentRoute: typeof AppLibraryRouteRoute
     }
-    '/_app/library/ratings': {
-      id: '/_app/library/ratings'
-      path: '/ratings'
-      fullPath: '/library/ratings'
-      preLoaderRoute: typeof AppLibraryRatingsRouteImport
+    '/_app/library/reviews': {
+      id: '/_app/library/reviews'
+      path: '/reviews'
+      fullPath: '/library/reviews'
+      preLoaderRoute: typeof AppLibraryReviewsRouteImport
       parentRoute: typeof AppLibraryRouteRoute
     }
     '/_app/life/': {
@@ -661,7 +661,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface AppLibraryRouteRouteChildren {
   AppLibraryPlannedRoute: typeof AppLibraryPlannedRoute
-  AppLibraryRatingsRoute: typeof AppLibraryRatingsRoute
+  AppLibraryReviewsRoute: typeof AppLibraryReviewsRoute
   AppLibraryIndexRoute: typeof AppLibraryIndexRoute
   AppLibraryListsListIdRoute: typeof AppLibraryListsListIdRoute
   AppLibraryListsIndexRoute: typeof AppLibraryListsIndexRoute
@@ -669,7 +669,7 @@ interface AppLibraryRouteRouteChildren {
 
 const AppLibraryRouteRouteChildren: AppLibraryRouteRouteChildren = {
   AppLibraryPlannedRoute: AppLibraryPlannedRoute,
-  AppLibraryRatingsRoute: AppLibraryRatingsRoute,
+  AppLibraryReviewsRoute: AppLibraryReviewsRoute,
   AppLibraryIndexRoute: AppLibraryIndexRoute,
   AppLibraryListsListIdRoute: AppLibraryListsListIdRoute,
   AppLibraryListsIndexRoute: AppLibraryListsIndexRoute,

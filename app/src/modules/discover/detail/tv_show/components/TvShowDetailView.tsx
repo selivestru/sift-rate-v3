@@ -1,3 +1,6 @@
+import { MEDIA_TYPES } from '~/common/constants/media-type'
+
+import { MediaReviews } from '../../shared/components/MediaReviews'
 import type { TvShowDetail } from '../types/tv-show-detail.types'
 import { TvShowCast } from './TvShowCast'
 import { TvShowFacts } from './TvShowFacts'
@@ -48,6 +51,8 @@ export const TvShowDetailView = ({ show }: TvShowDetailViewProps) => {
         )}
 
         {hasSimilar && <TvShowSimilar items={show.similar} />}
+
+        <MediaReviews mediaType={MEDIA_TYPES.TV_SHOW} externalId={show.id} />
       </div>
     </div>
   )

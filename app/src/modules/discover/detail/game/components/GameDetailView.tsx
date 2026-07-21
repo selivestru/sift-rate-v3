@@ -1,3 +1,6 @@
+import { MEDIA_TYPES } from '~/common/constants/media-type'
+
+import { MediaReviews } from '../../shared/components/MediaReviews'
 import type { GameDetail } from '../types/game-detail.types'
 import { GameCompanies } from './GameCompanies'
 import { GameFacts } from './GameFacts'
@@ -67,6 +70,8 @@ export const GameDetailView = ({ game }: GameDetailViewProps) => {
         {hasRelated && <GameRelated game={game} />}
 
         {hasSimilar && <GameSimilar items={game.similar} />}
+
+        <MediaReviews mediaType={MEDIA_TYPES.GAME} externalId={game.id} />
       </div>
     </div>
   )

@@ -222,7 +222,7 @@ export class GameService {
         return JSON.parse(cached) as GameDetail
       }
     } catch {
-      void 0
+      // ignore
     }
 
     let rows: IgdbGameRaw[]
@@ -248,7 +248,7 @@ export class GameService {
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.GAME_CACHE_TTL_SECONDS)
     } catch {
-      void 0
+      // ignore
     }
 
     return result

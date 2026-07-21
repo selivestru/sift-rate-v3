@@ -4,7 +4,7 @@ export const Route = createFileRoute('/_app/life')({
   beforeLoad: ({ context }) => {
     const { user } = context.auth
 
-    if (!user || user.subscription !== 'FREE') {
+    if (!user || user.subscription === 'FREE') {
       throw redirect({ to: '/' })
     }
   },

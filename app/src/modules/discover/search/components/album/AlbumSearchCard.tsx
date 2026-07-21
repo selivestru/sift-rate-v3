@@ -22,10 +22,10 @@ export const AlbumSearchCard = ({ item }: AlbumSearchCardProps) => {
       className={cn(
         'bg-card group relative flex flex-col overflow-hidden rounded-2xl transition-all duration-400 ease-out',
         'hover:scale-[1.02] hover:shadow-lg active:scale-[0.99]',
-        'ring-1 ring-(--card-color)/8 hover:ring-(--card-color)/25',
+        'ring-1 ring-(--card-accent)/8 hover:ring-(--card-accent)/25',
       )}
       style={{
-        '--card-color': color,
+        '--card-accent': color,
       }}
     >
       <div className="relative aspect-square w-full overflow-hidden rounded-t-2xl">

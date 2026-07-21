@@ -81,7 +81,7 @@ export class MovieService {
         return JSON.parse(cached) as MovieDetail
       }
     } catch {
-      void 0
+      // ignore
     }
 
     const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
@@ -108,7 +108,7 @@ export class MovieService {
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.MOVIE_CACHE_TTL_SECONDS)
     } catch {
-      void 0
+      // ignore
     }
 
     return result

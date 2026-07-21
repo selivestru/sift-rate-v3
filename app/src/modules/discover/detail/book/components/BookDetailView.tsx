@@ -1,3 +1,6 @@
+import { MEDIA_TYPES } from '~/common/constants/media-type'
+
+import { MediaReviews } from '../../shared/components/MediaReviews'
 import type { BookDetail } from '../types/book-detail.types'
 import { BookDescription } from './BookDescription'
 import { BookFacts } from './BookFacts'
@@ -40,6 +43,8 @@ export const BookDetailView = ({ book }: BookDetailViewProps) => {
         {hasMoreByAuthor && (
           <BookMoreByAuthor author={book.primaryAuthor} items={book.moreByAuthor} />
         )}
+
+        <MediaReviews mediaType={MEDIA_TYPES.BOOK} externalId={book.id} />
       </div>
     </div>
   )

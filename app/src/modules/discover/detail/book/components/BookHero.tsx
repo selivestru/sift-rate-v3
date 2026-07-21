@@ -5,6 +5,7 @@ import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 
 import { MediaCoverLightbox } from '../../shared'
+import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { BookDetail } from '../types/book-detail.types'
 import { formatPublished } from '../utils/format-published'
 
@@ -55,7 +56,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
           />
 
           <div
-            className="bg-muted relative aspect-2/3 w-[9.5rem] overflow-hidden rounded-sm sm:w-48"
+            className="bg-muted relative aspect-2/3 w-38 overflow-hidden rounded-sm sm:w-48"
             style={{
               boxShadow: [
                 `-10px 0 0 -4px color-mix(in oklab, ${accent} 55%, #1a1208)`,
@@ -142,6 +143,8 @@ export const BookHero = ({ book }: BookHeroProps) => {
             }}
           />
 
+          <MediaStateButtons externalId={book.id} mediaType={MEDIA_TYPES.BOOK} className="mb-5" />
+
           {stats.length > 0 && (
             <dl className="mb-5 flex max-w-full flex-wrap items-start justify-center gap-x-0 gap-y-3">
               {stats.slice(0, 4).map((stat, index) => (
@@ -155,7 +158,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
                   <dt className="text-muted-foreground text-[9px] font-medium tracking-[0.16em] uppercase">
                     {stat.label}
                   </dt>
-                  <dd className="text-foreground mt-0.5 max-w-[7.5rem] truncate text-xs font-medium tabular-nums sm:text-sm">
+                  <dd className="text-foreground mt-0.5 max-w-30 truncate text-xs font-medium tabular-nums sm:text-sm">
                     {stat.value}
                   </dd>
                 </div>

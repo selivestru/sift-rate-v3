@@ -1,4 +1,7 @@
+import { MEDIA_TYPES } from '~/common/constants/media-type'
+
 import { AlbumRail, ContributorList, TrackRail } from '../../shared'
+import { MediaReviews } from '../../shared/components/MediaReviews'
 import type { TrackDetail } from '../types/track-detail.types'
 import { TrackHero } from './TrackHero'
 
@@ -31,6 +34,8 @@ export const TrackDetailView = ({ track }: TrackDetailViewProps) => {
             items={track.artistAlbums}
           />
         )}
+
+        <MediaReviews mediaType={MEDIA_TYPES.TRACK} externalId={track.id} />
       </div>
     </div>
   )

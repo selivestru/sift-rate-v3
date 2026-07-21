@@ -7,6 +7,7 @@ import { formatDate } from '~/common/utils/formatDate'
 import { formatDuration } from '~/common/utils/formatDuration'
 
 import { MediaCoverLightbox } from '../../shared'
+import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { TrackDetail } from '../types/track-detail.types'
 
 interface TrackHeroProps {
@@ -58,20 +59,6 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
               ].join(', '),
             }}
           />
-        )}
-
-        {durationLabel && (
-          <div
-            aria-hidden
-            className="pointer-events-none absolute top-10 right-5 select-none sm:top-12 sm:right-8"
-          >
-            <span
-              className="text-6xl font-bold tracking-tighter tabular-nums opacity-[0.12] sm:text-7xl"
-              style={{ color: accent }}
-            >
-              {durationLabel}
-            </span>
-          </div>
         )}
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
@@ -150,6 +137,8 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
                   </>
                 )}
               </div>
+
+              <MediaStateButtons externalId={track.id} mediaType={MEDIA_TYPES.TRACK} />
             </div>
           </div>
         </div>

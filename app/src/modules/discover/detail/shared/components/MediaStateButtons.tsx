@@ -1,0 +1,77 @@
+import { StarIcon, TrashIcon } from 'lucide-react'
+
+import type { MediaType } from '~/common/constants/media-type'
+import { Button } from '~/common/ui/Button'
+import { Skeleton } from '~/common/ui/Skeleton'
+import { cn } from '~/common/utils/cn'
+import { PlannedToggleButton } from '~/modules/planned'
+import { DialogReviewDialog, UpsertReviewDialog } from '~/modules/review'
+
+import { useGetMediaState } from '../hooks/useGetMediaState'
+
+interface MediaStateButtonsProps {
+  externalId: string
+  mediaType: MediaType
+  className?: string
+}
+
+export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProps) => {
+  const { data, isLoading, isError } = useGetMediaState(props)
+
+  if (isLoading) {
+    return (
+      <div className={cn('flex gap-1.5', className)}>
+        {Array.from({ length: 2 }).map((_, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <Skeleton key={index} className="h-10 w-20 rounded-3xl" />
+        ))}
+      </div>
+    )
+  }
+
+  if (!data || isError) {
+    return
+  }
+
+  const hasReview = !!data.review
+
+  return (
+    <div className={cn('flex gap-1', className)}>
+      <UpsertReviewDialog
+        key={data.review?.id ? 'edit' : 'create'}
+        media={props}
+        initialData={data.review}
+      >
+        {({ open }) => (
+          <Button
+            variant={hasReview ? 'secondary' : 'default'}
+            className={cn(hasReview && 'text-rating')}
+            startIcon={
+              <StarIcon
+                className={cn(hasReview && 'fill-rating text-rating stroke-rating')}
+                aria-hidden
+              />
+            }
+            onClick={open}
+            aria-label={
+              hasReview ? `Edit rating, ${data.review!.rating} out of 10` : 'Rate this title'
+            }
+          >
+            {hasReview ? data.review!.rating : 'Rate'}
+          </Button>
+        )}
+      </UpsertReviewDialog>
+      {hasReview ? (
+        <DialogReviewDialog reviewId={data.review!.id}>
+          {({ open }) => (
+            <Button isIconOnly variant="danger-soft" onClick={open} aria-label="Delete review">
+              <TrashIcon />
+            </Button>
+          )}
+        </DialogReviewDialog>
+      ) : (
+        <PlannedToggleButton id={data.plannedItem?.id} {...props} />
+      )}
+    </div>
+  )
+}

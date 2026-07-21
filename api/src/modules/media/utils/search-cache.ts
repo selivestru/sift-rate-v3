@@ -54,6 +54,6 @@ export const setSearchCache = async <T>(
   try {
     await redis.set(key, JSON.stringify(envelope), 'EX', SEARCH_CACHE_TTL_SECONDS)
   } catch {
-    void 0
+    // ignore
   }
 }

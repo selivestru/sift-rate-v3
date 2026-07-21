@@ -1,3 +1,6 @@
+import { MEDIA_TYPES } from '~/common/constants/media-type'
+
+import { MediaReviews } from '../../shared/components/MediaReviews'
 import type { MovieDetail } from '../types/movie-detail.types'
 import { MovieCast } from './MovieCast'
 import { MovieCrewAndFacts } from './MovieCrewAndFacts'
@@ -43,6 +46,8 @@ export const MovieDetailView = ({ movie }: MovieDetailViewProps) => {
         )}
 
         {hasSimilar && <MovieSimilar items={movie.similar} />}
+
+        <MediaReviews mediaType={MEDIA_TYPES.MOVIE} externalId={movie.id} />
       </div>
     </div>
   )

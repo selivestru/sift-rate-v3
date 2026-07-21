@@ -88,7 +88,7 @@ export class BookService {
         return JSON.parse(cached) as BookDetail
       }
     } catch {
-      void 0
+      // ignore
     }
 
     const url = new URL(`${this.GOOGLE_BOOKS_API_URL}/volumes/${encodeURIComponent(bookId)}`)
@@ -119,7 +119,7 @@ export class BookService {
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.BOOK_CACHE_TTL_SECONDS)
     } catch {
-      void 0
+      // ignore
     }
 
     return result

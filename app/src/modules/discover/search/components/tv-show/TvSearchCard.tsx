@@ -22,10 +22,10 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
       params={{ externalId: item.id }}
       className={cn(
         'bg-card group relative flex gap-4 overflow-hidden rounded-2xl transition-all duration-500 ease-out hover:scale-[1.01] hover:shadow-lg active:scale-[0.99]',
-        'ring-1 ring-border hover:ring-(--card-color)',
+        'ring-1 ring-border hover:ring-(--card-accent)',
       )}
       style={{
-        '--card-color': color,
+        '--card-accent': color,
       }}
     >
       <div
@@ -53,7 +53,7 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
           </>
         ) : (
           <div className="flex size-full items-center justify-center">
-            <MediaTypeIcon className="size-10 text-(--card-color)" />
+            <MediaTypeIcon className="size-10 text-(--card-accent)" />
           </div>
         )}
       </div>
@@ -92,7 +92,7 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
         )}
 
         <Button
-          className="w-fit bg-(--card-color)/40 hover:bg-(--card-color)/60"
+          className="w-fit bg-(--card-accent)/40 hover:bg-(--card-accent)/60"
           endIcon={
             <ArrowRightIcon className="size-3.5 transition-transform duration-500 group-hover:translate-x-0.5" />
           }

@@ -22,16 +22,16 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
       params={{ externalId: item.id }}
       className={cn(
         'bg-card group relative flex items-center gap-3 overflow-hidden rounded-xl p-2 pr-3 transition-all duration-300 ease-out',
-        'hover:scale-[1.005] hover:bg-(--card-color)/5 active:scale-[0.995]',
-        'ring-border/60 ring-1 hover:ring-(--card-color)/25',
+        'hover:scale-[1.005] hover:bg-(--card-accent)/5 active:scale-[0.995]',
+        'ring-border/60 ring-1 hover:ring-(--card-accent)/25',
       )}
-      style={{ '--card-color': color }}
+      style={{ '--card-accent': color }}
     >
       <div
         className={cn(
           'bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg',
           {
-            'ring-1 transition-all duration-300 group-hover:ring-(--card-color) ring-ring/50':
+            'ring-1 transition-all duration-300 group-hover:ring-(--card-accent) ring-ring/50':
               !item.coverUrl,
           },
         )}
@@ -44,7 +44,7 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
             loading="lazy"
           />
         ) : (
-          <MediaTypeIcon className="text-muted-foreground size-5 group-hover:text-(--card-color)" />
+          <MediaTypeIcon className="text-muted-foreground size-5 group-hover:text-(--card-accent)" />
         )}
 
         {item.coverUrl && (

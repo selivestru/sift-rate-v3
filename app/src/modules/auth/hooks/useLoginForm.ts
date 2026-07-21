@@ -4,11 +4,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
+import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { setStorageItem } from '~/common/utils/storage'
 
 import { loginSchema, type LoginInput } from '../schema/auth.schema'
 import { useAuthStore } from '../store/auth.store'
-import { applyApiFormError } from '../utils/applyApiFormError'
 import { useLoginMutation } from './useLoginMutation'
 
 const LOGIN_FIELDS = ['email', 'password'] as const
@@ -42,8 +42,8 @@ export const useLoginForm = () => {
       setUser(response.user)
       setStorageItem('has_session', true)
       navigate({ to: '/' })
-    } catch (err) {
-      const apiError = await getApiError(err)
+    } catch (error) {
+      const apiError = await getApiError(error)
       applyApiFormError({
         apiError,
         setError,

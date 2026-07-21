@@ -8,6 +8,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
+import type { FileRoutesByTo } from '~/app/routeTree.gen'
+
 export const MEDIA_TYPES = {
   MOVIE: 'MOVIE',
   TV_SHOW: 'TV_SHOW',
@@ -101,3 +103,12 @@ export const mediaTypeList: MediaTypeMeta[] = [
   mediaTypeMeta.ALBUM,
   mediaTypeMeta.TRACK,
 ]
+
+export const mediaDetailRouteByType: Record<MediaType, keyof FileRoutesByTo> = {
+  [MEDIA_TYPES.MOVIE]: '/discover/movie/$externalId',
+  [MEDIA_TYPES.TV_SHOW]: '/discover/tv_show/$externalId',
+  [MEDIA_TYPES.GAME]: '/discover/game/$externalId',
+  [MEDIA_TYPES.BOOK]: '/discover/book/$externalId',
+  [MEDIA_TYPES.ALBUM]: '/discover/album/$externalId',
+  [MEDIA_TYPES.TRACK]: '/discover/track/$externalId',
+} as const

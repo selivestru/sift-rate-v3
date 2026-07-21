@@ -69,7 +69,7 @@ export class AlbumService {
         return JSON.parse(cached) as AlbumDetail
       }
     } catch {
-      void 0
+      // ignore
     }
 
     const album = await deezerGet<DeezerAlbumRaw>(`/album/${id}`)
@@ -106,7 +106,7 @@ export class AlbumService {
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.ALBUM_CACHE_TTL_SECONDS)
     } catch {
-      void 0
+      // ignore
     }
 
     return result

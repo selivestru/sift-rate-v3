@@ -23,7 +23,7 @@ export interface NavItemConfig {
   description: string
   authRequired?: boolean
   subscriptionRequired?: boolean
-  color: string
+
   params?: { mediaType: MediaTypeSlug }
   children?: NavItemConfig[]
 }
@@ -34,14 +34,13 @@ export const navItems: NavItemConfig[] = [
     label: 'Home',
     icon: HomeIcon,
     description: 'Your activity feed',
-    color: '#8B5CF6',
   },
   {
     to: '/discover',
     label: 'Discover',
     icon: CompassIcon,
     description: 'Find media to archive',
-    color: '#14B8A6',
+
     children: [
       {
         to: '/discover/movie',
@@ -49,7 +48,6 @@ export const navItems: NavItemConfig[] = [
         label: mediaTypeMeta.MOVIE.label,
         icon: mediaTypeMeta.MOVIE.icon,
         description: 'Films to watch and archive',
-        color: mediaTypeMeta.MOVIE.color,
       },
       {
         to: '/discover/tv_show',
@@ -57,7 +55,6 @@ export const navItems: NavItemConfig[] = [
         label: mediaTypeMeta.TV_SHOW.label,
         icon: mediaTypeMeta.TV_SHOW.icon,
         description: 'Series and seasons',
-        color: mediaTypeMeta.TV_SHOW.color,
       },
       {
         to: '/discover/track',
@@ -65,7 +62,6 @@ export const navItems: NavItemConfig[] = [
         label: mediaTypeMeta.TRACK.label,
         icon: mediaTypeMeta.TRACK.icon,
         description: 'Single moments',
-        color: mediaTypeMeta.TRACK.color,
       },
       {
         to: '/discover/album',
@@ -73,7 +69,6 @@ export const navItems: NavItemConfig[] = [
         label: mediaTypeMeta.ALBUM.label,
         icon: mediaTypeMeta.ALBUM.icon,
         description: 'Full listens',
-        color: mediaTypeMeta.ALBUM.color,
       },
       {
         to: '/discover/game',
@@ -81,7 +76,6 @@ export const navItems: NavItemConfig[] = [
         label: mediaTypeMeta.GAME.label,
         icon: mediaTypeMeta.GAME.icon,
         description: 'Playthroughs ahead',
-        color: mediaTypeMeta.GAME.color,
       },
       {
         to: '/discover/book',
@@ -89,7 +83,6 @@ export const navItems: NavItemConfig[] = [
         label: mediaTypeMeta.BOOK.label,
         icon: mediaTypeMeta.BOOK.icon,
         description: 'Pages and shelves',
-        color: mediaTypeMeta.BOOK.color,
       },
     ],
   },
@@ -98,15 +91,15 @@ export const navItems: NavItemConfig[] = [
     label: 'Library',
     icon: LibraryIcon,
     description: 'Your media library',
-    color: '#8B5CF6',
+
     authRequired: true,
     children: [
       {
-        to: '/library/ratings',
-        label: 'Ratings',
+        to: '/library/reviews',
+        label: 'Reviews',
         icon: StarIcon,
         description: 'Rating archive',
-        color: '#F59E0B',
+
         authRequired: true,
       },
       {
@@ -114,7 +107,7 @@ export const navItems: NavItemConfig[] = [
         label: 'Lists',
         icon: ListIcon,
         description: 'Ordered personal rankings',
-        color: '#3B82F6',
+
         authRequired: true,
       },
       {
@@ -122,7 +115,7 @@ export const navItems: NavItemConfig[] = [
         label: 'Planned',
         icon: CalendarCheckIcon,
         description: 'Watch and play later',
-        color: '#10B981',
+
         authRequired: true,
       },
     ],
@@ -132,7 +125,7 @@ export const navItems: NavItemConfig[] = [
     label: 'Life',
     icon: SparklesIcon,
     description: 'Your media life story',
-    color: '#F43F5E',
+
     authRequired: true,
     subscriptionRequired: true,
     children: [
@@ -141,7 +134,7 @@ export const navItems: NavItemConfig[] = [
         label: 'Timeline',
         icon: ClockIcon,
         description: 'Review timeline',
-        color: '#F43F5E',
+
         authRequired: true,
         subscriptionRequired: true,
       },
@@ -150,7 +143,7 @@ export const navItems: NavItemConfig[] = [
         label: 'Wrapped',
         icon: GiftIcon,
         description: 'Monthly and yearly recaps',
-        color: '#A855F7',
+
         authRequired: true,
         subscriptionRequired: true,
       },
@@ -159,7 +152,7 @@ export const navItems: NavItemConfig[] = [
         label: 'Memories',
         icon: BrainIcon,
         description: 'Moments worth keeping',
-        color: '#06B6D4',
+
         authRequired: true,
         subscriptionRequired: true,
       },

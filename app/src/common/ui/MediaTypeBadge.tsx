@@ -3,23 +3,25 @@ import { cn } from '../utils/cn'
 
 interface MediaBadgeProps {
   mediaType: MediaType
+  alternateColor?: boolean
   className?: string
 }
 
-export const MediaTypeBadge = ({ mediaType, className }: MediaBadgeProps) => {
+export const MediaTypeBadge = ({ mediaType, alternateColor, className }: MediaBadgeProps) => {
   const badge = mediaTypeMeta[mediaType]
   const BadgeIcon = badge.icon
 
   return (
     <div
       className={cn(
-        'transition-backdrop inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold backdrop-blur-xs',
+        'inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold',
+        !alternateColor && 'transition-backdrop backdrop-blur-xs',
         className,
       )}
       style={{
-        backgroundColor: `${badge.color}15`,
-        borderColor: `${badge.color}30`,
-        color: badge.color,
+        backgroundColor: alternateColor ? badge.color : `${badge.color}15`,
+        borderColor: alternateColor ? badge.color : `${badge.color}30`,
+        color: alternateColor ? 'white' : badge.color,
       }}
     >
       <BadgeIcon className="size-3.5" />

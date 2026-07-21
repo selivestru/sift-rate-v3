@@ -1,0 +1,38 @@
+import { useMutation } from '@tanstack/react-query'
+
+import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+import type { MediaStateResponse } from '~/modules/discover'
+
+import { plannedApi } from '../api/planned.api'
+import type { PlannedListResponse } from '../types/planned.types'
+
+export const useAddToPlannedList = () => {
+  return useMutation({
+    mutationKey: ['add-to-planned-list'],
+    mutationFn: plannedApi.addToPlannedList,
+    onSuccess: (data, __, ___, context) => {
+      context.client.setQueryData<PlannedListResponse>(QUERIES_KEYS.PLANNED_LIST, (prev) => {
+        if (!prev) return prev
+
+        return {
+          data: [...prev.data, data],
+          totalResults: prev.totalResults + 1,
+        }
+      })
+
+      const { media } = data
+
+      context.client.setQueryData<MediaStateResponse>(
+        QUERIES_KEYS.MEDIA_STATE({ externalId: media.externalId, mediaType: media.mediaType }),
+        (prev) => {
+          if (!prev) return prev
+
+          return {
+            ...prev,
+            plannedItem: data,
+          }
+        },
+      )
+    },
+  })
+}

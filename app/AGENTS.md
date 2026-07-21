@@ -171,7 +171,7 @@ File routes: `src/app/routes/`. Many authenticated destinations are still scaffo
 | Welcome  | `/welcome`                                                                                     | Username onboarding when account has no username               | Guard + stub page          |
 | Home     | `/`                                                                                            | Activity feed / home of the archive                            | Stub                       |
 | Discover | `/discover`, `/discover/{movie\|tv_show\|game\|book\|album\|track}`, `.../$externalId`         | Find media to archive by type and external id                  | Route scaffolds            |
-| Library  | `/library`, `/library/ratings`, `/library/lists`, `/library/lists/$listId`, `/library/planned` | Personal library, ratings archive, ranked lists, planned queue | Route scaffolds            |
+| Library  | `/library`, `/library/reviews`, `/library/lists`, `/library/lists/$listId`, `/library/planned` | Personal library, reviews archive, ranked lists, planned queue | Route scaffolds            |
 | Life     | `/life`, `/life/timeline`, `/life/wrapped`, `/life/memories`                                   | Media-life story (timeline, recaps, memories); paid            | Guards + scaffolds         |
 | Profile  | `/$username`                                                                                   | Public/personal profile by username                            | Stub                       |
 

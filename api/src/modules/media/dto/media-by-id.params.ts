@@ -9,5 +9,5 @@ export class MediaByIdParamsDto {
   mediaType!: MediaType
 
   @IsString()
-  id!: string
+  externalId!: string
 }

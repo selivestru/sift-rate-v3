@@ -15,9 +15,9 @@ export const buttonVariants = cva(
         danger:
           'bg-danger text-danger-foreground hover:bg-danger-hover focus-visible:border-danger/40 focus-visible:ring-danger/20',
         'danger-soft':
-          'bg-danger-soft text-danger-soft-foreground hover:bg-danger-soft-hover focus-visible:border-danger/40 focus-visible:ring-danger/20',
+          'bg-danger-soft text-danger-soft-foreground hover:bg-danger-soft-hover focus-visible:border-danger/40 focus-visible:ring-danger/20 backdrop-blur-sm',
         outline:
-          'border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground',
+          'border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground backdrop-blur-sm',
         ghost:
           'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
         success:

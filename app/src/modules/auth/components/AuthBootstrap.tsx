@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import z from 'zod'
 
 import { Spinner } from '~/common/ui/Spinner'
-import { getStorageItem } from '~/common/utils/storage'
+import { getStorageItem, removeStorageItem } from '~/common/utils/storage'
 
 import { authApi } from '../api/auth.api'
 import { useAuthStore } from '../store/auth.store'
@@ -17,14 +17,16 @@ export const AuthBootstrap = ({ children }: { children: React.ReactNode }) => {
       const hasSession = getStorageItem('has_session', z.boolean(), false)
 
       if (!hasSession) {
+        setIsLoading(false)
         return
       }
 
       try {
         const response = await authApi.me()
         setUser(response.user)
-      } catch (error) {
-        console.debug('Error ', error)
+      } catch {
+        setUser(null)
+        removeStorageItem('has_session')
       } finally {
         setIsLoading(false)
       }

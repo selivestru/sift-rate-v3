@@ -1,8 +1,10 @@
 import { useState } from 'react'
 
+import { MEDIA_TYPES } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 
+import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { GameDetail } from '../types/game-detail.types'
 
 interface GameHeroMetaProps {
@@ -18,14 +20,12 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
   const genrePreview = game.genres.slice(0, GENRE_PREVIEW)
   const platformPreview = game.platforms.slice(0, PLATFORM_PREVIEW)
   const hasStudio = game.developers.length > 0 || game.publishers.length > 0
-  const hasGlassMeta =
-    hasStudio || game.genres.length > 0 || game.platforms.length > 0 || Boolean(game.summary)
-
-  if (!hasGlassMeta) return null
 
   return (
     <div className="bg-card/70 ring-border/50 min-w-0 flex-1 rounded-2xl p-3.5 ring-1 backdrop-blur-xl sm:p-4">
       <div className="flex min-w-0 flex-col gap-3">
+        <MediaStateButtons externalId={game.id} mediaType={MEDIA_TYPES.GAME} />
+
         {hasStudio && (
           <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-1.5">
             {game.developers.length > 0 && (

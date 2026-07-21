@@ -5,6 +5,7 @@ import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
 
 import { MediaCoverLightbox } from '../../shared'
+import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { AlbumDetail } from '../types/album-detail.types'
 
 interface AlbumHeroProps {
@@ -127,6 +128,12 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
                   ))}
                 </div>
               )}
+
+              <MediaStateButtons
+                externalId={album.id}
+                mediaType={MEDIA_TYPES.ALBUM}
+                className="mt-1"
+              />
             </div>
           </div>
         </div>

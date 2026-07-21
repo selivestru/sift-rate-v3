@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
+import { applyApiFormError } from '~/common/utils/applyApiFormError'
 
 import { forgotPasswordSchema, type ForgotPasswordInput } from '../schema/auth.schema'
-import { applyApiFormError } from '../utils/applyApiFormError'
 import { useForgotPasswordMutation } from './useForgotPasswordMutation'
 
 const FORGOT_FIELDS = ['email'] as const
@@ -33,8 +33,8 @@ export const useForgotPasswordForm = () => {
     try {
       await mutation.mutateAsync(data)
       setIsSuccess(true)
-    } catch (err) {
-      const apiError = await getApiError(err)
+    } catch (error) {
+      const apiError = await getApiError(error)
       applyApiFormError({
         apiError,
         setError,

@@ -69,7 +69,7 @@ export class TrackService {
         return JSON.parse(cached) as TrackDetail
       }
     } catch {
-      void 0
+      // ignore
     }
 
     const track = await deezerGet<DeezerTrackRaw>(`/track/${id}`)
@@ -106,7 +106,7 @@ export class TrackService {
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TRACK_CACHE_TTL_SECONDS)
     } catch {
-      void 0
+      // ignore
     }
 
     return result

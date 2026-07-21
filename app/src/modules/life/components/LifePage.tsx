@@ -2,7 +2,6 @@ import { Link } from '@tanstack/react-router'
 import { SparklesIcon } from 'lucide-react'
 
 import { cn } from '~/common/utils/cn'
-import { useAuthStore } from '~/modules/auth'
 
 import { lifeChapters, type LifeChapterKind } from '../constants/life-chapters'
 
@@ -13,10 +12,8 @@ const chapterCardClass: Record<LifeChapterKind, string> = {
 }
 
 export const LifePage = () => {
-  const username = useAuthStore((state) => state.user?.username)
-
   return (
-    <div className="relative flex flex-col gap-8 overflow-hidden p-4 sm:gap-10 sm:p-6">
+    <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-8 sm:p-6">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-56 opacity-90"
         aria-hidden
@@ -26,7 +23,22 @@ export const LifePage = () => {
         }}
       />
 
-      <div className="z-px relative flex flex-col gap-4">
+      <div className="z-px relative flex flex-col gap-3">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
+            <SparklesIcon className="size-4" strokeWidth={1.75} />
+          </span>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">Life</p>
+        </div>
+        <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+          Explore the catalog
+        </h1>
+        <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty">
+          A warm record of the films, shows, games, books, and music that influenced you
+        </p>
+      </div>
+      {/*
+      <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
             <SparklesIcon className="size-4" strokeWidth={1.75} />
@@ -41,7 +53,7 @@ export const LifePage = () => {
             ? `A warm record of the films, shows, games, books, and music that shaped ${username}.`
             : 'A warm record of the media that shaped you.'}
         </p>
-      </div>
+      </div> */}
 
       <div className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {lifeChapters.map((chapter) => (
