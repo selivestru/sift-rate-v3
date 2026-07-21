@@ -163,6 +163,7 @@ export class MediaService {
           select: {
             id: true,
             username: true,
+            avatarUrl: true,
           },
         },
       },
