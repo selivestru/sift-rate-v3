@@ -1,11 +1,12 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronRight, Library } from 'reicon-react'
+import { ChevronRight } from 'reicon-react'
 
+import { libraryChildren, libraryNav } from '~/common/constants/navigation'
 import { cn } from '~/common/utils/cn'
 
-import { librarySections } from '../constants/library-sections'
-
 export const LibraryPage = () => {
+  const LibraryIcon = libraryNav.icon
+
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-8 sm:p-6">
       <div
@@ -20,10 +21,10 @@ export const LibraryPage = () => {
       <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-xl">
-            <Library className="size-4" strokeWidth={1.75} />
+            <LibraryIcon className="size-4" strokeWidth={1.75} />
           </span>
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-            Library
+            {libraryNav.label}
           </p>
         </div>
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Your collection</h1>
@@ -33,7 +34,7 @@ export const LibraryPage = () => {
       </div>
 
       <div className="border-border/80 z-px divide-border relative divide-y overflow-hidden rounded-2xl border">
-        {librarySections.map((section) => (
+        {libraryChildren.map((section, index) => (
           <Link
             key={section.to}
             to={section.to}
@@ -46,7 +47,7 @@ export const LibraryPage = () => {
             )}
           >
             <span className="text-muted-foreground/70 w-7 shrink-0 font-mono text-xs tabular-nums">
-              {section.index}
+              {String(index + 1).padStart(2, '0')}
             </span>
 
             <span

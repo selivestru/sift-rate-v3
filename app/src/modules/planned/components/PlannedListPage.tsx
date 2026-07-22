@@ -1,5 +1,5 @@
+import { plannedNavItem } from '~/common/constants/navigation'
 import { getQueryState } from '~/common/utils/getQueryState'
-import { librarySections } from '~/modules/library'
 
 import { useGetPlannedList } from '../hook/useGetPlannedList'
 import { PlannedHero } from './PlannedHero'
@@ -8,7 +8,7 @@ import { PlannedListEmpty } from './PlannedListEmpty'
 import { PlannedListError } from './PlannedListError'
 import { PlannedListSkeleton } from './PlannedListSkeleton'
 
-const plannedColor = librarySections.find((section) => section.to === '/library/planned')!.color
+const plannedColor = plannedNavItem.color
 
 export const PlannedListPage = () => {
   const { data, isLoading, isError } = useGetPlannedList()

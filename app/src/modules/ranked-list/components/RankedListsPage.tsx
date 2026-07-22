@@ -1,5 +1,5 @@
+import { rankedListNavItem } from '~/common/constants/navigation'
 import { getQueryState } from '~/common/utils/getQueryState'
-import { listsSection } from '~/modules/library'
 
 import { useGetMyRankedLists } from '../hooks/useGetMyRankedLists'
 import { RankedListCard } from './RankedListCard'
@@ -8,7 +8,7 @@ import { RankingListEmpty } from './RankingListEmpty'
 import { RankingListError } from './RankingListError'
 import { RankingListSkeleton } from './RankingListSkeleton'
 
-const listsColor = listsSection.color
+const listsColor = rankedListNavItem.color
 
 export const RankedListsPage = () => {
   const { data, isLoading, isError } = useGetMyRankedLists()

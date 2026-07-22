@@ -1,12 +1,17 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronRight, Compass } from 'reicon-react'
+import { ChevronRight } from 'reicon-react'
 
-import { mediaTypeMeta } from '~/common/constants/media-type'
+import {
+  getMediaTypeFromSlug,
+  mediaTypeMeta,
+  type MediaTypeSlug,
+} from '~/common/constants/media-type'
+import { discoverChildren, discoverNav } from '~/common/constants/navigation'
 import { cn } from '~/common/utils/cn'
 
-import { mediaTypeDestinations } from '../../constants/media-types'
-
 export const DiscoverPage = () => {
+  const DiscoverIcon = discoverNav.icon
+
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden p-4 sm:gap-8 sm:p-6">
       <div
@@ -21,10 +26,10 @@ export const DiscoverPage = () => {
       <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(58%_0.11_165/0.14)] text-[oklch(42%_0.1_165)] dark:text-[oklch(78%_0.09_165)]">
-            <Compass className="size-4" strokeWidth={1.75} />
+            <DiscoverIcon className="size-4" strokeWidth={1.75} />
           </span>
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-            Discover
+            {discoverNav.label}
           </p>
         </div>
         <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
@@ -36,15 +41,15 @@ export const DiscoverPage = () => {
       </div>
 
       <div className="z-px relative grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3">
-        {mediaTypeDestinations.map((item) => {
-          const meta = mediaTypeMeta[item.type]
+        {discoverChildren.map((item) => {
+          const slug = item.params?.mediaType as MediaTypeSlug
+          const meta = mediaTypeMeta[getMediaTypeFromSlug(slug)]
           const Icon = meta.icon
-          const to = `/discover/${item.mediaTypeSlug}`
 
           return (
             <Link
-              key={item.mediaTypeSlug}
-              to={to}
+              key={item.to}
+              to={item.to}
               style={{ '--media-color': meta.color }}
               className={cn(
                 'group border-border/50 relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border p-4 sm:p-5 bg-surface/50',

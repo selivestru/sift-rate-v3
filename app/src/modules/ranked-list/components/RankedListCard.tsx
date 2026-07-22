@@ -1,9 +1,9 @@
 import { Pen, Trash2 } from 'reicon-react'
 
+import { rankedListNavItem } from '~/common/constants/navigation'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
-import { listsSection } from '~/modules/library'
 import { reviewVisibilityConfig } from '~/modules/review'
 
 import type { RankedListItem } from '../types/ranked-list.types'
@@ -12,7 +12,7 @@ import { RankedListDetailDialog } from './RankedListDetailDialog'
 import { RankedListPodium } from './RankedListPodium'
 import { UpsertRankedListDialog } from './UpsertRankedListDialog'
 
-const listAccent = listsSection.color
+const listAccent = rankedListNavItem.color
 
 interface RankedListCardProps {
   item: RankedListItem

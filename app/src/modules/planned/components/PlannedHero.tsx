@@ -1,13 +1,13 @@
+import { plannedNavItem } from '~/common/constants/navigation'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
-import { plannedSection } from '~/modules/library'
 
 interface PlannedHeroProps {
   total: number | null
 }
 
 export const PlannedHero = ({ total }: PlannedHeroProps) => {
-  const { color, icon: PlannedIcon } = plannedSection
+  const { color, icon: PlannedIcon } = plannedNavItem
 
   return (
     <div className="z-px relative flex flex-col gap-5">

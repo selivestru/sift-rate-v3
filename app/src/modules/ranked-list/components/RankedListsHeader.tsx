@@ -1,9 +1,9 @@
 import { PlusCircle2 } from 'reicon-react'
 
+import { rankedListNavItem } from '~/common/constants/navigation'
 import { Button } from '~/common/ui/Button'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
-import { listsSection } from '~/modules/library'
 
 import { UpsertRankedListDialog } from './UpsertRankedListDialog'
 
@@ -12,7 +12,7 @@ interface RankedListsHeaderProps {
 }
 
 export const RankedListsHeader = ({ total }: RankedListsHeaderProps) => {
-  const { color, icon: ListsIcon } = listsSection
+  const { color, icon: ListsIcon } = rankedListNavItem
 
   return (
     <div className="z-px relative flex flex-col gap-5">
