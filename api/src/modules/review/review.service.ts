@@ -26,6 +26,14 @@ export class ReviewService {
     const reviews = await this.prisma.review.findMany({
       where: {
         userId,
+        ...(query.q && {
+          media: {
+            title: {
+              contains: query.q,
+              mode: 'insensitive',
+            },
+          },
+        }),
       },
       ...(query.cursor && {
         cursor: { id: query.cursor },

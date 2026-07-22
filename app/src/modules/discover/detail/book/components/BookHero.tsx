@@ -177,7 +177,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
                     : 'Google rating'
                 }
               >
-                <Star className="text-foreground/80 size-3.5" aria-hidden />
+                <Star weight="Filled" className="text-foreground/80 size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {book.googleRating.toFixed(1)}
                 </span>

@@ -21,8 +21,8 @@ export const reviewsSection: LibrarySection = {
 }
 
 export const listsSection: LibrarySection = {
-  to: '/library/lists',
-  label: 'Lists',
+  to: '/library/ranked-list',
+  label: 'Ranked List',
   description: 'Ordered rankings you build over time',
   icon: List,
   color: '#3B82F6',

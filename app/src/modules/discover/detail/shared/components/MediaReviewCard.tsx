@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Star, Trash, Users } from 'reicon-react'
+import { Star, Trash6, Users } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Badge } from '~/common/ui/Badge'
@@ -8,7 +8,7 @@ import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
-import { DialogReviewDialog, REVIEW_VISIBILITY } from '~/modules/review'
+import { DialogReviewDialog, VISIBILITY } from '~/modules/review'
 
 import type { MediaReviewItem } from '../types/media-state.types'
 
@@ -47,7 +47,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                 {user.username}
               </Link>
 
-              {review.visibility === REVIEW_VISIBILITY.FRIENDS && (
+              {review.visibility === VISIBILITY.FRIENDS && (
                 <Badge
                   variant="outline"
                   className="text-muted-foreground h-5 gap-1 px-1.5 text-[11px] font-normal"
@@ -75,7 +75,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                 isPerfect ? 'Perfect score 10 out of 10' : `Rated ${review.rating} out of 10`
               }
             >
-              <Star className="fill-rating text-rating size-3.5" />
+              <Star weight="Filled" className="text-rating size-3.5" />
               <span className="text-rating text-sm font-semibold tabular-nums">
                 {review.rating}
               </span>
@@ -90,7 +90,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                     onClick={open}
                     aria-label="Delete review"
                   >
-                    <Trash />
+                    <Trash6 weight="Filled" />
                   </Button>
                 )}
               </DialogReviewDialog>

@@ -10,7 +10,7 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator'
-import { MediaType, ReviewVisibility } from '~/generated/prisma/enums'
+import { MediaType, Visibility } from '~/generated/prisma/enums'
 import { transformMediaTypeSlug } from '~/modules/media/types/media.types'
 
 export class UpsertReviewDto {
@@ -34,8 +34,8 @@ export class UpsertReviewDto {
   @MaxLength(1000)
   content!: string | null
 
-  @IsEnum(ReviewVisibility)
-  visibility!: ReviewVisibility
+  @IsEnum(Visibility)
+  visibility!: Visibility
 
   @Type(() => Boolean)
   @IsBoolean()

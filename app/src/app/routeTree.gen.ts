@@ -22,6 +22,7 @@ import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AppDiscoverIndexRouteImport } from './routes/_app/discover/index'
 import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
 import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
+import { Route as AppLibraryRankedListRouteImport } from './routes/_app/library/ranked-list'
 import { Route as AppLibraryReviewsRouteImport } from './routes/_app/library/reviews'
 import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
 import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
@@ -39,8 +40,6 @@ import { Route as AppDiscoverTrackIndexRouteImport } from './routes/_app/discove
 import { Route as AppDiscoverTrackExternalIdRouteImport } from './routes/_app/discover/track/$externalId'
 import { Route as AppDiscoverTv_showIndexRouteImport } from './routes/_app/discover/tv_show/index'
 import { Route as AppDiscoverTv_showExternalIdRouteImport } from './routes/_app/discover/tv_show/$externalId'
-import { Route as AppLibraryListsIndexRouteImport } from './routes/_app/library/lists/index'
-import { Route as AppLibraryListsListIdRouteImport } from './routes/_app/library/lists/$listId'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -104,6 +103,11 @@ const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
 const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
   id: '/planned',
   path: '/planned',
+  getParentRoute: () => AppLibraryRouteRoute,
+} as any)
+const AppLibraryRankedListRoute = AppLibraryRankedListRouteImport.update({
+  id: '/ranked-list',
+  path: '/ranked-list',
   getParentRoute: () => AppLibraryRouteRoute,
 } as any)
 const AppLibraryReviewsRoute = AppLibraryReviewsRouteImport.update({
@@ -197,16 +201,6 @@ const AppDiscoverTv_showExternalIdRoute =
     path: '/discover/tv_show/$externalId',
     getParentRoute: () => AppRoute,
   } as any)
-const AppLibraryListsIndexRoute = AppLibraryListsIndexRouteImport.update({
-  id: '/lists/',
-  path: '/lists/',
-  getParentRoute: () => AppLibraryRouteRoute,
-} as any)
-const AppLibraryListsListIdRoute = AppLibraryListsListIdRouteImport.update({
-  id: '/lists/$listId',
-  path: '/lists/$listId',
-  getParentRoute: () => AppLibraryRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -219,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/library/planned': typeof AppLibraryPlannedRoute
+  '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
   '/life/memories': typeof AppLifeMemoriesRoute
   '/life/timeline': typeof AppLifeTimelineRoute
@@ -232,14 +227,12 @@ export interface FileRoutesByFullPath {
   '/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
   '/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
   '/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
-  '/library/lists/$listId': typeof AppLibraryListsListIdRoute
   '/discover/album/': typeof AppDiscoverAlbumIndexRoute
   '/discover/book/': typeof AppDiscoverBookIndexRoute
   '/discover/game/': typeof AppDiscoverGameIndexRoute
   '/discover/movie/': typeof AppDiscoverMovieIndexRoute
   '/discover/track/': typeof AppDiscoverTrackIndexRoute
   '/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
-  '/library/lists/': typeof AppLibraryListsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -250,6 +243,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/library/planned': typeof AppLibraryPlannedRoute
+  '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
   '/life/memories': typeof AppLifeMemoriesRoute
   '/life/timeline': typeof AppLifeTimelineRoute
@@ -263,14 +257,12 @@ export interface FileRoutesByTo {
   '/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
   '/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
   '/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
-  '/library/lists/$listId': typeof AppLibraryListsListIdRoute
   '/discover/album': typeof AppDiscoverAlbumIndexRoute
   '/discover/book': typeof AppDiscoverBookIndexRoute
   '/discover/game': typeof AppDiscoverGameIndexRoute
   '/discover/movie': typeof AppDiscoverMovieIndexRoute
   '/discover/track': typeof AppDiscoverTrackIndexRoute
   '/discover/tv_show': typeof AppDiscoverTv_showIndexRoute
-  '/library/lists': typeof AppLibraryListsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -285,6 +277,7 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
   '/_app/library/planned': typeof AppLibraryPlannedRoute
+  '/_app/library/ranked-list': typeof AppLibraryRankedListRoute
   '/_app/library/reviews': typeof AppLibraryReviewsRoute
   '/_app/life/memories': typeof AppLifeMemoriesRoute
   '/_app/life/timeline': typeof AppLifeTimelineRoute
@@ -298,14 +291,12 @@ export interface FileRoutesById {
   '/_app/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
   '/_app/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
   '/_app/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
-  '/_app/library/lists/$listId': typeof AppLibraryListsListIdRoute
   '/_app/discover/album/': typeof AppDiscoverAlbumIndexRoute
   '/_app/discover/book/': typeof AppDiscoverBookIndexRoute
   '/_app/discover/game/': typeof AppDiscoverGameIndexRoute
   '/_app/discover/movie/': typeof AppDiscoverMovieIndexRoute
   '/_app/discover/track/': typeof AppDiscoverTrackIndexRoute
   '/_app/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
-  '/_app/library/lists/': typeof AppLibraryListsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -320,6 +311,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/library/planned'
+    | '/library/ranked-list'
     | '/library/reviews'
     | '/life/memories'
     | '/life/timeline'
@@ -333,14 +325,12 @@ export interface FileRouteTypes {
     | '/discover/movie/$externalId'
     | '/discover/track/$externalId'
     | '/discover/tv_show/$externalId'
-    | '/library/lists/$listId'
     | '/discover/album/'
     | '/discover/book/'
     | '/discover/game/'
     | '/discover/movie/'
     | '/discover/track/'
     | '/discover/tv_show/'
-    | '/library/lists/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -351,6 +341,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/'
     | '/library/planned'
+    | '/library/ranked-list'
     | '/library/reviews'
     | '/life/memories'
     | '/life/timeline'
@@ -364,14 +355,12 @@ export interface FileRouteTypes {
     | '/discover/movie/$externalId'
     | '/discover/track/$externalId'
     | '/discover/tv_show/$externalId'
-    | '/library/lists/$listId'
     | '/discover/album'
     | '/discover/book'
     | '/discover/game'
     | '/discover/movie'
     | '/discover/track'
     | '/discover/tv_show'
-    | '/library/lists'
   id:
     | '__root__'
     | '/auth'
@@ -385,6 +374,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/_app/'
     | '/_app/library/planned'
+    | '/_app/library/ranked-list'
     | '/_app/library/reviews'
     | '/_app/life/memories'
     | '/_app/life/timeline'
@@ -398,14 +388,12 @@ export interface FileRouteTypes {
     | '/_app/discover/movie/$externalId'
     | '/_app/discover/track/$externalId'
     | '/_app/discover/tv_show/$externalId'
-    | '/_app/library/lists/$listId'
     | '/_app/discover/album/'
     | '/_app/discover/book/'
     | '/_app/discover/game/'
     | '/_app/discover/movie/'
     | '/_app/discover/track/'
     | '/_app/discover/tv_show/'
-    | '/_app/library/lists/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -505,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/planned'
       fullPath: '/library/planned'
       preLoaderRoute: typeof AppLibraryPlannedRouteImport
+      parentRoute: typeof AppLibraryRouteRoute
+    }
+    '/_app/library/ranked-list': {
+      id: '/_app/library/ranked-list'
+      path: '/ranked-list'
+      fullPath: '/library/ranked-list'
+      preLoaderRoute: typeof AppLibraryRankedListRouteImport
       parentRoute: typeof AppLibraryRouteRoute
     }
     '/_app/library/reviews': {
@@ -626,20 +621,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDiscoverTv_showExternalIdRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/library/lists/': {
-      id: '/_app/library/lists/'
-      path: '/lists'
-      fullPath: '/library/lists/'
-      preLoaderRoute: typeof AppLibraryListsIndexRouteImport
-      parentRoute: typeof AppLibraryRouteRoute
-    }
-    '/_app/library/lists/$listId': {
-      id: '/_app/library/lists/$listId'
-      path: '/lists/$listId'
-      fullPath: '/library/lists/$listId'
-      preLoaderRoute: typeof AppLibraryListsListIdRouteImport
-      parentRoute: typeof AppLibraryRouteRoute
-    }
   }
 }
 
@@ -661,18 +642,16 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface AppLibraryRouteRouteChildren {
   AppLibraryPlannedRoute: typeof AppLibraryPlannedRoute
+  AppLibraryRankedListRoute: typeof AppLibraryRankedListRoute
   AppLibraryReviewsRoute: typeof AppLibraryReviewsRoute
   AppLibraryIndexRoute: typeof AppLibraryIndexRoute
-  AppLibraryListsListIdRoute: typeof AppLibraryListsListIdRoute
-  AppLibraryListsIndexRoute: typeof AppLibraryListsIndexRoute
 }
 
 const AppLibraryRouteRouteChildren: AppLibraryRouteRouteChildren = {
   AppLibraryPlannedRoute: AppLibraryPlannedRoute,
+  AppLibraryRankedListRoute: AppLibraryRankedListRoute,
   AppLibraryReviewsRoute: AppLibraryReviewsRoute,
   AppLibraryIndexRoute: AppLibraryIndexRoute,
-  AppLibraryListsListIdRoute: AppLibraryListsListIdRoute,
-  AppLibraryListsIndexRoute: AppLibraryListsIndexRoute,
 }
 
 const AppLibraryRouteRouteWithChildren = AppLibraryRouteRoute._addFileChildren(

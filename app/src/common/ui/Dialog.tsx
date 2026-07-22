@@ -58,9 +58,10 @@ export const DialogContent = ({
             data-slot="dialog-close"
             render={
               <Button
+                isIconOnly
                 variant="ghost"
                 className="bg-secondary absolute top-4 right-4"
-                size="icon-sm"
+                size="sm"
               />
             }
           >

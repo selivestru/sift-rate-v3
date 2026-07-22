@@ -75,7 +75,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
                 className={cn(
                   'inline-flex min-h-8 items-center rounded-lg px-2.5 text-[11px] font-semibold tracking-wide uppercase',
                   'bg-foreground/6 text-foreground ring-1 ring-foreground/10',
-                  'transition-[transform,background-color,box-shadow] duration-200',
+                  'transition-[transform,background-color,box-shadow] duration-300',
                 )}
               >
                 {platform.abbreviation || platform.name}

@@ -140,7 +140,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
                 className="border-foreground/10 bg-foreground/8 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
                 title={`${show.tmdbVoteCount.toLocaleString()} TMDB votes`}
               >
-                <Star className="stroke-rating fill-rating size-3.5" aria-hidden />
+                <Star weight="Filled" className="stroke-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {show.tmdbRating.toFixed(1)}
                 </span>

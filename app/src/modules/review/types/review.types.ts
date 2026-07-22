@@ -1,18 +1,18 @@
 import type { MediaType } from '~/common/constants/media-type'
 
-export const REVIEW_VISIBILITY = {
-  PUBLIC: 'PUBLIC',
-  FRIENDS: 'FRIENDS',
+export const VISIBILITY = {
   PRIVATE: 'PRIVATE',
+  FRIENDS: 'FRIENDS',
+  PUBLIC: 'PUBLIC',
 } as const
 
-export type ReviewVisibility = (typeof REVIEW_VISIBILITY)[keyof typeof REVIEW_VISIBILITY]
+export type Visibility = (typeof VISIBILITY)[keyof typeof VISIBILITY]
 
 export interface Review {
   id: string
   rating: number
   content: string | null
-  visibility: ReviewVisibility
+  visibility: Visibility
   hasSpoiler: boolean
   createdAt: string
   updatedAt: string
@@ -37,6 +37,6 @@ export interface RateMediaBody {
   externalId: string
   rating: number
   content: string | null
-  visibility: ReviewVisibility
+  visibility: Visibility
   hasSpoiler: boolean
 }

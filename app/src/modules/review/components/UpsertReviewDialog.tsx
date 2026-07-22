@@ -12,7 +12,7 @@ import { Tabs, TabsIndicator, TabsList, TabsTab } from '~/common/ui/Tabs'
 import { Textarea } from '~/common/ui/Textarea'
 import { cn } from '~/common/utils/cn'
 
-import { REVIEW_VISIBILITY_OPTIONS } from '../constants/visibility'
+import { VISIBILITY_OPTIONS } from '../constants/visibility'
 import { useUpsertReviewForm } from '../hooks/useUpsertReviewForm'
 import { MAX_REVIEW_LENGTH } from '../schema/rate.schema'
 import type { Review } from '../types/review.types'
@@ -64,10 +64,8 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                   <div className="flex flex-col items-center gap-1">
                     <div className="flex h-18 items-center gap-2">
                       <Star
-                        className={cn(
-                          'size-7 transition-colors duration-300',
-                          field.value ? 'fill-rating text-rating' : 'text-muted-foreground/40',
-                        )}
+                        weight="Filled"
+                        className="text-rating size-7 transition-colors duration-300"
                       />
                       <span
                         className={cn(
@@ -112,10 +110,11 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           aria-label={`Rate ${value} out of 10`}
                         >
                           <Star
+                            weight={isSelected || isFilled ? 'Filled' : 'Outline'}
                             className={cn(
                               'size-5 transition-transform duration-300 ease-out group-hover:-translate-y-1',
                               isSelected || isFilled
-                                ? 'fill-rating text-rating'
+                                ? 'text-rating'
                                 : 'text-muted-foreground group-hover:text-foreground',
                             )}
                           />
@@ -183,7 +182,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                   <Tabs value={field.value} onValueChange={field.onChange}>
                     <TabsList className="h-11 w-full">
                       <TabsIndicator />
-                      {REVIEW_VISIBILITY_OPTIONS.map((option) => {
+                      {VISIBILITY_OPTIONS.map((option) => {
                         const Icon = option.icon
 
                         return (

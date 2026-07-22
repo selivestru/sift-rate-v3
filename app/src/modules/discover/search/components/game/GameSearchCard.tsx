@@ -58,7 +58,7 @@ export const GameSearchCard = ({ item }: GameSearchCardProps) => {
 
             {item.rating && (
               <div className="border-rating/30 bg-rating/15 shadow-rating/30 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm">
-                <Star className="fill-rating text-rating size-3.5" />
+                <Star weight="Filled" className="text-rating size-3.5" />
                 <span className="text-rating tabular-nums">{item.rating}</span>
               </div>
             )}

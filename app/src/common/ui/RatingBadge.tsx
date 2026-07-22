@@ -22,7 +22,8 @@ export const RatingBadge = ({ rating, size = 'sm', className }: RatingBadgeProps
       )}
     >
       <Star
-        className={cn('fill-rating text-rating', {
+        weight="Filled"
+        className={cn('text-rating', {
           'size-3.5': size === 'md',
           'size-3': size === 'sm' || size === 'xs',
         })}

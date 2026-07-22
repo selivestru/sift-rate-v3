@@ -93,7 +93,7 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
                     : 'IGDB rating'
                 }
               >
-                <Star className="fill-rating stroke-rating size-3.5" aria-hidden />
+                <Star weight="Filled" className="stroke-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {game.igdbRating.toFixed(1)}
                 </span>

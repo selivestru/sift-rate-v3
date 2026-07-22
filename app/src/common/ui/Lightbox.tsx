@@ -135,7 +135,7 @@ export const Lightbox = ({
                   <Button
                     type="button"
                     variant="secondary"
-                    size="icon-sm"
+                    size="sm"
                     isIconOnly
                     className="rounded-full bg-white/10 text-white hover:bg-white/20"
                     aria-label="Close"
@@ -172,10 +172,9 @@ export const Lightbox = ({
             {hasMultiple && (
               <>
                 <Button
+                  isIconOnly
                   type="button"
                   variant="secondary"
-                  size="icon"
-                  isIconOnly
                   className="absolute top-1/2 left-3 z-30 size-10 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20 sm:left-5"
                   aria-label="Previous image"
                   onClick={() => onIndexChange(safeIndex <= 0 ? images.length - 1 : safeIndex - 1)}
@@ -183,10 +182,9 @@ export const Lightbox = ({
                   <ChevronLeft className="size-5" />
                 </Button>
                 <Button
+                  isIconOnly
                   type="button"
                   variant="secondary"
-                  size="icon"
-                  isIconOnly
                   className="absolute top-1/2 right-3 z-30 size-10 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-5"
                   aria-label="Next image"
                   onClick={() => onIndexChange(safeIndex >= images.length - 1 ? 0 : safeIndex + 1)}

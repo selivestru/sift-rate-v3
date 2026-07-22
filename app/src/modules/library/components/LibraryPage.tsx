@@ -41,7 +41,7 @@ export const LibraryPage = () => {
               '--media-color': section.color,
             }}
             className={cn(
-              'group bg-surface/40 hover:bg-(--media-color)/5 flex items-center gap-4 px-4 py-4 transition-colors duration-200 sm:gap-5 sm:px-5 sm:py-5',
+              'group bg-surface/40 hover:bg-(--media-color)/5 flex items-center gap-4 px-4 py-4 transition-colors duration-300 sm:gap-5 sm:px-5 sm:py-5',
               'focus-visible:ring-primary/40 focus-visible:bg-(--media-color)/5 focus-visible:ring-2 focus-visible:outline-none',
             )}
           >
@@ -66,7 +66,7 @@ export const LibraryPage = () => {
               </p>
             </div>
 
-            <ChevronRight className="text-muted-foreground group-hover:text-foreground size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <ChevronRight className="text-muted-foreground group-hover:text-foreground size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5" />
           </Link>
         ))}
       </div>

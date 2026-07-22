@@ -18,6 +18,9 @@ export class PlannedService {
       where: {
         userId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: { media: true },
     })
 
@@ -30,11 +33,13 @@ export class PlannedService {
   async addPlannedItem(userId: string, body: AddPlannedItemDto): Promise<PlannedItem> {
     const media = await this.mediaService.ensureMedia(body.mediaType, body.externalId)
 
-    return this.prisma.$transaction(async (tx) => {
-      const existing = await tx.plannedItem.findFirst({
+    return await this.prisma.$transaction(async (tx) => {
+      const existing = await tx.plannedItem.findUnique({
         where: {
-          mediaId: media.id,
-          userId,
+          userId_mediaId: {
+            userId,
+            mediaId: media.id,
+          },
         },
       })
 
@@ -53,25 +58,22 @@ export class PlannedService {
   }
 
   async deletePlannedItem(userId: string, id: string): Promise<PlannedItem> {
-    return this.prisma.$transaction(async (tx) => {
-      const existing = await tx.plannedItem.findFirst({
-        where: {
-          id,
-          userId,
-        },
-      })
+    const existing = await this.prisma.plannedItem.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    })
 
-      if (!existing) {
-        throw new NotFoundException('Planned item not found')
-      }
+    if (!existing) {
+      throw new NotFoundException('Planned item not found')
+    }
 
-      return tx.plannedItem.delete({
-        where: {
-          userId,
-          id,
-        },
-        include: { media: true },
-      })
+    return await this.prisma.plannedItem.delete({
+      where: {
+        id,
+      },
+      include: { media: true },
     })
   }
 }

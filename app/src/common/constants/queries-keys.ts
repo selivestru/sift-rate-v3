@@ -7,10 +7,11 @@ export const QUERIES_KEYS = {
     data.mediaType,
     data.externalId,
   ],
-  MY_REVIEWS: ['my-reviews'],
+  MY_REVIEWS: ['my-reviews'] as const,
   MEDIA_REVIEWS: (data: { mediaType: MediaType; externalId: string }) => [
     'media-reviews',
     data.mediaType,
     data.externalId,
   ],
+  RANKED_LISTS: ['ranked-lists'],
 }

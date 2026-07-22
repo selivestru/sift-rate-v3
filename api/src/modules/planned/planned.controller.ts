@@ -9,8 +9,7 @@ export class PlannedController {
   constructor(private readonly plannedService: PlannedService) {}
 
   @Get()
-  async getPlannedItems(@CurrentUser('userId') userId: string) {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+  getPlannedItems(@CurrentUser('userId') userId: string) {
     return this.plannedService.getPlannedItems(userId)
   }
 

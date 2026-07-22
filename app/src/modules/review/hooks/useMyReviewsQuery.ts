@@ -4,11 +4,23 @@ import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
 import { reviewApi } from '../api/review.api'
 
-export const useMyReviewsQuery = () => {
+interface UseMyReviewsQueryOptions {
+  q?: string
+  enabled?: boolean
+}
+
+export const useMyReviewsQuery = (options?: UseMyReviewsQueryOptions) => {
+  const normalizedQ = options?.q?.trim() || undefined
+
   return useInfiniteQuery({
-    queryKey: QUERIES_KEYS.MY_REVIEWS,
+    queryKey: [...QUERIES_KEYS.MY_REVIEWS, normalizedQ ?? ''],
     initialPageParam: undefined as string | undefined,
-    queryFn: ({ pageParam }) => reviewApi.getMyReviews(pageParam),
+    queryFn: ({ pageParam }) =>
+      reviewApi.getMyReviews({
+        cursor: pageParam,
+        q: normalizedQ,
+      }),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
+    enabled: options?.enabled ?? true,
   })
 }

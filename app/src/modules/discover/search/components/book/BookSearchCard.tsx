@@ -67,7 +67,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
           {item.pageCount != null && <span className="tabular-nums">· {item.pageCount} pp</span>}
           {item.rating != null && (
             <span className="flex items-center gap-0.5 font-medium text-(--card-accent) tabular-nums">
-              <Star className="size-3.5 fill-current" />
+              <Star weight="Filled" className="size-3.5 fill-current" />
               {item.rating.toFixed(1)}
             </span>
           )}

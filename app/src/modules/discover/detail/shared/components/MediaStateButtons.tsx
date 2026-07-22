@@ -1,4 +1,4 @@
-import { Star, Trash } from 'reicon-react'
+import { Star, Trash6 } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
 import { Button } from '~/common/ui/Button'
@@ -48,7 +48,8 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
             className={cn(hasReview && 'text-rating')}
             startIcon={
               <Star
-                className={cn(hasReview && 'fill-rating text-rating stroke-rating')}
+                weight="Filled"
+                className={cn(hasReview && 'text-rating stroke-rating')}
                 aria-hidden
               />
             }
@@ -65,7 +66,7 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
         <DialogReviewDialog reviewId={data.review!.id}>
           {({ open }) => (
             <Button isIconOnly variant="danger-soft" onClick={open} aria-label="Delete review">
-              <Trash />
+              <Trash6 weight="Filled" />
             </Button>
           )}
         </DialogReviewDialog>

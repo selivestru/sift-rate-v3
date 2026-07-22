@@ -102,8 +102,8 @@ export const navItems: NavItemConfig[] = [
         authRequired: true,
       },
       {
-        to: '/library/lists',
-        label: 'Lists',
+        to: '/library/ranked-list',
+        label: 'Ranked List',
         icon: List,
         description: 'Ordered personal rankings',
         authRequired: true,

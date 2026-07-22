@@ -62,7 +62,7 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
         <MediaTypeBadge mediaType={MEDIA_TYPES.TV_SHOW} />
 
         <div className="border-rating/30 bg-rating/10 shadow-rating/40 z-px absolute top-3.5 right-3.5 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-xs">
-          <Star className="fill-rating text-rating size-4.5" />
+          <Star weight="Filled" className="text-rating size-4.5" />
           <span className="text-rating text-base font-bold tabular-nums">{item.rating}</span>
         </div>
 

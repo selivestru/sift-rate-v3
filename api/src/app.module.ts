@@ -11,6 +11,7 @@ import { S3Module } from './infrastructure/s3/s3.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { MediaModule } from './modules/media/media.module'
 import { PlannedModule } from './modules/planned/planned.module'
+import { RankedListModule } from './modules/ranked-list/ranked-list.module'
 import { ReviewModule } from './modules/review/review.module'
 import { UserModule } from './modules/user/user.module'
 
@@ -25,7 +26,6 @@ import { UserModule } from './modules/user/user.module'
       useFactory: (config: ConfigService<EnvConfig, true>) => ({
         connection: {
           url: config.get('REDIS_URL', { infer: true }),
-          // Required by BullMQ workers (blocks commands).
           maxRetriesPerRequest: null,
         },
       }),
@@ -38,6 +38,7 @@ import { UserModule } from './modules/user/user.module'
     UserModule,
     ReviewModule,
     PlannedModule,
+    RankedListModule,
   ],
   controllers: [],
   providers: [

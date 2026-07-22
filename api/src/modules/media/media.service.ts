@@ -22,7 +22,7 @@ import { TvShowService } from './services/tv_show.service'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
 import { Queue } from 'bullmq'
 import { Media } from '~/generated/prisma/client'
-import { MediaType, ReviewVisibility } from '~/generated/prisma/enums'
+import { MediaType, Visibility } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
 export type EnsureMediaResult = {
@@ -148,7 +148,7 @@ export class MediaService {
     const reviews = await this.prisma.review.findMany({
       where: {
         mediaId: media.id,
-        visibility: ReviewVisibility.PUBLIC,
+        visibility: Visibility.PUBLIC,
       },
       ...(cursor && {
         cursor: { id: cursor },

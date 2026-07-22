@@ -1,30 +1,30 @@
 import { Globe, Lock, Users } from 'reicon-react'
 
-import { REVIEW_VISIBILITY } from '../types/review.types'
+import { VISIBILITY } from '../types/review.types'
 
 export const reviewVisibilityConfig = {
-  [REVIEW_VISIBILITY.PUBLIC]: {
-    value: REVIEW_VISIBILITY.PUBLIC,
-    label: 'Public',
-    icon: Globe,
-    color: 'var(--color-primary)',
-  },
-  [REVIEW_VISIBILITY.PRIVATE]: {
-    value: REVIEW_VISIBILITY.PRIVATE,
+  [VISIBILITY.PRIVATE]: {
+    value: VISIBILITY.PRIVATE,
     label: 'Private',
     icon: Lock,
     color: 'var(--color-warning)',
   },
-  [REVIEW_VISIBILITY.FRIENDS]: {
-    value: REVIEW_VISIBILITY.FRIENDS,
+  [VISIBILITY.PUBLIC]: {
+    value: VISIBILITY.PUBLIC,
+    label: 'Public',
+    icon: Globe,
+    color: 'var(--color-primary)',
+  },
+  [VISIBILITY.FRIENDS]: {
+    value: VISIBILITY.FRIENDS,
     label: 'Friends',
     icon: Users,
     color: 'var(--color-success)',
   },
 } as const
 
-export const REVIEW_VISIBILITY_OPTIONS = [
-  { ...reviewVisibilityConfig[REVIEW_VISIBILITY.PUBLIC] },
-  { ...reviewVisibilityConfig[REVIEW_VISIBILITY.FRIENDS] },
-  { ...reviewVisibilityConfig[REVIEW_VISIBILITY.PRIVATE] },
+export const VISIBILITY_OPTIONS = [
+  { ...reviewVisibilityConfig[VISIBILITY.PRIVATE] },
+  { ...reviewVisibilityConfig[VISIBILITY.FRIENDS] },
+  { ...reviewVisibilityConfig[VISIBILITY.PUBLIC] },
 ] as const

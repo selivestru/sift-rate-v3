@@ -1,4 +1,4 @@
-import { MediaType, ReviewVisibility } from '~/generated/prisma/enums'
+import { MediaType, Visibility } from '~/generated/prisma/enums'
 
 export type ReviewMediaCard = {
   id: string
@@ -12,7 +12,7 @@ export type ReviewResponse = {
   id: string
   rating: number
   content: string | null
-  visibility: ReviewVisibility
+  visibility: Visibility
   hasSpoiler: boolean
   createdAt: Date
   updatedAt: Date

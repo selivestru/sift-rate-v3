@@ -24,7 +24,7 @@ Domain enums (product contracts):
 
 - `Subscription`: `FREE | MONTHLY | YEARLY | LIFETIME` — implemented in app as `SUBSCRIPTIONS` + `Subscription` in `src/modules/auth/types/user.type.ts`.
 - `MediaType`: `MOVIE | TV_SHOW | GAME | BOOK | ALBUM | TRACK` — product contract; keep this vocabulary in routes and future modules.
-- `ReviewVisibility`: `PRIVATE | FRIENDS | PUBLIC` — product contract for future review visibility.
+- `Visibility`: `PRIVATE | FRIENDS | PUBLIC` — product contract for future review visibility.
 
 ## Monorepo structure
 

@@ -10,7 +10,7 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator'
-import { ReviewVisibility } from '~/generated/prisma/enums'
+import { Visibility } from '~/generated/prisma/enums'
 
 export class UpdateReviewDto {
   @IsOptional()
@@ -26,8 +26,8 @@ export class UpdateReviewDto {
   content?: string | null
 
   @IsOptional()
-  @IsEnum(ReviewVisibility)
-  visibility?: ReviewVisibility
+  @IsEnum(Visibility)
+  visibility?: Visibility
 
   @IsOptional()
   @Type(() => Boolean)
