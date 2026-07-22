@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Disc3Icon } from 'lucide-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
 
@@ -9,10 +9,12 @@ interface AlbumDetailNotFoundProps {
 }
 
 export const AlbumDetailNotFound = ({ externalId }: AlbumDetailNotFoundProps) => {
+  const MediaTypeIcon = mediaTypeMeta.ALBUM.icon
+
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3 p-6">
       <Alert>
-        <Disc3Icon />
+        <MediaTypeIcon />
         <AlertTitle>This album isn&apos;t available</AlertTitle>
         <AlertDescription>
           It may have been removed from the catalog, or the link is outdated.

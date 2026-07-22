@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { CompassIcon } from 'lucide-react'
+import { Compass } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 
@@ -13,7 +13,7 @@ export const PlannedListEmpty = () => {
           backlog.
         </p>
       </div>
-      <Button variant="secondary" render={<Link to="/discover" />} startIcon={<CompassIcon />}>
+      <Button variant="secondary" render={<Link to="/discover" />} startIcon={<Compass />}>
         Browse Discover
       </Button>
     </div>

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronRightIcon, LibraryIcon } from 'lucide-react'
+import { ChevronRight, Library } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
 
@@ -20,7 +20,7 @@ export const LibraryPage = () => {
       <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="bg-primary/12 text-primary flex size-9 items-center justify-center rounded-xl">
-            <LibraryIcon className="size-4" strokeWidth={1.75} />
+            <Library className="size-4" strokeWidth={1.75} />
           </span>
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
             Library
@@ -66,7 +66,7 @@ export const LibraryPage = () => {
               </p>
             </div>
 
-            <ChevronRightIcon className="text-muted-foreground group-hover:text-foreground size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <ChevronRight className="text-muted-foreground group-hover:text-foreground size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         ))}
       </div>

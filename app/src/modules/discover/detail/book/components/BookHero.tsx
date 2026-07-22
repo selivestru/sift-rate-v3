@@ -1,4 +1,4 @@
-import { BookOpenIcon, StarIcon } from 'lucide-react'
+import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -15,6 +15,7 @@ interface BookHeroProps {
 
 export const BookHero = ({ book }: BookHeroProps) => {
   const accent = mediaTypeMeta[MEDIA_TYPES.BOOK].color
+  const MediaTypeIcon = mediaTypeMeta.BOOK.icon
   const publishedLabel = formatPublished(book.publishedDate, book.year)
   const categoryPreview = book.categories.slice(0, 3)
 
@@ -81,7 +82,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
               height={576}
               fallback={
                 <div className="flex size-full flex-col items-center justify-center gap-2 px-3">
-                  <BookOpenIcon className="text-muted-foreground size-10" aria-hidden />
+                  <MediaTypeIcon className="text-muted-foreground size-10" aria-hidden />
                   <span className="text-muted-foreground text-center text-[10px] tracking-wide uppercase">
                     No cover
                   </span>
@@ -176,7 +177,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
                     : 'Google rating'
                 }
               >
-                <StarIcon className="text-foreground/80 size-3.5" aria-hidden />
+                <Star className="text-foreground/80 size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {book.googleRating.toFixed(1)}
                 </span>

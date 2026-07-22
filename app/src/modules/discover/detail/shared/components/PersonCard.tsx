@@ -1,4 +1,4 @@
-import { UserIcon } from 'lucide-react'
+import { User } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
 
@@ -29,7 +29,7 @@ export const PersonCard = ({ name, profileUrl, subtitle, className }: PersonCard
           />
         ) : (
           <div className="flex size-full items-center justify-center">
-            <UserIcon className="text-muted-foreground size-8 opacity-60" aria-hidden />
+            <User className="text-muted-foreground size-8 opacity-60" aria-hidden />
           </div>
         )}
       </div>

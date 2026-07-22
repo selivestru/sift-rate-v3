@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRightIcon, StarIcon } from 'lucide-react'
+import { ArrowRight, Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -62,7 +62,7 @@ export const MovieSearchCard = ({ item }: MovieSearchCardProps) => {
         <MediaTypeBadge mediaType={MEDIA_TYPES.MOVIE} />
 
         <div className="border-rating/30 bg-rating/10 shadow-rating/40 z-px absolute top-3.5 right-3.5 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-xs">
-          <StarIcon className="fill-rating text-rating size-4.5" />
+          <Star className="fill-rating text-rating size-4.5" />
           <span className="text-rating text-base font-bold tabular-nums">{item.rating}</span>
         </div>
 
@@ -94,7 +94,7 @@ export const MovieSearchCard = ({ item }: MovieSearchCardProps) => {
         <Button
           className="w-fit bg-(--card-accent)/40 hover:bg-(--card-accent)/60"
           endIcon={
-            <ArrowRightIcon className="size-3.5 transition-transform duration-500 group-hover:translate-x-0.5" />
+            <ArrowRight className="size-3.5 transition-transform duration-500 group-hover:translate-x-0.5" />
           }
         >
           View Details

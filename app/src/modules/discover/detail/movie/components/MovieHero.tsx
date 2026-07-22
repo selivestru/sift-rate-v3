@@ -1,5 +1,5 @@
-import { ClapperboardIcon, StarIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -18,6 +18,7 @@ interface MovieHeroProps {
 export const MovieHero = ({ movie }: MovieHeroProps) => {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
   const accent = mediaTypeMeta[MEDIA_TYPES.MOVIE].color
+  const MediaTypeIcon = mediaTypeMeta.MOVIE.icon
   const runtime = formatRuntime(movie.runtimeMinutes)
   const showOriginal =
     Boolean(movie.originalTitle) &&
@@ -67,7 +68,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
             height={750}
             fallback={
               <div className="flex size-full items-center justify-center">
-                <ClapperboardIcon className="text-muted-foreground size-10" aria-hidden />
+                <MediaTypeIcon className="text-muted-foreground size-10" aria-hidden />
               </div>
             }
           />
@@ -129,7 +130,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
                 className="border-foreground/10 bg-foreground/8 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
                 title={`${movie.tmdbVoteCount.toLocaleString()} TMDB votes`}
               >
-                <StarIcon className="stroke-rating fill-rating size-3.5" aria-hidden />
+                <Star className="stroke-rating fill-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {movie.tmdbRating.toFixed(1)}
                 </span>

@@ -1,4 +1,4 @@
-import { MenuIcon } from 'lucide-react'
+import { Menu } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '~/common/ui/Drawer'
@@ -16,11 +16,11 @@ export const NavDrawer = () => {
             aria-label="Open menu"
             className="hidden max-md:flex"
           >
-            <MenuIcon />
+            <Menu />
           </Button>
         }
       >
-        <MenuIcon />
+        <Menu />
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>

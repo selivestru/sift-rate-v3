@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { CircleXIcon } from 'lucide-react'
+import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
@@ -16,7 +16,7 @@ export const BookDetailError = ({
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3 p-6">
       <Alert variant="danger">
-        <CircleXIcon />
+        <XCircle />
         <AlertTitle>{message}</AlertTitle>
       </Alert>
       <Button fullWidth variant="secondary" onClick={onRetry}>

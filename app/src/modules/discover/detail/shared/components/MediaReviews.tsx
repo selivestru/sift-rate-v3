@@ -1,4 +1,4 @@
-import { MessageSquareTextIcon } from 'lucide-react'
+import { MessageText2 } from 'reicon-react'
 
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
 import type { MediaRef } from '~/common/types/media-ref.types'
@@ -61,7 +61,7 @@ export const MediaReviews = (props: MediaReviewsProps) => {
 
       {!isLoading && !isError && !data?.pages[0].data.length && (
         <div className="bg-foreground/4 ring-foreground/8 flex flex-col items-center gap-2 rounded-2xl px-4 py-10 text-center ring-1">
-          <MessageSquareTextIcon className="text-muted-foreground size-8 opacity-60" />
+          <MessageText2 className="text-muted-foreground size-8 opacity-60" />
           <p className="text-foreground text-sm font-medium">No public reviews yet</p>
           <p className="text-muted-foreground max-w-sm text-xs">
             Be the first to share what this meant to you — rate it and write a public review.

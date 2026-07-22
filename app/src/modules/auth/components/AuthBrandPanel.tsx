@@ -1,37 +1,31 @@
-import {
-  CompassIcon,
-  LayersIcon,
-  MessagesSquareIcon,
-  StarIcon,
-  type LucideIcon,
-} from 'lucide-react'
+import { Compass, Layers, Messages2, Star, type IconComponent } from 'reicon-react'
 
 import { Badge } from '~/common/ui/Badge'
 
 const mediaTypes = ['Movies', 'TV', 'Tracks', 'Albums', 'Games', 'Books'] as const
 
 const capabilities: {
-  icon: LucideIcon
+  icon: IconComponent
   title: string
   description: string
 }[] = [
   {
-    icon: StarIcon,
+    icon: Star,
     title: 'Rate and review',
     description: 'Log what you finish and how it felt',
   },
   {
-    icon: LayersIcon,
+    icon: Layers,
     title: 'Collections and ranked lists',
     description: 'Organize taste into lists you actually revisit',
   },
   {
-    icon: MessagesSquareIcon,
+    icon: Messages2,
     title: 'Reviews and comments',
     description: 'Read other voices and leave your own',
   },
   {
-    icon: CompassIcon,
+    icon: Compass,
     title: 'Discover',
     description: 'Find the next thing through people, not algorithms alone',
   },

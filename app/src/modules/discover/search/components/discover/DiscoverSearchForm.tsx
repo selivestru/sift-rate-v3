@@ -1,5 +1,5 @@
-import { SearchIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Search, X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import { Input } from '~/common/ui/Input'
@@ -47,7 +47,7 @@ export const DiscoverSearchForm = ({
         endIcon={
           draft.length > 0 && (
             <Button isIconOnly variant="ghost" size="sm" onClick={handleClear}>
-              <XIcon className="size-4" />
+              <X className="size-4" />
             </Button>
           )
         }
@@ -55,7 +55,7 @@ export const DiscoverSearchForm = ({
       />
 
       <Button fullWidth type="submit" isDisabled={!canSubmit || isFetching}>
-        {isFetching ? <Spinner className="text-foreground" /> : <SearchIcon className="size-4" />}
+        {isFetching ? <Spinner className="text-foreground" /> : <Search className="size-4" />}
         Search
       </Button>
     </form>

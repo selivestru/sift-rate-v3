@@ -1,4 +1,4 @@
-import { StarIcon } from 'lucide-react'
+import { Star } from 'reicon-react'
 
 import { cn } from '../utils/cn'
 
@@ -21,7 +21,7 @@ export const RatingBadge = ({ rating, size = 'sm', className }: RatingBadgeProps
         className,
       )}
     >
-      <StarIcon
+      <Star
         className={cn('fill-rating text-rating', {
           'size-3.5': size === 'md',
           'size-3': size === 'sm' || size === 'xs',

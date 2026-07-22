@@ -1,5 +1,5 @@
-import { PlayIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Play } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
@@ -50,7 +50,7 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
               />
               <div className="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/30" />
               <span className="bg-background/90 text-foreground ring-foreground/10 absolute top-1/2 left-1/2 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg ring-1 backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
-                <PlayIcon className="size-6 fill-current" aria-hidden />
+                <Play className="size-6 fill-current" aria-hidden />
               </span>
             </button>
           )}

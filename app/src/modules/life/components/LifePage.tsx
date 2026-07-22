@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { SparklesIcon } from 'lucide-react'
+import { Sparkles } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
 
@@ -26,7 +26,7 @@ export const LifePage = () => {
       <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
-            <SparklesIcon className="size-4" strokeWidth={1.75} />
+            <Sparkles className="size-4" strokeWidth={1.75} />
           </span>
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">Life</p>
         </div>
@@ -41,7 +41,7 @@ export const LifePage = () => {
       <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(54%_0.18_15/0.14)] text-[oklch(50%_0.16_15)] dark:text-[oklch(75%_0.12_15)]">
-            <SparklesIcon className="size-4" strokeWidth={1.75} />
+            <Sparkles className="size-4" strokeWidth={1.75} />
           </span>
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">Life</p>
         </div>

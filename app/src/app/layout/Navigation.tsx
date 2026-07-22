@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { LockIcon } from 'lucide-react'
+import { Lock } from 'reicon-react'
 
 import { navItems, type NavItemConfig } from '~/common/constants/navigation'
 import { cn } from '~/common/utils/cn'
@@ -42,7 +42,7 @@ function NavItem({ item, isAuthenticated, currentSubscription, nested }: NavItem
               className={cn('size-5 shrink-0', nested && 'size-4', isActive && 'text-foreground')}
             />
             <span className={cn('flex-1', isActive && 'text-foreground')}>{item.label}</span>
-            {isLocked && <LockIcon className="size-4 shrink-0 opacity-70" />}
+            {isLocked && <Lock className="size-4 shrink-0 opacity-70" />}
           </>
         )}
       </Link>

@@ -1,5 +1,4 @@
-import { TvIcon } from 'lucide-react'
-
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { RatingBadge } from '~/common/ui/RatingBadge'
 
 import type { TvSeasonSummary } from '../types/tv-show-detail.types'
@@ -10,6 +9,7 @@ interface TvSeasonCardProps {
 }
 
 export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
+  const MediaTypeIcon = mediaTypeMeta.TV_SHOW.icon
   const isSpecials = season.seasonNumber === 0
   const label = isSpecials ? 'Specials' : `S${season.seasonNumber}`
 
@@ -27,7 +27,7 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
           />
         ) : (
           <div className="flex size-full items-center justify-center">
-            <TvIcon className="text-muted-foreground size-8 opacity-60" aria-hidden />
+            <MediaTypeIcon className="text-muted-foreground size-8 opacity-60" aria-hidden />
           </div>
         )}
 

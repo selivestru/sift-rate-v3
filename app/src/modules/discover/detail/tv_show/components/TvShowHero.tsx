@@ -1,5 +1,5 @@
-import { StarIcon, TvIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -24,6 +24,7 @@ const formatYears = (start: string, end: string, inProduction: boolean) => {
 export const TvShowHero = ({ show }: TvShowHeroProps) => {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
   const accent = mediaTypeMeta[MEDIA_TYPES.TV_SHOW].color
+  const MediaTypeIcon = mediaTypeMeta.TV_SHOW.icon
   const showOriginal =
     Boolean(show.originalTitle) &&
     show.originalTitle.trim().toLowerCase() !== show.title.trim().toLowerCase()
@@ -73,7 +74,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
             height={750}
             fallback={
               <div className="flex size-full items-center justify-center">
-                <TvIcon className="text-muted-foreground size-10" aria-hidden />
+                <MediaTypeIcon className="text-muted-foreground size-10" aria-hidden />
               </div>
             }
           />
@@ -139,7 +140,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
                 className="border-foreground/10 bg-foreground/8 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
                 title={`${show.tmdbVoteCount.toLocaleString()} TMDB votes`}
               >
-                <StarIcon className="stroke-rating fill-rating size-3.5" aria-hidden />
+                <Star className="stroke-rating fill-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {show.tmdbRating.toFixed(1)}
                 </span>

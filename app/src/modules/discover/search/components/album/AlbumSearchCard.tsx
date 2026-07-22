@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRightIcon } from 'lucide-react'
+import { ArrowRight } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -59,7 +59,7 @@ export const AlbumSearchCard = ({ item }: AlbumSearchCardProps) => {
 
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-400 group-hover:opacity-100">
           <Button isIconOnly variant="secondary">
-            <ArrowRightIcon className="size-4.5" />
+            <ArrowRight className="size-4.5" />
           </Button>
         </div>
 

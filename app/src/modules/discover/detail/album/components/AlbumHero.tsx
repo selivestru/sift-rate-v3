@@ -1,5 +1,3 @@
-import { Disc3Icon } from 'lucide-react'
-
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
@@ -14,6 +12,7 @@ interface AlbumHeroProps {
 
 export const AlbumHero = ({ album }: AlbumHeroProps) => {
   const accent = mediaTypeMeta[MEDIA_TYPES.ALBUM].color
+  const MediaTypeIcon = mediaTypeMeta[MEDIA_TYPES.ALBUM].icon
   const backdropUrl = album.coverUrl
 
   const metaParts: string[] = []
@@ -73,7 +72,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
                 imageClassName="object-center"
                 fallback={
                   <div className="flex size-full items-center justify-center">
-                    <Disc3Icon className="text-muted-foreground size-8" aria-hidden />
+                    <MediaTypeIcon className="text-muted-foreground size-8" aria-hidden />
                   </div>
                 }
               />

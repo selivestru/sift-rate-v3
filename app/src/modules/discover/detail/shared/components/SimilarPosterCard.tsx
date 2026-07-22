@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { BookOpenIcon, FilmIcon, Gamepad2Icon, TvIcon } from 'lucide-react'
 
-import { MEDIA_TYPES, mediaTypeToSlug } from '~/common/constants/media-type'
+import { MEDIA_TYPES, mediaTypeMeta, mediaTypeToSlug } from '~/common/constants/media-type'
 import { RatingBadge } from '~/common/ui/RatingBadge'
 import { cn } from '~/common/utils/cn'
 
@@ -18,19 +17,12 @@ const routeFor = (mediaType: SimilarMediaType) => {
   return `/discover/${slug}/$externalId` as const
 }
 
-const iconFor = (mediaType: SimilarMediaType) => {
-  if (mediaType === MEDIA_TYPES.TV_SHOW) return TvIcon
-  if (mediaType === MEDIA_TYPES.GAME) return Gamepad2Icon
-  if (mediaType === MEDIA_TYPES.BOOK) return BookOpenIcon
-  return FilmIcon
-}
-
 export const SimilarPosterCard = ({
   item,
   mediaType = MEDIA_TYPES.MOVIE,
   className,
 }: SimilarPosterCardProps) => {
-  const NotFoundIcon = iconFor(mediaType)
+  const NotFoundIcon = mediaTypeMeta[mediaType].icon
 
   return (
     <Link

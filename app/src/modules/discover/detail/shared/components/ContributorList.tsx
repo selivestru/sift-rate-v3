@@ -1,4 +1,4 @@
-import { UserIcon } from 'lucide-react'
+import { User } from 'reicon-react'
 
 import type { MusicContributor } from '../types/music-rail.types'
 
@@ -30,7 +30,7 @@ export const ContributorList = ({ contributors }: ContributorListProps) => {
               />
             ) : (
               <div className="bg-muted flex size-11 shrink-0 items-center justify-center rounded-full">
-                <UserIcon className="text-muted-foreground size-5" aria-hidden />
+                <User className="text-muted-foreground size-5" aria-hidden />
               </div>
             )}
 

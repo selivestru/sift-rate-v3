@@ -1,4 +1,4 @@
-import { CircleXIcon } from 'lucide-react'
+import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
@@ -15,7 +15,7 @@ export const DiscoverSearchError = ({
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3">
       <Alert variant="danger">
-        <CircleXIcon />
+        <XCircle />
         <AlertTitle>{message}</AlertTitle>
       </Alert>
       <Button fullWidth variant="secondary" onClick={onRetry}>

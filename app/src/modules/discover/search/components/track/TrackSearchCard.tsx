@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRightIcon, ClockIcon } from 'lucide-react'
+import { ArrowRight, Clock } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -70,7 +70,7 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
         )}
 
         <span className="text-muted-foreground flex items-center gap-1 text-xs tabular-nums">
-          <ClockIcon className="size-3" />
+          <Clock className="size-3" />
           {formatDuration(item.duration)}
         </span>
 
@@ -79,7 +79,7 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
           variant="ghost"
           className="size-8 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         >
-          <ArrowRightIcon className="size-3.5" />
+          <ArrowRight className="size-3.5" />
         </Button>
       </div>
     </Link>

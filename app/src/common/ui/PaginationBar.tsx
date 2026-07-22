@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoreH } from 'reicon-react'
 
 import { cn } from '../utils/cn'
 
@@ -61,7 +61,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
           'hover:scale-102',
         )}
       >
-        <ChevronLeftIcon className="size-4" />
+        <ChevronLeft className="size-4" />
         <span className="hidden sm:inline">Prev</span>
       </button>
 
@@ -71,7 +71,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
             key={i === 1 ? 'ellipsis-start' : 'ellipsis-end'}
             className="flex size-9 items-center justify-center"
           >
-            <MoreHorizontalIcon className="text-muted-foreground size-4" />
+            <MoreH className="text-muted-foreground size-4" />
           </span>
         ) : (
           <button
@@ -103,7 +103,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
         )}
       >
         <span className="hidden sm:inline">Next</span>
-        <ChevronRightIcon className="size-4" />
+        <ChevronRight className="size-4" />
       </button>
     </nav>
   )

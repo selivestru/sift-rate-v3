@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRightIcon, StarIcon } from 'lucide-react'
+import { ArrowRight, Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -58,7 +58,7 @@ export const GameSearchCard = ({ item }: GameSearchCardProps) => {
 
             {item.rating && (
               <div className="border-rating/30 bg-rating/15 shadow-rating/30 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm">
-                <StarIcon className="fill-rating text-rating size-3.5" />
+                <Star className="fill-rating text-rating size-3.5" />
                 <span className="text-rating tabular-nums">{item.rating}</span>
               </div>
             )}
@@ -103,7 +103,7 @@ export const GameSearchCard = ({ item }: GameSearchCardProps) => {
       <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 backdrop-blur-[2px] transition-opacity duration-400 group-hover:opacity-100">
         <Button variant="success">
           View Game
-          <ArrowRightIcon className="size-4" />
+          <ArrowRight className="size-4" />
         </Button>
       </div>
     </Link>

@@ -1,5 +1,5 @@
-import { ChevronDownIcon } from 'lucide-react'
 import { useState } from 'react'
+import { ChevronDown } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 
@@ -52,7 +52,7 @@ export const AlbumTracks = ({ tracks, coverUrl }: AlbumTracksProps) => {
           size="sm"
           className="self-start"
           onClick={() => setExpanded(true)}
-          endIcon={<ChevronDownIcon className="size-4" />}
+          endIcon={<ChevronDown className="size-4" />}
         >
           {`Show all ${total} tracks`}
         </Button>

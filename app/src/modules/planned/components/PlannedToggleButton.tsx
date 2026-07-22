@@ -1,4 +1,4 @@
-import { BookmarkIcon } from 'lucide-react'
+import { Bookmark } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
 import type { MediaType } from '~/common/constants/media-type'
@@ -37,7 +37,7 @@ export const PlannedToggleButton = ({ id, ...props }: PlannedToggleButtonProps) 
     <Button
       variant={isPlanned ? 'secondary' : 'outline'}
       isLoading={isLoading}
-      startIcon={<BookmarkIcon className={cn(isPlanned && 'fill-current')} aria-hidden />}
+      startIcon={<Bookmark className={cn(isPlanned && 'fill-current')} aria-hidden />}
       onClick={handleToggle}
       aria-label={isPlanned ? 'Remove from planned' : 'Add to planned'}
     >

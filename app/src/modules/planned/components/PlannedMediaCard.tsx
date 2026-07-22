@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowUpRightIcon, CalendarCheckIcon, Trash2Icon } from 'lucide-react'
+import { ArrowUpRight, CalendarCheck, Trash2 } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
 import { mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
@@ -67,7 +67,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
           <div className="flex flex-col gap-1 px-3">
             <h3 className="line-clamp-2 text-lg font-bold tracking-tight">{media.title}</h3>
             <p className="text-muted-foreground flex items-center gap-1 text-[11px]">
-              <CalendarCheckIcon className="size-3 shrink-0 opacity-80" />
+              <CalendarCheck className="size-3 shrink-0 opacity-80" />
               <span>Saved {formatRelativeDate(item.createdAt)}</span>
             </p>
           </div>
@@ -76,7 +76,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
 
       <div className="grid grid-cols-2">
         <Button
-          className="h-11 rounded-none border-none"
+          className="h-11 rounded-none rounded-bl-2xl border-none"
           variant="default"
           render={
             <Link
@@ -84,17 +84,17 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
               params={{ externalId: media.externalId }}
             />
           }
-          endIcon={<ArrowUpRightIcon />}
+          endIcon={<ArrowUpRight />}
         >
           Open
         </Button>
 
         <Button
-          className="h-11 rounded-none border-none"
+          className="h-11 rounded-none rounded-br-2xl border-none"
           aria-label={`Delete ${media.title} from planned`}
           variant="danger-soft"
           onClick={handleDelete}
-          startIcon={<Trash2Icon />}
+          startIcon={<Trash2 />}
           isLoading={deleteMutation.isPending}
         >
           Delete

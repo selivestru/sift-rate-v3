@@ -1,4 +1,4 @@
-import { StarIcon, TrashIcon } from 'lucide-react'
+import { Star, Trash } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
 import { Button } from '~/common/ui/Button'
@@ -47,7 +47,7 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
             variant={hasReview ? 'secondary' : 'default'}
             className={cn(hasReview && 'text-rating')}
             startIcon={
-              <StarIcon
+              <Star
                 className={cn(hasReview && 'fill-rating text-rating stroke-rating')}
                 aria-hidden
               />
@@ -65,7 +65,7 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
         <DialogReviewDialog reviewId={data.review!.id}>
           {({ open }) => (
             <Button isIconOnly variant="danger-soft" onClick={open} aria-label="Delete review">
-              <TrashIcon />
+              <Trash />
             </Button>
           )}
         </DialogReviewDialog>

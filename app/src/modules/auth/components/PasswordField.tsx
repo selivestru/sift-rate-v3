@@ -1,6 +1,6 @@
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { useState } from 'react'
 import type { FieldError as RHFFieldError } from 'react-hook-form'
+import { Eye, EyeOff } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import { Field, FieldError, FieldLabel } from '~/common/ui/Field'
@@ -42,7 +42,7 @@ export const PasswordField = ({
             aria-label={isVisible ? 'Hide password' : 'Show password'}
             onClick={() => setIsVisible((value) => !value)}
           >
-            {isVisible ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+            {isVisible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </Button>
         }
         autoComplete={props.autoComplete}

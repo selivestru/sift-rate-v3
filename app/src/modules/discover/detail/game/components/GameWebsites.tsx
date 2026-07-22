@@ -1,5 +1,6 @@
-import { ExternalLinkIcon, Gamepad2Icon, GlobeIcon, ShoppingBagIcon, VideoIcon } from 'lucide-react'
+import { Globe, Link6, ShoppingBag, Video } from 'reicon-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 
@@ -11,8 +12,8 @@ interface GameWebsitesProps {
 }
 
 const iconFor = (kind: GameWebsiteKind) => {
-  if (kind === 'youtube' || kind === 'twitch') return VideoIcon
-  if (kind === 'official') return GlobeIcon
+  if (kind === 'youtube' || kind === 'twitch') return Video
+  if (kind === 'official') return Globe
   if (
     kind === 'steam' ||
     kind === 'epic' ||
@@ -20,18 +21,20 @@ const iconFor = (kind: GameWebsiteKind) => {
     kind === 'itch' ||
     kind === 'store'
   ) {
-    return ShoppingBagIcon
+    return ShoppingBag
   }
-  return ExternalLinkIcon
+  return Link6
 }
 
 export const GameWebsites = ({ websites, className }: GameWebsitesProps) => {
+  const MediaTypeIcon = mediaTypeMeta.GAME.icon
+
   if (websites.length === 0) return null
 
   return (
     <section className={cn('min-w-0', className)} aria-labelledby="websites-heading">
       <div className="mb-3 flex items-center gap-2">
-        <Gamepad2Icon className="text-muted-foreground size-4" aria-hidden />
+        <MediaTypeIcon className="text-muted-foreground size-4" aria-hidden />
         <h2 id="websites-heading" className="text-foreground text-lg font-semibold">
           Where to play
         </h2>
@@ -50,10 +53,7 @@ export const GameWebsites = ({ websites, className }: GameWebsitesProps) => {
               >
                 <Icon className="size-3.5 shrink-0" aria-hidden />
                 {site.label}
-                <ExternalLinkIcon
-                  className="text-muted-foreground size-3 shrink-0 opacity-70"
-                  aria-hidden
-                />
+                <Link6 className="text-muted-foreground size-3 shrink-0 opacity-70" aria-hidden />
               </Button>
             </li>
           )

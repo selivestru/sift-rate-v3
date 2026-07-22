@@ -1,6 +1,6 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
-import { ChevronLeftIcon, ChevronRightIcon, XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { ChevronLeft, ChevronRight, X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import {
@@ -142,7 +142,7 @@ export const Lightbox = ({
                   />
                 }
               >
-                <XIcon />
+                <X />
               </DialogPrimitive.Close>
             </div>
 
@@ -180,7 +180,7 @@ export const Lightbox = ({
                   aria-label="Previous image"
                   onClick={() => onIndexChange(safeIndex <= 0 ? images.length - 1 : safeIndex - 1)}
                 >
-                  <ChevronLeftIcon className="size-5" />
+                  <ChevronLeft className="size-5" />
                 </Button>
                 <Button
                   type="button"
@@ -191,7 +191,7 @@ export const Lightbox = ({
                   aria-label="Next image"
                   onClick={() => onIndexChange(safeIndex >= images.length - 1 ? 0 : safeIndex + 1)}
                 >
-                  <ChevronRightIcon className="size-5" />
+                  <ChevronRight className="size-5" />
                 </Button>
               </>
             )}

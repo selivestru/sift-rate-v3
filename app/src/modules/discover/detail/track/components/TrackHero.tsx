@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { Music2Icon } from 'lucide-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -16,6 +15,7 @@ interface TrackHeroProps {
 
 export const TrackHero = ({ track }: TrackHeroProps) => {
   const accent = mediaTypeMeta[MEDIA_TYPES.TRACK].color
+  const MediaTypeIcon = mediaTypeMeta.TRACK.icon
   const backdropUrl = track.coverUrl
   const durationLabel = track.duration > 0 ? formatDuration(track.duration) : null
 
@@ -73,7 +73,7 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
                 imageClassName="object-center"
                 fallback={
                   <div className="flex size-full items-center justify-center">
-                    <Music2Icon className="text-muted-foreground size-8" aria-hidden />
+                    <MediaTypeIcon className="text-muted-foreground size-8" aria-hidden />
                   </div>
                 }
               />

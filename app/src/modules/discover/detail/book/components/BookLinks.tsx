@@ -1,5 +1,6 @@
-import { BookOpenIcon, ExternalLinkIcon, ShoppingBagIcon } from 'lucide-react'
+import { Link6, ShoppingBag } from 'reicon-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 
@@ -11,18 +12,19 @@ interface BookLinksProps {
 }
 
 export const BookLinks = ({ book, className }: BookLinksProps) => {
-  const links: Array<{ label: string; url: string; icon: typeof ExternalLinkIcon }> = []
+  const links: Array<{ label: string; url: string; icon: typeof Link6 }> = []
+  const MediaTypeIcon = mediaTypeMeta.BOOK.icon
 
   if (book.previewUrl) {
-    links.push({ label: 'Preview', url: book.previewUrl, icon: BookOpenIcon })
+    links.push({ label: 'Preview', url: book.previewUrl, icon: MediaTypeIcon })
   }
 
   if (book.infoUrl) {
-    links.push({ label: 'Google Books', url: book.infoUrl, icon: ExternalLinkIcon })
+    links.push({ label: 'Google Books', url: book.infoUrl, icon: Link6 })
   }
 
   if (book.buyUrl) {
-    links.push({ label: 'Buy', url: book.buyUrl, icon: ShoppingBagIcon })
+    links.push({ label: 'Buy', url: book.buyUrl, icon: ShoppingBag })
   }
 
   if (links.length === 0) return null
@@ -45,10 +47,7 @@ export const BookLinks = ({ book, className }: BookLinksProps) => {
               >
                 <Icon className="size-3.5 shrink-0" aria-hidden />
                 {link.label}
-                <ExternalLinkIcon
-                  className="text-muted-foreground size-3 shrink-0 opacity-70"
-                  aria-hidden
-                />
+                <Link6 className="text-muted-foreground size-3 shrink-0 opacity-70" aria-hidden />
               </Button>
             </li>
           )

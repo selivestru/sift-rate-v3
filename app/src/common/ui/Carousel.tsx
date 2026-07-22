@@ -1,6 +1,6 @@
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { createContext, use, useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
+import { ChevronLeft, ChevronRight } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
@@ -205,7 +205,7 @@ export const CarouselPrevious = ({
       )}
       {...props}
     >
-      <ChevronLeftIcon />
+      <ChevronLeft />
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -236,7 +236,7 @@ export const CarouselNext = ({
       )}
       {...props}
     >
-      <ChevronRightIcon />
+      <ChevronRight />
       <span className="sr-only">Next slide</span>
     </Button>
   )

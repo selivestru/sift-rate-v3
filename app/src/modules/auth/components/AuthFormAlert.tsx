@@ -1,4 +1,4 @@
-import { CircleXIcon } from 'lucide-react'
+import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
 
@@ -9,7 +9,7 @@ interface AuthFormAlertProps {
 export const AuthFormAlert = ({ message }: AuthFormAlertProps) => {
   return (
     <Alert variant="danger">
-      <CircleXIcon />
+      <XCircle />
       <AlertTitle>{message}</AlertTitle>
     </Alert>
   )

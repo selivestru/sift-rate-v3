@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { TvIcon } from 'lucide-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
 
@@ -9,10 +9,12 @@ interface TvShowDetailNotFoundProps {
 }
 
 export const TvShowDetailNotFound = ({ externalId }: TvShowDetailNotFoundProps) => {
+  const MediaTypeIcon = mediaTypeMeta.TV_SHOW.icon
+
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3 p-6">
       <Alert>
-        <TvIcon />
+        <MediaTypeIcon />
         <AlertTitle>This series isn&apos;t available</AlertTitle>
         <AlertDescription>
           It may have been removed from the catalog, or the link is outdated.

@@ -1,4 +1,4 @@
-import { BrainIcon, ClockIcon, GiftIcon, type LucideIcon } from 'lucide-react'
+import { Clock, Gift, SdCard, type IconComponent } from 'reicon-react'
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
 
@@ -10,7 +10,7 @@ export interface LifeChapter {
   label: string
   description: string
   motif: string
-  icon: LucideIcon
+  icon: IconComponent
 }
 
 export const lifeChapters: LifeChapter[] = [
@@ -20,7 +20,7 @@ export const lifeChapters: LifeChapter[] = [
     label: 'Timeline',
     description: 'Walk through reviews as they happened in your life',
     motif: 'Along the years',
-    icon: ClockIcon,
+    icon: Clock,
   },
   {
     to: '/life/wrapped',
@@ -28,7 +28,7 @@ export const lifeChapters: LifeChapter[] = [
     label: 'Wrapped',
     description: 'Monthly and yearly recaps of what shaped you',
     motif: 'This season',
-    icon: GiftIcon,
+    icon: Gift,
   },
   {
     to: '/life/memories',
@@ -36,6 +36,6 @@ export const lifeChapters: LifeChapter[] = [
     label: 'Memories',
     description: 'Moments you chose to keep close',
     motif: 'Pinned moments',
-    icon: BrainIcon,
+    icon: SdCard,
   },
 ]

@@ -1,4 +1,4 @@
-import { StarIcon } from 'lucide-react'
+import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { formatDate } from '~/common/utils/formatDate'
@@ -93,7 +93,7 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
                     : 'IGDB rating'
                 }
               >
-                <StarIcon className="fill-rating stroke-rating size-3.5" aria-hidden />
+                <Star className="fill-rating stroke-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {game.igdbRating.toFixed(1)}
                 </span>

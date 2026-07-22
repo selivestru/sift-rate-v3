@@ -1,5 +1,5 @@
-import { CircleXIcon, StarIcon } from 'lucide-react'
 import { Controller } from 'react-hook-form'
+import { Star, XCircle } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
 import type { MediaRef } from '~/common/types/media-ref.types'
@@ -51,7 +51,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
           >
             {serverError && (
               <Alert variant="danger">
-                <CircleXIcon />
+                <XCircle />
                 <AlertTitle>{serverError}</AlertTitle>
               </Alert>
             )}
@@ -63,7 +63,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                 <Field className="items-center gap-4">
                   <div className="flex flex-col items-center gap-1">
                     <div className="flex h-18 items-center gap-2">
-                      <StarIcon
+                      <Star
                         className={cn(
                           'size-7 transition-colors duration-300',
                           field.value ? 'fill-rating text-rating' : 'text-muted-foreground/40',
@@ -111,7 +111,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           aria-pressed={isSelected}
                           aria-label={`Rate ${value} out of 10`}
                         >
-                          <StarIcon
+                          <Star
                             className={cn(
                               'size-5 transition-transform duration-300 ease-out group-hover:-translate-y-1',
                               isSelected || isFilled

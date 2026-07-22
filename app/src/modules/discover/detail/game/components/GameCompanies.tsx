@@ -1,4 +1,4 @@
-import { Building2Icon } from 'lucide-react'
+import { Building2 } from 'reicon-react'
 
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
@@ -23,7 +23,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
   return (
     <section className={cn('min-w-0', className)} aria-labelledby="companies-heading">
       <div className="mb-3 flex items-center gap-2">
-        <Building2Icon className="text-muted-foreground size-4" aria-hidden />
+        <Building2 className="text-muted-foreground size-4" aria-hidden />
         <h2 id="companies-heading" className="text-foreground text-lg font-semibold">
           Companies
         </h2>
@@ -46,7 +46,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
                   height={44}
                 />
               ) : (
-                <Building2Icon className="text-muted-foreground size-5" aria-hidden />
+                <Building2 className="text-muted-foreground size-5" aria-hidden />
               )}
             </div>
             <div className="min-w-0 flex-1">

@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronRightIcon, Music2Icon } from 'lucide-react'
+import { ChevronRight } from 'reicon-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatDuration } from '~/common/utils/formatDuration'
@@ -15,6 +16,7 @@ interface AlbumTrackRowProps {
 
 export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) => {
   const trackNumber = String(track.trackPosition ?? index + 1).padStart(2, '0')
+  const MediaTypeIcon = mediaTypeMeta.ALBUM.icon
 
   return (
     <Link
@@ -39,7 +41,7 @@ export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) =>
           />
         ) : (
           <div className="flex size-full items-center justify-center">
-            <Music2Icon className="text-muted-foreground size-4" aria-hidden />
+            <MediaTypeIcon className="text-muted-foreground size-4" aria-hidden />
           </div>
         )}
         <div className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[1px]">
@@ -63,7 +65,7 @@ export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) =>
         </span>
       </div>
 
-      <ChevronRightIcon
+      <ChevronRight
         className="text-muted-foreground size-4 shrink-0 opacity-40 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100"
         aria-hidden
       />

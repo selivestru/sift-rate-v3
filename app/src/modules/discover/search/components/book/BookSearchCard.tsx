@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRightIcon, StarIcon } from 'lucide-react'
+import { ArrowRight, Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -67,7 +67,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
           {item.pageCount != null && <span className="tabular-nums">· {item.pageCount} pp</span>}
           {item.rating != null && (
             <span className="flex items-center gap-0.5 font-medium text-(--card-accent) tabular-nums">
-              <StarIcon className="size-3.5 fill-current" />
+              <Star className="size-3.5 fill-current" />
               {item.rating.toFixed(1)}
             </span>
           )}
@@ -89,7 +89,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
         variant="ghost"
         className="absolute top-2 right-2 z-20 size-8 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       >
-        <ArrowRightIcon className="size-3.5" />
+        <ArrowRight className="size-3.5" />
       </Button>
     </Link>
   )

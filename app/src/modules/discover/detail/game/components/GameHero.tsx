@@ -1,6 +1,4 @@
-import { Gamepad2Icon } from 'lucide-react'
-
-import { mediaTypeMeta, MEDIA_TYPES } from '~/common/constants/media-type'
+import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 
 import { MediaCoverLightbox } from '../../shared'
 import type { GameDetail } from '../types/game-detail.types'
@@ -13,6 +11,7 @@ interface GameHeroProps {
 
 export const GameHero = ({ game }: GameHeroProps) => {
   const accent = mediaTypeMeta[MEDIA_TYPES.GAME].color
+  const MediaTypeIcon = mediaTypeMeta.GAME.icon
   const showAlt =
     Boolean(game.alternativeName) &&
     game.alternativeName.trim().toLowerCase() !== game.title.trim().toLowerCase()
@@ -36,7 +35,7 @@ export const GameHero = ({ game }: GameHeroProps) => {
             height={480}
             fallback={
               <div className="flex size-full items-center justify-center">
-                <Gamepad2Icon className="text-muted-foreground size-10" aria-hidden />
+                <MediaTypeIcon className="text-muted-foreground size-10" aria-hidden />
               </div>
             }
           />

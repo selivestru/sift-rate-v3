@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Disc3Icon } from 'lucide-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import {
   Carousel,
   CarouselContent,
@@ -28,6 +28,8 @@ const toHeadingId = (title: string) =>
     .replace(/^-|-$/g, '')}`
 
 export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
+  const MediaTypeIcon = mediaTypeMeta.ALBUM.icon
+
   if (items.length === 0) return null
 
   const headingId = toHeadingId(title)
@@ -64,7 +66,7 @@ export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center">
-                      <Disc3Icon className="text-muted-foreground size-8 opacity-60" aria-hidden />
+                      <MediaTypeIcon className="text-muted-foreground size-10" aria-hidden />
                     </div>
                   )}
                 </div>

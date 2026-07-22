@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronRightIcon, CompassIcon } from 'lucide-react'
+import { ChevronRight, Compass } from 'reicon-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
 import { cn } from '~/common/utils/cn'
@@ -21,7 +21,7 @@ export const DiscoverPage = () => {
       <div className="z-px relative flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex size-9 items-center justify-center rounded-xl bg-[oklch(58%_0.11_165/0.14)] text-[oklch(42%_0.1_165)] dark:text-[oklch(78%_0.09_165)]">
-            <CompassIcon className="size-4" strokeWidth={1.75} />
+            <Compass className="size-4" strokeWidth={1.75} />
           </span>
           <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
             Discover
@@ -64,7 +64,7 @@ export const DiscoverPage = () => {
                 >
                   <Icon className="size-5" strokeWidth={1.75} />
                 </span>
-                <ChevronRightIcon
+                <ChevronRight
                   className="text-muted-foreground size-4 shrink-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-(--media-color)"
                   strokeWidth={1.75}
                   aria-hidden

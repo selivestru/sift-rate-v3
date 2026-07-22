@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Music2Icon } from 'lucide-react'
 
+import { mediaTypeMeta } from '~/common/constants/media-type'
 import {
   Carousel,
   CarouselContent,
@@ -29,6 +29,8 @@ const toHeadingId = (title: string) =>
     .replace(/^-|-$/g, '')}`
 
 export const TrackRail = ({ title, items, className }: TrackRailProps) => {
+  const MediaTypeIcon = mediaTypeMeta.TRACK.icon
+
   if (items.length === 0) return null
 
   const headingId = toHeadingId(title)
@@ -65,7 +67,10 @@ export const TrackRail = ({ title, items, className }: TrackRailProps) => {
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center">
-                      <Music2Icon className="text-muted-foreground size-8 opacity-60" aria-hidden />
+                      <MediaTypeIcon
+                        className="text-muted-foreground size-8 opacity-60"
+                        aria-hidden
+                      />
                     </div>
                   )}
                 </div>

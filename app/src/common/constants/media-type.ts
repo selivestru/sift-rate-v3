@@ -1,12 +1,12 @@
 import {
-  BookOpenIcon,
-  ClapperboardIcon,
-  Disc3Icon,
-  Gamepad2Icon,
-  Music2Icon,
-  TvIcon,
-  type LucideIcon,
-} from 'lucide-react'
+  BookOpen,
+  Clapperboard,
+  Gamepad2,
+  MusicNote3,
+  Tv,
+  Vinyl,
+  type IconComponent,
+} from 'reicon-react'
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
 
@@ -52,7 +52,7 @@ export const getMediaTypeFromSlug = (slug: MediaTypeSlug): MediaType => {
 export interface MediaTypeMeta {
   type: MediaType
   label: string
-  icon: LucideIcon
+  icon: IconComponent
   color: string
 }
 
@@ -60,37 +60,37 @@ export const mediaTypeMeta: Record<MediaType, MediaTypeMeta> = {
   MOVIE: {
     type: MEDIA_TYPES.MOVIE,
     label: 'Movies',
-    icon: ClapperboardIcon,
+    icon: Clapperboard,
     color: '#A78BFA',
   },
   TV_SHOW: {
     type: MEDIA_TYPES.TV_SHOW,
     label: 'TV Shows',
-    icon: TvIcon,
+    icon: Tv,
     color: '#818CF8',
   },
   GAME: {
     type: MEDIA_TYPES.GAME,
     label: 'Games',
-    icon: Gamepad2Icon,
+    icon: Gamepad2,
     color: '#34D399',
   },
   BOOK: {
     type: MEDIA_TYPES.BOOK,
     label: 'Books',
-    icon: BookOpenIcon,
+    icon: BookOpen,
     color: '#FBBF24',
   },
   ALBUM: {
     type: MEDIA_TYPES.ALBUM,
     label: 'Albums',
-    icon: Disc3Icon,
+    icon: Vinyl,
     color: '#F472B6',
   },
   TRACK: {
     type: MEDIA_TYPES.TRACK,
     label: 'Tracks',
-    icon: Music2Icon,
+    icon: MusicNote3,
     color: '#60A5FA',
   },
 }

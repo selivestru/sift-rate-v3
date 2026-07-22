@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { LogOut } from 'lucide-react'
+import { Logout } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import {
@@ -50,7 +50,7 @@ export const Profile = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="danger" className="justify-between" onClick={logout}>
             Log Out
-            <LogOut />
+            <Logout />
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

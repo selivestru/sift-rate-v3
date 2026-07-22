@@ -1,16 +1,16 @@
 import {
-  BrainIcon,
-  CalendarCheckIcon,
-  ClockIcon,
-  CompassIcon,
-  GiftIcon,
-  HomeIcon,
-  LibraryIcon,
-  ListIcon,
-  SparklesIcon,
-  StarIcon,
-  type LucideIcon,
-} from 'lucide-react'
+  CalendarCheck,
+  Clock,
+  Compass,
+  Gift,
+  Home,
+  Library,
+  List,
+  SdCard,
+  Sparkles,
+  Star,
+  type IconComponent,
+} from 'reicon-react'
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
 
@@ -19,7 +19,7 @@ import { mediaTypeMeta, mediaTypeToSlug, type MediaTypeSlug } from './media-type
 export interface NavItemConfig {
   to: keyof FileRoutesByTo
   label: string
-  icon: LucideIcon
+  icon: IconComponent
   description: string
   authRequired?: boolean
   subscriptionRequired?: boolean
@@ -32,13 +32,13 @@ export const navItems: NavItemConfig[] = [
   {
     to: '/',
     label: 'Home',
-    icon: HomeIcon,
+    icon: Home,
     description: 'Your activity feed',
   },
   {
     to: '/discover',
     label: 'Discover',
-    icon: CompassIcon,
+    icon: Compass,
     description: 'Find media to archive',
 
     children: [
@@ -89,7 +89,7 @@ export const navItems: NavItemConfig[] = [
   {
     to: '/library',
     label: 'Library',
-    icon: LibraryIcon,
+    icon: Library,
     description: 'Your media library',
 
     authRequired: true,
@@ -97,25 +97,22 @@ export const navItems: NavItemConfig[] = [
       {
         to: '/library/reviews',
         label: 'Reviews',
-        icon: StarIcon,
+        icon: Star,
         description: 'Rating archive',
-
         authRequired: true,
       },
       {
         to: '/library/lists',
         label: 'Lists',
-        icon: ListIcon,
+        icon: List,
         description: 'Ordered personal rankings',
-
         authRequired: true,
       },
       {
         to: '/library/planned',
         label: 'Planned',
-        icon: CalendarCheckIcon,
+        icon: CalendarCheck,
         description: 'Watch and play later',
-
         authRequired: true,
       },
     ],
@@ -123,7 +120,7 @@ export const navItems: NavItemConfig[] = [
   {
     to: '/life',
     label: 'Life',
-    icon: SparklesIcon,
+    icon: Sparkles,
     description: 'Your media life story',
 
     authRequired: true,
@@ -132,27 +129,24 @@ export const navItems: NavItemConfig[] = [
       {
         to: '/life/timeline',
         label: 'Timeline',
-        icon: ClockIcon,
+        icon: Clock,
         description: 'Review timeline',
-
         authRequired: true,
         subscriptionRequired: true,
       },
       {
         to: '/life/wrapped',
         label: 'Wrapped',
-        icon: GiftIcon,
+        icon: Gift,
         description: 'Monthly and yearly recaps',
-
         authRequired: true,
         subscriptionRequired: true,
       },
       {
         to: '/life/memories',
         label: 'Memories',
-        icon: BrainIcon,
+        icon: SdCard,
         description: 'Moments worth keeping',
-
         authRequired: true,
         subscriptionRequired: true,
       },

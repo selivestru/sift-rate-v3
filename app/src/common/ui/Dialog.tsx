@@ -1,5 +1,5 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
-import { XIcon } from 'lucide-react'
+import { X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
@@ -64,7 +64,7 @@ export const DialogContent = ({
               />
             }
           >
-            <XIcon />
+            <X />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

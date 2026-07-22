@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { StarIcon, TrashIcon, UsersIcon } from 'lucide-react'
+import { Star, Trash, Users } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Badge } from '~/common/ui/Badge'
@@ -52,7 +52,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                   variant="outline"
                   className="text-muted-foreground h-5 gap-1 px-1.5 text-[11px] font-normal"
                 >
-                  <UsersIcon className="size-3" />
+                  <Users className="size-3" />
                   Friends
                 </Badge>
               )}
@@ -75,7 +75,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                 isPerfect ? 'Perfect score 10 out of 10' : `Rated ${review.rating} out of 10`
               }
             >
-              <StarIcon className="fill-rating text-rating size-3.5" />
+              <Star className="fill-rating text-rating size-3.5" />
               <span className="text-rating text-sm font-semibold tabular-nums">
                 {review.rating}
               </span>
@@ -90,7 +90,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                     onClick={open}
                     aria-label="Delete review"
                   >
-                    <TrashIcon />
+                    <Trash />
                   </Button>
                 )}
               </DialogReviewDialog>

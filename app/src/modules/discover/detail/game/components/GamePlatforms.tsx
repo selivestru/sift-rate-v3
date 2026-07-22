@@ -1,4 +1,4 @@
-import { MonitorIcon } from 'lucide-react'
+import { Monitor } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
 
@@ -45,7 +45,7 @@ export const GamePlatforms = ({ platforms, className }: GamePlatformsProps) => {
   return (
     <section className={cn('min-w-0', className)} aria-labelledby="platforms-heading">
       <div className="mb-3 flex items-center gap-2">
-        <MonitorIcon className="text-muted-foreground size-4" aria-hidden />
+        <Monitor className="text-muted-foreground size-4" aria-hidden />
         <h2 id="platforms-heading" className="text-foreground text-lg font-semibold">
           Platforms
         </h2>
