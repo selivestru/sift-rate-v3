@@ -71,6 +71,7 @@
 @theme inline {
   --animate-blur-morph-in: blur-morph-in 300ms ease-out forwards;
   --animate-blur-morph-out: blur-morph-out 200ms ease-in forwards;
+  --animate-perfect-stardust: perfect-stardust var(--stardust-duration, 5s) ease-in-out infinite;
 
   --font-sans: var(--font-sans);
 
@@ -148,6 +149,35 @@ button:not(:disabled),
   }
 }
 
+@keyframes perfect-stardust {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.55);
+  }
+  18% {
+    opacity: 0.9;
+  }
+  65% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -22px, 0) scale(1);
+  }
+}
+
 @utility transition-backdrop {
   transition-property: backdrop-filter;
+}
+
+@utility animate-perfect-stardust {
+  animation: perfect-stardust var(--stardust-duration, 5s) ease-in-out infinite;
+  animation-delay: var(--stardust-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-perfect-stardust {
+    animation: none;
+    opacity: 0;
+  }
 }

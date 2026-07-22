@@ -1,5 +1,5 @@
 import { mediaTypeMeta, type MediaType } from '../constants/media-type'
-import { cn } from '../utils/cn'
+import { Badge } from './Badge'
 
 interface MediaBadgeProps {
   mediaType: MediaType
@@ -14,28 +14,18 @@ export const MediaTypeBadge = ({
   alternateColor,
   className,
 }: MediaBadgeProps) => {
-  const badge = mediaTypeMeta[mediaType]
-  const BadgeIcon = badge.icon
+  const meta = mediaTypeMeta[mediaType]
+  const Icon = meta.icon
 
   return (
-    <div
-      className={cn(
-        'inline-flex w-fit items-center gap-1.5 rounded-full border font-semibold',
-        {
-          'px-2 py-0.5 text-[10px]': size === 'sm',
-          'px-2.5 py-1 text-xs': size === 'md',
-        },
-        !alternateColor && 'transition-backdrop backdrop-blur-xs',
-        className,
-      )}
-      style={{
-        backgroundColor: alternateColor ? badge.color : `${badge.color}15`,
-        borderColor: alternateColor ? badge.color : `${badge.color}30`,
-        color: alternateColor ? 'white' : badge.color,
-      }}
+    <Badge
+      color={meta.color}
+      isSolid={alternateColor}
+      size={size}
+      startIcon={<Icon />}
+      className={className}
     >
-      <BadgeIcon className="size-3.5" />
-      {badge.label}
-    </div>
+      {meta.label}
+    </Badge>
   )
 }

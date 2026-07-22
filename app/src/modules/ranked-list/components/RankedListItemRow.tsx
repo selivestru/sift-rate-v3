@@ -53,8 +53,9 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
   return (
     <div
       className={cn(
-        'flex items-center gap-3.5 rounded-2xl p-3 transition-all duration-300 hover:scale-[1.01]',
-        !medal && 'bg-foreground/3 ring-foreground/6 ring-1',
+        'flex flex-col gap-3 rounded-2xl p-3 transition-all duration-300',
+        'sm:flex-row sm:items-center sm:gap-3.5 sm:hover:scale-[1.01]',
+        !medal && 'bg-foreground/3 ring-1 ring-foreground/6',
       )}
       style={
         medal
@@ -85,17 +86,28 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
 
       <div
         className={cn(
-          'bg-muted relative shrink-0 overflow-hidden rounded-xl shadow-sm',
-          isMusic ? 'size-20' : 'aspect-2/3 w-20',
+          'bg-muted relative w-full shrink-0 overflow-hidden rounded-xl shadow-sm',
+          isMusic
+            ? 'aspect-square max-h-48 sm:max-h-none sm:size-20'
+            : 'aspect-2/3 max-h-52 sm:max-h-none sm:w-20',
         )}
       >
         {media.posterUrl ? (
-          <img
-            src={media.posterUrl}
-            alt={media.title}
-            className="size-full object-cover"
-            loading="lazy"
-          />
+          <>
+            <img
+              src={media.posterUrl}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 size-full scale-110 object-cover blur-xl sm:hidden"
+              loading="lazy"
+            />
+            <img
+              src={media.posterUrl}
+              alt={media.title}
+              className="z-px relative size-full object-contain sm:object-cover"
+              loading="lazy"
+            />
+          </>
         ) : (
           <div className="flex size-full items-center justify-center">
             <TypeIcon className="text-muted-foreground size-5" />
@@ -104,13 +116,13 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <p className="text-foreground line-clamp-2 text-sm font-semibold tracking-tight">
+        <p className="text-foreground line-clamp-2 text-lg font-semibold tracking-tight">
           {media.title}
         </p>
-        <MediaTypeBadge size="sm" mediaType={media.mediaType} />
+        <MediaTypeBadge mediaType={media.mediaType} />
       </div>
 
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="flex w-full shrink-0 flex-wrap items-center justify-end gap-1 sm:w-auto">
         <Button
           isIconOnly
           size="sm"

@@ -1,5 +1,6 @@
 import { Plus } from 'reicon-react'
 
+import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import {
   Dialog,
@@ -40,16 +41,9 @@ export const RankedListDetailDialog = ({
             <div className="flex min-w-0 flex-col gap-1.5">
               <DialogTitle className="text-lg">{list.title}</DialogTitle>
               <DialogDescription className="flex flex-wrap items-center gap-2">
-                <span
-                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
-                  style={{
-                    backgroundColor: `color-mix(in oklab, ${visibility.color} 14%, transparent)`,
-                    color: visibility.color,
-                  }}
-                >
-                  <VisibilityIcon className="size-3" />
+                <Badge size="sm" color={visibility.color} startIcon={<VisibilityIcon />}>
                   {visibility.label}
-                </span>
+                </Badge>
                 <span className="text-muted-foreground text-xs tabular-nums">
                   {sortedItems.length} ranked
                 </span>

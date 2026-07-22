@@ -1,34 +1,41 @@
 import { Star } from 'reicon-react'
 
 import { cn } from '../utils/cn'
+import { badgeVariants } from './Badge'
 
 interface RatingBadgeProps {
   rating: number
   size?: 'xs' | 'sm' | 'md'
+  variant?: 'default' | 'outline'
   className?: string
 }
 
-export const RatingBadge = ({ rating, size = 'sm', className }: RatingBadgeProps) => {
+export const RatingBadge = ({
+  rating,
+  size = 'sm',
+  variant = 'default',
+  className,
+}: RatingBadgeProps) => {
+  const badgeSize = size === 'xs' ? 'sm' : size === 'md' ? 'md' : 'sm'
+
   return (
     <div
       className={cn(
-        'border-rating/30 bg-rating/25 shadow-rating/40 z-px flex items-center rounded-full border backdrop-blur-sm transition-backdrop gap-1 w-fit px-2 py-0.5',
-        {
-          'text-base': size === 'md',
-          'text-sm': size === 'sm',
-          'text-xs': size === 'xs',
-        },
+        badgeVariants({
+          variant: variant === 'default' ? 'rating' : 'outline',
+          size: badgeSize,
+        }),
+        size === 'xs' && 'gap-0.5 px-1.5 py-0.5 text-[10px] [&_svg]:size-3!',
+        size === 'md' && 'text-base [&_svg]:size-4!',
+        size === 'sm' && 'text-sm [&_svg]:size-3.5!',
+        'font-bold tabular-nums',
         className,
       )}
     >
-      <Star
-        weight="Filled"
-        className={cn('text-rating', {
-          'size-3.5': size === 'md',
-          'size-3': size === 'sm' || size === 'xs',
-        })}
-      />
-      <span className="text-rating font-bold tabular-nums">{rating}</span>
+      <Star weight="Filled" className="text-rating" />
+      <span className={cn(variant === 'default' ? 'text-rating' : 'text-foreground')}>
+        {rating}
+      </span>
     </div>
   )
 }

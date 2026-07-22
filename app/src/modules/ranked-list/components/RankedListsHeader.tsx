@@ -16,7 +16,7 @@ export const RankedListsHeader = ({ total }: RankedListsHeaderProps) => {
 
   return (
     <div className="z-px relative flex flex-col gap-5">
-      <div className="flex items-end justify-between gap-6">
+      <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
         <div className="flex min-w-0 flex-col gap-3">
           <div className="flex items-center gap-2.5">
             <span

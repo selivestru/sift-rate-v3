@@ -2,6 +2,7 @@ import { Pen, Trash2 } from 'reicon-react'
 
 import { rankedListNavItem } from '~/common/constants/navigation'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
+import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 import { reviewVisibilityConfig } from '~/modules/review'
@@ -60,16 +61,9 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
               {item.title}
             </h2>
             <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
-              <span
-                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium"
-                style={{
-                  backgroundColor: `color-mix(in oklab, ${visibility.color} 14%, transparent)`,
-                  color: visibility.color,
-                }}
-              >
-                <VisibilityIcon className="size-3" />
+              <Badge size="sm" color={visibility.color} startIcon={<VisibilityIcon />}>
                 {visibility.label}
-              </span>
+              </Badge>
               <span className="tabular-nums">
                 {count} {count === 1 ? 'item' : 'items'}
               </span>

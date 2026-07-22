@@ -48,11 +48,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
               </Link>
 
               {review.visibility === VISIBILITY.FRIENDS && (
-                <Badge
-                  variant="outline"
-                  className="text-muted-foreground h-5 gap-1 px-1.5 text-[11px] font-normal"
-                >
-                  <Users className="size-3" />
+                <Badge variant="outline" size="sm" startIcon={<Users />}>
                   Friends
                 </Badge>
               )}

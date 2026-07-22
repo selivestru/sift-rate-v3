@@ -155,6 +155,59 @@ Same ladder as Button: `xs` | `sm` | `default` | `lg`.
 
 ---
 
+## Badge
+
+**File:** `src/common/ui/Badge.tsx`
+
+Canonical **soft pill chip**: icon + label, `rounded-full`, `font-semibold`. Not a control height (not the Button `h-10` ladder).
+
+### Sizes
+
+| Size | Look                               |
+| ---- | ---------------------------------- |
+| `sm` | `text-[10px]`, tighter padding     |
+| `md` | default — `text-xs`, `px-2.5 py-1` |
+
+### Variants (token surfaces)
+
+| Variant   | When                        |
+| --------- | --------------------------- |
+| `default` | Neutral secondary chip      |
+| `outline` | Low emphasis / genre tags   |
+| `danger`  | Spoilers, destructive meta  |
+| `rating`  | Perfect / rating-gold chips |
+| `warning` | Caution meta                |
+| `blur`    | Over photo / glass overlay  |
+
+### Dynamic accent
+
+| Prop      | Role                                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| `color`   | Any CSS color (`#…`, `var(--…)`). Soft tint via `color-mix` for bg/border/text. Overrides `variant` surface. |
+| `isSolid` | With `color`: solid fill + white label (e.g. media type on posters)                                          |
+
+### Icons
+
+`startIcon` / `endIcon` — same idea as Button. Prefer these over raw SVG children for spacing consistency.
+
+### Domain wrappers (keep)
+
+| Component        | File                 | When                                                                         |
+| ---------------- | -------------------- | ---------------------------------------------------------------------------- |
+| `MediaTypeBadge` | `MediaTypeBadge.tsx` | Media type chip (`color` from `mediaTypeMeta`, `alternateColor` → `isSolid`) |
+| `RatingBadge`    | `RatingBadge.tsx`    | Numeric score with star — not a text label chip                              |
+
+```tsx
+<Badge variant="danger" startIcon={<TriangleWarning />}>Spoilers</Badge>
+<Badge color={visibility.color} startIcon={<Lock />}>Private</Badge>
+<MediaTypeBadge mediaType="MOVIE" />
+<RatingBadge rating={8} />
+```
+
+Do not invent one-off pill markup for visibility / type / status when Badge covers it.
+
+---
+
 ## Agent checklist
 
 When adding or changing a control in this family:
