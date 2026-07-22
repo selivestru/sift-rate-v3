@@ -64,6 +64,7 @@ export const useUpsertReviewForm = (
         content: values.content ? values.content.trim() : null,
         visibility: values.visibility,
         hasSpoiler: content ? values.hasSpoiler : false,
+        previousReview: initialData ? { id: initialData.id, rating: initialData.rating } : null,
       })
 
       onClose()

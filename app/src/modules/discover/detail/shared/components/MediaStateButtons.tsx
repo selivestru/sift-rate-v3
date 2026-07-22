@@ -63,7 +63,11 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
         )}
       </UpsertReviewDialog>
       {hasReview ? (
-        <DialogReviewDialog reviewId={data.review!.id}>
+        <DialogReviewDialog
+          reviewId={data.review!.id}
+          rating={data.review!.rating}
+          mediaType={props.mediaType}
+        >
           {({ open }) => (
             <Button isIconOnly variant="danger-soft" onClick={open} aria-label="Delete review">
               <Trash6 weight="Filled" />

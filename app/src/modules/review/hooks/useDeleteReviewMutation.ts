@@ -4,13 +4,45 @@ import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import type { MediaStateResponse } from '~/modules/discover'
 
 import { reviewApi } from '../api/review.api'
+import type { DeleteReviewVariables, ReviewStats } from '../types/review.types'
+import { applyReviewDeleted } from '../utils/review-stats'
+import { patchMyReviewStats } from '../utils/review-stats-cache'
 
 export const useDeleteReviewMutation = () => {
   return useMutation({
     mutationKey: ['delete-review'],
     mutationFn: reviewApi.deleteReview,
-    onSuccess: (data, __, ___, context) => {
+    onMutate: async (variables: DeleteReviewVariables, context) => {
+      const { client } = context
+
+      await client.cancelQueries({ queryKey: QUERIES_KEYS.MY_REVIEW_STATS })
+
+      const previousStats = client.getQueryData<ReviewStats>(QUERIES_KEYS.MY_REVIEW_STATS)
+
+      if (previousStats) {
+        patchMyReviewStats(client, (stats) =>
+          applyReviewDeleted(stats, {
+            mediaType: variables.mediaType,
+            rating: variables.rating,
+          }),
+        )
+      }
+
+      return { previousStats }
+    },
+    onError: (_error, _variables, onMutateResult, context) => {
+      if (onMutateResult?.previousStats) {
+        context.client.setQueryData(QUERIES_KEYS.MY_REVIEW_STATS, onMutateResult.previousStats)
+      }
+    },
+    onSuccess: (data, _variables, onMutateResult, context) => {
       const { media } = data
+
+      if (!onMutateResult?.previousStats) {
+        context.client.invalidateQueries({
+          queryKey: QUERIES_KEYS.MY_REVIEW_STATS,
+        })
+      }
 
       context.client.invalidateQueries({
         queryKey: QUERIES_KEYS.MY_REVIEWS,

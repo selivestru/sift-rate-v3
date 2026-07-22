@@ -35,7 +35,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
     <article
       className={cn(
         'bg-card group/card relative flex flex-col gap-3 overflow-hidden rounded-2xl p-3 transition-all duration-300',
-        'sm:flex-row sm:items-stretch sm:gap-4 sm:p-3.5',
+        'sm:flex-row sm:items-stretch sm:gap-4 sm:p-4',
         'ring-1 ring-(--card-accent)/20 hover:ring-2 hover:ring-(--card-accent)/50',
         'hover:-translate-y-px',
       )}
@@ -65,7 +65,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
 
       {isPerfect && <PerfectStardust />}
 
-      <div className="absolute top-2.5 right-2.5 z-10 flex gap-1 opacity-0 sm:opacity-100">
+      <div className="absolute top-3 right-3 z-10 flex gap-1 opacity-0 sm:opacity-100">
         <UpsertReviewDialog
           media={{
             mediaType: media.mediaType,
@@ -86,7 +86,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           )}
         </UpsertReviewDialog>
 
-        <DialogReviewDialog reviewId={review.id}>
+        <DialogReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
           {({ open }) => (
             <Button
               isIconOnly
@@ -230,7 +230,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           )}
         </UpsertReviewDialog>
 
-        <DialogReviewDialog reviewId={review.id}>
+        <DialogReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
           {({ open }) => (
             <Button
               type="button"

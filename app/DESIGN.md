@@ -1,6 +1,6 @@
 # SiftRate UI design system
 
-Agent guide for shared UI primitives. Match **`Button`** / **`Input`** for interactive controls;
+Agent guide for shared UI primitives. Match **`Button`** / **`Input`** / **`Select`** for interactive controls;
 
 Sources:
 
@@ -145,13 +145,118 @@ Same ladder as Button: `xs` | `sm` | `default` | `lg`.
 
 ---
 
-## Alignment rules (Button ↔ Input)
+## Alignment rules (Button ↔ Input ↔ Select)
 
-1. **Same height at the same `size`** — a default Input next to a default Button should share `h-10`.
-2. **Same radius** — `rounded-3xl` on both.
+1. **Same height at the same `size`** — a default Input next to a default Button / Select trigger should share `h-10`.
+2. **Same radius** — `rounded-3xl` on Button, Input, and Select trigger.
 3. **Same motion** — `duration-300`.
-4. **Secondary surface is the “quiet fill”** — secondary buttons and default inputs should feel related.
+4. **Secondary surface is the “quiet fill”** — secondary buttons, default inputs, and default Select triggers should feel related.
 5. **Boolean public API uses `is*`** — `isDisabled`, `isLoading`, `isIconOnly`, `isInvalid`.
+
+---
+
+## Select
+
+**File:** `src/common/ui/Select.tsx`  
+**Stack:** Base UI select + compound components + `cva` (`selectTriggerVariants`)
+
+Form control for choosing a predefined value. Popup shell matches **DropdownMenu**; trigger matches **Input**.
+
+### Parts
+
+| Export                                            | Role                                                     |
+| ------------------------------------------------- | -------------------------------------------------------- |
+| `Select`                                          | Root (must export) — value, open, `items`, `disabled`, … |
+| `SelectTrigger`                                   | Field-like button; chevron built-in                      |
+| `SelectValue`                                     | Selected label / placeholder                             |
+| `SelectContent`                                   | Portal + positioner + popup + list + scroll arrows       |
+| `SelectItem`                                      | Option + check indicator                                 |
+| `SelectGroup` / `SelectLabel`                     | Grouped options (label = group heading inside popup)     |
+| `SelectSeparator`                                 | Divider between groups                                   |
+| `SelectScrollUpButton` / `SelectScrollDownButton` | Optional; already inside `SelectContent`                 |
+
+Field labels stay outside via `Field` / `Label` (or `aria-label` on the trigger).
+
+### Trigger variants / sizes
+
+Same as Input:
+
+| Prop        | Values                                       |
+| ----------- | -------------------------------------------- |
+| `variant`   | `default` (soft secondary fill) \| `outline` |
+| `size`      | `xs` \| `sm` \| `default` \| `lg`            |
+| `isInvalid` | Public invalid API → `aria-invalid`          |
+
+### Content
+
+- Surface: `bg-popover`, `rounded-2xl`, soft ring/shadow (same family as DropdownMenu).
+- Items: `rounded-xl`, highlight via `data-highlighted:bg-primary-soft`.
+- Positioner defaults: `side="bottom"`, `sideOffset={4}`, `align="center"`, `alignItemWithTrigger={true}` (Base UI item-align mode). For filter-style menus use `alignItemWithTrigger={false}` and often `align="start"`.
+
+### Patterns
+
+```tsx
+const items = [
+  { value: null, label: 'All' },
+  { value: 'movie', label: 'Movie' },
+]
+
+<Select value={mediaType} onValueChange={setMediaType} items={items}>
+  <SelectTrigger aria-label="Media type">
+    <SelectValue placeholder="All" />
+  </SelectTrigger>
+  <SelectContent alignItemWithTrigger={false} align="start">
+    {items.map((item) => (
+      <SelectItem key={String(item.value)} value={item.value}>
+        {item.label}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+```
+
+- Prefer `items` on Root so `SelectValue` shows labels without a custom formatter.
+- Icon-only chrome is not the primary use case — full-width or `w-fit` via `className` on the trigger.
+- Do not invent a one-off native `<select>` or unstyled Base UI select in features; use this primitive.
+
+---
+
+## Library heroes
+
+Shared page-hero family for Library routes. **Do not invent a fourth header layout** for Reviews / Ranked lists / Planned.
+
+**References:**
+
+| Page         | File                                                     |
+| ------------ | -------------------------------------------------------- |
+| Reviews      | `src/modules/review/components/ReviewListHero.tsx`       |
+| Ranked lists | `src/modules/ranked-list/components/RankedListsHero.tsx` |
+| Planned      | `src/modules/planned/components/PlannedHero.tsx`         |
+
+### Shell (required)
+
+| Rule        | Value                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------------- |
+| Surface     | `rounded-4xl bg-card ring-1 ring-border/50`, `isolate overflow-hidden`                                        |
+| Padding     | `px-5 py-6 sm:px-7 sm:py-8`                                                                                   |
+| Body layout | Column on mobile; `sm:flex-row sm:items-end sm:justify-between`                                               |
+| Left        | Eyebrow → `h1` (`text-3xl sm:text-4xl font-semibold tracking-tight`) → short subtext → optional CTA (`w-fit`) |
+| Right       | Optional domain motif → large tabular count (`text-5xl sm:text-6xl`) → metric label                           |
+| Loading     | Skeleton on the count when total is unknown (`null` / pending)                                                |
+| Empty total | Muted count when `0`                                                                                          |
+| Footer      | Hairlines + **domain-only** motif strip                                                                       |
+| Atmosphere  | 2–3 radials / soft orbs / low-opacity watermark **inside** the hero                                           |
+| Page chrome | No competing full-page radial wash above the hero                                                             |
+
+### Domain accents
+
+| Page         | Accent                                | Eyebrow | Metric         | Right motif       | Footer motif          |
+| ------------ | ------------------------------------- | ------- | -------------- | ----------------- | --------------------- |
+| Reviews      | `reviewsNavItem.color` (`#F59E0B`)    | Library | reviews logged | Rising score bars | Media-type color dots |
+| Ranked lists | `rankedListNavItem.color` (`#3B82F6`) | Library | lists ordered  | Mini podium 2·1·3 | Rank bars             |
+| Planned      | `plannedNavItem.color` (`#10B981`)    | Library | in queue       | Queue stack bars  | Rising queue ticks    |
+
+New Library page heroes must reuse this shell and only swap accent, copy, motif, and optional CTA.
 
 ---
 
@@ -218,4 +323,5 @@ When adding or changing a control in this family:
 - [ ] Focus ring kept
 - [ ] Light and dark both readable
 - [ ] Public boolean props named `is*`
-- [ ] Does not invent a third visual language beside Button/Input
+- [ ] Does not invent a third visual language beside Button/Input/Select
+- [ ] Select trigger shares height, radius, and quiet fill with Input at the same `size`

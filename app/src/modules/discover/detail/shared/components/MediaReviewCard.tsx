@@ -36,7 +36,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
       </Avatar>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-        <header className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-col gap-0.5">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               <Link
@@ -78,7 +78,11 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
             </div>
 
             {currentUserId === user.id && (
-              <DialogReviewDialog reviewId={review.id}>
+              <DialogReviewDialog
+                reviewId={review.id}
+                rating={review.rating}
+                mediaType={review.media.mediaType}
+              >
                 {({ open }) => (
                   <Button
                     isIconOnly
@@ -92,7 +96,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
               </DialogReviewDialog>
             )}
           </div>
-        </header>
+        </div>
 
         {review.content && <p className="text-sm leading-relaxed break-all">{review.content}</p>}
       </div>

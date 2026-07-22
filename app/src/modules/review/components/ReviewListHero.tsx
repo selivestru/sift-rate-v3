@@ -1,29 +1,24 @@
-import { plannedNavItem } from '~/common/constants/navigation'
+import { mediaTypeList } from '~/common/constants/media-type'
+import { reviewsNavItem } from '~/common/constants/navigation'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
 
-interface PlannedHeroProps {
-  total: number | null
+interface ReviewListHeroProps {
+  totalResults: number
+  isLoading?: boolean
 }
 
-const QUEUE_STACK = [
-  { id: 'q1', width: 'w-10 sm:w-12', opacity: 0.95 },
-  { id: 'q2', width: 'w-8 sm:w-10', opacity: 0.7 },
-  { id: 'q3', width: 'w-6 sm:w-7', opacity: 0.45 },
+const SCORE_BARS = [
+  { id: 's1', height: 'h-3', opacity: 0.4 },
+  { id: 's2', height: 'h-4', opacity: 0.55 },
+  { id: 's3', height: 'h-5', opacity: 0.7 },
+  { id: 's4', height: 'h-6', opacity: 0.85 },
+  { id: 's5', height: 'h-7', opacity: 1 },
 ] as const
 
-const QUEUE_TICKS = [
-  { id: 't1', height: 'h-2', opacity: 0.4 },
-  { id: 't2', height: 'h-2.5', opacity: 0.55 },
-  { id: 't3', height: 'h-3', opacity: 0.7 },
-  { id: 't4', height: 'h-3.5', opacity: 0.85 },
-  { id: 't5', height: 'h-4', opacity: 1 },
-] as const
-
-export const PlannedHero = ({ total }: PlannedHeroProps) => {
-  const { color, icon: PlannedIcon } = plannedNavItem
-  const isLoading = total == null
-  const isEmpty = total === 0
+export const ReviewListHero = ({ totalResults, isLoading = false }: ReviewListHeroProps) => {
+  const { color, icon: ReviewsIcon } = reviewsNavItem
+  const isEmpty = !isLoading && totalResults === 0
 
   return (
     <div
@@ -32,21 +27,21 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
         'bg-card ring-1 ring-border/50',
         'px-5 py-6 sm:px-7 sm:py-8',
       )}
-      style={{ ['--planned-accent' as string]: color }}
+      style={{ ['--reviews-accent' as string]: color }}
     >
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden
         style={{
           background: [
-            'radial-gradient(ellipse 95% 85% at 0% 0%, color-mix(in oklab, var(--planned-accent) 22%, transparent), transparent 64%)',
-            'radial-gradient(ellipse 65% 70% at 100% 100%, color-mix(in oklab, var(--planned-accent) 14%, transparent), transparent 60%)',
-            'radial-gradient(ellipse 40% 45% at 72% 18%, color-mix(in oklab, var(--planned-accent) 10%, transparent), transparent 55%)',
+            'radial-gradient(ellipse 95% 85% at 0% 0%, color-mix(in oklab, var(--reviews-accent) 22%, transparent), transparent 64%)',
+            'radial-gradient(ellipse 65% 70% at 100% 100%, color-mix(in oklab, var(--reviews-accent) 14%, transparent), transparent 60%)',
+            'radial-gradient(ellipse 40% 45% at 72% 18%, color-mix(in oklab, var(--reviews-accent) 10%, transparent), transparent 55%)',
           ].join(', '),
         }}
       />
 
-      <PlannedIcon
+      <ReviewsIcon
         className="pointer-events-none absolute -right-6 -bottom-8 size-44 opacity-[0.06] sm:size-56"
         aria-hidden
         style={{ color }}
@@ -59,16 +54,18 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
           </p>
 
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Planned</h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Reviews</h1>
             <p className="text-muted-foreground max-w-[36ch] text-sm leading-relaxed sm:text-[15px]">
-              Media you saved for later. Your queue, ready when you are.
+              Ratings and notes that map what you watch, read, play, and hear.
             </p>
           </div>
         </div>
 
         <div
           className="flex shrink-0 flex-col items-start gap-3 sm:items-end"
-          aria-label={isLoading ? 'Loading queue count' : `${total} in queue`}
+          aria-label={
+            isLoading ? 'Loading review count' : `${totalResults} reviews logged in your archive`
+          }
         >
           <div className="flex flex-col items-start gap-0.5 sm:items-end sm:text-right">
             {isLoading ? (
@@ -81,11 +78,11 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
                 )}
                 style={!isEmpty ? { color } : undefined}
               >
-                {total}
+                {totalResults}
               </p>
             )}
             <p className="text-muted-foreground text-xs font-medium tracking-wide sm:text-sm">
-              in queue
+              reviews logged
             </p>
           </div>
         </div>
@@ -93,15 +90,14 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
 
       <div className="relative mt-7 flex items-center gap-2 sm:mt-9" aria-hidden>
         <div className="bg-border/60 h-px flex-1" />
-        <div className="flex items-end gap-1.5 px-0.5">
-          {QUEUE_TICKS.map((tick) => (
+        <div className="flex items-center gap-1.5 px-1">
+          {mediaTypeList.map((item) => (
             <span
-              key={tick.id}
-              className={cn('w-1 rounded-full sm:w-1.5', tick.height)}
+              key={item.type}
+              className="size-1.5 rounded-full sm:size-2"
               style={{
-                backgroundColor: color,
-                opacity: tick.opacity,
-                boxShadow: `0 0 10px color-mix(in oklab, ${color} 45%, transparent)`,
+                backgroundColor: item.color,
+                boxShadow: `0 0 10px color-mix(in oklab, ${item.color} 55%, transparent)`,
               }}
             />
           ))}

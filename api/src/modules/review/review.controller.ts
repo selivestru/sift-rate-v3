@@ -10,6 +10,11 @@ import { CurrentUser } from '~/common/decorators/current-user.decorator'
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
+  @Get('me/stats')
+  getMineStats(@CurrentUser('userId') userId: string) {
+    return this.reviewService.getMineStats(userId)
+  }
+
   @Get('me')
   findMine(@CurrentUser('userId') userId: string, @Query() query: ReviewsQueryDto) {
     return this.reviewService.findMine(userId, query)

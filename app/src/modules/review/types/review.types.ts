@@ -32,6 +32,12 @@ export interface MyReviewsResponse {
   nextCursor: string | null
 }
 
+export interface ReviewStats {
+  total: number
+  byMediaType: Partial<Record<MediaType, number>>
+  byRating: Partial<Record<number, number>>
+}
+
 export interface RateMediaBody {
   mediaType: MediaType
   externalId: string
@@ -39,4 +45,14 @@ export interface RateMediaBody {
   content: string | null
   visibility: Visibility
   hasSpoiler: boolean
+}
+
+export type UpsertReviewVariables = RateMediaBody & {
+  previousReview?: Pick<Review, 'id' | 'rating'> | null
+}
+
+export type DeleteReviewVariables = {
+  id: string
+  rating: number
+  mediaType: MediaType
 }

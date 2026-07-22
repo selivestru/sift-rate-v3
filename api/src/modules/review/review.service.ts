@@ -5,10 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 
-import { ReviewsQueryDto } from './dto/reviews.query'
+import { REVIEW_SORT, ReviewsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
 import { UpsertReviewDto } from './dto/upsert-review.dto'
-import { ReviewListResponse, ReviewResponse } from './types/review.types'
+import { ReviewListResponse, ReviewResponse, ReviewStatsResponse } from './types/review.types'
+import { Prisma } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { MediaService } from '~/modules/media/media.service'
 import { MediaSnapshot } from '~/modules/media/types/media.types'
@@ -23,24 +24,29 @@ export class ReviewService {
   ) {}
 
   async findMine(userId: string, query: ReviewsQueryDto): Promise<ReviewListResponse> {
+    const mediaFilter: Prisma.MediaWhereInput = {
+      ...(query.mediaType && { mediaType: query.mediaType }),
+      ...(query.q && {
+        title: {
+          contains: query.q,
+          mode: 'insensitive',
+        },
+      }),
+    }
+    const hasMediaFilter = Object.keys(mediaFilter).length > 0
+
     const reviews = await this.prisma.review.findMany({
       where: {
         userId,
-        ...(query.q && {
-          media: {
-            title: {
-              contains: query.q,
-              mode: 'insensitive',
-            },
-          },
-        }),
+        ...(query.rating != null && { rating: query.rating }),
+        ...(hasMediaFilter && { media: mediaFilter }),
       },
       ...(query.cursor && {
         cursor: { id: query.cursor },
         skip: 1,
       }),
       orderBy: {
-        createdAt: 'desc',
+        createdAt: query.sort === REVIEW_SORT.OLDEST ? 'asc' : 'desc',
       },
       take: this.REVIEWS_LIMIT + 1,
       include: { media: true },
@@ -55,6 +61,52 @@ export class ReviewService {
     return {
       data: reviews,
       nextCursor: hasNextPage ? reviews[reviews.length - 1].id : null,
+    }
+  }
+
+  async getMineStats(userId: string): Promise<ReviewStatsResponse> {
+    const [total, ratingGroups, mediaIdGroups] = await Promise.all([
+      this.prisma.review.count({
+        where: { userId },
+      }),
+      this.prisma.review.groupBy({
+        by: ['rating'],
+        where: { userId },
+        _count: true,
+      }),
+      this.prisma.review.groupBy({
+        by: ['mediaId'],
+        where: { userId },
+        _count: true,
+      }),
+    ])
+
+    const byRating: ReviewStatsResponse['byRating'] = {}
+    for (const group of ratingGroups) {
+      byRating[group.rating] = group._count
+    }
+
+    const byMediaType: ReviewStatsResponse['byMediaType'] = {}
+
+    if (mediaIdGroups.length > 0) {
+      const mediaIds = mediaIdGroups.map((group) => group.mediaId)
+      const mediaRows = await this.prisma.media.findMany({
+        where: { id: { in: mediaIds } },
+        select: { id: true, mediaType: true },
+      })
+      const mediaTypeById = new Map(mediaRows.map((row) => [row.id, row.mediaType]))
+
+      for (const group of mediaIdGroups) {
+        const mediaType = mediaTypeById.get(group.mediaId)
+        if (!mediaType) continue
+        byMediaType[mediaType] = (byMediaType[mediaType] ?? 0) + group._count
+      }
+    }
+
+    return {
+      total,
+      byMediaType,
+      byRating,
     }
   }
 

@@ -1,4 +1,5 @@
 import { toastApiError } from '~/common/api'
+import type { MediaType } from '~/common/constants/media-type'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
 import {
   AlertDialog,
@@ -16,17 +17,24 @@ import { useDeleteReviewMutation } from '../hooks/useDeleteReviewMutation'
 
 interface DialogReviewDialogProps {
   reviewId: string
+  rating: number
+  mediaType: MediaType
   children: ({ open }: { open: () => void }) => React.ReactNode
 }
 
-export const DialogReviewDialog = ({ reviewId, children }: DialogReviewDialogProps) => {
+export const DialogReviewDialog = ({
+  reviewId,
+  rating,
+  mediaType,
+  children,
+}: DialogReviewDialogProps) => {
   const { opened, open, close } = useDisclosure()
 
   const mutation = useDeleteReviewMutation()
 
   const handleDelete = async () => {
     try {
-      await mutation.mutateAsync(reviewId)
+      await mutation.mutateAsync({ id: reviewId, rating, mediaType })
       close()
     } catch (error) {
       await toastApiError(error)

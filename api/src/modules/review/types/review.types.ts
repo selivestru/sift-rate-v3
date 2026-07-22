@@ -23,3 +23,9 @@ export type ReviewListResponse = {
   data: ReviewResponse[]
   nextCursor: string | null
 }
+
+export type ReviewStatsResponse = {
+  total: number
+  byMediaType: Partial<Record<MediaType, number>>
+  byRating: Partial<Record<number, number>>
+}
