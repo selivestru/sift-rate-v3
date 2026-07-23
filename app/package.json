@@ -11,6 +11,7 @@
     "fmt": "oxfmt --check",
     "fmt:fix": "oxfmt",
     "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
     "doctor": "npx react-doctor@latest",
     "oxc": "bun format:fix && bun lint:fix"
   },

@@ -1,12 +1,14 @@
 import { Link } from '@tanstack/react-router'
-import { Logout } from 'reicon-react'
+import { Check, Logout, Settings } from 'reicon-react'
 
+import { useTheme } from '~/common/theme'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/common/ui/DropdownMenu'
@@ -17,6 +19,7 @@ import { useLogout } from '~/modules/auth/hooks/useLogout'
 export const Profile = () => {
   const user = useAuthStore((state) => state.user!)
   const { logout } = useLogout()
+  const { theme, setTheme } = useTheme()
 
   return (
     <DropdownMenu>
@@ -46,6 +49,37 @@ export const Profile = () => {
                 <p className="text-muted-foreground text-xs">{user.email}</p>
               </div>
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Theme</DropdownMenuLabel>
+          <DropdownMenuItem
+            closeOnClick={false}
+            className="justify-between"
+            onClick={() => setTheme('system')}
+          >
+            System
+            {theme === 'system' && <Check />}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            closeOnClick={false}
+            className="justify-between"
+            onClick={() => setTheme('light')}
+          >
+            Light
+            {theme === 'light' && <Check />}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            closeOnClick={false}
+            className="justify-between"
+            onClick={() => setTheme('dark')}
+          >
+            Dark
+            {theme === 'dark' && <Check />}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="justify-between">
+            Settings
+            <Settings />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" className="justify-between" onClick={logout}>

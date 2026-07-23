@@ -16,6 +16,7 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
 import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
 import { Route as AppLifeRouteRouteImport } from './routes/_app/life/route'
+import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
@@ -28,6 +29,10 @@ import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
 import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
 import { Route as AppLifeTimelineRouteImport } from './routes/_app/life/timeline'
 import { Route as AppLifeWrappedRouteImport } from './routes/_app/life/wrapped'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSettings2faRouteImport } from './routes/_app/settings/2fa'
+import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
+import { Route as AppSettingsDangerZoneRouteImport } from './routes/_app/settings/danger-zone'
 import { Route as AppDiscoverAlbumIndexRouteImport } from './routes/_app/discover/album/index'
 import { Route as AppDiscoverAlbumExternalIdRouteImport } from './routes/_app/discover/album/$externalId'
 import { Route as AppDiscoverBookIndexRouteImport } from './routes/_app/discover/book/index'
@@ -73,6 +78,11 @@ const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
 const AppLifeRouteRoute = AppLifeRouteRouteImport.update({
   id: '/life',
   path: '/life',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
@@ -134,6 +144,26 @@ const AppLifeWrappedRoute = AppLifeWrappedRouteImport.update({
   id: '/wrapped',
   path: '/wrapped',
   getParentRoute: () => AppLifeRouteRoute,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettings2faRoute = AppSettings2faRouteImport.update({
+  id: '/2fa',
+  path: '/2fa',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsDangerZoneRoute = AppSettingsDangerZoneRouteImport.update({
+  id: '/danger-zone',
+  path: '/danger-zone',
+  getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppDiscoverAlbumIndexRoute = AppDiscoverAlbumIndexRouteImport.update({
   id: '/discover/album/',
@@ -208,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/library': typeof AppLibraryRouteRouteWithChildren
   '/life': typeof AppLifeRouteRouteWithChildren
+  '/settings': typeof AppSettingsRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -218,9 +249,13 @@ export interface FileRoutesByFullPath {
   '/life/memories': typeof AppLifeMemoriesRoute
   '/life/timeline': typeof AppLifeTimelineRoute
   '/life/wrapped': typeof AppLifeWrappedRoute
+  '/settings/2fa': typeof AppSettings2faRoute
+  '/settings/account': typeof AppSettingsAccountRoute
+  '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/discover/': typeof AppDiscoverIndexRoute
   '/library/': typeof AppLibraryIndexRoute
   '/life/': typeof AppLifeIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
   '/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
   '/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
   '/discover/game/$externalId': typeof AppDiscoverGameExternalIdRoute
@@ -248,9 +283,13 @@ export interface FileRoutesByTo {
   '/life/memories': typeof AppLifeMemoriesRoute
   '/life/timeline': typeof AppLifeTimelineRoute
   '/life/wrapped': typeof AppLifeWrappedRoute
+  '/settings/2fa': typeof AppSettings2faRoute
+  '/settings/account': typeof AppSettingsAccountRoute
+  '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/discover': typeof AppDiscoverIndexRoute
   '/library': typeof AppLibraryIndexRoute
   '/life': typeof AppLifeIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
   '/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
   '/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
   '/discover/game/$externalId': typeof AppDiscoverGameExternalIdRoute
@@ -271,6 +310,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/_app/library': typeof AppLibraryRouteRouteWithChildren
   '/_app/life': typeof AppLifeRouteRouteWithChildren
+  '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -282,9 +322,13 @@ export interface FileRoutesById {
   '/_app/life/memories': typeof AppLifeMemoriesRoute
   '/_app/life/timeline': typeof AppLifeTimelineRoute
   '/_app/life/wrapped': typeof AppLifeWrappedRoute
+  '/_app/settings/2fa': typeof AppSettings2faRoute
+  '/_app/settings/account': typeof AppSettingsAccountRoute
+  '/_app/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/_app/discover/': typeof AppDiscoverIndexRoute
   '/_app/library/': typeof AppLibraryIndexRoute
   '/_app/life/': typeof AppLifeIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
   '/_app/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
   '/_app/discover/game/$externalId': typeof AppDiscoverGameExternalIdRoute
@@ -306,6 +350,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/library'
     | '/life'
+    | '/settings'
     | '/$username'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -316,9 +361,13 @@ export interface FileRouteTypes {
     | '/life/memories'
     | '/life/timeline'
     | '/life/wrapped'
+    | '/settings/2fa'
+    | '/settings/account'
+    | '/settings/danger-zone'
     | '/discover/'
     | '/library/'
     | '/life/'
+    | '/settings/'
     | '/discover/album/$externalId'
     | '/discover/book/$externalId'
     | '/discover/game/$externalId'
@@ -346,9 +395,13 @@ export interface FileRouteTypes {
     | '/life/memories'
     | '/life/timeline'
     | '/life/wrapped'
+    | '/settings/2fa'
+    | '/settings/account'
+    | '/settings/danger-zone'
     | '/discover'
     | '/library'
     | '/life'
+    | '/settings'
     | '/discover/album/$externalId'
     | '/discover/book/$externalId'
     | '/discover/game/$externalId'
@@ -368,6 +421,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/_app/library'
     | '/_app/life'
+    | '/_app/settings'
     | '/_app/$username'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -379,9 +433,13 @@ export interface FileRouteTypes {
     | '/_app/life/memories'
     | '/_app/life/timeline'
     | '/_app/life/wrapped'
+    | '/_app/settings/2fa'
+    | '/_app/settings/account'
+    | '/_app/settings/danger-zone'
     | '/_app/discover/'
     | '/_app/library/'
     | '/_app/life/'
+    | '/_app/settings/'
     | '/_app/discover/album/$externalId'
     | '/_app/discover/book/$externalId'
     | '/_app/discover/game/$externalId'
@@ -451,6 +509,13 @@ declare module '@tanstack/react-router' {
       path: '/life'
       fullPath: '/life'
       preLoaderRoute: typeof AppLifeRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteRouteImport
       parentRoute: typeof AppRoute
     }
     '/auth/forgot-password': {
@@ -536,6 +601,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/life/wrapped'
       preLoaderRoute: typeof AppLifeWrappedRouteImport
       parentRoute: typeof AppLifeRouteRoute
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/2fa': {
+      id: '/_app/settings/2fa'
+      path: '/2fa'
+      fullPath: '/settings/2fa'
+      preLoaderRoute: typeof AppSettings2faRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/account': {
+      id: '/_app/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AppSettingsAccountRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/danger-zone': {
+      id: '/_app/settings/danger-zone'
+      path: '/danger-zone'
+      fullPath: '/settings/danger-zone'
+      preLoaderRoute: typeof AppSettingsDangerZoneRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
     }
     '/_app/discover/album/': {
       id: '/_app/discover/album/'
@@ -676,9 +769,27 @@ const AppLifeRouteRouteWithChildren = AppLifeRouteRoute._addFileChildren(
   AppLifeRouteRouteChildren,
 )
 
+interface AppSettingsRouteRouteChildren {
+  AppSettings2faRoute: typeof AppSettings2faRoute
+  AppSettingsAccountRoute: typeof AppSettingsAccountRoute
+  AppSettingsDangerZoneRoute: typeof AppSettingsDangerZoneRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+}
+
+const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
+  AppSettings2faRoute: AppSettings2faRoute,
+  AppSettingsAccountRoute: AppSettingsAccountRoute,
+  AppSettingsDangerZoneRoute: AppSettingsDangerZoneRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+}
+
+const AppSettingsRouteRouteWithChildren =
+  AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
+
 interface AppRouteChildren {
   AppLibraryRouteRoute: typeof AppLibraryRouteRouteWithChildren
   AppLifeRouteRoute: typeof AppLifeRouteRouteWithChildren
+  AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
   AppIndexRoute: typeof AppIndexRoute
   AppDiscoverIndexRoute: typeof AppDiscoverIndexRoute
@@ -699,6 +810,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppLibraryRouteRoute: AppLibraryRouteRouteWithChildren,
   AppLifeRouteRoute: AppLifeRouteRouteWithChildren,
+  AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
   AppIndexRoute: AppIndexRoute,
   AppDiscoverIndexRoute: AppDiscoverIndexRoute,
