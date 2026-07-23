@@ -14,12 +14,12 @@ export const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-border bg-muted text-rating',
+        default: 'border-border bg-muted text-foreground',
         outline: 'border-border bg-background text-foreground',
         destructive: 'border-border bg-muted text-destructive',
         rating: 'border-rating/30 bg-rating/10 text-rating',
         warning: 'border-border bg-muted text-warning',
-        blur: 'border-border bg-card text-foreground backdrop-blur-sm',
+        blur: 'border-transparent bg-card/50 text-foreground backdrop-blur-sm',
         none: 'border-transparent bg-transparent',
       },
       size: {

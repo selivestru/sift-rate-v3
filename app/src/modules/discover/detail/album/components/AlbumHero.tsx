@@ -87,9 +87,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
                   Album
                 </span>
                 {album.explicit && (
-                  <Badge variant="outline" className="h-5 px-1.5 text-[10px] uppercase">
-                    Explicit
-                  </Badge>
+                  <Badge className="h-5 px-1.5 text-[10px] uppercase">Explicit</Badge>
                 )}
               </div>
 
@@ -121,7 +119,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
               {album.genres.length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-1">
                   {album.genres.slice(0, 4).map((genre) => (
-                    <Badge key={genre} variant="outline" className="h-5 px-1.5 text-[10px]">
+                    <Badge key={genre} className="h-5 px-1.5 text-[10px]">
                       {genre}
                     </Badge>
                   ))}

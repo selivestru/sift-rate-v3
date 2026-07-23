@@ -47,7 +47,7 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
 
       <div className="flex shrink-0 items-center gap-2">
         {item.rank != null && (
-          <Badge variant="outline" className="hidden h-5 px-1.5 text-[10px] sm:flex">
+          <Badge className="hidden h-5 px-1.5 text-[10px] sm:flex">
             ★ {Math.round(item.rank / 1000)}k
           </Badge>
         )}

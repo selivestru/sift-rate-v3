@@ -54,9 +54,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
         {genrePreview.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {genrePreview.map((genre) => (
-              <Badge key={genre} variant="outline">
-                {genre}
-              </Badge>
+              <Badge key={genre}>{genre}</Badge>
             ))}
             {game.genres.length > genrePreview.length && (
               <span className="text-muted-foreground self-center text-[11px]">

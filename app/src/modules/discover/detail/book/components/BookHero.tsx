@@ -105,11 +105,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
             >
               Book
             </span>
-            {book.isEbook && (
-              <Badge variant="outline" className="h-5 px-1.5 text-[10px] uppercase">
-                eBook
-              </Badge>
-            )}
+            {book.isEbook && <Badge className="h-5 px-1.5 text-[10px] uppercase">eBook</Badge>}
             <span
               aria-hidden
               className="h-px w-6 sm:w-8"
@@ -189,7 +185,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
           {categoryPreview.length > 0 && (
             <div className="mt-4 flex flex-wrap justify-center gap-1.5">
               {categoryPreview.map((category) => (
-                <Badge key={category} variant="outline" className="font-normal">
+                <Badge key={category} className="font-normal">
                   {category}
                 </Badge>
               ))}

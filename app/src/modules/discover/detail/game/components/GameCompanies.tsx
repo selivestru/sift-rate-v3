@@ -53,7 +53,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
               <p className="text-foreground truncate text-sm font-medium">{company.name}</p>
               <div className="mt-1 flex flex-wrap gap-1">
                 {company.roles.map((role) => (
-                  <Badge key={role} variant="outline" className="text-[10px]">
+                  <Badge key={role} className="text-[10px]">
                     {ROLE_LABEL[role]}
                   </Badge>
                 ))}

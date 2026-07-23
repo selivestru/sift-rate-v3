@@ -57,11 +57,7 @@ export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) =>
         </span>
         <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
           <span className="tabular-nums">{formatDuration(track.duration)}</span>
-          {track.explicit && (
-            <Badge variant="outline" className="h-4 px-1 text-[9px] uppercase">
-              E
-            </Badge>
-          )}
+          {track.explicit && <Badge className="h-4 px-1 text-[9px] uppercase">E</Badge>}
         </span>
       </div>
 

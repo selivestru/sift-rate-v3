@@ -65,9 +65,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
         {item.categories.length > 0 && (
           <div className="mt-0.5 flex flex-wrap gap-1">
             {item.categories.map((category) => (
-              <Badge key={category} variant="outline" size="sm">
-                {category}
-              </Badge>
+              <Badge key={category}>{category}</Badge>
             ))}
           </div>
         )}

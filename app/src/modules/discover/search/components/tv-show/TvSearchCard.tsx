@@ -62,9 +62,7 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
         {item.genres.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {item.genres.map((genre) => (
-              <Badge key={genre} variant="outline">
-                {genre}
-              </Badge>
+              <Badge key={genre}>{genre}</Badge>
             ))}
           </div>
         )}

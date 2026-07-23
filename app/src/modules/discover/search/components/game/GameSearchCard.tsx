@@ -26,7 +26,7 @@ export const GameSearchCard = ({ item }: GameSearchCardProps) => {
         'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
       )}
     >
-      <div className="bg-muted relative aspect-3/4 w-full overflow-hidden">
+      <div className="bg-muted relative aspect-3/4 w-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]">
         {item.coverUrl ? (
           <img
             src={item.coverUrl}
@@ -44,13 +44,7 @@ export const GameSearchCard = ({ item }: GameSearchCardProps) => {
 
         {(item.year || item.rating) && (
           <div className="absolute top-2.5 right-2.5 left-2.5 flex items-center justify-between">
-            {item.year ? (
-              <Badge variant="blur" className="text-white">
-                {item.year}
-              </Badge>
-            ) : (
-              <span />
-            )}
+            {item.year ? <Badge variant="blur">{item.year}</Badge> : <span />}
             {item.rating && (
               <div className="border-border bg-card flex items-center gap-1 rounded-full border px-2 py-0.5">
                 <Star weight="Filled" className="text-rating size-3.5" />
@@ -71,15 +65,11 @@ export const GameSearchCard = ({ item }: GameSearchCardProps) => {
         {visiblePlatforms.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {visiblePlatforms.map((platform) => (
-              <Badge key={platform} variant="outline" size="sm">
+              <Badge key={platform} size="sm">
                 {platform}
               </Badge>
             ))}
-            {extraPlatforms > 0 && (
-              <Badge variant="outline" size="sm">
-                +{extraPlatforms}
-              </Badge>
-            )}
+            {extraPlatforms > 0 && <Badge size="sm">+{extraPlatforms}</Badge>}
           </div>
         )}
 

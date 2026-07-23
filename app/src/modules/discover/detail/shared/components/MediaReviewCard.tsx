@@ -52,7 +52,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
               </Link>
 
               {review.visibility === VISIBILITY.FRIENDS && (
-                <Badge variant="outline" size="sm" startIcon={<Users />}>
+                <Badge size="sm" startIcon={<Users />}>
                   Friends
                 </Badge>
               )}

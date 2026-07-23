@@ -34,13 +34,21 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   return (
     <article
       style={{
-        '--card-accent': accent,
+        '--card-accent': isPerfect ? 'var(--rating)' : accent,
       }}
       className={cn(
-        'bg-card border-border group/card relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3',
+        'bg-card group hover:border-(--card-accent)/40 border-(--card-accent)/20 relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3 transition-colors duration-300',
         'sm:flex-row sm:items-stretch sm:gap-4 sm:p-4',
       )}
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-50 transition-opacity duration-300 group-hover:opacity-0"
+        style={{
+          backgroundImage:
+            'linear-gradient(to left, color-mix(in oklab, var(--card-accent) 12%, transparent), transparent 52%)',
+        }}
+      />
       {isPerfect && <PerfectStardust />}
 
       <div className="absolute top-3 right-3 z-10 flex gap-1 opacity-0 sm:opacity-100">
@@ -103,7 +111,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             <img
               src={media.posterUrl}
               alt={media.title}
-              className="z-px relative size-full object-contain transition-transform duration-300 group-hover/card:scale-[1.02] sm:object-cover"
+              className="z-px relative size-full object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:object-cover"
               loading="lazy"
             />
           </>

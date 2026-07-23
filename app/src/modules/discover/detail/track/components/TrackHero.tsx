@@ -88,9 +88,7 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
                   Track
                 </span>
                 {track.explicit && (
-                  <Badge variant="outline" className="h-5 px-1.5 text-[10px] uppercase">
-                    Explicit
-                  </Badge>
+                  <Badge className="h-5 px-1.5 text-[10px] uppercase">Explicit</Badge>
                 )}
               </div>
 
