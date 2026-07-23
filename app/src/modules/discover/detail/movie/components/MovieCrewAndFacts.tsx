@@ -23,10 +23,7 @@ const CrewGroup = ({ label, names }: { label: string; names: string[] }) => {
 const ChipList = ({ items }: { items: string[] }) => (
   <span className="inline-flex flex-wrap justify-end gap-1">
     {items.map((item) => (
-      <span
-        key={item}
-        className="bg-foreground/6 ring-foreground/8 rounded-md px-1.5 py-0.5 text-xs ring-1"
-      >
+      <span key={item} className="bg-muted ring-border rounded-md px-1.5 py-0.5 text-xs ring-1">
         {item}
       </span>
     ))}
@@ -95,7 +92,7 @@ export const MovieCrewAndFacts = ({ movie }: MovieCrewAndFactsProps) => {
           Details
         </h2>
         {hasCrew ? (
-          <div className="bg-card/60 ring-border/50 flex flex-col gap-3.5 rounded-2xl p-4 ring-1">
+          <div className="bg-card ring-border flex flex-col gap-3.5 rounded-2xl p-4 ring-1">
             <CrewGroup label="Director" names={movie.directors.map((p) => p.name)} />
             <CrewGroup label="Writing" names={movie.writers.map((p) => p.name)} />
             <CrewGroup label="Production" names={movie.producers.map((p) => p.name)} />

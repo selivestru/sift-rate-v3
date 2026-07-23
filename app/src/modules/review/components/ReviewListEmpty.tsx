@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Compass, Search } from 'reicon-react'
+import { Compass, Search, Star } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
 
@@ -10,8 +10,8 @@ interface ReviewListEmptyProps {
 export const ReviewListEmpty = ({ variant }: ReviewListEmptyProps) => {
   if (variant === 'search') {
     return (
-      <div className="bg-surface/50 border-border/50 flex flex-col items-center gap-3 rounded-2xl border px-4 py-14 text-center">
-        <span className="bg-secondary text-muted-foreground flex size-11 items-center justify-center rounded-2xl">
+      <div className="bg-card border-border flex flex-col items-center gap-3 rounded-xl border px-4 py-14 text-center">
+        <span className="bg-muted text-muted-foreground flex size-11 items-center justify-center rounded-lg">
           <Search className="size-5" aria-hidden />
         </span>
         <div className="flex flex-col gap-1.5">
@@ -25,9 +25,9 @@ export const ReviewListEmpty = ({ variant }: ReviewListEmptyProps) => {
   }
 
   return (
-    <div className="bg-surface/50 border-border/50 flex flex-col items-center gap-4 rounded-2xl border px-4 py-14 text-center">
-      <span className="bg-primary/12 text-primary flex size-11 items-center justify-center rounded-2xl">
-        <Compass className="size-5" aria-hidden />
+    <div className="bg-card border-border flex flex-col items-center gap-4 rounded-xl border px-4 py-14 text-center">
+      <span className="bg-accent text-primary flex size-11 items-center justify-center rounded-lg">
+        <Star className="size-5" aria-hidden />
       </span>
       <div className="flex flex-col gap-1.5">
         <p className="text-foreground font-semibold tracking-tight">No reviews yet</p>

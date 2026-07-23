@@ -61,8 +61,8 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
         )}
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
-          <div className="bg-card/75 ring-border/50 flex min-w-0 gap-3 rounded-2xl p-3 shadow-xl ring-1 backdrop-blur-xl sm:gap-4 sm:p-3.5">
-            <div className="bg-muted ring-foreground/10 relative size-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:size-48">
+          <div className="bg-card ring-border flex min-w-0 gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
+            <div className="bg-muted ring-border relative size-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:size-48">
               <MediaCoverLightbox
                 src={album.coverUrl}
                 alt={album.title}

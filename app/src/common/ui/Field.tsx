@@ -48,7 +48,7 @@ export const FieldGroup = ({ className, ...props }: React.ComponentProps<'div'>)
   )
 }
 
-const fieldVariants = cva('group/field flex w-full gap-3 data-[invalid=true]:text-danger', {
+const fieldVariants = cva('group/field flex w-full gap-3 data-[invalid=true]:text-destructive', {
   variants: {
     orientation: {
       vertical: 'flex-col *:w-full [&>.sr-only]:w-auto',
@@ -99,7 +99,7 @@ export const FieldLabel = ({ className, ...props }: React.ComponentProps<typeof 
     <Label
       data-slot="field-label"
       className={cn(
-        'group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-xl has-[>[data-slot=field]]:border *:data-[slot=field]:p-4 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10',
+        'group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-border has-data-checked:bg-accent has-[>[data-slot=field]]:rounded-xl has-[>[data-slot=field]]:border *:data-[slot=field]:p-4',
         'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
         className,
       )}
@@ -171,7 +171,7 @@ export const FieldError = ({ className, children, ...props }: React.ComponentPro
     <div
       role="alert"
       data-slot="field-error"
-      className={cn('text-sm font-normal text-danger', className)}
+      className={cn('text-sm font-normal text-destructive', className)}
       {...props}
     >
       {children}

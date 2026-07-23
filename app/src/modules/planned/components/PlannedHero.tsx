@@ -6,12 +6,6 @@ interface PlannedHeroProps {
   total: number | null
 }
 
-const QUEUE_STACK = [
-  { id: 'q1', width: 'w-10 sm:w-12', opacity: 0.95 },
-  { id: 'q2', width: 'w-8 sm:w-10', opacity: 0.7 },
-  { id: 'q3', width: 'w-6 sm:w-7', opacity: 0.45 },
-] as const
-
 const QUEUE_TICKS = [
   { id: 't1', height: 'h-2', opacity: 0.4 },
   { id: 't2', height: 'h-2.5', opacity: 0.55 },
@@ -28,24 +22,12 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
   return (
     <div
       className={cn(
-        'relative isolate overflow-hidden rounded-4xl',
-        'bg-card ring-1 ring-border/50',
+        'relative isolate overflow-hidden rounded-2xl',
+        'bg-card ring-1 ring-border',
         'px-5 py-6 sm:px-7 sm:py-8',
       )}
       style={{ ['--planned-accent' as string]: color }}
     >
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background: [
-            'radial-gradient(ellipse 95% 85% at 0% 0%, color-mix(in oklab, var(--planned-accent) 22%, transparent), transparent 64%)',
-            'radial-gradient(ellipse 65% 70% at 100% 100%, color-mix(in oklab, var(--planned-accent) 14%, transparent), transparent 60%)',
-            'radial-gradient(ellipse 40% 45% at 72% 18%, color-mix(in oklab, var(--planned-accent) 10%, transparent), transparent 55%)',
-          ].join(', '),
-        }}
-      />
-
       <PlannedIcon
         className="pointer-events-none absolute -right-6 -bottom-8 size-44 opacity-[0.06] sm:size-56"
         aria-hidden
@@ -77,7 +59,7 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
               <p
                 className={cn(
                   'text-5xl font-semibold tracking-tighter tabular-nums sm:text-6xl',
-                  isEmpty && 'text-muted-foreground/45',
+                  isEmpty && 'text-muted-foreground',
                 )}
                 style={!isEmpty ? { color } : undefined}
               >
@@ -92,7 +74,7 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
       </div>
 
       <div className="relative mt-7 flex items-center gap-2 sm:mt-9" aria-hidden>
-        <div className="bg-border/60 h-px flex-1" />
+        <div className="bg-border h-px flex-1" />
         <div className="flex items-end gap-1.5 px-0.5">
           {QUEUE_TICKS.map((tick) => (
             <span
@@ -106,7 +88,7 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
             />
           ))}
         </div>
-        <div className="bg-border/60 h-px flex-1" />
+        <div className="bg-border h-px flex-1" />
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Calendar, CrownStar, Pen, Trash2, TriangleWarning } from 'reicon-react'
+import { Calendar, CrownStar, Pen, Trash6, TriangleWarning } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -11,7 +11,7 @@ import { formatDate } from '~/common/utils/formatDate'
 
 import { reviewVisibilityConfig } from '../constants/visibility'
 import type { Review } from '../types/review.types'
-import { DialogReviewDialog } from './DeleteReviewDialog'
+import { DeleteReviewDialog } from './DeleteReviewDialog'
 import { PerfectStardust } from './PerfectStardust'
 import { UpsertReviewDialog } from './UpsertReviewDialog'
 
@@ -22,6 +22,7 @@ interface ReviewCardProps {
 export const ReviewCard = ({ review }: ReviewCardProps) => {
   const { media } = review
   const typeMeta = mediaTypeMeta[media.mediaType]
+  const accent = typeMeta.color
   const TypeIcon = typeMeta.icon
   const visibility = reviewVisibilityConfig[review.visibility]
   const VisibilityIcon = visibility.icon
@@ -29,40 +30,17 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   const detailTo = mediaDetailRouteByType[media.mediaType]
   const hasContent = Boolean(review.content?.trim())
   const isPerfect = review.rating === 10
-  const accent = isPerfect ? 'var(--rating)' : typeMeta.color
 
   return (
     <article
-      className={cn(
-        'bg-card group/card relative flex flex-col gap-3 overflow-hidden rounded-2xl p-3 transition-all duration-300',
-        'sm:flex-row sm:items-stretch sm:gap-4 sm:p-4',
-        'ring-1 ring-(--card-accent)/20 hover:ring-2 hover:ring-(--card-accent)/50',
-        'hover:-translate-y-px',
-      )}
       style={{
         '--card-accent': accent,
       }}
+      className={cn(
+        'bg-card border-border group/card relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3',
+        'sm:flex-row sm:items-stretch sm:gap-4 sm:p-4',
+      )}
     >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-90 transition-opacity duration-300 group-hover/card:opacity-100"
-        aria-hidden
-        style={{
-          background:
-            'radial-gradient(ellipse 105% 95% at 0% 0%, color-mix(in oklab, var(--card-accent) 22%, transparent), transparent 70%), radial-gradient(ellipse 75% 65% at 100% 100%, color-mix(in oklab, var(--card-accent) 13%, transparent), transparent 66%)',
-        }}
-      />
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-0 opacity-0 transition-all duration-500 ease-out',
-          'group-hover/card:opacity-100 group-hover/card:scale-105',
-        )}
-        aria-hidden
-        style={{
-          background:
-            'radial-gradient(ellipse 115% 100% at 8% 12%, color-mix(in oklab, var(--card-accent) 32%, transparent), transparent 62%), radial-gradient(ellipse 85% 75% at 92% 88%, color-mix(in oklab, var(--card-accent) 18%, transparent), transparent 60%)',
-        }}
-      />
-
       {isPerfect && <PerfectStardust />}
 
       <div className="absolute top-3 right-3 z-10 flex gap-1 opacity-0 sm:opacity-100">
@@ -81,24 +59,24 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               onClick={open}
               aria-label={`Edit review for ${media.title}`}
             >
-              <Pen />
+              <Pen weight="Filled" />
             </Button>
           )}
         </UpsertReviewDialog>
 
-        <DialogReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
+        <DeleteReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
           {({ open }) => (
             <Button
               isIconOnly
               type="button"
-              variant="danger-soft"
+              variant="destructive-soft"
               onClick={open}
               aria-label={`Delete review for ${media.title}`}
             >
-              <Trash2 />
+              <Trash6 weight="Filled" />
             </Button>
           )}
-        </DialogReviewDialog>
+        </DeleteReviewDialog>
       </div>
 
       <Link
@@ -106,10 +84,8 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         params={{ externalId: media.externalId }}
         aria-label={`Open ${media.title}`}
         className={cn(
-          'bg-muted group/poster relative z-px w-full shrink-0 overflow-hidden rounded-xl shadow-sm outline-none',
-          'ring-1 ring-foreground/6 transition-shadow duration-300',
-          'hover:ring-2 hover:ring-(--card-accent)/70',
-          'focus-visible:ring-2 focus-visible:ring-primary',
+          'bg-muted group/poster relative z-px w-full shrink-0 overflow-hidden rounded-lg border border-border outline-none',
+          'focus-visible:ring-2 focus-visible:ring-ring/40',
           isMusic
             ? 'aspect-square max-h-56 sm:max-h-none sm:size-36 md:size-42'
             : 'aspect-2/3 max-h-64 sm:max-h-none sm:w-36 md:w-42',
@@ -127,7 +103,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             <img
               src={media.posterUrl}
               alt={media.title}
-              className="z-px relative size-full object-contain transition-transform duration-500 ease-out group-hover/poster:scale-[1.03] sm:object-cover"
+              className="z-px relative size-full object-contain transition-transform duration-300 group-hover/card:scale-[1.02] sm:object-cover"
               loading="lazy"
             />
           </>
@@ -147,7 +123,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           <MediaTypeBadge mediaType={media.mediaType} />
 
           {isPerfect && (
-            <Badge variant="rating" startIcon={<CrownStar />} className="bg-rating/10">
+            <Badge variant="rating" startIcon={<CrownStar />}>
               Perfect
             </Badge>
           )}
@@ -157,7 +133,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           </Badge>
 
           {review.hasSpoiler && (
-            <Badge variant="danger" startIcon={<TriangleWarning />}>
+            <Badge variant="destructive" startIcon={<TriangleWarning />}>
               Spoilers
             </Badge>
           )}
@@ -167,7 +143,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           to={detailTo}
           params={{ externalId: media.externalId }}
           className={cn(
-            'text-foreground line-clamp-2 w-fit text-lg font-bold tracking-tight outline-none transition-colors duration-300',
+            'text-foreground line-clamp-2 w-fit text-lg font-semibold tracking-tight outline-none transition-colors duration-200',
             'sm:text-xl',
             'hover:text-primary focus-visible:text-primary focus-visible:underline',
           )}
@@ -179,30 +155,23 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           <RatingBadge
             size="md"
             rating={review.rating}
-            variant={isPerfect ? 'default' : 'outline'}
+            variant={isPerfect ? 'rating' : 'default'}
           />
           <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs">
-            <Calendar className="size-3.5 shrink-0 opacity-80" aria-hidden />
+            <Calendar className="size-3.5 shrink-0" aria-hidden />
             <time dateTime={review.createdAt}>{formatDate(review.createdAt)}</time>
           </span>
         </div>
 
         <blockquote
           className={cn(
-            'bg-foreground/3 rounded-r-xl border-l-2 py-2.5 pr-3 pl-3.5',
+            'bg-muted rounded-r-lg border-l-2 border-border py-2.5 pr-3 pl-3.5',
             'text-sm leading-relaxed',
-            !hasContent && 'border-border/80',
+            isPerfect && hasContent && 'border-l-rating',
           )}
-          style={
-            hasContent
-              ? {
-                  borderLeftColor: 'var(--card-accent)',
-                }
-              : undefined
-          }
         >
           {hasContent ? (
-            <p className="text-foreground/90 break-all italic">{review.content}</p>
+            <p className="text-foreground break-all italic">{review.content}</p>
           ) : (
             <p className="text-muted-foreground italic">No written review</p>
           )}
@@ -221,7 +190,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             <Button
               type="button"
               variant="secondary"
-              startIcon={<Pen />}
+              startIcon={<Pen weight="Filled" />}
               onClick={open}
               aria-label={`Edit review for ${media.title}`}
             >
@@ -230,19 +199,19 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           )}
         </UpsertReviewDialog>
 
-        <DialogReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
+        <DeleteReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
           {({ open }) => (
             <Button
               type="button"
-              variant="danger-soft"
-              startIcon={<Trash2 />}
+              variant="destructive-soft"
+              startIcon={<Trash6 weight="Filled" />}
               onClick={open}
               aria-label={`Delete review for ${media.title}`}
             >
               Delete
             </Button>
           )}
-        </DialogReviewDialog>
+        </DeleteReviewDialog>
       </div>
     </article>
   )

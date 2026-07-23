@@ -1,327 +1,290 @@
 # SiftRate UI design system
 
-Agent guide for shared UI primitives. Match **`Button`** / **`Input`** / **`Select`** for interactive controls;
+Clear Design direction for shared UI. Quiet personal media-life archive — calm, precise, minimal. Not a loud SaaS dashboard.
 
 Sources:
 
-- `src/common/ui/Button.tsx`
-- `src/common/ui/Input.tsx`
+- Skill: `.agents/skills/clear-design/SKILL.md`
 - Tokens: `src/app/globals.css`
+- Controls: `src/common/ui/Button.tsx`, `Input.tsx`, `Select.tsx`, and peers
 
 ---
 
 ## Product language
 
-Quiet personal media archive — soft surfaces, large pill radii, restrained motion. Not a loud SaaS dashboard. Brand accent is purple (`primary`); fields and secondary actions sit on soft gray (`secondary`).
+- Surfaces over decoration: spacing, typography, and subtle borders create hierarchy
+- Brand purple (`primary`) is selective — CTAs, links, focus ring — not card washes
+- Light and dark are intentional separate systems (off-white / deep dark, not pure white/black pages)
+
+---
+
+## Semantic color tokens
+
+Use tokens from `globals.css`. Do not hardcode hex/oklch in reusable components.
+
+| Token                                    | Role                                        |
+| ---------------------------------------- | ------------------------------------------- |
+| `background` / `foreground`              | Page base                                   |
+| `card` / `card-foreground`               | Panels, shells, elevated content            |
+| `popover` / `popover-foreground`         | Menus, dialogs, selects                     |
+| `primary` / `primary-foreground`         | Main CTA, brand accent (selective)          |
+| `secondary` / `secondary-foreground`     | Quiet filled controls                       |
+| `muted` / `muted-foreground`             | Secondary surfaces, placeholders, meta text |
+| `accent` / `accent-foreground`           | Hover / active nav / subtle highlights      |
+| `destructive` / `destructive-foreground` | Destructive actions and errors              |
+| `border` / `input` / `ring`              | Structure, fields, focus                    |
+| `success` / `warning` / `rating`         | Domain status only                          |
+
+Removed (do not reintroduce):
+
+- `primary-soft`, `primary-hover`, `secondary-hover`
+- `danger` / `danger-soft` / `danger-hover` (use `destructive`)
+- `surface`, `surface-secondary`, `container`, `body`
+
+Prefer:
+
+```tsx
+bg-accent text-accent-foreground
+bg-muted text-muted-foreground
+border-border
+```
+
+Avoid:
+
+```tsx
+bg-primary/20 border-primary/30 text-foreground/70 border-white/10
+```
+
+Opacity is allowed for overlays, disabled states, image scrims, and intentional media chrome (lightbox, poster gradients). Not as a substitute for tokens.
 
 ---
 
 ## Shared control metrics
 
-Both Button and Input share the same geometry and type rhythm. New interactive controls should lock to this grid.
+Button, Input, Select trigger, and Textarea share geometry.
 
-| Rule           | Value                                                          |
-| -------------- | -------------------------------------------------------------- |
-| Corner radius  | `rounded-3xl`                                                  |
-| Type           | `text-sm font-medium` (`xs` → `text-xs`)                       |
-| Transition     | `transition-all duration-300`                                  |
-| Default height | `h-10`                                                         |
-| Border default | `border border-transparent` (outline variants use real border) |
-| Focus          | Always visible — never strip rings                             |
-| Disabled       | `opacity-50` + no pointer events                               |
+| Rule           | Value                                       |
+| -------------- | ------------------------------------------- |
+| Corner radius  | `rounded-md`                                |
+| Type           | `text-sm font-medium` (`xs` → `text-xs`)    |
+| Transition     | `transition-colors duration-200`            |
+| Default height | `h-10`                                      |
+| Focus          | Visible ring (`ring-ring/40`) — never strip |
+| Disabled       | `opacity-50` + no pointer events            |
 
 ### Size ladder
 
-| Size      | Height | Notes                |
-| --------- | ------ | -------------------- |
-| `xs`      | `h-7`  | Smaller type on both |
-| `sm`      | `h-9`  |                      |
-| `default` | `h-10` | Preferred default    |
-| `lg`      | `h-11` |                      |
+| Size      | Height |
+| --------- | ------ |
+| `xs`      | `h-7`  |
+| `sm`      | `h-9`  |
+| `default` | `h-10` |
+| `lg`      | `h-11` |
 
-Button also has square icon sizes (`icon`, `icon-xs`, `icon-sm`, `icon-lg`) matching the same heights (`size-10` … `size-7`).
+Icon-only buttons match the same heights (`size-10` … `size-7`).
 
 ---
 
-## Color roles
+## Radius system
 
-Use semantic Tailwind tokens from `globals.css` (light + dark already defined). Do not hardcode hex/oklch in components.
+| Use                                            | Class          |
+| ---------------------------------------------- | -------------- |
+| Buttons, inputs, select triggers               | `rounded-md`   |
+| Cards, dialogs, menus                          | `rounded-xl`   |
+| Large containers (header, sidebar, main shell) | `rounded-2xl`  |
+| Pills / badges / avatars                       | `rounded-full` |
 
-| Token family                                                   | Role                                                                    |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `primary` / `primary-hover` / `primary-foreground`             | Main CTA (solid Button `default`)                                       |
-| `primary-soft`                                                 | Soft primary washes elsewhere (not on Button/Input variants themselves) |
-| `secondary` / `secondary-hover` / `secondary-foreground`       | Secondary Button + **default Input fill**                               |
-| `danger` / `danger-hover` / `danger-foreground`                | Destructive solid Button                                                |
-| `danger-soft` / `danger-soft-hover` / `danger-soft-foreground` | Soft danger Button + invalid Input wash                                 |
-| `ring`, `border`                                               | Focus / outline chrome                                                  |
-| `muted-foreground`                                             | Input placeholder                                                       |
-| `foreground`                                                   | Default field text                                                      |
+---
 
-Hover formulas (already in CSS vars): solid colors mix ~90% base + 10% on-color; secondary hover mixes a little foreground into the surface.
+## Shadows
+
+| Level                     | When                                           |
+| ------------------------- | ---------------------------------------------- |
+| none                      | Default for most surfaces                      |
+| `shadow-sm`               | Subtle lift (tabs indicator, restrained cards) |
+| `shadow-md` / `shadow-lg` | Popovers, dialogs, dropdowns only              |
+
+---
+
+## Spacing
+
+Prefer the Tailwind scale: `p-3`, `p-4`, `p-6`, `gap-4`, `gap-6`, `mt-8`.
+
+Most common: 8 / 12 / 16 / 24 / 32px. Avoid arbitrary `p-[13px]`-style values.
 
 ---
 
 ## Button
 
-**File:** `src/common/ui/Button.tsx`  
-**Stack:** Base UI button + `cva` (`buttonVariants`)
+**File:** `src/common/ui/Button.tsx`
 
 ### Variants
 
-| Variant       | Look                             | When                              |
-| ------------- | -------------------------------- | --------------------------------- |
-| `default`     | Solid primary, light label       | Primary action (submit, main CTA) |
-| `secondary`   | Soft surface, brand-tinted label | Secondary / quiet actions         |
-| `danger`      | Solid danger, light label        | Destructive confirm               |
-| `danger-soft` | Soft danger wash                 | Less aggressive destructive       |
-| `outline`     | Bordered, light fill             | Low emphasis with edge            |
-| `ghost`       | Transparent, muted hover         | Inline / chrome actions           |
+| Variant            | Look                              | When                                      |
+| ------------------ | --------------------------------- | ----------------------------------------- |
+| `default`          | Solid primary                     | Primary action                            |
+| `secondary`        | Soft surface                      | Secondary / quiet                         |
+| `outline`          | Bordered, transparent fill        | Low emphasis with edge                    |
+| `ghost`            | Transparent, accent hover         | Chrome / inline                           |
+| `destructive-soft` | Quiet destructive text + soft hover | Icon / secondary delete and remove      |
+| `destructive`      | Solid destructive                 | Confirm delete / irreversible             |
 
-### Props (prefer these)
+Use `destructive-soft` for quiet delete/remove actions. Use solid `destructive` for confirm dialogs.
 
-| Prop                    | Purpose                                                                   |
-| ----------------------- | ------------------------------------------------------------------------- |
-| `variant`               | Visual style (above)                                                      |
-| `size`                  | Height ladder or `icon*`                                                  |
-| `isIconOnly`            | Square control; pair with text sizes (`default`/`sm`/…), not only `icon*` |
-| `isDisabled`            | Preferred over raw `disabled`                                             |
-| `isLoading`             | Disables control, shows spinner; icon-only → spinner only                 |
-| `startIcon` / `endIcon` | Icons beside label (`data-icon` for padding)                              |
-| `fullWidth`             | `w-full`                                                                  |
+Solid `default` / `destructive` hover darkens via `color-mix(in oklab, var(--token) 88%, black)` — not brightness filters or opacity washes.
 
-### Patterns
-
-```tsx
-<Button type="submit" isLoading={isLoading}>Sign in</Button>
-<Button variant="secondary">Cancel</Button>
-<Button isIconOnly variant="secondary" aria-label="Open menu">
-  <MenuIcon />
-</Button>
-```
-
-- Icon-only needs an accessible name (`aria-label`).
-- Do not invent new variants without a product need — extend the table above deliberately.
-
----
-
-## Input
-
-**File:** `src/common/ui/Input.tsx`  
-**Stack:** Base UI input + `cva` (`inputVariants`)
-
-Default field is intentionally the same **soft surface family** as Button `secondary` (filled, not a harsh bordered shadcn box).
-
-### Variants
-
-| Variant   | Look                                                        |
-| --------- | ----------------------------------------------------------- |
-| `default` | `bg-secondary`, hover `secondary-hover`, transparent border |
-| `outline` | Bordered `border-border` + `bg-input/30`                    |
-
-### Sizes
-
-Same ladder as Button: `xs` | `sm` | `default` | `lg`.
+Do not add blue/purple/premium variants without a real semantic need.
 
 ### Props
 
-| Prop        | Purpose                                                |
-| ----------- | ------------------------------------------------------ |
-| `variant`   | `default` \| `outline`                                 |
-| `size`      | Height ladder                                          |
-| `isInvalid` | Public invalid API — maps to `aria-invalid` internally |
-
-**Do not** pass `aria-invalid` from call sites; use `isInvalid`.
-
-### Patterns
-
-```tsx
-<Input placeholder="Email" autoComplete="email" />
-<Input size="lg" isInvalid={!!error} />
-```
-
-- Invalid styles: soft danger background + danger border/ring (via `aria-invalid` set by the component).
-- Focus: ring uses `ring` / `primary` chrome already on the component — keep focus visible.
+| Prop                       | Purpose                          |
+| -------------------------- | -------------------------------- |
+| `variant` / `size`         | Visual + height ladder or `icon` |
+| `isIconOnly`               | Square control                   |
+| `isDisabled` / `isLoading` | Preferred public API             |
+| `disabled`                 | Deprecated alias; still mapped   |
+| `startIcon` / `endIcon`    | Icons beside label               |
+| `fullWidth`                | `w-full`                         |
 
 ---
 
-## Alignment rules (Button ↔ Input ↔ Select)
+## Input / Textarea / Select trigger
 
-1. **Same height at the same `size`** — a default Input next to a default Button / Select trigger should share `h-10`.
-2. **Same radius** — `rounded-3xl` on Button, Input, and Select trigger.
-3. **Same motion** — `duration-300`.
-4. **Secondary surface is the “quiet fill”** — secondary buttons, default inputs, and default Select triggers should feel related.
-5. **Boolean public API uses `is*`** — `isDisabled`, `isLoading`, `isIconOnly`, `isInvalid`.
+| Variant   | Look                              |
+| --------- | --------------------------------- |
+| `default` | `bg-secondary`, hover `bg-accent` |
+| `outline` | `border-input bg-background`      |
+
+Invalid: `border-destructive` + ring (no soft danger wash).
+
+Public API: `isInvalid` (not raw `aria-invalid` from call sites).
+
+Select popup: `bg-popover`, `rounded-xl`, `border-border`, `shadow-lg`. Items highlight with `bg-accent`.
 
 ---
 
-## Select
+## Navigation
 
-**File:** `src/common/ui/Select.tsx`  
-**Stack:** Base UI select + compound components + `cva` (`selectTriggerVariants`)
+Active: `bg-accent text-accent-foreground`  
+Hover: `hover:bg-accent hover:text-accent-foreground`
 
-Form control for choosing a predefined value. Popup shell matches **DropdownMenu**; trigger matches **Input**.
+Not `bg-primary/50` or primary soft washes.
 
-### Parts
+**Domain colors on nav config:** `navigation.ts` may define `color` on library children (reviews/lists/planned) and media-type meta for **hubs, heroes, badges, and empty-state icons** — not for sidebar nav chrome. `Navigation.tsx` uses only semantic accent/muted tokens.
 
-| Export                                            | Role                                                     |
-| ------------------------------------------------- | -------------------------------------------------------- |
-| `Select`                                          | Root (must export) — value, open, `items`, `disabled`, … |
-| `SelectTrigger`                                   | Field-like button; chevron built-in                      |
-| `SelectValue`                                     | Selected label / placeholder                             |
-| `SelectContent`                                   | Portal + positioner + popup + list + scroll arrows       |
-| `SelectItem`                                      | Option + check indicator                                 |
-| `SelectGroup` / `SelectLabel`                     | Grouped options (label = group heading inside popup)     |
-| `SelectSeparator`                                 | Divider between groups                                   |
-| `SelectScrollUpButton` / `SelectScrollDownButton` | Optional; already inside `SelectContent`                 |
+---
 
-Field labels stay outside via `Field` / `Label` (or `aria-label` on the trigger).
+## Forms
 
-### Trigger variants / sizes
+Hierarchy: Label → Input → Description → Error (`text-destructive`).
 
-Same as Input:
+---
 
-| Prop        | Values                                       |
-| ----------- | -------------------------------------------- |
-| `variant`   | `default` (soft secondary fill) \| `outline` |
-| `size`      | `xs` \| `sm` \| `default` \| `lg`            |
-| `isInvalid` | Public invalid API → `aria-invalid`          |
+## Cards and shells
 
-### Content
+| Layer                                                          | Recipe                                                                             |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| App chrome (header, sidebar, main)                             | `bg-card border-border rounded-2xl`                                                |
+| Content cards (reviews, lists, planned, search, media reviews) | `bg-card border-border rounded-xl` + quiet `hover:bg-accent`                       |
+| Empty states                                                   | Same card recipe: icon well + title + body + optional primary action               |
+| Dialogs                                                        | `rounded-xl border-border shadow-lg`                                               |
+| Drawer (large shell)                                           | `rounded-2xl border-border shadow-lg`; overlay `bg-black/40` (aligned with dialog) |
 
-- Surface: `bg-popover`, `rounded-2xl`, soft ring/shadow (same family as DropdownMenu).
-- Items: `rounded-xl`, highlight via `data-highlighted:bg-primary-soft`.
-- Positioner defaults: `side="bottom"`, `sideOffset={4}`, `align="center"`, `alignItemWithTrigger={true}` (Base UI item-align mode). For filter-style menus use `alignItemWithTrigger={false}` and often `align="start"`.
+Content cards must **not** use:
 
-### Patterns
+- multi-radial domain atmospheres
+- scale/shadow lift on hover
+- colored ring ladders (`ring-(--card-accent)/…`)
+- nested interactive controls inside `Link` (no nested Button)
 
-```tsx
-const items = [
-  { value: null, label: 'All' },
-  { value: 'movie', label: 'Movie' },
-]
+### Domain accent policy (allowed residuals)
 
-<Select value={mediaType} onValueChange={setMediaType} items={items}>
-  <SelectTrigger aria-label="Media type">
-    <SelectValue placeholder="All" />
-  </SelectTrigger>
-  <SelectContent alignItemWithTrigger={false} align="start">
-    {items.map((item) => (
-      <SelectItem key={String(item.value)} value={item.value}>
-        {item.label}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
-```
+Runtime domain colors (media type, visibility, library section, perfect rating) may appear **only** on:
 
-- Prefer `items` on Root so `SelectValue` shows labels without a custom formatter.
-- Icon-only chrome is not the primary use case — full-width or `w-fit` via `className` on the trigger.
-- Do not invent a one-off native `<select>` or unstyled Base UI select in features; use this primitive.
+- badges (`MediaTypeBadge`, visibility chips, `Badge color=…`)
+- icons (inline `style={{ color }}` on type icons)
+- poster/image scrims (black gradients for title legibility)
+- hero metric number tint
+- rating chips (`text-rating` / `border-rating` for perfect state)
+- restrained **single** radial wash on `ReviewCard` (media-type **or** perfect via `color-mix`; not multi-radial, not solid fills)
+
+Not on full-page washes, nav active states, or other content cards.
 
 ---
 
 ## Library heroes
 
-Shared page-hero family for Library routes. **Do not invent a fourth header layout** for Reviews / Ranked lists / Planned.
+Shared shell for Reviews / Ranked lists / Planned:
 
-**References:**
+| Rule       | Value                                                                      |
+| ---------- | -------------------------------------------------------------------------- |
+| Surface    | `rounded-2xl bg-card ring-1 ring-border`                                   |
+| Padding    | `px-5 py-6 sm:px-7 sm:py-8`                                                |
+| Layout     | Column → `sm:flex-row` with metric on the right                            |
+| Atmosphere | Minimal (optional low-opacity watermark icon) — no full-page radial washes |
 
-| Page         | File                                                     |
-| ------------ | -------------------------------------------------------- |
-| Reviews      | `src/modules/review/components/ReviewListHero.tsx`       |
-| Ranked lists | `src/modules/ranked-list/components/RankedListsHero.tsx` |
-| Planned      | `src/modules/planned/components/PlannedHero.tsx`         |
+Domain accent color may tint the metric number only; keep body chrome neutral.
 
-### Shell (required)
+---
 
-| Rule        | Value                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------------- |
-| Surface     | `rounded-4xl bg-card ring-1 ring-border/50`, `isolate overflow-hidden`                                        |
-| Padding     | `px-5 py-6 sm:px-7 sm:py-8`                                                                                   |
-| Body layout | Column on mobile; `sm:flex-row sm:items-end sm:justify-between`                                               |
-| Left        | Eyebrow → `h1` (`text-3xl sm:text-4xl font-semibold tracking-tight`) → short subtext → optional CTA (`w-fit`) |
-| Right       | Optional domain motif → large tabular count (`text-5xl sm:text-6xl`) → metric label                           |
-| Loading     | Skeleton on the count when total is unknown (`null` / pending)                                                |
-| Empty total | Muted count when `0`                                                                                          |
-| Footer      | Hairlines + **domain-only** motif strip                                                                       |
-| Atmosphere  | 2–3 radials / soft orbs / low-opacity watermark **inside** the hero                                           |
-| Page chrome | No competing full-page radial wash above the hero                                                             |
+## Empty states
 
-### Domain accents
+One pattern for library/discover empties:
 
-| Page         | Accent                                | Eyebrow | Metric         | Right motif       | Footer motif          |
-| ------------ | ------------------------------------- | ------- | -------------- | ----------------- | --------------------- |
-| Reviews      | `reviewsNavItem.color` (`#F59E0B`)    | Library | reviews logged | Rising score bars | Media-type color dots |
-| Ranked lists | `rankedListNavItem.color` (`#3B82F6`) | Library | lists ordered  | Mini podium 2·1·3 | Rank bars             |
-| Planned      | `plannedNavItem.color` (`#10B981`)    | Library | in queue       | Queue stack bars  | Rising queue ticks    |
+```text
+[icon well: bg-accent text-primary or bg-muted text-muted-foreground]
+title (font-semibold)
+short body (text-muted-foreground)
+optional primary Button
+```
 
-New Library page heroes must reuse this shell and only swap accent, copy, motif, and optional CTA.
+Shell: `bg-card border-border rounded-xl border px-4 py-14 text-center`.
 
 ---
 
 ## Badge
 
-**File:** `src/common/ui/Badge.tsx`
+Soft pill: `rounded-full`, icon + label.
 
-Canonical **soft pill chip**: icon + label, `rounded-full`, `font-semibold`. Not a control height (not the Button `h-10` ladder).
+| Variant       | When                        |
+| ------------- | --------------------------- |
+| `default`     | Neutral secondary           |
+| `outline`     | Low emphasis                |
+| `destructive` | Spoilers / destructive meta |
+| `rating`      | Score chips (`text-rating`) |
+| `warning`     | Caution meta                |
+| `blur`        | Over photo (restrained)     |
 
-### Sizes
+Dynamic `color` / `isSolid` for media-type and visibility chips. Prefer `MediaTypeBadge` / `RatingBadge` wrappers.
 
-| Size | Look                               |
-| ---- | ---------------------------------- |
-| `sm` | `text-[10px]`, tighter padding     |
-| `md` | default — `text-xs`, `px-2.5 py-1` |
+---
 
-### Variants (token surfaces)
+## Alert
 
-| Variant   | When                        |
-| --------- | --------------------------- |
-| `default` | Neutral secondary chip      |
-| `outline` | Low emphasis / genre tags   |
-| `danger`  | Spoilers, destructive meta  |
-| `rating`  | Perfect / rating-gold chips |
-| `warning` | Caution meta                |
-| `blur`    | Over photo / glass overlay  |
+| Variant       | When    |
+| ------------- | ------- |
+| `default`     | Neutral |
+| `destructive` | Errors  |
 
-### Dynamic accent
+---
 
-| Prop      | Role                                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------------------------ |
-| `color`   | Any CSS color (`#…`, `var(--…)`). Soft tint via `color-mix` for bg/border/text. Overrides `variant` surface. |
-| `isSolid` | With `color`: solid fill + white label (e.g. media type on posters)                                          |
+## Themes
 
-### Icons
+**Light:** off-white background, white cards, dark (not pure black) text, subtle borders.
 
-`startIcon` / `endIcon` — same idea as Button. Prefer these over raw SVG children for spacing consistency.
-
-### Domain wrappers (keep)
-
-| Component        | File                 | When                                                                         |
-| ---------------- | -------------------- | ---------------------------------------------------------------------------- |
-| `MediaTypeBadge` | `MediaTypeBadge.tsx` | Media type chip (`color` from `mediaTypeMeta`, `alternateColor` → `isSolid`) |
-| `RatingBadge`    | `RatingBadge.tsx`    | Numeric score with star — not a text label chip                              |
-
-```tsx
-<Badge variant="danger" startIcon={<TriangleWarning />}>Spoilers</Badge>
-<Badge color={visibility.color} startIcon={<Lock />}>Private</Badge>
-<MediaTypeBadge mediaType="MOVIE" />
-<RatingBadge rating={8} />
-```
-
-Do not invent one-off pill markup for visibility / type / status when Badge covers it.
+**Dark:** deep layered dark (not pure black), readable foreground, solid borders (not white/10 stacks).
 
 ---
 
 ## Agent checklist
 
-When adding or changing a control in this family:
-
-- [ ] Uses tokens from `globals.css`, not ad-hoc colors
-- [ ] Height from the size ladder; default `h-10`
-- [ ] `rounded-3xl` unless there is a documented exception
+- [ ] Semantic tokens only in reusable UI
+- [ ] Height from size ladder; default `h-10`
+- [ ] Radius matches category (md / xl / 2xl / full)
+- [ ] No uncontrolled primary/opacity washes
 - [ ] Focus ring kept
 - [ ] Light and dark both readable
-- [ ] Public boolean props named `is*`
-- [ ] Does not invent a third visual language beside Button/Input/Select
-- [ ] Select trigger shares height, radius, and quiet fill with Input at the same `size`
+- [ ] Public booleans named `is*`
+- [ ] One visual language with Button / Input / Select
+- [ ] Primary used selectively
+- [ ] No new variants without semantic reason

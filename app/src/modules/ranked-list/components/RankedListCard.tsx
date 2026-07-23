@@ -1,6 +1,5 @@
-import { Pen, Trash2 } from 'reicon-react'
+import { Pen, Trash6 } from 'reicon-react'
 
-import { rankedListNavItem } from '~/common/constants/navigation'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
@@ -12,8 +11,6 @@ import { DeleteRankedListDialog } from './DeleteRankedListDialog'
 import { RankedListDetailDialog } from './RankedListDetailDialog'
 import { RankedListPodium } from './RankedListPodium'
 import { UpsertRankedListDialog } from './UpsertRankedListDialog'
-
-const listAccent = rankedListNavItem.color
 
 interface RankedListCardProps {
   item: RankedListItem
@@ -38,23 +35,12 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
           }
         }}
         className={cn(
-          'bg-card group relative flex cursor-pointer flex-col gap-3 overflow-hidden rounded-3xl p-4 text-left',
-          'ring-border/50 ring-1 transition-all duration-300 ease-out',
-          'hover:-translate-y-0.5 hover:ring-2 hover:ring-primary/35',
-          'active:translate-y-0 active:scale-[0.99]',
-          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
+          'bg-card border-border group relative flex cursor-pointer flex-col gap-3 overflow-hidden rounded-xl border p-3 text-left',
+          'transition-colors duration-200',
+          'hover:bg-accent',
+          'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
         )}
-        style={{ ['--list-accent' as string]: listAccent }}
       >
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-24 opacity-80"
-          aria-hidden
-          style={{
-            background:
-              'radial-gradient(ellipse 80% 90% at 20% 0%, color-mix(in oklab, var(--list-accent) 18%, transparent), transparent 70%)',
-          }}
-        />
-
         <div className="relative flex items-start justify-between gap-2">
           <div className="flex min-w-0 flex-col gap-1.5">
             <h2 className="text-foreground line-clamp-2 text-base font-semibold tracking-tight">
@@ -72,7 +58,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
 
           <div
             className={cn(
-              'flex shrink-0 items-center gap-1 transition-opacity duration-300 opacity-0',
+              'flex shrink-0 items-center gap-1 transition-opacity duration-200 opacity-0',
               'group-hover:opacity-100 group-focus-within:opacity-100',
             )}
             onClick={(event) => event.stopPropagation()}
@@ -91,7 +77,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
                     open()
                   }}
                 >
-                  <Pen />
+                  <Pen weight="Filled" />
                 </Button>
               )}
             </UpsertRankedListDialog>
@@ -100,7 +86,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
               {({ open }) => (
                 <Button
                   type="button"
-                  variant="danger-soft"
+                  variant="destructive-soft"
                   size="sm"
                   isIconOnly
                   aria-label={`Delete ${item.title}`}
@@ -109,7 +95,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
                     open()
                   }}
                 >
-                  <Trash2 />
+                  <Trash6 weight="Filled" />
                 </Button>
               )}
             </DeleteRankedListDialog>

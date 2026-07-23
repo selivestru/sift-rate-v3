@@ -52,6 +52,7 @@ export const DiscoverSearchForm = ({
           )
         }
         placeholder={placeholder}
+        className="gap-0 pr-0"
       />
 
       <Button fullWidth type="submit" isDisabled={!canSubmit || isFetching}>

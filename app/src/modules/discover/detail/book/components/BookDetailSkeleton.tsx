@@ -16,8 +16,8 @@ export const BookDetailSkeleton = () => {
             <Skeleton className="my-5 h-px w-16 rounded-full" />
 
             <div className="mb-5 flex flex-wrap justify-center gap-2">
-              <Skeleton className="h-10 w-20 rounded-3xl" />
-              <Skeleton className="h-10 w-22 rounded-3xl" />
+              <Skeleton className="h-10 w-20 rounded-xl" />
+              <Skeleton className="h-10 w-22 rounded-xl" />
             </div>
 
             <div className="mb-5 flex flex-wrap items-start justify-center">
@@ -56,7 +56,7 @@ export const BookDetailSkeleton = () => {
 
         <section className="flex flex-col gap-3">
           <Skeleton className="h-6 w-16 rounded-lg" />
-          <div className="bg-card/60 ring-border/50 divide-border/50 flex flex-col divide-y rounded-2xl ring-1">
+          <div className="bg-card ring-border divide-border flex flex-col divide-y rounded-2xl ring-1">
             {Array.from({ length: 6 }, (_, index) => (
               <div
                 key={index}
@@ -72,9 +72,9 @@ export const BookDetailSkeleton = () => {
         <section className="min-w-0">
           <Skeleton className="mb-3 h-6 w-16 rounded-lg" />
           <div className="flex flex-wrap gap-2">
-            <Skeleton className="h-11 w-28 rounded-3xl" />
-            <Skeleton className="h-11 w-32 rounded-3xl" />
-            <Skeleton className="h-11 w-20 rounded-3xl" />
+            <Skeleton className="h-11 w-28 rounded-xl" />
+            <Skeleton className="h-11 w-32 rounded-xl" />
+            <Skeleton className="h-11 w-20 rounded-xl" />
           </div>
         </section>
 

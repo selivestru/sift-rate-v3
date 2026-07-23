@@ -33,9 +33,9 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
         {companies.map((company) => (
           <li
             key={company.id}
-            className="bg-card/70 ring-border/50 flex min-h-16 items-center gap-3 rounded-2xl p-3 ring-1"
+            className="bg-card ring-border flex min-h-16 items-center gap-3 rounded-2xl p-3 ring-1"
           >
-            <div className="bg-muted ring-foreground/8 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl ring-1">
+            <div className="bg-muted ring-border flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl ring-1">
               {company.logoUrl ? (
                 <img
                   src={company.logoUrl}

@@ -5,17 +5,11 @@ import { Button } from '~/common/ui/Button'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
 
-import { PODIUM_RANKS, podiumMeta } from '../constants/podium'
+import { podiumMeta } from '../constants/podium'
 import { UpsertRankedListDialog } from './UpsertRankedListDialog'
 
 interface RankedListsHeroProps {
   total: number | null
-}
-
-const pedestalHeight: Record<(typeof PODIUM_RANKS)[number], string> = {
-  1: 'h-14 sm:h-16',
-  2: 'h-10 sm:h-12',
-  3: 'h-8 sm:h-9',
 }
 
 export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
@@ -26,24 +20,12 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
   return (
     <div
       className={cn(
-        'relative isolate overflow-hidden rounded-4xl',
-        'bg-card ring-1 ring-border/50',
+        'relative isolate overflow-hidden rounded-2xl',
+        'bg-card ring-1 ring-border',
         'px-5 py-6 sm:px-7 sm:py-8',
       )}
       style={{ ['--list-accent' as string]: color }}
     >
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background: [
-            'radial-gradient(ellipse 95% 85% at 0% 0%, color-mix(in oklab, var(--list-accent) 22%, transparent), transparent 64%)',
-            'radial-gradient(ellipse 65% 70% at 100% 100%, color-mix(in oklab, var(--list-accent) 14%, transparent), transparent 60%)',
-            'radial-gradient(ellipse 40% 45% at 72% 18%, color-mix(in oklab, var(--list-accent) 10%, transparent), transparent 55%)',
-          ].join(', '),
-        }}
-      />
-
       <ListsIcon
         className="pointer-events-none absolute -right-6 -bottom-8 size-44 opacity-[0.06] sm:size-56"
         aria-hidden
@@ -83,7 +65,7 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
               <p
                 className={cn(
                   'text-5xl font-semibold tracking-tighter tabular-nums sm:text-6xl',
-                  isEmpty && 'text-muted-foreground/45',
+                  isEmpty && 'text-muted-foreground',
                 )}
                 style={!isEmpty ? { color } : undefined}
               >
@@ -98,7 +80,7 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
       </div>
 
       <div className="relative mt-7 flex items-center gap-2 sm:mt-9" aria-hidden>
-        <div className="bg-border/60 h-px flex-1" />
+        <div className="bg-border h-px flex-1" />
         <div className="flex items-end gap-1.5 px-0.5">
           {([2, 1, 3] as const).map((rank) => {
             const meta = podiumMeta[rank]
@@ -116,7 +98,7 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
             )
           })}
         </div>
-        <div className="bg-border/60 h-px flex-1" />
+        <div className="bg-border h-px flex-1" />
       </div>
     </div>
   )

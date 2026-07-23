@@ -33,7 +33,7 @@ export const SimilarPosterCard = ({
         className,
       )}
     >
-      <div className="bg-muted ring-foreground/8 relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1">
+      <div className="bg-muted ring-border relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1">
         {item.posterUrl ? (
           <img
             src={item.posterUrl}

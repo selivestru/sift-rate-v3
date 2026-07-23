@@ -8,7 +8,7 @@ export const PlannedListSkeleton = () => {
       {SKELETON_KEYS.map((id) => (
         <div
           key={id}
-          className="bg-card ring-border/40 flex flex-col overflow-hidden rounded-2xl ring-1"
+          className="bg-card border-border flex flex-col overflow-hidden rounded-xl border"
         >
           <div className="relative aspect-2/3 w-full overflow-hidden">
             <Skeleton className="absolute inset-0 rounded-none" />
@@ -20,7 +20,10 @@ export const PlannedListSkeleton = () => {
             </div>
           </div>
 
-          <div className="h-11" />
+          <div className="border-border grid h-11 grid-cols-2 border-t">
+            <Skeleton className="h-full rounded-none" />
+            <Skeleton className="h-full rounded-none" />
+          </div>
         </div>
       ))}
     </div>

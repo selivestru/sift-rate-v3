@@ -25,7 +25,7 @@ export const DialogOverlay = ({ className, ...props }: DialogPrimitive.Backdrop.
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/30 duration-300 supports-backdrop-filter:backdrop-blur-sm',
+        'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/40 duration-200 supports-backdrop-filter:backdrop-blur-sm',
         className,
       )}
       {...props}
@@ -47,7 +47,7 @@ export const DialogContent = ({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          'bg-popover text-popover-foreground ring-foreground/5 data-open:animate-blur-morph-in data-closed:animate-blur-morph-out fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-4xl p-6 text-sm shadow-xl ring-1 outline-none sm:max-w-md dark:ring-foreground/10',
+          'bg-popover text-popover-foreground border-border data-open:animate-blur-morph-in data-closed:animate-blur-morph-out fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl border p-6 text-sm shadow-lg outline-none sm:max-w-md',
           className,
         )}
         {...props}
@@ -57,12 +57,7 @@ export const DialogContent = ({
           <DialogPrimitive.Close
             data-slot="dialog-close"
             render={
-              <Button
-                isIconOnly
-                variant="ghost"
-                className="bg-secondary absolute top-4 right-4"
-                size="sm"
-              />
+              <Button isIconOnly variant="ghost" className="absolute top-4 right-4" size="sm" />
             }
           >
             <X />

@@ -8,7 +8,7 @@ interface AuthFormAlertProps {
 
 export const AuthFormAlert = ({ message }: AuthFormAlertProps) => {
   return (
-    <Alert variant="danger">
+    <Alert variant="destructive">
       <XCircle />
       <AlertTitle>{message}</AlertTitle>
     </Alert>

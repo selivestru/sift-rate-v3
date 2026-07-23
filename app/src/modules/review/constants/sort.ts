@@ -16,12 +16,12 @@ export const reviewSortMeta: {
 }[] = [
   {
     value: REVIEW_SORT.NEWEST,
-    label: 'Новые оценки',
+    label: 'New ratings',
     icon: SortDesc,
   },
   {
     value: REVIEW_SORT.OLDEST,
-    label: 'Старые оценки',
+    label: 'Old ratings',
     icon: SortAsc,
   },
 ]

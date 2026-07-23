@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
-import { Star, Trash6, Users } from 'reicon-react'
+import { Pen, Star, Trash6, Users } from 'reicon-react'
 
+import type { MediaType } from '~/common/constants/media-type'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
@@ -8,26 +9,29 @@ import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
-import { DialogReviewDialog, VISIBILITY } from '~/modules/review'
+import { DeleteReviewDialog, UpsertReviewDialog, VISIBILITY } from '~/modules/review'
 
 import type { MediaReviewItem } from '../types/media-state.types'
 
 interface MediaReviewCardProps {
   review: MediaReviewItem
+  externalId: string
+  mediaType: MediaType
 }
 
-export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
+export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCardProps) => {
+  const { user } = review
+
   const currentUserId = useAuthStore((state) => state.user?.id)
+  const isOwner = currentUserId === user.id
 
   const isPerfect = review.rating === 10
-  const { user } = review
 
   return (
     <article
       className={cn(
         'bg-card text-card-foreground border-border flex gap-3 rounded-xl border p-4',
-        isPerfect &&
-          'border-rating/25 ring-rating/20 from-rating/5 bg-linear-to-r to-transparent ring-1',
+        isPerfect && 'border-rating',
       )}
     >
       <Avatar size="lg">
@@ -37,7 +41,7 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
 
       <div className="flex min-w-0 flex-1 flex-col gap-2.5">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-col gap-0.5">
+          <div className="flex min-w-0 flex-col gap-1">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               <Link
                 to="/$username"
@@ -52,6 +56,32 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
                   Friends
                 </Badge>
               )}
+
+              {isPerfect && (
+                <Badge variant="rating" size="sm">
+                  Perfect
+                </Badge>
+              )}
+            </div>
+
+            <div
+              className="flex items-center gap-0.5"
+              aria-label={
+                isPerfect ? 'Perfect score 10 out of 10' : `Rated ${review.rating} out of 10`
+              }
+            >
+              {Array.from({ length: 10 }, (_, index) => {
+                const filled = index < review.rating
+
+                return (
+                  <Star
+                    key={index}
+                    weight={filled ? 'Filled' : 'Outline'}
+                    className={cn('size-5', filled ? 'text-rating' : 'text-muted-foreground/40')}
+                    aria-hidden
+                  />
+                )
+              })}
             </div>
 
             <time dateTime={review.createdAt} className="text-muted-foreground text-xs">
@@ -59,46 +89,40 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
             </time>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <div
-              className={cn(
-                'flex items-center gap-1 rounded-full border px-2 py-0.5',
-                isPerfect
-                  ? 'border-rating/50 bg-rating/20 shadow-rating/20 shadow-sm'
-                  : 'border-rating/30 bg-rating/10',
-              )}
-              aria-label={
-                isPerfect ? 'Perfect score 10 out of 10' : `Rated ${review.rating} out of 10`
-              }
-            >
-              <Star weight="Filled" className="text-rating size-3.5" />
-              <span className="text-rating text-sm font-semibold tabular-nums">
-                {review.rating}
-              </span>
-            </div>
-
-            {currentUserId === user.id && (
-              <DialogReviewDialog
-                reviewId={review.id}
-                rating={review.rating}
-                mediaType={review.media.mediaType}
+          {isOwner && (
+            <div className="flex gap-2">
+              <UpsertReviewDialog
+                initialData={review}
+                media={{
+                  mediaType,
+                  externalId,
+                }}
               >
+                {({ open }) => (
+                  <Button isIconOnly variant="secondary" onClick={open} aria-label="Edit review">
+                    <Pen weight="Filled" />
+                  </Button>
+                )}
+              </UpsertReviewDialog>
+              <DeleteReviewDialog reviewId={review.id} rating={review.rating} mediaType={mediaType}>
                 {({ open }) => (
                   <Button
                     isIconOnly
-                    variant="danger-soft"
+                    variant="destructive-soft"
                     onClick={open}
                     aria-label="Delete review"
                   >
                     <Trash6 weight="Filled" />
                   </Button>
                 )}
-              </DialogReviewDialog>
-            )}
-          </div>
+              </DeleteReviewDialog>
+            </div>
+          )}
         </div>
 
-        {review.content && <p className="text-sm leading-relaxed break-all">{review.content}</p>}
+        {review.content && (
+          <p className="text-foreground text-sm leading-relaxed break-all">{review.content}</p>
+        )}
       </div>
     </article>
   )

@@ -46,7 +46,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
     <nav
       aria-label="pagination"
       className={cn(
-        'bg-card border-border/50 inline-flex items-center gap-1 rounded-2xl border p-1.5',
+        'bg-card border-border inline-flex items-center gap-1 rounded-xl border p-1.5',
         'animate-blur-morph-in',
       )}
     >
@@ -55,10 +55,9 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
         disabled={page <= 1}
         onClick={() => onPageChange(page - 1)}
         className={cn(
-          'flex h-9 items-center gap-1 rounded-xl px-2.5 text-sm font-medium transition-all duration-300 ease-out cursor-pointer',
-          'text-muted-foreground hover:bg-foreground/10 hover:text-foreground active:scale-97',
-          'disabled:pointer-events-none disabled:opacity-30',
-          'hover:scale-102',
+          'flex h-9 items-center gap-1 rounded-md px-2.5 text-sm font-medium transition-colors duration-200 ease-out cursor-pointer',
+          'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+          'disabled:pointer-events-none disabled:opacity-50',
         )}
       >
         <ChevronLeft className="size-4" />
@@ -79,10 +78,10 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
             type="button"
             onClick={() => onPageChange(p)}
             className={cn(
-              'flex size-9 items-center justify-center rounded-xl text-sm font-medium transition-all duration-300 ease-out cursor-pointer',
+              'flex size-9 items-center justify-center rounded-md text-sm font-medium transition-colors duration-200 ease-out cursor-pointer',
               p === page
-                ? 'bg-primary/15 border-primary/30 text-primary scale-102 border shadow-sm'
-                : 'text-muted-foreground hover:bg-foreground/10 hover:text-foreground hover:scale-102 active:scale-97',
+                ? 'bg-accent text-accent-foreground'
+                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
             )}
             aria-current={p === page ? 'page' : undefined}
           >
@@ -96,10 +95,9 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
         disabled={page >= totalPages}
         onClick={() => onPageChange(page + 1)}
         className={cn(
-          'flex h-9 items-center gap-1 rounded-xl px-2.5 text-sm font-medium transition-all duration-300 ease-out cursor-pointer',
-          'text-muted-foreground hover:bg-foreground/10 hover:text-foreground active:scale-97',
-          'disabled:pointer-events-none disabled:opacity-30',
-          'hover:scale-102',
+          'flex h-9 items-center gap-1 rounded-md px-2.5 text-sm font-medium transition-colors duration-200 ease-out cursor-pointer',
+          'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+          'disabled:pointer-events-none disabled:opacity-50',
         )}
       >
         <span className="hidden sm:inline">Next</span>

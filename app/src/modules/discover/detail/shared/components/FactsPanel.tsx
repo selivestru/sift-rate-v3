@@ -16,7 +16,7 @@ export const FactsPanel = ({ facts, className }: FactsPanelProps) => {
   return (
     <dl
       className={cn(
-        'flex flex-col divide-y divide-border/50 rounded-2xl bg-card/60 ring-1 ring-border/50',
+        'flex flex-col divide-y divide-border rounded-2xl bg-card ring-1 ring-border',
         className,
       )}
     >

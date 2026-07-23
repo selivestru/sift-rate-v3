@@ -1,8 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 
-import { mediaTypeMeta } from '~/common/constants/media-type'
 import { PaginationBar } from '~/common/ui/PaginationBar'
-import { cn } from '~/common/utils/cn'
 
 import { useDiscoverSearchQuery } from '../../hooks/useDiscoverSearchQuery'
 import type { DiscoverSearchConfig } from '../../types/discover-search.types'
@@ -20,8 +18,6 @@ interface DiscoverSearchPageProps<T> {
 
 export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPageProps<T>) => {
   const navigate = useNavigate()
-
-  const meta = mediaTypeMeta[config.mediaType]
 
   const q = search.q ?? ''
   const page = search.page ?? 1
@@ -60,19 +56,7 @@ export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPagePro
   }
 
   return (
-    <div
-      className={cn('relative flex flex-col gap-4 p-4 sm:p-6', {
-        'pointer-events-none': isFetching,
-      })}
-    >
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-90"
-        aria-hidden
-        style={{
-          background: `radial-gradient(ellipse 90% 80% at 18% 0%, color-mix(in oklab, ${meta.color} 22%, transparent), transparent 70%), radial-gradient(ellipse 70% 55% at 92% 8%, color-mix(in oklab, ${meta.color} 10%, transparent), transparent 65%)`,
-        }}
-      />
-
+    <div className="relative flex flex-col gap-4 p-4 sm:p-6">
       <DiscoverSearchHeader
         mediaType={config.mediaType}
         title={config.title}
@@ -87,17 +71,19 @@ export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPagePro
         onSearch={commitSearch}
       />
 
-      <DiscoverSearchContent
-        config={config}
-        enabled={enabled}
-        isFirstFetch={isPending}
-        isError={isError}
-        isFetching={isFetching}
-        items={items}
-        query={q.trim()}
-        onRetry={refetch}
-        isPlaceholderData={isPlaceholderData}
-      />
+      <div className={isPending ? 'pointer-events-none opacity-80' : undefined}>
+        <DiscoverSearchContent
+          config={config}
+          enabled={enabled}
+          isFirstFetch={isPending}
+          isError={isError}
+          isFetching={isFetching}
+          items={items}
+          query={q.trim()}
+          onRetry={refetch}
+          isPlaceholderData={isPlaceholderData}
+        />
+      </div>
 
       {showPagination && (
         <div className="z-px sticky right-0 bottom-4 left-0 flex justify-center">

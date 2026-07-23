@@ -19,7 +19,7 @@ export const ContributorList = ({ contributors }: ContributorListProps) => {
         {contributors.map((contributor) => (
           <li
             key={contributor.id}
-            className="bg-card ring-border/60 flex items-center gap-3 rounded-xl p-2.5 ring-1"
+            className="bg-card ring-border flex items-center gap-3 rounded-xl p-2.5 ring-1"
           >
             {contributor.pictureUrl ? (
               <img

@@ -7,19 +7,19 @@ import { cn } from '~/common/utils/cn'
 export const badgeVariants = cva(
   [
     'group/badge inline-flex w-fit shrink-0 items-center justify-center rounded-full border font-semibold',
-    'whitespace-nowrap transition-all duration-300 outline-none select-none',
-    'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
+    'whitespace-nowrap transition-colors duration-200 outline-none select-none',
+    'focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40',
     '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   ].join(' '),
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-secondary text-secondary-foreground',
-        outline: 'border-border bg-input/30 text-foreground',
-        danger: 'border-danger/30 bg-danger/10 text-danger',
-        rating: 'border-rating/30 bg-rating/24 text-rating',
-        warning: 'border-warning/40 bg-warning/25 text-warning',
-        blur: 'border-transparent bg-secondary/40 text-foreground backdrop-blur-2xl',
+        default: 'border-border bg-muted text-rating',
+        outline: 'border-border bg-background text-foreground',
+        destructive: 'border-border bg-muted text-destructive',
+        rating: 'border-rating/30 bg-rating/10 text-rating',
+        warning: 'border-border bg-muted text-warning',
+        blur: 'border-border bg-card text-foreground backdrop-blur-sm',
         none: 'border-transparent bg-transparent',
       },
       size: {
@@ -85,7 +85,6 @@ export const Badge = ({
             variant: hasAccent ? 'none' : variant,
             size,
           }),
-          hasAccent && !isSolid && 'backdrop-blur-xs',
           className,
         ),
         style: hasAccent && color ? { ...getAccentStyle(color, isSolid), ...style } : style,

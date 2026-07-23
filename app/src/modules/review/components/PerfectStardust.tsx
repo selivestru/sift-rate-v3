@@ -31,20 +31,18 @@ export const PerfectStardust = () => {
             'animate-perfect-stardust absolute bg-rating',
             particle.soft ? 'rounded-sm rotate-45 blur-[1px]' : 'rounded-full',
           )}
-          style={
-            {
-              left: particle.left,
-              top: particle.top,
-              width: particle.size,
-              height: particle.size,
-              boxShadow:
-                particle.size >= 4
-                  ? '0 0 8px color-mix(in oklab, var(--rating) 55%, transparent)'
-                  : '0 0 4px color-mix(in oklab, var(--rating) 40%, transparent)',
-              '--stardust-duration': particle.duration,
-              '--stardust-delay': particle.delay,
-            } as React.CSSProperties
-          }
+          style={{
+            left: particle.left,
+            top: particle.top,
+            width: particle.size,
+            height: particle.size,
+            boxShadow:
+              particle.size >= 4
+                ? '0 0 8px color-mix(in oklab, var(--rating) 55%, transparent)'
+                : '0 0 4px color-mix(in oklab, var(--rating) 40%, transparent)',
+            '--stardust-duration': particle.duration,
+            '--stardust-delay': particle.delay,
+          }}
         />
       ))}
     </div>

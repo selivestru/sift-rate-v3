@@ -1,6 +1,7 @@
-import { Search } from 'reicon-react'
+import { Search, X } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
+import { Button } from '~/common/ui/Button'
 import { Input } from '~/common/ui/Input'
 
 import type { ReviewSort } from '../constants/sort'
@@ -32,6 +33,10 @@ export const ReviewListFilters = ({
   onSortChange,
   stats,
 }: ReviewListFiltersProps) => {
+  const handleClear = () => {
+    onQueryChange('')
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <Input
@@ -39,7 +44,15 @@ export const ReviewListFilters = ({
         onChange={(event) => onQueryChange(event.target.value)}
         placeholder="Search your reviews"
         startIcon={<Search />}
+        endIcon={
+          query.length > 0 && (
+            <Button isIconOnly variant="ghost" size="sm" onClick={handleClear}>
+              <X className="size-4" />
+            </Button>
+          )
+        }
         aria-label="Search reviews"
+        className="pr-0"
       />
 
       <div className="grid gap-2 max-sm:grid-rows-3 sm:grid-cols-3">

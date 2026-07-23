@@ -7,7 +7,7 @@ export const TrackDetailSkeleton = () => {
         <Skeleton className="absolute inset-0 scale-105 rounded-none" />
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
-          <div className="bg-card/75 ring-border/50 flex min-w-0 gap-3 rounded-2xl p-3 shadow-xl ring-1 sm:gap-4 sm:p-3.5">
+          <div className="bg-card ring-border flex min-w-0 gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
             <Skeleton className="size-32 shrink-0 rounded-xl sm:size-48" />
 
             <div className="flex min-w-0 flex-1 flex-col justify-end gap-1.5 py-0.5">
@@ -18,8 +18,8 @@ export const TrackDetailSkeleton = () => {
               <Skeleton className="h-3 w-1/3 rounded-lg" />
 
               <div className="mt-1.5 flex flex-wrap gap-2">
-                <Skeleton className="h-9 w-18 rounded-3xl" />
-                <Skeleton className="h-9 w-20 rounded-3xl" />
+                <Skeleton className="h-9 w-18 rounded-xl" />
+                <Skeleton className="h-9 w-20 rounded-xl" />
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@ export const TrackDetailSkeleton = () => {
             {Array.from({ length: 4 }, (_, index) => (
               <li
                 key={index}
-                className="bg-card ring-border/60 flex items-center gap-3 rounded-xl p-2.5 ring-1"
+                className="bg-card ring-border flex items-center gap-3 rounded-xl p-2.5 ring-1"
               >
                 <Skeleton className="size-11 shrink-0 rounded-full" />
                 <div className="flex min-w-0 flex-1 flex-col gap-1">

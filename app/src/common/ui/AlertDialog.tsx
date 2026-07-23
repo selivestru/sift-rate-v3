@@ -23,7 +23,7 @@ export const AlertDialogOverlay = ({
     <AlertDialogPrimitive.Backdrop
       data-slot="alert-dialog-overlay"
       className={cn(
-        'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/30 duration-300 supports-backdrop-filter:backdrop-blur-sm',
+        'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/40 duration-200 supports-backdrop-filter:backdrop-blur-sm',
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ export const AlertDialogContent = ({
         data-slot="alert-dialog-content"
         data-size={size}
         className={cn(
-          'group/alert-dialog-content bg-popover text-popover-foreground ring-foreground/5 dark:ring-foreground/10 data-open:animate-blur-morph-in data-closed:animate-blur-morph-out fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-6 rounded-4xl p-6 shadow-xl ring-1 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-md',
+          'group/alert-dialog-content bg-popover text-popover-foreground border-border data-open:animate-blur-morph-in data-closed:animate-blur-morph-out fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl border p-6 shadow-lg outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-md',
           className,
         )}
         {...props}
@@ -93,11 +93,11 @@ export const AlertDialogMedia = ({
       data-variant={variant}
       className={cn(
         'mb-2 inline-flex size-16 items-center justify-center rounded-full sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*="size-"])]:size-8',
-        variant === 'default' && 'bg-muted',
-        variant === 'success' && 'bg-success/10',
-        variant === 'destructive' && 'bg-destructive/10',
-        variant === 'rating' && 'bg-rating/10',
-        variant === 'primary' && 'bg-primary/10',
+        variant === 'default' && 'bg-muted text-muted-foreground',
+        variant === 'success' && 'bg-muted text-success',
+        variant === 'destructive' && 'bg-muted text-destructive',
+        variant === 'rating' && 'bg-muted text-rating',
+        variant === 'primary' && 'bg-muted text-primary',
         className,
       )}
       {...props}
@@ -113,7 +113,7 @@ export const AlertDialogTitle = ({
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
       className={cn(
-        'font-heading text-lg font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2',
+        'text-lg font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2',
         className,
       )}
       {...props}

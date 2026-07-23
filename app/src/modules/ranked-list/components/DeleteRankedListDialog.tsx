@@ -51,7 +51,7 @@ export const DeleteRankedListDialog = ({
           <AlertDialogFooter>
             <AlertDialogCancel disabled={mutation.isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              variant="danger-soft"
+              variant="destructive"
               onClick={handleDelete}
               isLoading={mutation.isPending}
             >

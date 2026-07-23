@@ -4,14 +4,14 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '~/common/utils/cn'
 
 export const inputVariants = cva(
-  'w-full min-w-0 rounded-3xl border border-transparent bg-clip-padding text-sm font-medium transition-all duration-300 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-danger/40 aria-invalid:bg-danger-soft aria-invalid:ring-2 aria-invalid:ring-danger/20 dark:aria-invalid:border-danger/50 dark:aria-invalid:ring-danger/40',
+  'w-full min-w-0 rounded-md border border-transparent bg-clip-padding text-sm font-medium transition-colors duration-200 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30',
   {
     variants: {
       variant: {
         default:
-          'bg-secondary text-foreground hover:bg-secondary-hover focus-visible:border-ring focus-visible:bg-secondary focus-visible:ring-2 focus-visible:ring-primary',
+          'bg-secondary text-foreground hover:bg-accent focus-visible:border-ring focus-visible:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/40',
         outline:
-          'border-border bg-input/30 text-foreground hover:bg-input/50 focus-visible:border-ring focus-visible:bg-input/30 focus-visible:ring-2 focus-visible:ring-primary',
+          'border-input bg-background text-foreground hover:bg-accent focus-visible:border-ring focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-ring/40',
       },
       size: {
         default: 'h-10 px-3',
@@ -29,9 +29,8 @@ export const inputVariants = cva(
 
 const inputShellClassName = cn(
   'flex items-center gap-1.5 focus-visible:ring-0',
-  'focus-within:border-ring focus-within:ring-2 focus-within:ring-primary',
-  'has-[[aria-invalid=true]]:border-danger/40 has-[[aria-invalid=true]]:bg-danger-soft has-[[aria-invalid=true]]:ring-2 has-[[aria-invalid=true]]:ring-danger/20',
-  'dark:has-[[aria-invalid=true]]:border-danger/50 dark:has-[[aria-invalid=true]]:ring-danger/40',
+  'focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40',
+  'has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-2 has-[[aria-invalid=true]]:ring-destructive/30',
 )
 
 const inputIconClassName =
@@ -74,7 +73,7 @@ export const Input = ({
       className={cn(
         inputVariants({ variant, size }),
         inputShellClassName,
-        variant === 'outline' ? 'focus-within:bg-input/30' : 'focus-within:bg-secondary',
+        variant === 'outline' ? 'focus-within:bg-background' : 'focus-within:bg-secondary',
         className,
       )}
     >

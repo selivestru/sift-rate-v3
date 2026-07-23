@@ -38,7 +38,7 @@ export const AuthBootstrap = ({ children }: { children: React.ReactNode }) => {
 
   if (isLoading) {
     return (
-      <div className="bg-body flex min-h-dvh items-center justify-center">
+      <div className="bg-background flex min-h-dvh items-center justify-center">
         <Spinner className="text-primary size-8" />
       </div>
     )

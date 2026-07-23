@@ -62,7 +62,7 @@ export const RankedListDetailDialog = ({
 
         <div className="flex min-h-0 flex-1 scrollbar-none flex-col gap-2 overflow-y-auto p-1">
           {sortedItems.length === 0 ? (
-            <div className="bg-foreground/3 ring-foreground/6 flex flex-col items-center gap-3 rounded-2xl px-4 py-12 text-center ring-1">
+            <div className="bg-muted ring-border flex flex-col items-center gap-3 rounded-2xl px-4 py-12 text-center ring-1">
               <p className="text-foreground text-sm font-medium">Empty podium</p>
               <p className="text-muted-foreground max-w-xs text-xs leading-relaxed">
                 Add rated media to start building this ranking.

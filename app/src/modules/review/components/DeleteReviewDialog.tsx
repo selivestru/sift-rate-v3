@@ -15,19 +15,19 @@ import { cn } from '~/common/utils/cn'
 
 import { useDeleteReviewMutation } from '../hooks/useDeleteReviewMutation'
 
-interface DialogReviewDialogProps {
+interface DeleteReviewDialogProps {
   reviewId: string
   rating: number
   mediaType: MediaType
   children: ({ open }: { open: () => void }) => React.ReactNode
 }
 
-export const DialogReviewDialog = ({
+export const DeleteReviewDialog = ({
   reviewId,
   rating,
   mediaType,
   children,
-}: DialogReviewDialogProps) => {
+}: DeleteReviewDialogProps) => {
   const { opened, open, close } = useDisclosure()
 
   const mutation = useDeleteReviewMutation()
@@ -55,7 +55,7 @@ export const DialogReviewDialog = ({
           <AlertDialogFooter>
             <AlertDialogCancel disabled={mutation.isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              variant="danger-soft"
+              variant="destructive"
               onClick={handleDelete}
               isLoading={mutation.isPending}
             >

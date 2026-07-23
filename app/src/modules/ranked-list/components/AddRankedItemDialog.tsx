@@ -122,7 +122,7 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
             )}
 
             {reviewsQuery.isError && (
-              <p role="alert" className="text-danger py-8 text-center text-sm">
+              <p role="alert" className="text-destructive py-8 text-center text-sm">
                 Couldn&apos;t load reviews.
               </p>
             )}
@@ -170,13 +170,13 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
                     disabled={addMutation.isPending}
                     onClick={() => handleAdd(review)}
                     className={cn(
-                      'group/row border-border/50 bg-foreground/2 hover:border-border hover:bg-foreground/5 focus-visible:ring-ring/30 flex w-full items-center gap-3.5 rounded-2xl border p-2.5 text-left shadow-none transition-all duration-300 outline-none hover:-translate-y-px hover:shadow-sm focus-visible:ring-3',
+                      'group/row border-border bg-card hover:bg-accent focus-visible:ring-ring/40 flex w-full items-center gap-3.5 rounded-xl border p-2.5 text-left transition-colors duration-200 outline-none focus-visible:ring-2',
                       isPending && 'pointer-events-none opacity-60',
                     )}
                   >
                     <div
                       className={cn(
-                        'bg-muted ring-foreground/8 relative shrink-0 overflow-hidden rounded-xl ring-1',
+                        'bg-muted border-border relative shrink-0 overflow-hidden rounded-lg border',
                         isMusic ? 'size-20' : 'aspect-2/3 w-20',
                       )}
                     >
@@ -184,18 +184,18 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
                         <img
                           src={review.media.posterUrl}
                           alt={review.media.title}
-                          className="size-full object-cover transition-transform duration-300 group-hover/row:scale-[1.03]"
+                          className="size-full object-cover"
                           loading="lazy"
                         />
                       ) : null}
                     </div>
 
                     <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                      <span className="text-foreground line-clamp-2 text-base font-bold tracking-tight">
+                      <span className="text-foreground line-clamp-2 text-base font-semibold tracking-tight">
                         {review.media.title}
                       </span>
                       <div className="flex flex-wrap items-center gap-2">
-                        <MediaTypeBadge mediaType={review.media.mediaType} className="scale-90" />
+                        <MediaTypeBadge mediaType={review.media.mediaType} size="sm" />
                         <span className="text-rating inline-flex items-center gap-1 text-sm font-semibold tabular-nums">
                           <Star weight="Filled" className="text-rating size-4" />
                           {review.rating}/10
@@ -203,7 +203,7 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
                       </div>
                     </div>
 
-                    <span className="bg-foreground/5 text-muted-foreground group-hover/row:bg-primary/15 group-hover/row:text-primary flex size-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300">
+                    <span className="bg-muted text-muted-foreground group-hover/row:bg-background flex size-9 shrink-0 items-center justify-center rounded-full transition-colors duration-200">
                       <Plus className="size-4" />
                     </span>
                   </button>

@@ -2,10 +2,10 @@ import { Skeleton } from '~/common/ui/Skeleton'
 
 export const BookSearchSkeleton = () => {
   return (
-    <div className="bg-card ring-border/60 flex items-stretch overflow-hidden rounded-2xl ring-1">
-      <Skeleton className="aspect-2/3 w-24 shrink-0 rounded-l-2xl rounded-r-none sm:w-32" />
+    <div className="bg-card border-border flex items-stretch overflow-hidden rounded-xl border">
+      <Skeleton className="aspect-2/3 w-24 shrink-0 rounded-none sm:w-32" />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-3 pl-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-3">
         <Skeleton className="h-4 w-12 rounded-full" />
         <Skeleton className="h-5 w-4/5 rounded-lg" />
         <Skeleton className="h-5 w-1/2 rounded-lg" />

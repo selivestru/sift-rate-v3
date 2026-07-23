@@ -17,7 +17,7 @@ export const PersonCard = ({ name, profileUrl, subtitle, className }: PersonCard
         className,
       )}
     >
-      <div className="bg-muted ring-foreground/10 group-hover:ring-foreground/25 relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 group-hover:shadow-lg">
+      <div className="bg-muted ring-border group-hover:ring-border relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 group-hover:shadow-lg">
         {profileUrl ? (
           <img
             src={profileUrl}

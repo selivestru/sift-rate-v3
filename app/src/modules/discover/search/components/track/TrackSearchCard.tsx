@@ -1,9 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, Clock } from 'reicon-react'
+import { Clock } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
-import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 import { formatDuration } from '~/common/utils/formatDuration'
 
@@ -21,21 +20,12 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
       to="/discover/track/$externalId"
       params={{ externalId: item.id }}
       className={cn(
-        'bg-card group relative flex items-center gap-3 overflow-hidden rounded-xl p-2 pr-3 transition-all duration-300 ease-out',
-        'hover:scale-[1.005] hover:bg-(--card-accent)/5 active:scale-[0.995]',
-        'ring-border/60 ring-1 hover:ring-(--card-accent)/25',
+        'bg-card border-border group relative flex items-center gap-3 overflow-hidden rounded-xl border p-2 pr-3 transition-colors duration-200',
+        'hover:bg-accent',
+        'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
       )}
-      style={{ '--card-accent': color }}
     >
-      <div
-        className={cn(
-          'bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg',
-          {
-            'ring-1 transition-all duration-300 group-hover:ring-(--card-accent) ring-ring/50':
-              !item.coverUrl,
-          },
-        )}
-      >
+      <div className="bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg">
         {item.coverUrl ? (
           <img
             src={item.coverUrl}
@@ -44,21 +34,14 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
             loading="lazy"
           />
         ) : (
-          <MediaTypeIcon className="text-muted-foreground size-5 group-hover:text-(--card-accent)" />
-        )}
-
-        {item.coverUrl && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <MediaTypeIcon color={color} />
-          </div>
+          <MediaTypeIcon className="text-muted-foreground size-5" style={{ color }} />
         )}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <h3 className="text-foreground line-clamp-1 text-sm font-semibold">{item.title}</h3>
-
         <p className="text-muted-foreground line-clamp-1 text-xs">
-          {item.artist} <span className="opacity-50">·</span> {item.albumTitle}
+          {item.artist} · {item.albumTitle}
         </p>
       </div>
 
@@ -73,14 +56,6 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
           <Clock className="size-3" />
           {formatDuration(item.duration)}
         </span>
-
-        <Button
-          isIconOnly
-          variant="ghost"
-          className="size-8 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        >
-          <ArrowRight className="size-3.5" />
-        </Button>
       </div>
     </Link>
   )

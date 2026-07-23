@@ -86,14 +86,14 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
           {game.igdbRating > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               <div
-                className="border-foreground/10 bg-background/40 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-md"
+                className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-md"
                 title={
                   game.igdbRatingCount > 0
                     ? `${game.igdbRatingCount.toLocaleString()} IGDB ratings`
                     : 'IGDB rating'
                 }
               >
-                <Star weight="Filled" className="stroke-rating size-3.5" aria-hidden />
+                <Star weight="Filled" className="text-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {game.igdbRating.toFixed(1)}
                 </span>

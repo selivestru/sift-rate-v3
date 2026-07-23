@@ -48,7 +48,7 @@ export const ReviewList = () => {
       {isInitialLoading && <ReviewListSkeleton />}
 
       {isError && !isInitialLoading && (
-        <p role="alert" className="text-danger py-10 text-center text-sm">
+        <p role="alert" className="text-destructive py-10 text-center text-sm">
           Couldn&apos;t load reviews.
         </p>
       )}

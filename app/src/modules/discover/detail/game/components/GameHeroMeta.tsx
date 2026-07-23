@@ -22,7 +22,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
   const hasStudio = game.developers.length > 0 || game.publishers.length > 0
 
   return (
-    <div className="bg-card/70 ring-border/50 min-w-0 flex-1 rounded-2xl p-3.5 ring-1 backdrop-blur-xl sm:p-4">
+    <div className="bg-card ring-border min-w-0 flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
       <div className="flex min-w-0 flex-col gap-3">
         <MediaStateButtons externalId={game.id} mediaType={MEDIA_TYPES.GAME} />
 
@@ -74,7 +74,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
                 title={platform.name}
                 className={cn(
                   'inline-flex min-h-8 items-center rounded-lg px-2.5 text-[11px] font-semibold tracking-wide uppercase',
-                  'bg-foreground/6 text-foreground ring-1 ring-foreground/10',
+                  'bg-muted text-foreground ring-1 ring-border',
                   'transition-[transform,background-color,box-shadow] duration-300',
                 )}
               >

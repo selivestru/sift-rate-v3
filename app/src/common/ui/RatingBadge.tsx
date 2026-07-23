@@ -6,7 +6,7 @@ import { badgeVariants } from './Badge'
 interface RatingBadgeProps {
   rating: number
   size?: 'xs' | 'sm' | 'md'
-  variant?: 'default' | 'outline'
+  variant?: 'default' | 'rating'
   className?: string
 }
 
@@ -22,7 +22,7 @@ export const RatingBadge = ({
     <div
       className={cn(
         badgeVariants({
-          variant: variant === 'default' ? 'rating' : 'outline',
+          variant: variant === 'default' ? 'default' : 'rating',
           size: badgeSize,
         }),
         size === 'xs' && 'gap-0.5 px-1.5 py-0.5 text-[10px] [&_svg]:size-3!',
@@ -33,7 +33,7 @@ export const RatingBadge = ({
       )}
     >
       <Star weight="Filled" className="text-rating" />
-      <span className={cn(variant === 'default' ? 'text-rating' : 'text-foreground')}>
+      <span className={cn(variant === 'default' ? 'text-foreground' : 'text-rating')}>
         {rating}
       </span>
     </div>

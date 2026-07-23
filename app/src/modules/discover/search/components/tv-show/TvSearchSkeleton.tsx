@@ -2,7 +2,7 @@ import { Skeleton } from '~/common/ui/Skeleton'
 
 export const TvSearchSkeleton = () => {
   return (
-    <div className="bg-card ring-border relative flex gap-4 overflow-hidden rounded-2xl ring-1">
+    <div className="bg-card border-border relative flex gap-4 overflow-hidden rounded-xl border">
       <Skeleton className="aspect-2/3 w-27.5 shrink-0 rounded-none sm:w-37.5" />
 
       <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 py-4 pr-4">
@@ -10,7 +10,7 @@ export const TvSearchSkeleton = () => {
 
         <Skeleton className="h-5 w-16 rounded-full" />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pr-16">
           <Skeleton className="h-6 w-3/5 rounded-lg" />
           <Skeleton className="h-4 w-10 shrink-0 rounded-lg" />
         </div>
@@ -25,8 +25,6 @@ export const TvSearchSkeleton = () => {
           <Skeleton className="h-3.5 w-5/6 rounded-lg" />
           <Skeleton className="h-3.5 w-2/3 rounded-lg" />
         </div>
-
-        <Skeleton className="mt-0.5 h-10 w-28 rounded-3xl" />
       </div>
     </div>
   )

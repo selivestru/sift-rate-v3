@@ -54,13 +54,13 @@ export const MediaReviews = (props: MediaReviewsProps) => {
       )}
 
       {isError && (
-        <div className="bg-danger/10 border-danger/20 text-danger rounded-2xl border px-4 py-6 text-center text-sm">
+        <div className="bg-card border-border text-destructive rounded-2xl border px-4 py-6 text-center text-sm">
           Couldn&apos;t load reviews. Try again later.
         </div>
       )}
 
       {!isLoading && !isError && !data?.pages[0].data.length && (
-        <div className="bg-foreground/4 ring-foreground/8 flex flex-col items-center gap-2 rounded-2xl px-4 py-10 text-center ring-1">
+        <div className="bg-muted ring-border flex flex-col items-center gap-2 rounded-2xl px-4 py-10 text-center ring-1">
           <MessageText2 className="text-muted-foreground size-8 opacity-60" />
           <p className="text-foreground text-sm font-medium">No public reviews yet</p>
           <p className="text-muted-foreground max-w-sm text-xs">
@@ -70,7 +70,7 @@ export const MediaReviews = (props: MediaReviewsProps) => {
       )}
 
       {data?.pages.map((page) =>
-        page.data.map((review) => <MediaReviewCard key={review.id} review={review} />),
+        page.data.map((review) => <MediaReviewCard key={review.id} review={review} {...props} />),
       )}
 
       <div ref={loadMoreRef} className={cn(isFetching && 'py-5 text-center')}>

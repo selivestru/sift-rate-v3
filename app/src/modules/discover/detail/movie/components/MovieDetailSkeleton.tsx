@@ -16,8 +16,8 @@ export const MovieDetailSkeleton = () => {
             <Skeleton className="h-6 w-16 rounded-full" />
 
             <div className="flex flex-wrap gap-2">
-              <Skeleton className="h-10 w-20 rounded-3xl" />
-              <Skeleton className="h-10 w-22 rounded-3xl" />
+              <Skeleton className="h-10 w-20 rounded-xl" />
+              <Skeleton className="h-10 w-22 rounded-xl" />
             </div>
 
             <div className="flex flex-wrap gap-1.5">
@@ -40,7 +40,7 @@ export const MovieDetailSkeleton = () => {
         <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
           <div className="flex flex-col gap-4">
             <Skeleton className="h-6 w-20 rounded-lg" />
-            <div className="bg-card/60 ring-border/50 flex flex-col gap-3.5 rounded-2xl p-4 ring-1">
+            <div className="bg-card ring-border flex flex-col gap-3.5 rounded-2xl p-4 ring-1">
               {Array.from({ length: 3 }, (_, index) => (
                 <div key={index} className="flex flex-col gap-1">
                   <Skeleton className="h-3 w-16 rounded-lg" />
@@ -52,7 +52,7 @@ export const MovieDetailSkeleton = () => {
 
           <div className="flex flex-col gap-4">
             <Skeleton className="h-6 w-16 rounded-lg sm:invisible sm:h-7" />
-            <div className="bg-card/60 ring-border/50 divide-border/50 flex flex-col divide-y rounded-2xl ring-1">
+            <div className="bg-card ring-border divide-border flex flex-col divide-y rounded-2xl ring-1">
               {Array.from({ length: 6 }, (_, index) => (
                 <div
                   key={index}

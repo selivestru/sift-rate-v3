@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowUpRight, CalendarCheck, Trash2 } from 'reicon-react'
+import { ArrowUpRight, CalendarCheck, Trash6 } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
 import { mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
@@ -19,7 +19,6 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
   const { media } = item
   const config = mediaTypeMeta[media.mediaType]
   const TypeIcon = config.icon
-  const accent = config.color
 
   const deleteMutation = useDeletePlannedItem()
 
@@ -34,26 +33,22 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
   return (
     <div
       className={cn(
-        'bg-card group relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 ease-out',
-        'ring-1 ring-(--card-accent)/15 hover:ring-2 hover:ring-(--card-accent)/55',
-        'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]',
+        'bg-card border-border group relative flex flex-col overflow-hidden rounded-xl border transition-colors duration-200',
+        'hover:bg-accent',
         deleteMutation.isPending && 'pointer-events-none animate-pulse',
       )}
-      style={{
-        '--card-accent': accent,
-      }}
     >
       <div className="relative aspect-2/3 w-full overflow-hidden">
         {media.posterUrl ? (
           <img
             src={media.posterUrl}
             alt={media.title}
-            className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            className="size-full object-cover"
             loading="lazy"
           />
         ) : (
           <div className="bg-muted flex size-full items-center justify-center">
-            <TypeIcon className="size-10 text-(--card-accent)" />
+            <TypeIcon className="size-10" style={{ color: config.color }} />
           </div>
         )}
 
@@ -65,19 +60,21 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/50 to-transparent pt-16 pb-3">
           <div className="flex flex-col gap-1 px-3">
-            <h3 className="line-clamp-2 text-lg font-bold tracking-tight">{media.title}</h3>
-            <p className="text-muted-foreground flex items-center gap-1 text-[11px]">
-              <CalendarCheck className="size-3 shrink-0 opacity-80" />
+            <h3 className="line-clamp-2 text-lg font-semibold tracking-tight text-white">
+              {media.title}
+            </h3>
+            <p className="flex items-center gap-1 text-[11px] text-white/80">
+              <CalendarCheck className="size-3 shrink-0" />
               <span>Saved {formatRelativeDate(item.createdAt)}</span>
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2">
+      <div className="border-border grid grid-cols-2 border-t">
         <Button
-          className="h-11 rounded-none rounded-bl-2xl border-none"
-          variant="default"
+          className="h-11 rounded-none rounded-bl-xl border-none"
+          variant="secondary"
           render={
             <Link
               to={mediaDetailRouteByType[media.mediaType]}
@@ -90,11 +87,11 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
         </Button>
 
         <Button
-          className="h-11 rounded-none rounded-br-2xl border-none"
+          className="h-11 rounded-none rounded-br-xl border-none"
           aria-label={`Delete ${media.title} from planned`}
-          variant="danger-soft"
+          variant="destructive-soft"
           onClick={handleDelete}
-          startIcon={<Trash2 />}
+          startIcon={<Trash6 weight="Filled" />}
           isLoading={deleteMutation.isPending}
         >
           Delete

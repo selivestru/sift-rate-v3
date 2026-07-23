@@ -54,7 +54,7 @@ export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
                 params={{ externalId: item.id }}
                 className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
               >
-                <div className="bg-muted ring-foreground/8 relative aspect-square w-full overflow-hidden rounded-xl ring-1">
+                <div className="bg-muted ring-border relative aspect-square w-full overflow-hidden rounded-xl ring-1">
                   {item.coverUrl ? (
                     <img
                       src={item.coverUrl}

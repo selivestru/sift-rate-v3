@@ -1,9 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, Star } from 'reicon-react'
+import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
-import { Button } from '~/common/ui/Button'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
 import { cn } from '~/common/utils/cn'
 
@@ -21,39 +20,22 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
       to="/discover/tv_show/$externalId"
       params={{ externalId: item.id }}
       className={cn(
-        'bg-card group relative flex gap-4 overflow-hidden rounded-2xl transition-all duration-500 ease-out hover:scale-[1.01] hover:shadow-lg active:scale-[0.99]',
-        'ring-1 ring-border hover:ring-(--card-accent)',
+        'bg-card border-border group relative flex gap-4 overflow-hidden rounded-xl border transition-colors duration-200',
+        'hover:bg-accent',
+        'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
       )}
-      style={{
-        '--card-accent': color,
-      }}
     >
-      <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-10 transition-opacity duration-500 group-hover:opacity-20"
-        style={{
-          background: `linear-gradient(to left, ${color}, transparent 60%)`,
-        }}
-      />
-
-      <div
-        className={cn(
-          'relative aspect-2/3 w-27.5 shrink-0 overflow-hidden sm:w-37.5 border-r border-r-transparent',
-          item.posterUrl ? 'border-r-transparent' : 'border-r-border',
-        )}
-      >
+      <div className="border-border relative aspect-2/3 w-27.5 shrink-0 overflow-hidden border-r sm:w-37.5">
         {item.posterUrl ? (
-          <>
-            <img
-              src={item.posterUrl}
-              alt={item.title}
-              className="size-full object-cover"
-              loading="lazy"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0" />
-          </>
+          <img
+            src={item.posterUrl}
+            alt={item.title}
+            className="size-full object-cover"
+            loading="lazy"
+          />
         ) : (
-          <div className="flex size-full items-center justify-center">
-            <MediaTypeIcon className="size-10 text-(--card-accent)" />
+          <div className="bg-muted flex size-full items-center justify-center">
+            <MediaTypeIcon className="size-10" style={{ color }} />
           </div>
         )}
       </div>
@@ -61,12 +43,14 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
       <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 py-4 pr-4">
         <MediaTypeBadge mediaType={MEDIA_TYPES.TV_SHOW} />
 
-        <div className="border-rating/30 bg-rating/10 shadow-rating/40 z-px absolute top-3.5 right-3.5 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-xs">
-          <Star weight="Filled" className="text-rating size-4.5" />
-          <span className="text-rating text-base font-bold tabular-nums">{item.rating}</span>
-        </div>
+        {item.rating != null && (
+          <div className="border-border bg-muted absolute top-3.5 right-3.5 flex items-center gap-1 rounded-full border px-2 py-0.5">
+            <Star weight="Filled" className="text-rating size-3.5" />
+            <span className="text-rating text-sm font-semibold tabular-nums">{item.rating}</span>
+          </div>
+        )}
 
-        <div className="flex items-baseline gap-2">
+        <div className="flex items-baseline gap-2 pr-16">
           <h3 className="text-foreground line-clamp-1 text-lg font-semibold sm:text-xl">
             {item.title}
           </h3>
@@ -90,15 +74,6 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
             {item.overview}
           </p>
         )}
-
-        <Button
-          className="w-fit bg-(--card-accent)/40 hover:bg-(--card-accent)/60"
-          endIcon={
-            <ArrowRight className="size-3.5 transition-transform duration-500 group-hover:translate-x-0.5" />
-          }
-        >
-          View Details
-        </Button>
       </div>
     </Link>
   )

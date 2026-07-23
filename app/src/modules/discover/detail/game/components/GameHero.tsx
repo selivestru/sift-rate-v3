@@ -22,7 +22,7 @@ export const GameHero = ({ game }: GameHeroProps) => {
 
       <div className="relative z-10 -mt-12 flex min-w-0 flex-col gap-4 px-5 sm:-mt-14 sm:flex-row sm:items-start sm:gap-4 sm:px-6">
         <div
-          className="bg-muted ring-foreground/10 relative aspect-2/3 w-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:w-40"
+          className="bg-muted ring-border relative aspect-2/3 w-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:w-40"
           style={{
             boxShadow: `0 24px 48px -16px color-mix(in oklab, ${accent} 35%, transparent), 0 12px 24px -8px rgb(0 0 0 / 0.45)`,
           }}

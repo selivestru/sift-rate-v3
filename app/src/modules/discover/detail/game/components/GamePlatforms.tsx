@@ -56,12 +56,12 @@ export const GamePlatforms = ({ platforms, className }: GamePlatformsProps) => {
           <li key={platform.name}>
             <div
               className={cn(
-                'bg-card/70 text-foreground ring-border/60',
+                'bg-card text-foreground ring-border',
                 'flex min-h-11 items-center gap-2 rounded-xl px-3.5 py-2 ring-1',
               )}
             >
               <span
-                className="bg-foreground/8 text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide uppercase"
+                className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold tracking-wide uppercase"
                 aria-hidden
               >
                 {(platform.abbreviation || platform.name).slice(0, 3)}

@@ -80,9 +80,9 @@ export const MediaImageGallery = ({
   }
 
   const portraitItemClass =
-    'group relative aspect-2/3 w-full cursor-pointer overflow-hidden rounded-xl bg-muted ring-1 ring-foreground/8 transition-transform duration-300 hover:scale-[1.01] focus-visible:ring-2 focus-visible:ring-ring'
+    'group relative aspect-2/3 w-full cursor-pointer overflow-hidden rounded-xl bg-muted ring-1 ring-border transition-transform duration-300 hover:scale-[1.01] focus-visible:ring-2 focus-visible:ring-ring'
   const landscapeItemClass =
-    'group relative aspect-video w-full cursor-pointer overflow-hidden rounded-xl bg-muted ring-1 ring-foreground/8 transition-transform duration-300 hover:scale-[1.01] focus-visible:ring-2 focus-visible:ring-ring'
+    'group relative aspect-video w-full cursor-pointer overflow-hidden rounded-xl bg-muted ring-1 ring-border transition-transform duration-300 hover:scale-[1.01] focus-visible:ring-2 focus-visible:ring-ring'
 
   if (!hasBackdrops && !hasPosters) return null
 

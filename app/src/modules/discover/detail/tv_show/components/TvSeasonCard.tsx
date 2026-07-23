@@ -15,7 +15,7 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
 
   return (
     <div className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]">
-      <div className="bg-muted ring-foreground/10 group-hover:ring-foreground/25 relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 group-hover:shadow-lg">
+      <div className="bg-muted ring-border group-hover:ring-border relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 group-hover:shadow-lg">
         {season.posterUrl ? (
           <img
             src={season.posterUrl}

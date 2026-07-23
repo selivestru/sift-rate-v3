@@ -183,7 +183,7 @@ type CarouselNavButtonProps = Omit<React.ComponentProps<typeof Button>, 'childre
 export const CarouselPrevious = ({
   className,
   variant = 'outline',
-  size = 'icon-sm',
+  size = 'sm',
   ...props
 }: CarouselNavButtonProps) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
@@ -214,7 +214,7 @@ export const CarouselPrevious = ({
 export const CarouselNext = ({
   className,
   variant = 'outline',
-  size = 'icon-sm',
+  size = 'sm',
   ...props
 }: CarouselNavButtonProps) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel()

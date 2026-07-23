@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowDown, ArrowUp, ArrowUpRight, Trash2 } from 'reicon-react'
+import { ArrowDown, ArrowUp, ArrowUpRight, Trash6 } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
@@ -53,30 +53,20 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 rounded-2xl p-3 transition-all duration-300',
-        'sm:flex-row sm:items-center sm:gap-3.5 sm:hover:scale-[1.01]',
-        !medal && 'bg-foreground/3 ring-1 ring-foreground/6',
+        'border-border bg-card flex flex-col gap-3 rounded-xl border p-3 transition-colors duration-200',
+        'sm:flex-row sm:items-center sm:gap-3.5',
+        'hover:bg-accent',
       )}
-      style={
-        medal
-          ? {
-              background: `linear-gradient(105deg, ${medal.accentSoft} 0%, color-mix(in oklab, ${medal.accent} 6%, transparent) 42%, transparent 78%)`,
-              boxShadow: `inset 0 0 0 1px color-mix(in oklab, ${medal.accent} 35%, transparent)`,
-            }
-          : undefined
-      }
     >
       <span
         className={cn(
-          'flex size-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold tabular-nums',
-          !medal && 'bg-foreground/6 text-muted-foreground',
+          'bg-muted text-muted-foreground flex size-10 shrink-0 items-center justify-center rounded-lg text-sm font-bold tabular-nums',
         )}
         style={
           medal
             ? {
                 backgroundColor: medal.accentSoft,
                 color: medal.accent,
-                boxShadow: `inset 0 0 0 1px ${medal.accent}`,
               }
             : undefined
         }
@@ -86,7 +76,7 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
 
       <div
         className={cn(
-          'bg-muted relative w-full shrink-0 overflow-hidden rounded-xl shadow-sm',
+          'bg-muted relative w-full shrink-0 overflow-hidden rounded-lg border border-border',
           isMusic
             ? 'aspect-square max-h-48 sm:max-h-none sm:size-20'
             : 'aspect-2/3 max-h-52 sm:max-h-none sm:w-20',
@@ -164,11 +154,11 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
           isIconOnly
           size="sm"
           type="button"
-          variant="danger-soft"
+          variant="destructive-soft"
           aria-label={`Remove ${media.title} from list`}
           onClick={handleDelete}
         >
-          <Trash2 />
+          <Trash6 weight="Filled" />
         </Button>
       </div>
     </div>

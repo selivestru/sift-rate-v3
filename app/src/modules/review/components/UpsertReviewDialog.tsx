@@ -50,7 +50,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
             className={cn('flex flex-col gap-4', isLoading && 'pointer-events-none')}
           >
             {serverError && (
-              <Alert variant="danger">
+              <Alert variant="destructive">
                 <XCircle />
                 <AlertTitle>{serverError}</AlertTitle>
               </Alert>
@@ -70,7 +70,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                       <span
                         className={cn(
                           'text-5xl font-bold tracking-tight tabular-nums',
-                          field.value ? 'text-rating' : 'text-muted-foreground/40',
+                          field.value ? 'text-rating' : 'text-muted-foreground',
                         )}
                       >
                         {field.value ?? '—'}
@@ -99,12 +99,12 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           type="button"
                           onClick={() => field.onChange(value)}
                           className={cn(
-                            'group focus-visible:ring-ring/30 flex aspect-square min-h-11 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3',
+                            'group focus-visible:ring-ring/30 flex aspect-square min-h-11 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border',
                             isSelected
-                              ? 'bg-rating/25 border-rating/50 shadow-sm'
+                              ? 'bg-rating/20 hover:bg-rating/30'
                               : isFilled
-                                ? 'bg-rating/10 border-rating/20 hover:bg-rating/15'
-                                : 'bg-foreground/5 border-foreground/10 hover:bg-foreground/10',
+                                ? 'bg-rating/20 hover:bg-rating/30'
+                                : 'bg-muted hover:bg-muted',
                           )}
                           aria-pressed={isSelected}
                           aria-label={`Rate ${value} out of 10`}
@@ -125,7 +125,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                 </Field>
               )}
             />
-            <div className="bg-foreground/4 ring-foreground/8 flex flex-col gap-4 rounded-2xl p-4 ring-1">
+            <div className="bg-muted ring-border flex flex-col gap-4 rounded-2xl p-4 ring-1">
               <Controller
                 name="content"
                 control={control}
@@ -152,7 +152,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                       onBlur={field.onBlur}
                       placeholder="What stayed with you?"
                       maxLength={MAX_REVIEW_LENGTH}
-                      className="h-50 scrollbar-none break-all"
+                      className="border-border h-50 scrollbar-none break-all"
                     />
                     {fieldState.error?.message && (
                       <FieldError>{fieldState.error.message}</FieldError>

@@ -153,7 +153,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
                   key={stat.label}
                   className={cn(
                     'flex min-w-0 flex-col items-center px-3.5 sm:px-4',
-                    index > 0 && 'border-l border-border/60',
+                    index > 0 && 'border-l border-border',
                   )}
                 >
                   <dt className="text-muted-foreground text-[9px] font-medium tracking-[0.16em] uppercase">
@@ -170,14 +170,14 @@ export const BookHero = ({ book }: BookHeroProps) => {
           {book.googleRating != null && book.googleRating > 0 && (
             <div className="flex flex-wrap items-center justify-center gap-2">
               <div
-                className="border-foreground/10 bg-foreground/5 flex items-center gap-1 rounded-full border px-2.5 py-1"
+                className="border-border bg-muted flex items-center gap-1 rounded-full border px-2.5 py-1"
                 title={
                   book.googleRatingsCount > 0
                     ? `${book.googleRatingsCount.toLocaleString()} Google ratings`
                     : 'Google rating'
                 }
               >
-                <Star weight="Filled" className="text-foreground/80 size-3.5" aria-hidden />
+                <Star weight="Filled" className="text-muted-foreground size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {book.googleRating.toFixed(1)}
                 </span>

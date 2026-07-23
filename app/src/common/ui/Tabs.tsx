@@ -17,7 +17,7 @@ export const TabsList = ({ className, ...props }: TabsPrimitive.List.Props) => {
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        'relative inline-flex h-11 w-fit items-center justify-center rounded-2xl border border-foreground/10 bg-foreground/8 p-1 text-muted-foreground backdrop-blur-xl',
+        'relative inline-flex h-10 w-fit items-center justify-center rounded-lg border border-border bg-muted p-1 text-muted-foreground',
         className,
       )}
       {...props}
@@ -30,7 +30,7 @@ export const TabsTab = ({ className, ...props }: TabsPrimitive.Tab.Props) => {
     <TabsPrimitive.Tab
       data-slot="tabs-tab"
       className={cn(
-        'z-10 inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-medium whitespace-nowrap text-muted-foreground transition-all duration-300 ease-out outline-none select-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/30 aria-selected:text-foreground disabled:pointer-events-none disabled:opacity-50',
+        'z-10 inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md px-3 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors duration-200 ease-out outline-none select-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 aria-selected:text-foreground disabled:pointer-events-none disabled:opacity-50',
         className,
       )}
       {...props}
@@ -43,7 +43,7 @@ export const TabsIndicator = ({ className, ...props }: TabsPrimitive.Indicator.P
     <TabsPrimitive.Indicator
       data-slot="tabs-indicator"
       className={cn(
-        'absolute top-1/2 left-0 z-0 h-9 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-xl bg-foreground/10 shadow-sm ring-1 ring-foreground/10 backdrop-blur-md transition-all duration-300 ease-out',
+        'absolute top-1/2 left-0 z-0 h-8 w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-1/2 rounded-md bg-background shadow-sm border border-border transition-all duration-200 ease-out',
         className,
       )}
       {...props}

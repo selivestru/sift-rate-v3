@@ -58,7 +58,7 @@ export const UpsertRankedListDialog = ({ list, children }: UpsertRankedListDialo
             className={cn('flex flex-col gap-4', isLoading && 'pointer-events-none')}
           >
             {serverError && (
-              <Alert variant="danger">
+              <Alert variant="destructive">
                 <XCircle />
                 <AlertTitle>{serverError}</AlertTitle>
               </Alert>

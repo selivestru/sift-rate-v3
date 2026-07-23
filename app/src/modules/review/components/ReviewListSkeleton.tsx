@@ -8,14 +8,14 @@ export const ReviewListSkeleton = () => {
       {SKELETON_KEYS.map((id) => (
         <div
           key={id}
-          className="bg-card ring-border/50 relative flex flex-col gap-3 rounded-2xl p-3 ring-1 sm:flex-row sm:items-stretch sm:gap-4 sm:p-3.5"
+          className="bg-card border-border relative flex flex-col gap-3 rounded-xl border p-3 sm:flex-row sm:items-stretch sm:gap-4 sm:p-4"
         >
-          <div className="absolute top-2.5 right-2.5 z-10 flex gap-2">
-            <Skeleton className="h-9 w-20 rounded-3xl" />
-            <Skeleton className="h-9 w-20 rounded-3xl" />
+          <div className="absolute top-3 right-3 z-10 flex gap-1">
+            <Skeleton className="size-9 rounded-md" />
+            <Skeleton className="size-9 rounded-md" />
           </div>
 
-          <Skeleton className="aspect-2/3 max-h-64 w-full shrink-0 rounded-xl sm:max-h-none sm:w-36 md:w-42" />
+          <Skeleton className="aspect-2/3 max-h-64 w-full shrink-0 rounded-lg sm:max-h-none sm:w-36 md:w-42" />
 
           <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-2.5">
             <div className="flex flex-wrap gap-1.5">
@@ -31,7 +31,7 @@ export const ReviewListSkeleton = () => {
               <Skeleton className="h-3.5 w-24 rounded-lg" />
             </div>
 
-            <Skeleton className="h-16 w-full rounded-r-xl" />
+            <Skeleton className="h-16 w-full rounded-r-lg" />
           </div>
         </div>
       ))}

@@ -5,7 +5,7 @@ import { Button } from '~/common/ui/Button'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
 import { PlannedToggleButton } from '~/modules/planned'
-import { DialogReviewDialog, UpsertReviewDialog } from '~/modules/review'
+import { DeleteReviewDialog, UpsertReviewDialog } from '~/modules/review'
 
 import { useGetMediaState } from '../hooks/useGetMediaState'
 
@@ -23,7 +23,7 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
       <div className={cn('flex gap-1.5', className)}>
         {Array.from({ length: 2 }).map((_, index) => (
           // oxlint-disable-next-line react/no-array-index-key
-          <Skeleton key={index} className="h-10 w-20 rounded-3xl" />
+          <Skeleton key={index} className="h-10 w-20 rounded-xl" />
         ))}
       </div>
     )
@@ -47,11 +47,7 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
             variant={hasReview ? 'secondary' : 'default'}
             className={cn(hasReview && 'text-rating')}
             startIcon={
-              <Star
-                weight="Filled"
-                className={cn(hasReview && 'text-rating stroke-rating')}
-                aria-hidden
-              />
+              <Star weight="Filled" className={cn(hasReview && 'text-rating')} aria-hidden />
             }
             onClick={open}
             aria-label={
@@ -63,17 +59,17 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
         )}
       </UpsertReviewDialog>
       {hasReview ? (
-        <DialogReviewDialog
+        <DeleteReviewDialog
           reviewId={data.review!.id}
           rating={data.review!.rating}
           mediaType={props.mediaType}
         >
           {({ open }) => (
-            <Button isIconOnly variant="danger-soft" onClick={open} aria-label="Delete review">
+            <Button isIconOnly variant="destructive-soft" onClick={open} aria-label="Delete review">
               <Trash6 weight="Filled" />
             </Button>
           )}
-        </DialogReviewDialog>
+        </DeleteReviewDialog>
       ) : (
         <PlannedToggleButton id={data.plannedItem?.id} {...props} />
       )}

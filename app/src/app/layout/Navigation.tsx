@@ -25,30 +25,34 @@ function NavItem({ item, isAuthenticated, currentSubscription, nested }: NavItem
         disabled={isLocked}
         activeOptions={{ exact: true, includeSearch: false }}
         className={cn(
-          'text-muted-foreground relative flex items-center gap-2.5 rounded-xl px-3 text-sm font-medium transition-colors duration-300',
-          'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'text-muted-foreground relative flex items-center gap-2.5 rounded-md px-3 text-sm font-medium transition-colors duration-200',
+          'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
           nested ? 'h-9' : 'h-10',
           isLocked
             ? 'cursor-not-allowed opacity-50'
-            : 'hover:bg-primary-soft hover:text-foreground',
+            : 'hover:bg-accent hover:text-accent-foreground',
         )}
         activeProps={{
-          className: 'bg-primary/50 text-foreground hover:bg-primary/50',
+          className: 'bg-accent text-accent-foreground hover:bg-accent',
         }}
       >
         {({ isActive }) => (
           <>
             <item.icon
-              className={cn('size-5 shrink-0', nested && 'size-4', isActive && 'text-foreground')}
+              className={cn(
+                'size-5 shrink-0',
+                nested && 'size-4',
+                isActive && 'text-accent-foreground',
+              )}
             />
-            <span className={cn('flex-1', isActive && 'text-foreground')}>{item.label}</span>
+            <span className={cn('flex-1', isActive && 'text-accent-foreground')}>{item.label}</span>
             {isLocked && <Lock className="size-4 shrink-0 opacity-70" />}
           </>
         )}
       </Link>
 
       {item.children && (
-        <ul className="border-border/60 mt-1 ml-5 flex flex-col gap-0.5 border-l pl-2">
+        <ul className="border-border mt-1 ml-5 flex flex-col gap-0.5 border-l pl-2">
           {item.children.map((child) => (
             <NavItem
               nested

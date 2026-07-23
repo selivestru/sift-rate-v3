@@ -5,29 +5,28 @@ import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 
 export const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-3xl border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all duration-300 outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:not-aria-[haspopup]:scale-[102%] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-danger aria-invalid:ring-[3px] aria-invalid:ring-danger/20 dark:aria-invalid:border-danger/50 dark:aria-invalid:ring-danger/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 gap-2",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors duration-200 outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 gap-2",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary-hover',
+        default:
+          'bg-primary text-primary-foreground hover:bg-[color-mix(in_oklab,var(--primary)_88%,black)]',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary-hover aria-expanded:bg-secondary',
-        danger:
-          'bg-danger text-danger-foreground hover:bg-danger-hover focus-visible:border-danger/40 focus-visible:ring-danger/20',
-        'danger-soft':
-          'bg-danger-soft text-danger-soft-foreground hover:bg-danger-soft-hover focus-visible:border-danger/40 focus-visible:ring-danger/20 backdrop-blur-sm',
+          'bg-secondary text-primary hover:bg-accent hover:border-ring/40 aria-expanded:bg-accent',
+        destructive:
+          'bg-destructive text-destructive-foreground hover:bg-[color-mix(in_oklab,var(--destructive)_88%,black)] focus-visible:border-destructive focus-visible:ring-destructive/30',
+        'destructive-soft':
+          'text-destructive bg-destructive/20 hover:bg-destructive/30 aria-expanded:bg-accent aria-expanded:text-destructive focus-visible:border-destructive focus-visible:ring-destructive/30',
         outline:
-          'border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground backdrop-blur-sm',
+          'border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent',
         ghost:
-          'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
-        success:
-          'bg-success text-success-foreground hover:bg-success-hover focus-visible:border-success/40 focus-visible:ring-success/20',
+          'hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground',
       },
       size: {
         default: 'h-10 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5',
         xs: "h-7 px-2.5 text-xs has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
         sm: 'h-9 px-3 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
-        lg: 'h-11.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3',
+        lg: 'h-11 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3',
         icon: 'size-10',
       },
       isIconOnly: {
@@ -86,6 +85,7 @@ export const Button = ({
   endIcon,
   fullWidth = false,
   isDisabled = false,
+  disabled = false,
   render,
   nativeButton,
   children,
@@ -101,7 +101,7 @@ export const Button = ({
       )}
       render={render}
       nativeButton={nativeButton ?? render == null}
-      disabled={isDisabled || isLoading}
+      disabled={isDisabled || disabled || isLoading}
       aria-busy={isLoading || undefined}
       {...props}
     >

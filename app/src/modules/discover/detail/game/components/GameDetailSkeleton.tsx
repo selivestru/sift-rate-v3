@@ -19,11 +19,11 @@ export const GameDetailSkeleton = () => {
       <div className="relative z-10 -mt-12 flex min-w-0 flex-col gap-4 px-5 sm:-mt-14 sm:flex-row sm:items-start sm:gap-4 sm:px-6">
         <Skeleton className="aspect-2/3 w-32 shrink-0 rounded-xl sm:w-40" />
 
-        <div className="bg-card/70 ring-border/50 min-w-0 flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
+        <div className="bg-card ring-border min-w-0 flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
           <div className="flex min-w-0 flex-col gap-3">
             <div className="flex flex-wrap gap-2">
-              <Skeleton className="h-10 w-20 rounded-3xl" />
-              <Skeleton className="h-10 w-22 rounded-3xl" />
+              <Skeleton className="h-10 w-20 rounded-xl" />
+              <Skeleton className="h-10 w-22 rounded-xl" />
             </div>
 
             <div className="flex flex-col gap-1.5 sm:flex-row sm:gap-x-5">
@@ -78,7 +78,7 @@ export const GameDetailSkeleton = () => {
 
         <section className="flex flex-col gap-3">
           <Skeleton className="h-6 w-16 rounded-lg" />
-          <div className="bg-card/60 ring-border/50 divide-border/50 flex flex-col divide-y rounded-2xl ring-1">
+          <div className="bg-card ring-border divide-border flex flex-col divide-y rounded-2xl ring-1">
             {Array.from({ length: 6 }, (_, index) => (
               <div
                 key={index}

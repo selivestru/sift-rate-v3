@@ -65,7 +65,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
       )}
 
       <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-start sm:gap-5 sm:p-6 sm:pt-8">
-        <div className="bg-muted ring-foreground/10 relative aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl shadow-xl ring-1 sm:w-48">
+        <div className="bg-muted ring-border relative aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl shadow-sm ring-1 sm:w-48">
           <MediaCoverLightbox
             src={show.posterUrl}
             alt={show.title}
@@ -137,10 +137,10 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
           {show.tmdbRating > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               <div
-                className="border-foreground/10 bg-foreground/8 flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
+                className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
                 title={`${show.tmdbVoteCount.toLocaleString()} TMDB votes`}
               >
-                <Star weight="Filled" className="stroke-rating size-3.5" aria-hidden />
+                <Star weight="Filled" className="text-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {show.tmdbRating.toFixed(1)}
                 </span>

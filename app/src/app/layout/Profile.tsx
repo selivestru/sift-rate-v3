@@ -48,7 +48,7 @@ export const Profile = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="danger" className="justify-between" onClick={logout}>
+          <DropdownMenuItem variant="destructive" className="justify-between" onClick={logout}>
             Log Out
             <Logout />
           </DropdownMenuItem>

@@ -11,10 +11,7 @@ interface TvShowFactsProps {
 const ChipList = ({ items }: { items: string[] }) => (
   <span className="inline-flex flex-wrap justify-end gap-1">
     {items.map((item) => (
-      <span
-        key={item}
-        className="bg-foreground/6 ring-foreground/8 rounded-md px-1.5 py-0.5 text-xs ring-1"
-      >
+      <span key={item} className="bg-muted ring-border rounded-md px-1.5 py-0.5 text-xs ring-1">
         {item}
       </span>
     ))}

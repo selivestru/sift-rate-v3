@@ -15,7 +15,7 @@ export const MovieDetailError = ({
 }: MovieDetailErrorProps) => {
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3 p-6">
-      <Alert variant="danger">
+      <Alert variant="destructive">
         <XCircle />
         <AlertTitle>{message}</AlertTitle>
       </Alert>

@@ -34,16 +34,10 @@ const capabilities: {
 export const AuthBrandPanel = () => {
   return (
     <div className="relative flex h-full flex-col justify-between overflow-hidden p-8 lg:p-12">
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute -top-24 -left-16 size-72 rounded-full bg-[oklch(54.09%_0.2471_299.89/0.28)] blur-3xl" />
-        <div className="absolute top-1/3 -right-20 size-80 rounded-full bg-[oklch(54.09%_0.2_320/0.2)] blur-3xl" />
-        <div className="absolute -bottom-20 left-1/4 size-64 rounded-full bg-[oklch(65%_0.12_280/0.18)] blur-3xl" />
-      </div>
-
       <div className="z-px relative">
         <div className="flex items-center gap-2.5">
-          <span className="bg-primary flex size-9 items-center justify-center rounded-xl text-sm font-semibold">
-            C
+          <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md text-xs font-semibold">
+            S
           </span>
           <span className="text-lg font-semibold tracking-tight">SiftRate</span>
         </div>
@@ -74,7 +68,7 @@ export const AuthBrandPanel = () => {
         <ul className="space-y-4">
           {capabilities.map(({ icon: Icon, title, description }) => (
             <li key={title} className="flex gap-3">
-              <span className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-xl">
+              <span className="bg-accent text-primary flex size-10 shrink-0 items-center justify-center rounded-lg">
                 <Icon className="size-4" strokeWidth={1.75} />
               </span>
               <div className="min-w-0 space-y-0.5 pt-0.5">

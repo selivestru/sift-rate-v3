@@ -3,13 +3,13 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '~/common/utils/cn'
 
 export const textareaVariants = cva(
-  'flex field-sizing-content min-h-16 w-full resize-none rounded-3xl border border-transparent bg-clip-padding px-3 py-3 text-sm font-medium transition-all duration-300 outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-danger/40 aria-invalid:bg-danger-soft aria-invalid:ring-[3px] aria-invalid:ring-danger/20 dark:aria-invalid:border-danger/50 dark:aria-invalid:ring-danger/40',
+  'flex field-sizing-content min-h-16 w-full resize-none rounded-md border border-transparent bg-clip-padding px-3 py-3 text-sm font-medium transition-colors duration-200 outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30',
   {
     variants: {
       variant: {
-        default: 'bg-secondary text-foreground hover:bg-secondary-hover focus-visible:bg-secondary',
+        default: 'bg-secondary text-foreground hover:bg-accent focus-visible:bg-secondary',
         outline:
-          'border-border bg-input/30 text-foreground hover:bg-input/50 focus-visible:bg-input/30',
+          'border-input bg-background text-foreground hover:bg-accent focus-visible:bg-background',
       },
     },
     defaultVariants: {

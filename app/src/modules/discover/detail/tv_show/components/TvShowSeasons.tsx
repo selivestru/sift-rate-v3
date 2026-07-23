@@ -24,7 +24,7 @@ export const TvShowSeasons = ({ seasons, className }: TvShowSeasonsProps) => {
 
   if (seasons.length === 0) {
     return (
-      <div className="bg-foreground/4 ring-foreground/8 rounded-2xl px-4 py-10 text-center ring-1">
+      <div className="bg-muted ring-border rounded-2xl px-4 py-10 text-center ring-1">
         <p className="text-foreground text-sm font-medium">No seasons listed</p>
         <p className="text-muted-foreground mt-1 text-xs">
           Season data isn&apos;t available for this series yet.

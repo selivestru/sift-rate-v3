@@ -33,7 +33,7 @@ export const RankedListPodium = ({ items }: RankedListPodiumProps) => {
               className={cn(
                 'relative w-full overflow-hidden rounded-2xl transition-transform duration-300 ease-out',
                 meta.heightClass,
-                !media && 'border-border/60 bg-muted/40 border border-dashed',
+                !media && 'border-border bg-muted border border-dashed',
               )}
               style={
                 media
@@ -56,12 +56,12 @@ export const RankedListPodium = ({ items }: RankedListPodiumProps) => {
                   style={{ backgroundColor: meta.accentSoft }}
                 >
                   <Trophy className="size-5 opacity-80" style={{ color: meta.accent }} />
-                  <span className="text-foreground/80 line-clamp-3 text-center text-[10px] leading-tight font-medium">
+                  <span className="text-muted-foreground line-clamp-3 text-center text-[10px] leading-tight font-medium">
                     {media.title}
                   </span>
                 </div>
               ) : (
-                <div className="text-muted-foreground/50 flex size-full flex-col items-center justify-center gap-1">
+                <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-1">
                   <span className="text-2xl font-semibold tabular-nums opacity-40">{rank}</span>
                   <span className="text-[10px] font-medium tracking-wide uppercase">Open</span>
                 </div>
@@ -75,7 +75,7 @@ export const RankedListPodium = ({ items }: RankedListPodiumProps) => {
               <span
                 className={cn(
                   'absolute top-1.5 left-1.5 flex size-6 items-center justify-center rounded-full text-[11px] font-bold tabular-nums shadow-sm',
-                  media ? 'text-black' : 'bg-foreground/10 text-muted-foreground',
+                  media ? 'text-black' : 'bg-muted text-muted-foreground',
                 )}
                 style={
                   media

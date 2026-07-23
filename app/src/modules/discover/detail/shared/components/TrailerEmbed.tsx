@@ -22,7 +22,7 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
-      <div className="bg-muted ring-foreground/10 relative aspect-video w-full overflow-hidden rounded-2xl ring-1">
+      <div className="bg-muted ring-border relative aspect-video w-full overflow-hidden rounded-2xl ring-1">
         <div key={`${active.id}-${playing ? 'play' : 'idle'}`} className="size-full">
           {playing ? (
             <iframe
@@ -49,7 +49,7 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/30" />
-              <span className="bg-background/90 text-foreground ring-foreground/10 absolute top-1/2 left-1/2 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg ring-1 backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
+              <span className="bg-card text-foreground ring-border absolute top-1/2 left-1/2 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg ring-1 backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
                 <Play className="size-6 fill-current" aria-hidden />
               </span>
             </button>

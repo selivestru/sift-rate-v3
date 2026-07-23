@@ -23,7 +23,7 @@ export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) =>
       to="/discover/track/$externalId"
       params={{ externalId: track.id }}
       className={cn(
-        'group relative flex min-h-14 items-center gap-3 overflow-hidden rounded-2xl bg-card/60 p-2 pr-3 ring-1 ring-border/50',
+        'group relative flex min-h-14 items-center gap-3 overflow-hidden rounded-2xl bg-card p-2 pr-3 ring-1 ring-border',
         'transition-all duration-300 ease-out',
         'hover:scale-[1.01] hover:bg-card hover:shadow-md hover:ring-border',
         'active:scale-[0.99]',
