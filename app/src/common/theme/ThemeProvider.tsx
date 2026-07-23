@@ -3,6 +3,13 @@ import z from 'zod'
 
 import { getStorageItem, setStorageItem } from '../utils/storage'
 import {
+  ACCENT_COLORS,
+  ACCENT_STORAGE_KEY,
+  applyAccentAttribute,
+  DEFAULT_ACCENT,
+  type AccentColor,
+} from './accent'
+import {
   applyThemeClass,
   getSystemTheme,
   resolveTheme,
@@ -18,6 +25,9 @@ export const ThemeProvider = ({ children }: React.PropsWithChildren) => {
     getStorageItem(THEME_STORAGE_KEY, z.enum(THEME_MODES), 'system'),
   )
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolveTheme(theme))
+  const [accent, setAccentState] = useState<AccentColor>(
+    getStorageItem(ACCENT_STORAGE_KEY, z.enum(ACCENT_COLORS), DEFAULT_ACCENT),
+  )
 
   const isFirstRender = useRef(true)
 
@@ -89,11 +99,21 @@ export const ThemeProvider = ({ children }: React.PropsWithChildren) => {
     })
   }
 
+  const setAccent = (next: AccentColor) => {
+    if (next === accent) return
+
+    setAccentState(next)
+    applyAccentAttribute(next)
+    setStorageItem(ACCENT_STORAGE_KEY, next)
+  }
+
   const value = {
     theme,
     resolvedTheme,
     setTheme,
     toggleTheme,
+    accent,
+    setAccent,
   }
 
   return <ThemeContext value={value}>{children}</ThemeContext>

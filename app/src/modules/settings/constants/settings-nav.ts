@@ -1,7 +1,7 @@
-import { AlertTriangle, ShieldLock, User, type IconComponent } from 'reicon-react'
+import { AlertTriangle, Palette, ShieldLock, User, type IconComponent } from 'reicon-react'
 
 export type SettingsNavItem = {
-  to: '/settings/account' | '/settings/2fa' | '/settings/danger-zone'
+  to: '/settings/account' | '/settings/appearance' | '/settings/2fa' | '/settings/danger-zone'
   label: string
   description: string
   icon: IconComponent
@@ -13,6 +13,13 @@ export const accountNavItem: SettingsNavItem = {
   label: 'Account',
   description: 'Email, password, username, Google',
   icon: User,
+}
+
+export const appearanceNavItem: SettingsNavItem = {
+  to: '/settings/appearance',
+  label: 'Appearance',
+  description: 'Theme and accent color',
+  icon: Palette,
 }
 
 export const twoFactorNavItem: SettingsNavItem = {
@@ -32,6 +39,7 @@ export const dangerZoneNavItem: SettingsNavItem = {
 
 export const settingsNavItems: SettingsNavItem[] = [
   accountNavItem,
+  appearanceNavItem,
   twoFactorNavItem,
   dangerZoneNavItem,
 ]

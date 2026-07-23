@@ -32,6 +32,7 @@ import { Route as AppLifeWrappedRouteImport } from './routes/_app/life/wrapped'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettings2faRouteImport } from './routes/_app/settings/2fa'
 import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
+import { Route as AppSettingsAppearanceRouteImport } from './routes/_app/settings/appearance'
 import { Route as AppSettingsDangerZoneRouteImport } from './routes/_app/settings/danger-zone'
 import { Route as AppDiscoverAlbumIndexRouteImport } from './routes/_app/discover/album/index'
 import { Route as AppDiscoverAlbumExternalIdRouteImport } from './routes/_app/discover/album/$externalId'
@@ -160,6 +161,11 @@ const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AppSettingsRouteRoute,
 } as any)
+const AppSettingsAppearanceRoute = AppSettingsAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
 const AppSettingsDangerZoneRoute = AppSettingsDangerZoneRouteImport.update({
   id: '/danger-zone',
   path: '/danger-zone',
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/life/wrapped': typeof AppLifeWrappedRoute
   '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
+  '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/discover/': typeof AppDiscoverIndexRoute
   '/library/': typeof AppLibraryIndexRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/life/wrapped': typeof AppLifeWrappedRoute
   '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
+  '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/discover': typeof AppDiscoverIndexRoute
   '/library': typeof AppLibraryIndexRoute
@@ -324,6 +332,7 @@ export interface FileRoutesById {
   '/_app/life/wrapped': typeof AppLifeWrappedRoute
   '/_app/settings/2fa': typeof AppSettings2faRoute
   '/_app/settings/account': typeof AppSettingsAccountRoute
+  '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
   '/_app/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/_app/discover/': typeof AppDiscoverIndexRoute
   '/_app/library/': typeof AppLibraryIndexRoute
@@ -363,6 +372,7 @@ export interface FileRouteTypes {
     | '/life/wrapped'
     | '/settings/2fa'
     | '/settings/account'
+    | '/settings/appearance'
     | '/settings/danger-zone'
     | '/discover/'
     | '/library/'
@@ -397,6 +407,7 @@ export interface FileRouteTypes {
     | '/life/wrapped'
     | '/settings/2fa'
     | '/settings/account'
+    | '/settings/appearance'
     | '/settings/danger-zone'
     | '/discover'
     | '/library'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/_app/life/wrapped'
     | '/_app/settings/2fa'
     | '/_app/settings/account'
+    | '/_app/settings/appearance'
     | '/_app/settings/danger-zone'
     | '/_app/discover/'
     | '/_app/library/'
@@ -623,6 +635,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAccountRouteImport
       parentRoute: typeof AppSettingsRouteRoute
     }
+    '/_app/settings/appearance': {
+      id: '/_app/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof AppSettingsAppearanceRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
     '/_app/settings/danger-zone': {
       id: '/_app/settings/danger-zone'
       path: '/danger-zone'
@@ -772,6 +791,7 @@ const AppLifeRouteRouteWithChildren = AppLifeRouteRoute._addFileChildren(
 interface AppSettingsRouteRouteChildren {
   AppSettings2faRoute: typeof AppSettings2faRoute
   AppSettingsAccountRoute: typeof AppSettingsAccountRoute
+  AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
   AppSettingsDangerZoneRoute: typeof AppSettingsDangerZoneRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
 }
@@ -779,6 +799,7 @@ interface AppSettingsRouteRouteChildren {
 const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
   AppSettings2faRoute: AppSettings2faRoute,
   AppSettingsAccountRoute: AppSettingsAccountRoute,
+  AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
   AppSettingsDangerZoneRoute: AppSettingsDangerZoneRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
 }

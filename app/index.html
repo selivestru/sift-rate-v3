@@ -7,21 +7,22 @@
     <title>app</title>
     <script>
       ;(function () {
-        const key = 'theme'
-        let stored = null
+        const root = document.documentElement
+
+        let themeStored = null
         try {
-          const raw = localStorage.getItem(key)
-          stored = JSON.parse(raw)
+          themeStored = JSON.parse(localStorage.getItem('theme'))
         } catch (e) {}
         const mode =
-          stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system'
+          themeStored === 'light' || themeStored === 'dark' || themeStored === 'system'
+            ? themeStored
+            : 'system'
         const resolved =
           mode === 'system'
             ? window.matchMedia('(prefers-color-scheme: dark)').matches
               ? 'dark'
               : 'light'
             : mode
-        const root = document.documentElement
         if (resolved === 'dark') {
           root.classList.add('dark')
           root.setAttribute('data-theme', 'dark')
@@ -30,6 +31,25 @@
           root.setAttribute('data-theme', 'light')
         }
         root.style.colorScheme = resolved
+
+        const accents = [
+          'blue',
+          'indigo',
+          'violet',
+          'emerald',
+          'teal',
+          'cyan',
+          'orange',
+          'rose',
+          'pink',
+          'amber',
+        ]
+        let accentStored = null
+        try {
+          accentStored = JSON.parse(localStorage.getItem('accent'))
+        } catch (e) {}
+        const accent = accents.indexOf(accentStored) !== -1 ? accentStored : 'violet'
+        root.setAttribute('data-accent', accent)
       })()
     </script>
   </head>

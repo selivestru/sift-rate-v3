@@ -1,5 +1,7 @@
 import { createContext } from 'react'
 
+import type { AccentColor } from './accent'
+
 export const THEME_STORAGE_KEY = 'theme'
 
 export const THEME_MODES = ['system', 'light', 'dark'] as const
@@ -8,11 +10,19 @@ export type ThemeMode = (typeof THEME_MODES)[number]
 
 export type ResolvedTheme = 'light' | 'dark'
 
+export const THEME_LABELS: Record<ThemeMode, string> = {
+  system: 'System',
+  light: 'Light',
+  dark: 'Dark',
+}
+
 interface ThemeContext {
   theme: ThemeMode
   resolvedTheme: ResolvedTheme
   setTheme: (theme: ThemeMode) => void
   toggleTheme: (event: React.MouseEvent<HTMLButtonElement>) => void
+  accent: AccentColor
+  setAccent: (accent: AccentColor) => void
 }
 
 export const ThemeContext = createContext<ThemeContext | null>(null)
