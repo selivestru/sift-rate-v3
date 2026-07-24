@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Logout, Settings } from 'reicon-react'
+import { Logout, Settings, User } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import {
@@ -31,28 +31,17 @@ export const Profile = () => {
       />
       <DropdownMenuContent align="end" className="w-fit">
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Link
-              to="/$username"
-              params={{ username: user.username! }}
-              className="flex items-center gap-2"
-            >
-              <Avatar>
-                <AvatarImage src={user.avatarUrl!} alt={user.username!} />
-                <AvatarFallback>{getFirstLetter(user.username!)}</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-0">
-                <p className="text-sm font-medium">{user.username}</p>
-                <p className="text-muted-foreground text-xs">{user.email}</p>
-              </div>
-            </Link>
+          <DropdownMenuItem
+            className="justify-between"
+            render={<Link to="/$username" params={{ username: user.username! }} />}
+          >
+            Profile
+            <User />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="justify-between">
-            <Link to="/settings/account" className="flex w-full items-center justify-between gap-2">
-              Settings
-              <Settings />
-            </Link>
+          <DropdownMenuItem className="justify-between" render={<Link to="/settings/account" />}>
+            Settings
+            <Settings />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" className="justify-between" onClick={logout}>
