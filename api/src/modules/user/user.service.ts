@@ -31,10 +31,16 @@ export class UserService {
     })
   }
 
-  async create(data: { email: string; username: string; passwordHash: string }): Promise<User> {
+  async create(data: {
+    email: string
+    displayName: string
+    username: string
+    passwordHash: string
+  }) {
     return this.prisma.user.create({
       data: {
         email: data.email,
+        displayName: data.displayName,
         username: data.username,
         passwordHash: data.passwordHash,
         method: AuthMethod.CREDENTIALS,

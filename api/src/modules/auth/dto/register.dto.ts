@@ -11,6 +11,11 @@ export class RegisterDto {
   @IsEmail({}, { message: 'email must be a valid email address' })
   email!: string
 
+  @IsString({ message: 'Display name must be a string' })
+  @MinLength(2, { message: 'Display name must be at least 2 characters' })
+  @MaxLength(50, { message: 'Display name must be at most 50 characters' })
+  displayName!: string
+
   @IsString({ message: 'Username must be a string' })
   @MinLength(4, { message: 'Username must be at least 4 characters' })
   @MaxLength(25, { message: 'Username must be at most 25 characters' })
