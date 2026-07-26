@@ -6,7 +6,7 @@ import { EnvConfig } from '~/app/config/env.config'
 
 @Injectable()
 export class RedisService extends Redis {
-  constructor(configService: ConfigService<EnvConfig, true>) {
-    super(configService.get('REDIS_URL', { infer: true }))
+  constructor(config: ConfigService<EnvConfig, true>) {
+    super(config.get('REDIS_URL', { infer: true }))
   }
 }

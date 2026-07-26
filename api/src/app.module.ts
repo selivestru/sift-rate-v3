@@ -7,6 +7,7 @@ import { EnvConfig, validateEnv } from './app/config/env.config'
 import { AuthGuard } from './common/guards/auth.guard'
 import { PrismaModule } from './infrastructure/prisma/prisma.module'
 import { RedisModule } from './infrastructure/redis/redis.module'
+import { ResendModule } from './infrastructure/resend/resend.module'
 import { S3Module } from './infrastructure/s3/s3.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { MediaModule } from './modules/media/media.module'
@@ -39,6 +40,7 @@ import { UserModule } from './modules/user/user.module'
     ReviewModule,
     PlannedModule,
     RankedListModule,
+    ResendModule,
   ],
   controllers: [],
   providers: [

@@ -14,7 +14,7 @@ import { UserService } from '~/modules/user/user.service'
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly configService: ConfigService<EnvConfig, true>,
+    private readonly config: ConfigService<EnvConfig, true>,
   ) {}
 
   async register(req: Request, dto: RegisterDto): Promise<{ user: SafeUser }> {
@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   async logout(req: Request, res: Response): Promise<void> {
-    const isProd = this.configService.get('NODE_ENV', { infer: true }) === 'production'
+    const isProd = this.config.get('NODE_ENV', { infer: true }) === 'production'
     const cookieName = isProd ? '__Host-sid' : 'sid'
 
     await new Promise<void>((resolve, reject) => {
