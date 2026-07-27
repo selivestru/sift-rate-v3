@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { emailSchema, passwordSchema, usernameSchema } from '~/modules/user'
+import { displayNameSchema, emailSchema, passwordSchema, usernameSchema } from '~/modules/user'
 
 export const loginPasswordSchema = z
   .string()
@@ -16,6 +16,7 @@ export const registerSchema = z
   .object({
     email: emailSchema,
     username: usernameSchema,
+    displayName: displayNameSchema,
     password: passwordSchema,
     confirmPassword: z.string().min(1, 'Confirm your password'),
   })

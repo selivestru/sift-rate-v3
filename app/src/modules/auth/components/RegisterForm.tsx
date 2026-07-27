@@ -45,6 +45,15 @@ export const RegisterForm = () => {
           {...register('username')}
         />
 
+        <AuthTextField
+          label="Display name"
+          type="text"
+          autoComplete="name"
+          placeholder="Enter your display name"
+          error={errors.displayName}
+          {...register('displayName')}
+        />
+
         <PasswordField
           label="Password"
           autoComplete="new-password"
