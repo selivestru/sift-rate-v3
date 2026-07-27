@@ -36,16 +36,18 @@ enum Visibility {
 }
 
 model User {
-  id           String       @id @default(uuid(7))
-  email        String
-  displayName  String
-  username     String?
-  passwordHash String?
-  avatarUrl    String?
-  method       AuthMethod   @default(CREDENTIALS)
-  subscription Subscription @default(FREE)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id               String       @id @default(uuid(7))
+  email            String
+  displayName      String
+  username         String?
+  passwordHash     String?
+  avatarUrl        String?
+  method           AuthMethod   @default(CREDENTIALS)
+  subscription     Subscription @default(FREE)
+  twoFactorEnabled Boolean      @default(false)
+  twoFactorSecret  String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   reviews      Review[]
   plannedItems PlannedItem[]

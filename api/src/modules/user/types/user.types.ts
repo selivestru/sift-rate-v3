@@ -1,3 +1,3 @@
 import { User } from '~/generated/prisma/client'
 
-export type SafeUser = Omit<User, 'passwordHash' | 'updatedAt'>
+export type SafeUser = Omit<User, 'passwordHash' | 'twoFactorSecret' | 'updatedAt'>

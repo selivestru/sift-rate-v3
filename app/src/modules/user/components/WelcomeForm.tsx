@@ -6,7 +6,7 @@ import { Button } from '~/common/ui/Button'
 import { Field, FieldDescription, FieldError, FieldLabel } from '~/common/ui/Field'
 import { Input } from '~/common/ui/Input'
 
-import { useChangeUsernameForm } from '../hook/useChangeUsernameForm'
+import { useChangeUsernameForm } from '../hooks/useChangeUsernameForm'
 
 export const WelcomeForm = () => {
   const navigate = useNavigate()

@@ -1,6 +1,6 @@
 export * from './api/user.api'
 export * from './components/WelcomeForm'
-export * from './hook/useChangeUsernameForm'
+export * from './hooks/useChangeUsernameForm'
 export * from './schema/email.schema'
 export * from './schema/password.schema'
 export * from './schema/username.schema'

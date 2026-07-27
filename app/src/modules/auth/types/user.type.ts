@@ -21,5 +21,6 @@ export interface User {
   displayName: string
   avatarUrl: string | null
   method: AuthMethod
+  twoFactorEnabled: boolean
   subscription: Subscription
 }

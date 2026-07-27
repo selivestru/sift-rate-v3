@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { OAuth2Client } from 'google-auth-library'
@@ -48,13 +48,13 @@ export class GoogleOAuthService {
     const storedState = await this.redis.getdel(STATE_PREFIX + state)
 
     if (!storedState) {
-      throw new HttpException('Invalid or expired OAuth state', 400)
+      throw new BadRequestException('Invalid or expired OAuth state')
     }
 
     const { tokens } = await this.client.getToken(code)
 
     if (!tokens.id_token) {
-      throw new HttpException('Missing Google ID token', 400)
+      throw new BadRequestException('Missing Google ID token')
     }
 
     const ticket = await this.client.verifyIdToken({
@@ -65,7 +65,7 @@ export class GoogleOAuthService {
     const payload = ticket.getPayload()
 
     if (!payload?.email || !payload.email_verified) {
-      throw new HttpException('Google email is not verified', 400)
+      throw new BadRequestException('Google email is not verified')
     }
 
     return {

@@ -41,9 +41,7 @@ export const PageHeader = ({
         <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">{label}</p>
       </div>
       <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">{title}</h1>
-      <p className="text-muted-foreground max-w-md text-sm leading-relaxed text-pretty">
-        {description}
-      </p>
+      <p className="text-muted-foreground text-sm leading-relaxed text-pretty">{description}</p>
       {children}
     </div>
   )

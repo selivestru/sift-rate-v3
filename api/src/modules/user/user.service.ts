@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 
 import type { SafeUser } from './types/user.types'
 import { AuthMethod, User } from '~/generated/prisma/client'
@@ -64,7 +64,7 @@ export class UserService {
     const existing = await this.findByUsername(username)
 
     if (existing && existing.id !== userId) {
-      throw new HttpException('Username already taken', 409)
+      throw new ConflictException('Username already taken')
     }
 
     await this.prisma.user.update({

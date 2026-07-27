@@ -1,4 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { SafeUser } from '../user/types/user.types'
@@ -23,13 +28,13 @@ export class AuthService {
     const existingEmail = await this.userService.findByEmail(dto.email)
 
     if (existingEmail) {
-      throw new HttpException('Email already taken', 409)
+      throw new ConflictException('Email already taken')
     }
 
     const existingUsername = await this.userService.findByUsername(dto.username)
 
     if (existingUsername) {
-      throw new HttpException('Username already taken', 409)
+      throw new ConflictException('Username already taken')
     }
 
     const passwordHash = (await hash(dto.password, { type: argon2id })) as string
@@ -50,13 +55,13 @@ export class AuthService {
     const existing = await this.userService.findByEmail(dto.email)
 
     if (!existing || existing.method !== AuthMethod.CREDENTIALS || !existing.passwordHash) {
-      throw new HttpException('Invalid credentials', 401)
+      throw new UnauthorizedException('Invalid credentials')
     }
 
     const isValidPassword = await verify(existing.passwordHash, dto.password)
 
     if (!isValidPassword) {
-      throw new HttpException('Invalid credentials', 401)
+      throw new UnauthorizedException('Invalid credentials')
     }
 
     await this.saveSession(req, existing.id)
@@ -74,7 +79,7 @@ export class AuthService {
     const existing = await this.userService.findByEmail(profile.email)
 
     if (existing && existing.method !== AuthMethod.GOOGLE) {
-      throw new HttpException('Email already registered with credentials', 409)
+      throw new ConflictException('Email already registered with credentials')
     }
 
     const user = existing ?? (await this.userService.createGoogleUser(profile))
@@ -95,7 +100,7 @@ export class AuthService {
     await new Promise<void>((resolve, reject) => {
       req.session.destroy((err) => {
         if (err) {
-          reject(new HttpException('Failed to destroy session', 500))
+          reject(new InternalServerErrorException('Failed to destroy session'))
           return
         }
 
@@ -112,28 +117,15 @@ export class AuthService {
   }
 
   private safeUser(user: User): SafeUser {
-    const { passwordHash: _, ...safeUser } = user
+    const { passwordHash: _, twoFactorSecret: __, ...safeUser } = user
     return safeUser
-  }
-
-  private persistSession(req: Request): Promise<void> {
-    return new Promise((resolve, reject) => {
-      req.session.save((err) => {
-        if (err) {
-          reject(new HttpException('Failed to save session', 500))
-          return
-        }
-
-        resolve()
-      })
-    })
   }
 
   private saveSession(req: Request, userId: string): Promise<void> {
     return new Promise((resolve, reject) => {
       req.session.regenerate((err) => {
         if (err) {
-          reject(new HttpException('Failed to save session', 500))
+          reject(new InternalServerErrorException('Failed to save session'))
           return
         }
 

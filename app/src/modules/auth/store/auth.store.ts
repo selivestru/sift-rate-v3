@@ -15,6 +15,7 @@ interface AuthActions {
   setUser: (user: AuthState['user']) => void
   setIsLoading: (isLoading: boolean) => void
   setUsername: (username: string) => void
+  setTwoFactor: (twoFactorEnabled: boolean) => void
 }
 
 type Store = AuthState & AuthActions
@@ -32,4 +33,5 @@ export const useAuthStore = create<Store>()((set, get) => ({
     }),
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
   setUsername: (username) => set({ user: { ...get().user!, username } }),
+  setTwoFactor: (twoFactorEnabled) => set({ user: { ...get().user!, twoFactorEnabled } }),
 }))

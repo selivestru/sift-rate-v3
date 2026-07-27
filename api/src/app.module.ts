@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bullmq'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
+import { seconds, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 
 import { EnvConfig, validateEnv } from './app/config/env.config'
 import { AuthGuard } from './common/guards/auth.guard'
@@ -14,6 +15,7 @@ import { MediaModule } from './modules/media/media.module'
 import { PlannedModule } from './modules/planned/planned.module'
 import { RankedListModule } from './modules/ranked-list/ranked-list.module'
 import { ReviewModule } from './modules/review/review.module'
+import { TwoFactorModule } from './modules/two-factor/two-factor.module'
 import { UserModule } from './modules/user/user.module'
 
 @Module({
@@ -33,6 +35,12 @@ import { UserModule } from './modules/user/user.module'
     }),
     PrismaModule,
     RedisModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: seconds(60),
+        limit: 10,
+      },
+    ]),
     S3Module,
     AuthModule,
     MediaModule,
@@ -41,12 +49,17 @@ import { UserModule } from './modules/user/user.module'
     PlannedModule,
     RankedListModule,
     ResendModule,
+    TwoFactorModule,
   ],
   controllers: [],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

@@ -64,7 +64,7 @@ export const buttonVariants = cva(
   },
 )
 
-type ButtonProps = Omit<ButtonPrimitive.Props, 'disabled'> &
+export type ButtonProps = Omit<ButtonPrimitive.Props, 'disabled'> &
   VariantProps<typeof buttonVariants> & {
     isLoading?: boolean
     startIcon?: React.ReactNode
