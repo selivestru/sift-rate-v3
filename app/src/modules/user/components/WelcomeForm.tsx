@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
@@ -8,7 +9,10 @@ import { Input } from '~/common/ui/Input'
 import { useChangeUsernameForm } from '../hook/useChangeUsernameForm'
 
 export const WelcomeForm = () => {
-  const { register, onSubmit, isLoading, errors, serverError } = useChangeUsernameForm()
+  const navigate = useNavigate()
+  const { register, onSubmit, isLoading, errors, serverError } = useChangeUsernameForm(() => {
+    navigate({ to: '/' })
+  })
   const usernameError = errors.username
   const isInvalid = !!usernameError
 

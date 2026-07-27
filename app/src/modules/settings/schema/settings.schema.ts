@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { emailSchema, passwordSchema, usernameSchema } from '~/modules/user'
+import { emailSchema, passwordSchema } from '~/modules/user'
 
 export const changeEmailSchema = z.object({
   email: emailSchema,
@@ -21,10 +21,6 @@ export const changePasswordSchema = z
     path: ['newPassword'],
   })
 
-export const changeUsernameSchema = z.object({
-  username: usernameSchema,
-})
-
 export const twoFactorCodeSchema = z.object({
   code: z
     .string()
@@ -35,5 +31,4 @@ export const twoFactorCodeSchema = z.object({
 
 export type ChangeEmailInput = z.infer<typeof changeEmailSchema>
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
-export type ChangeUsernameInput = z.infer<typeof changeUsernameSchema>
 export type TwoFactorCodeInput = z.infer<typeof twoFactorCodeSchema>

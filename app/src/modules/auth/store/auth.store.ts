@@ -14,11 +14,12 @@ export interface AuthState {
 interface AuthActions {
   setUser: (user: AuthState['user']) => void
   setIsLoading: (isLoading: boolean) => void
+  setUsername: (username: string) => void
 }
 
 type Store = AuthState & AuthActions
 
-export const useAuthStore = create<Store>()((set) => ({
+export const useAuthStore = create<Store>()((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: getStorageItem('has_session', z.boolean(), false),
@@ -30,4 +31,5 @@ export const useAuthStore = create<Store>()((set) => ({
       isLoading: false,
     }),
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
+  setUsername: (username) => set({ user: { ...get().user!, username } }),
 }))

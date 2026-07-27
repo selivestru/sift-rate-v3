@@ -60,19 +60,19 @@ export class UserService {
     })
   }
 
-  async updateUsername(userId: string, username: string): Promise<{ user: SafeUser }> {
+  async updateUsername(userId: string, username: string): Promise<{ username: string }> {
     const existing = await this.findByUsername(username)
 
     if (existing && existing.id !== userId) {
       throw new HttpException('Username already taken', 409)
     }
 
-    const user = await this.prisma.user.update({
+    await this.prisma.user.update({
       where: { id: userId },
       data: { username },
     })
 
-    return { user: this.safeUser(user) }
+    return { username }
   }
 
   private safeUser(user: User): SafeUser {

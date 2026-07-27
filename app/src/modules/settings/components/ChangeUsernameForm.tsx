@@ -1,41 +1,16 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { Button } from '~/common/ui/Button'
 import { useAuthStore } from '~/modules/auth'
+import { useChangeUsernameForm } from '~/modules/user'
 
-import { changeUsernameSchema, type ChangeUsernameInput } from '../schema/settings.schema'
-import { mockDelay } from '../utils/mock-delay'
 import { SettingsSection } from './SettingsSection'
 import { SettingsTextField } from './SettingsTextField'
 
 export const ChangeUsernameForm = () => {
-  const user = useAuthStore((state) => state.user)
-  const currentUsername = user?.username ?? 'username'
-  const [isLoading, setIsLoading] = useState(false)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isValid, isDirty },
-  } = useForm<ChangeUsernameInput>({
-    defaultValues: { username: '' },
-    resolver: zodResolver(changeUsernameSchema),
-    mode: 'onChange',
-  })
-
-  const onSubmit = handleSubmit(async () => {
-    setIsLoading(true)
-    try {
-      await mockDelay()
-      toast.success('Username update saved (demo only)')
-      reset()
-    } finally {
-      setIsLoading(false)
-    }
+  const currentUsername = useAuthStore((state) => state.user?.username)
+  const { onSubmit, isLoading, register, errors, isDirty, isValid } = useChangeUsernameForm(() => {
+    toast.success('Username updated')
   })
 
   return (
@@ -51,7 +26,7 @@ export const ChangeUsernameForm = () => {
       >
         <SettingsTextField
           label="Current username"
-          value={currentUsername}
+          value={currentUsername!}
           readOnly
           disabled
           autoComplete="username"
@@ -59,7 +34,7 @@ export const ChangeUsernameForm = () => {
         <SettingsTextField
           label="New username"
           autoComplete="username"
-          placeholder="new_username"
+          placeholder="New username"
           error={errors.username}
           {...register('username')}
         />

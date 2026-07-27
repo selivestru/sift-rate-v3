@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -12,10 +11,10 @@ import { useChangeUsernameMutation } from './useChangeUsernameMutation'
 
 const CHANGE_USERNAME_FIELDS = ['username'] as const
 
-export const useChangeUsernameForm = () => {
+export const useChangeUsernameForm = (onSuccess?: () => void) => {
   const mutation = useChangeUsernameMutation()
-  const navigate = useNavigate()
-  const setUser = useAuthStore((state) => state.setUser)
+  const currentUsername = useAuthStore((state) => state.user?.username)
+  const setUsername = useAuthStore((state) => state.setUsername)
 
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -23,7 +22,8 @@ export const useChangeUsernameForm = () => {
     register,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
+    reset,
   } = useForm<ChangeUsernameInput>({
     defaultValues: {
       username: '',
@@ -32,12 +32,20 @@ export const useChangeUsernameForm = () => {
   })
 
   const onSubmit = handleSubmit(async (data) => {
+    if (mutation.isPending) return
+
+    if (currentUsername === data.username) {
+      setError('username', { type: 'manual', message: 'Username cannot be the same' })
+      return
+    }
+
     setServerError(null)
 
     try {
       const response = await mutation.mutateAsync(data.username)
-      setUser(response.user)
-      navigate({ to: '/' })
+      setUsername(response.username)
+      onSuccess?.()
+      reset()
     } catch (error) {
       const apiError = await getApiError(error)
       applyApiFormError({
@@ -55,5 +63,7 @@ export const useChangeUsernameForm = () => {
     onSubmit,
     isLoading: mutation.isPending,
     serverError,
+    isDirty,
+    isValid,
   }
 }
