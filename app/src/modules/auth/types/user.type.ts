@@ -7,12 +7,19 @@ export const SUBSCRIPTIONS = {
 
 export type Subscription = (typeof SUBSCRIPTIONS)[keyof typeof SUBSCRIPTIONS]
 
+export const AUTH_METHODS = {
+  CREDENTIALS: 'CREDENTIALS',
+  GOOGLE: 'GOOGLE',
+}
+
+export type AuthMethod = (typeof AUTH_METHODS)[keyof typeof AUTH_METHODS]
+
 export interface User {
   id: string
   email: string
   username: string | null
   displayName: string
   avatarUrl: string | null
-  method: 'CREDENTIALS' | 'GOOGLE'
+  method: AuthMethod
   subscription: Subscription
 }

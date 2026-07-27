@@ -4,11 +4,14 @@ import { toast } from 'sonner'
 import GoogleIcon from '~/common/assets/icons/google.svg?react'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
+import { AUTH_METHODS, useAuthStore } from '~/modules/auth'
 
 import { mockDelay } from '../utils/mock-delay'
 import { SettingsSection } from './SettingsSection'
 
 export const GoogleConnectionCard = () => {
+  const method = useAuthStore((state) => state.user?.method)
+
   const [isConnected, setIsConnected] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -22,6 +25,10 @@ export const GoogleConnectionCard = () => {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (method === AUTH_METHODS.GOOGLE) {
+    return
   }
 
   return (
