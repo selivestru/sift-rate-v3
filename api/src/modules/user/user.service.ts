@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common'
 
+import type { SafeUser } from './types/user.types'
 import { AuthMethod, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
@@ -46,5 +47,36 @@ export class UserService {
         method: AuthMethod.CREDENTIALS,
       },
     })
+  }
+
+  async createGoogleUser(data: { email: string; displayName: string; avatarUrl: string | null }) {
+    return this.prisma.user.create({
+      data: {
+        email: data.email,
+        displayName: data.displayName,
+        avatarUrl: data.avatarUrl,
+        method: AuthMethod.GOOGLE,
+      },
+    })
+  }
+
+  async updateUsername(userId: string, username: string): Promise<{ user: SafeUser }> {
+    const existing = await this.findByUsername(username)
+
+    if (existing && existing.id !== userId) {
+      throw new HttpException('Username already taken', 409)
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { username },
+    })
+
+    return { user: this.safeUser(user) }
+  }
+
+  private safeUser(user: User): SafeUser {
+    const { passwordHash: _, ...safeUser } = user
+    return safeUser
   }
 }

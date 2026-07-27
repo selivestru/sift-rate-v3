@@ -1,5 +1,5 @@
-import { LazyMotion, domAnimation } from 'motion/react'
+import { LazyMotion, domMax } from 'motion/react'
 
 export const MotionProvider = ({ children }: React.PropsWithChildren) => {
-  return <LazyMotion features={domAnimation}>{children}</LazyMotion>
+  return <LazyMotion features={domMax}>{children}</LazyMotion>
 }

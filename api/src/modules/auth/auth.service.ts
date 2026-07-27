@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config'
 import { SafeUser } from '../user/types/user.types'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
+import { GoogleOAuthService } from './google-oauth.service'
 import { argon2id, hash, verify } from 'argon2'
 import type { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly config: ConfigService<EnvConfig, true>,
+    private readonly googleOAuth: GoogleOAuthService,
   ) {}
 
   async register(req: Request, dto: RegisterDto): Promise<{ user: SafeUser }> {
@@ -60,6 +62,24 @@ export class AuthService {
     await this.saveSession(req, existing.id)
 
     return { user: this.safeUser(existing) }
+  }
+
+  async getGoogleAuthUrl(): Promise<{ url: string }> {
+    return this.googleOAuth.createAuthUrl()
+  }
+
+  async loginWithGoogle(req: Request, code: string, state: string): Promise<void> {
+    const profile = await this.googleOAuth.getProfile(code, state)
+
+    const existing = await this.userService.findByEmail(profile.email)
+
+    if (existing && existing.method !== AuthMethod.GOOGLE) {
+      throw new HttpException('Email already registered with credentials', 409)
+    }
+
+    const user = existing ?? (await this.userService.createGoogleUser(profile))
+
+    await this.saveSession(req, user.id)
   }
 
   async me(userId: string): Promise<{ user: SafeUser }> {

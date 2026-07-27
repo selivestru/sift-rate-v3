@@ -1,10 +1,24 @@
+import { useState } from 'react'
+
+import { toastApiError } from '~/common/api'
 import GoogleIcon from '~/common/assets/icons/google.svg?react'
-import { env } from '~/common/constants/env'
 import { Button } from '~/common/ui/Button'
 
+import { authApi } from '../api/auth.api'
+
 export const GoogleAuthButton = () => {
-  const handlePress = () => {
-    window.location.assign(`${env.VITE_BASE_URL}/auth/google`)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handlePress = async () => {
+    setIsLoading(true)
+
+    try {
+      const { url } = await authApi.getGoogleUrl()
+      window.location.assign(url)
+    } catch (error) {
+      setIsLoading(false)
+      await toastApiError(error)
+    }
   }
 
   return (
@@ -13,6 +27,7 @@ export const GoogleAuthButton = () => {
       type="button"
       variant="secondary"
       className="h-11"
+      isLoading={isLoading}
       startIcon={<GoogleIcon />}
       onClick={handlePress}
     >

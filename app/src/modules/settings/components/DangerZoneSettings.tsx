@@ -46,7 +46,6 @@ export const DangerZoneSettings = () => {
             <li>All reviews and ratings are removed</li>
             <li>Ranked lists and planned queue are removed</li>
             <li>Profile and username become unavailable</li>
-            <li>This scaffold only shows confirmation UI — no API call</li>
           </ul>
         </SettingsSection>
       </div>

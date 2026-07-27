@@ -10,6 +10,10 @@ export const envSchema = z.object({
 
   SESSION_SECRET: z.string(),
 
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+  GOOGLE_REDIRECT_URI: z.url(),
+
   TMDB_API_KEY: z.string(),
   IGDB_CLIENT_ID: z.string(),
   IGDB_CLIENT_SECRET: z.string(),

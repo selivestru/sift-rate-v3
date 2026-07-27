@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { emailSchema, passwordSchema, usernameSchema } from '~/modules/auth/schema/auth.schema'
+import { emailSchema, passwordSchema, usernameSchema } from '~/modules/user'
 
 export const changeEmailSchema = z.object({
   email: emailSchema,

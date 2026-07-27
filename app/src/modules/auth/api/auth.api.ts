@@ -14,6 +14,9 @@ export const authApi = {
   forgotPassword: (body: ForgotPasswordInput) => {
     return api.post('/auth/forgot-password', { json: body }).json()
   },
+  getGoogleUrl: () => {
+    return api.get<{ url: string }>('/auth/google/url').json()
+  },
   me: () => {
     return api.get<LoginResponse>('/auth/me').json()
   },

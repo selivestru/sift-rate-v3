@@ -15,7 +15,11 @@ export const useLogout = () => {
     mutationKey: ['logout'],
     mutationFn: authApi.logout,
     onMutate: () => {
-      if (location.pathname.startsWith('/library') || location.pathname.startsWith('/life')) {
+      if (
+        location.pathname.startsWith('/library') ||
+        location.pathname.startsWith('/life') ||
+        location.pathname.startsWith('/settings')
+      ) {
         navigate({ to: '/' })
       }
 
