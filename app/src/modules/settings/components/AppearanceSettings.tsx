@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion'
 import { Check, Monitor, Moon, Sun } from 'reicon-react'
 
 import {
@@ -88,6 +89,9 @@ export const AppearanceSettings = () => {
               const selected = accent === color
               return (
                 <button
+                  style={{
+                    '--accent-color': ACCENT_PREVIEW[color],
+                  }}
                   key={color}
                   type="button"
                   role="radio"
@@ -101,21 +105,30 @@ export const AppearanceSettings = () => {
                 >
                   <span
                     className={cn(
-                      'relative flex size-11 items-center justify-center rounded-full border-2 transition-shadow duration-300',
+                      'relative flex size-11 items-center justify-center rounded-full border-2 transition-[border-color,box-shadow] duration-300',
                       selected
-                        ? 'border-foreground'
+                        ? 'border-(--accent-color)'
                         : 'border-transparent group-hover:border-border',
                     )}
                   >
-                    <span
-                      className="size-8 rounded-full shadow-inner"
-                      style={{ backgroundColor: ACCENT_PREVIEW[color] }}
-                    />
-                    {selected && <Check className="absolute size-4 text-white drop-shadow-sm" />}
+                    <span className="size-8 rounded-full bg-(--accent-color) shadow-inner transition-[background-color] duration-300" />
+                    <AnimatePresence>
+                      {selected && (
+                        <motion.span
+                          initial={{ scale: 0.5, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0.5, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                          className="absolute"
+                        >
+                          <Check className="size-4 text-white drop-shadow-sm" />
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </span>
                   <span
                     className={cn(
-                      'text-xs font-medium',
+                      'text-xs font-medium transition-colors duration-300',
                       selected ? 'text-foreground' : 'text-muted-foreground',
                     )}
                   >

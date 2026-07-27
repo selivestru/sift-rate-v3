@@ -33,22 +33,22 @@
         root.style.colorScheme = resolved
 
         const accents = [
-          'blue',
-          'indigo',
-          'violet',
-          'emerald',
+          'red',
+          'orange',
+          'yellow',
+          'green',
           'teal',
           'cyan',
-          'orange',
-          'rose',
+          'blue',
+          'indigo',
+          'purple',
           'pink',
-          'amber',
         ]
         let accentStored = null
         try {
           accentStored = JSON.parse(localStorage.getItem('accent'))
         } catch (e) {}
-        const accent = accents.indexOf(accentStored) !== -1 ? accentStored : 'violet'
+        const accent = accents.indexOf(accentStored) !== -1 ? accentStored : 'purple'
         root.setAttribute('data-accent', accent)
       })()
     </script>

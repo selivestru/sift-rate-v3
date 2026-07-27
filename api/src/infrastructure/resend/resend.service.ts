@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
+import Welcome from './templates/welcome.template'
+import { pretty, render } from 'react-email'
 import { Resend } from 'resend'
 import { EnvConfig } from '~/app/config/env.config'
 
@@ -10,5 +12,18 @@ export class ResendService {
 
   constructor(readonly config: ConfigService<EnvConfig, true>) {
     this.resend = new Resend(config.get('RESEND_API_KEY', { infer: true }))
+  }
+
+  async sendWelcomeEmail(to: string, token: string) {
+    const origin = this.config.get('ORIGIN', { infer: true })
+    const verificationUrl = `${origin}/auth/verify?token=${token}`
+    const html = await pretty(await render(Welcome({ verificationUrl })))
+
+    await this.resend.emails.send({
+      from: 'SiftRate <onboarding@resend.dev>',
+      to,
+      subject: 'Welcome to SiftRate',
+      html,
+    })
   }
 }
