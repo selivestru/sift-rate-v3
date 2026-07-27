@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
+import { TwoFactorService } from '../two-factor/two-factor.service'
 import { SafeUser } from '../user/types/user.types'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
@@ -22,6 +23,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly googleOAuth: GoogleOAuthService,
+    private readonly twoFactorService: TwoFactorService,
   ) {}
 
   async register(req: Request, dto: RegisterDto): Promise<{ user: SafeUser }> {
@@ -62,6 +64,24 @@ export class AuthService {
 
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid credentials')
+    }
+
+    if (existing.twoFactorEnabled) {
+      if (!dto.twoFactorCode) {
+        throw new UnauthorizedException({
+          message: 'Two-factor authentication code is required',
+          code: 'TWO_FACTOR_REQUIRED',
+        })
+      }
+
+      const result = await this.twoFactorService.verifyStoredCode(existing.id, dto.twoFactorCode)
+
+      if (!result.valid) {
+        throw new UnauthorizedException({
+          message: 'Invalid two-factor authentication code',
+          code: 'INVALID_TWO_FACTOR_CODE',
+        })
+      }
     }
 
     await this.saveSession(req, existing.id)

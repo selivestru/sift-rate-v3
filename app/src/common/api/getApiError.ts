@@ -4,12 +4,14 @@ export interface ApiError {
   message: string
   fieldErrors?: Record<string, string>
   status?: number
+  code?: string
 }
 
 interface ApiErrorBody {
   message?: string | string[]
   errors?: Record<string, string | string[]>
   fieldErrors?: Record<string, string | string[]>
+  code?: string
 }
 
 const SERVER_UNAVAILABLE_MESSAGE = 'Server is unavailable. Please try again later.'
@@ -118,6 +120,7 @@ export const getApiError = async (err: unknown): Promise<ApiError> => {
     return {
       message: normalizeMessage(data?.message),
       fieldErrors: normalizeFieldErrors(data?.fieldErrors ?? data?.errors),
+      code: data?.code,
       status,
     }
   }
