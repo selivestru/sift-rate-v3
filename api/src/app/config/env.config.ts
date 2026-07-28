@@ -4,6 +4,7 @@ export const envSchema = z.object({
   PORT: z.coerce.number(),
   NODE_ENV: z.enum(['development', 'production', 'test']),
   ORIGIN: z.url(),
+  BACKEND_URL: z.url(),
 
   DATABASE_URL: z.string(),
   REDIS_URL: z.string(),

@@ -44,6 +44,7 @@ model User {
   avatarUrl        String?
   method           AuthMethod   @default(CREDENTIALS)
   subscription     Subscription @default(FREE)
+  isVerified       Boolean      @default(false)
   twoFactorEnabled Boolean      @default(false)
   twoFactorSecret  String?
   createdAt        DateTime     @default(now())
