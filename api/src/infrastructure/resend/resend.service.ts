@@ -15,9 +15,20 @@ export class ResendService {
   }
 
   async sendWelcomeEmail(to: string, token: string) {
-    const origin = this.config.get('ORIGIN', { infer: true })
-    const verificationUrl = `${origin}/auth/verify?token=${token}`
+    const backendUrl = this.config.get('BACKEND_URL', { infer: true })
+    const verificationUrl = `${backendUrl}/api/auth/verify?token=${token}`
     const html = await pretty(await render(Welcome({ verificationUrl })))
+
+    await this.resend.emails.send({
+      from: 'SiftRate <onboarding@resend.dev>',
+      to,
+      subject: 'Welcome to SiftRate',
+      html,
+    })
+  }
+
+  async sendGoogleWelcomeEmail(to: string) {
+    const html = await pretty(await render(Welcome({})))
 
     await this.resend.emails.send({
       from: 'SiftRate <onboarding@resend.dev>',

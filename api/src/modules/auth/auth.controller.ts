@@ -10,10 +10,12 @@ import {
   Res,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { seconds, Throttle } from '@nestjs/throttler'
 
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
+import { ResendVerificationDto } from './dto/resend-verification.dto'
 import type { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
 import { Public } from '~/common/decorators/public.decorator'
@@ -27,8 +29,8 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  register(@Req() req: Request, @Body() dto: RegisterDto) {
-    return this.authService.register(req, dto)
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto)
   }
 
   @Public()
@@ -80,5 +82,31 @@ export class AuthController {
   @HttpCode(204)
   logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.authService.logout(req, res)
+  }
+
+  @Public()
+  @Get('verify')
+  async verify(@Res() res: Response, @Query('token') token?: string) {
+    const origin = this.config.get('ORIGIN', { infer: true })
+
+    if (!token) {
+      return res.redirect(`${origin}/auth/verify?error=invalid_or_expired`)
+    }
+
+    try {
+      await this.authService.verifyEmail(token)
+
+      return res.redirect(`${origin}/auth/verify?success=true`)
+    } catch {
+      return res.redirect(`${origin}/auth/verify?error=invalid_or_expired`)
+    }
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Post('resend-verification')
+  @HttpCode(200)
+  resendVerification(@Body() dto: ResendVerificationDto) {
+    return this.authService.resendVerification(dto.email)
   }
 }

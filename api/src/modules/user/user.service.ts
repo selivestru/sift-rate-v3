@@ -56,7 +56,15 @@ export class UserService {
         displayName: data.displayName,
         avatarUrl: data.avatarUrl,
         method: AuthMethod.GOOGLE,
+        isVerified: true,
       },
+    })
+  }
+
+  async verifyUser(userId: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { isVerified: true },
     })
   }
 

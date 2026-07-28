@@ -7,7 +7,6 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
   pixelBasedPreset,
   Preview,
   Row,
@@ -17,15 +16,12 @@ import {
 } from 'react-email'
 
 interface WelcomeTemplateProps {
-  verificationUrl: string
+  verificationUrl?: string
 }
 
 const BRAND = '#9F38FF'
 
 export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
-  const url = new URL(verificationUrl)
-  const hostname = url.hostname
-
   return (
     <Html lang="en">
       <Tailwind
@@ -42,7 +38,11 @@ export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
       >
         <Head />
         <Body className="bg-[#f6f5fb] font-sans text-gray-900">
-          <Preview>Confirm your email to start using SiftRate.</Preview>
+          <Preview>
+            {verificationUrl
+              ? 'Confirm your email to start building your library.'
+              : 'Welcome to SiftRate'}
+          </Preview>
           <Container className="mx-auto my-[24px] w-full max-w-[560px] px-4 sm:my-[40px] sm:px-0">
             <Section className="w-full rounded-[8px] border border-gray-200 border-solid bg-white px-6 py-2 sm:px-10 sm:py-4">
               <Section className="mb-2 text-center">
@@ -53,11 +53,12 @@ export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
                 as="h1"
                 className="m-0 text-[20px] font-bold leading-[28px] text-gray-900 sm:text-[24px] sm:leading-[30px]"
               >
-                Welcome to SiftRate 👋
+                {verificationUrl ? 'Confirm your email' : 'Welcome to SiftRate'}
               </Heading>
               <Text className="m-0 mb-6 text-[14px] leading-[22px] text-gray-600 sm:text-[15px] sm:leading-[24px]">
-                Confirm your email address to finish setting up your account. Then you can rate
-                movies, games and books, discover picks, and share your taste with friends.
+                {verificationUrl
+                  ? 'Confirm your email to finish setting up your account. Then you can start rating anything you watch, play, read, or listen to.'
+                  : 'You can now start rating anything you watch, play, read, or listen to — and your library will follow you across devices.'}
               </Text>
 
               <Section className="mb-8">
@@ -67,8 +68,8 @@ export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
                   </Column>
                   <Column>
                     <Text className="m-0 text-[13px] leading-[20px] text-gray-700 sm:text-[14px] sm:leading-[24px]">
-                      <span className="font-semibold text-gray-900">Rate</span> anything in seconds
-                      — from blockbusters to deep cuts.
+                      <span className="font-semibold text-gray-900">Rate</span> — build a record of
+                      everything you&apos;ve watched, played, read, and listened to.
                     </Text>
                   </Column>
                 </Row>
@@ -78,8 +79,8 @@ export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
                   </Column>
                   <Column>
                     <Text className="m-0 text-[13px] leading-[20px] text-gray-700 sm:text-[14px] sm:leading-[24px]">
-                      <span className="font-semibold text-gray-900">Discover</span> picks matched to
-                      your taste, not the algorithm&apos;s noise.
+                      <span className="font-semibold text-gray-900">Discover</span> — search movies,
+                      shows, games, books, albums, and tracks all in one place.
                     </Text>
                   </Column>
                 </Row>
@@ -89,29 +90,32 @@ export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
                   </Column>
                   <Column>
                     <Text className="m-0 text-[13px] leading-[20px] text-gray-700 sm:text-[14px] sm:leading-[24px]">
-                      <span className="font-semibold text-gray-900">Share</span> your lists and see
-                      what your friends are loving right now.
+                      <span className="font-semibold text-gray-900">Share</span> — publish your
+                      reviews for friends or make them public.
                     </Text>
                   </Column>
                 </Row>
               </Section>
 
-              <Button
-                href={verificationUrl}
-                className="box-border block w-full rounded-[6px] bg-brand px-6 py-3 text-center text-[15px] font-medium text-white no-underline sm:px-7"
-              >
-                Confirm email
-              </Button>
+              {verificationUrl && (
+                <>
+                  <Text className="m-0 mb-6 text-[13px] leading-[17px] text-gray-400">
+                    This link expires in 24 hours.
+                  </Text>
+
+                  <Button
+                    href={verificationUrl}
+                    className="box-border block w-full rounded-[6px] bg-brand px-6 py-3 text-center text-[15px] font-medium text-white no-underline sm:px-7"
+                  >
+                    Confirm email
+                  </Button>
+                </>
+              )}
 
               <Hr className="my-8 border border-0 border-t border-solid border-gray-200" />
 
               <Text className="m-0 text-[13px] leading-[20px] text-gray-500">
-                You received this email because you created a SiftRate account. If this wasn&apos;t
-                you, you can safely ignore it — or visit{' '}
-                <Link href={verificationUrl} className="text-brand font-medium no-underline">
-                  {hostname}
-                </Link>{' '}
-                to learn more.
+                If you didn&apos;t create this account, you can safely ignore this email.
               </Text>
             </Section>
           </Container>
@@ -122,5 +126,5 @@ export default function Welcome({ verificationUrl }: WelcomeTemplateProps) {
 }
 
 Welcome.PreviewProps = {
-  verificationUrl: 'http://localhost:3000/auth/verify?token=abc123',
+  verificationUrl: 'http://localhost:5000/api/auth/verify?token=abc123',
 } satisfies WelcomeTemplateProps
