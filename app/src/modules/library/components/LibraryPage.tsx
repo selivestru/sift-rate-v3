@@ -49,7 +49,7 @@ export const LibraryPage = () => {
       </div>
 
       <p className="text-muted-foreground text-xs leading-relaxed">
-        Looking for something new? Head to Discover. Life holds the story behind the shelf.
+        Looking for something new? Head to Discover for what's next.
       </p>
     </div>
   )

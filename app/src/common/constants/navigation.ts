@@ -1,16 +1,4 @@
-import {
-  CalendarCheck,
-  Clock,
-  Compass,
-  Cup,
-  Gift,
-  Home,
-  Library,
-  SdCard,
-  Sparkles,
-  Star,
-  type IconComponent,
-} from 'reicon-react'
+import { CalendarCheck, Compass, Cup, Home, Library, Star, type IconComponent } from 'reicon-react'
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
 
@@ -119,43 +107,6 @@ export const navItems: NavItemConfig[] = [
       },
     ],
   },
-  {
-    to: '/life',
-    label: 'Life',
-    icon: Sparkles,
-    description: 'Your media life story',
-    authRequired: true,
-    subscriptionRequired: true,
-    children: [
-      {
-        to: '/life/timeline',
-        label: 'Timeline',
-        icon: Clock,
-        description: 'Walk through reviews as they happened in your life',
-        motif: 'Along the years',
-        authRequired: true,
-        subscriptionRequired: true,
-      },
-      {
-        to: '/life/wrapped',
-        label: 'Wrapped',
-        icon: Gift,
-        description: 'Monthly and yearly recaps of what shaped you',
-        motif: 'This season',
-        authRequired: true,
-        subscriptionRequired: true,
-      },
-      {
-        to: '/life/memories',
-        label: 'Memories',
-        icon: SdCard,
-        description: 'Moments you chose to keep close',
-        motif: 'Pinned moments',
-        authRequired: true,
-        subscriptionRequired: true,
-      },
-    ],
-  },
 ]
 
 export const getNavItem = (to: keyof FileRoutesByTo): NavItemConfig | undefined => {
@@ -179,11 +130,8 @@ export const requireNavItem = (to: keyof FileRoutesByTo): NavItemConfig => {
 
 export const discoverNav = requireNavItem('/discover')
 export const libraryNav = requireNavItem('/library')
-export const lifeNav = requireNavItem('/life')
-
 export const discoverChildren = discoverNav.children ?? []
 export const libraryChildren = libraryNav.children ?? []
-export const lifeChildren = lifeNav.children ?? []
 
 export const reviewsNavItem = requireNavItem('/library/reviews')
 export const rankedListNavItem = requireNavItem('/library/ranked-list')

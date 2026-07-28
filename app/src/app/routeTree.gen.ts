@@ -15,7 +15,6 @@ import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
 import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
-import { Route as AppLifeRouteRouteImport } from './routes/_app/life/route'
 import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
@@ -27,10 +26,6 @@ import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index
 import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
 import { Route as AppLibraryRankedListRouteImport } from './routes/_app/library/ranked-list'
 import { Route as AppLibraryReviewsRouteImport } from './routes/_app/library/reviews'
-import { Route as AppLifeIndexRouteImport } from './routes/_app/life/index'
-import { Route as AppLifeMemoriesRouteImport } from './routes/_app/life/memories'
-import { Route as AppLifeTimelineRouteImport } from './routes/_app/life/timeline'
-import { Route as AppLifeWrappedRouteImport } from './routes/_app/life/wrapped'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettings2faRouteImport } from './routes/_app/settings/2fa'
 import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
@@ -76,11 +71,6 @@ const AppUsernameRoute = AppUsernameRouteImport.update({
 const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
   id: '/library',
   path: '/library',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLifeRouteRoute = AppLifeRouteRouteImport.update({
-  id: '/life',
-  path: '/life',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
@@ -137,26 +127,6 @@ const AppLibraryReviewsRoute = AppLibraryReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
   getParentRoute: () => AppLibraryRouteRoute,
-} as any)
-const AppLifeIndexRoute = AppLifeIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppLifeRouteRoute,
-} as any)
-const AppLifeMemoriesRoute = AppLifeMemoriesRouteImport.update({
-  id: '/memories',
-  path: '/memories',
-  getParentRoute: () => AppLifeRouteRoute,
-} as any)
-const AppLifeTimelineRoute = AppLifeTimelineRouteImport.update({
-  id: '/timeline',
-  path: '/timeline',
-  getParentRoute: () => AppLifeRouteRoute,
-} as any)
-const AppLifeWrappedRoute = AppLifeWrappedRouteImport.update({
-  id: '/wrapped',
-  path: '/wrapped',
-  getParentRoute: () => AppLifeRouteRoute,
 } as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   id: '/',
@@ -255,7 +225,6 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/welcome': typeof WelcomeRoute
   '/library': typeof AppLibraryRouteRouteWithChildren
-  '/life': typeof AppLifeRouteRouteWithChildren
   '/settings': typeof AppSettingsRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -266,16 +235,12 @@ export interface FileRoutesByFullPath {
   '/library/planned': typeof AppLibraryPlannedRoute
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
-  '/life/memories': typeof AppLifeMemoriesRoute
-  '/life/timeline': typeof AppLifeTimelineRoute
-  '/life/wrapped': typeof AppLifeWrappedRoute
   '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/discover/': typeof AppDiscoverIndexRoute
   '/library/': typeof AppLibraryIndexRoute
-  '/life/': typeof AppLifeIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
   '/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
   '/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
@@ -302,16 +267,12 @@ export interface FileRoutesByTo {
   '/library/planned': typeof AppLibraryPlannedRoute
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
-  '/life/memories': typeof AppLifeMemoriesRoute
-  '/life/timeline': typeof AppLifeTimelineRoute
-  '/life/wrapped': typeof AppLifeWrappedRoute
   '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/discover': typeof AppDiscoverIndexRoute
   '/library': typeof AppLibraryIndexRoute
-  '/life': typeof AppLifeIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
   '/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
@@ -332,7 +293,6 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/_app/library': typeof AppLibraryRouteRouteWithChildren
-  '/_app/life': typeof AppLifeRouteRouteWithChildren
   '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -344,16 +304,12 @@ export interface FileRoutesById {
   '/_app/library/planned': typeof AppLibraryPlannedRoute
   '/_app/library/ranked-list': typeof AppLibraryRankedListRoute
   '/_app/library/reviews': typeof AppLibraryReviewsRoute
-  '/_app/life/memories': typeof AppLifeMemoriesRoute
-  '/_app/life/timeline': typeof AppLifeTimelineRoute
-  '/_app/life/wrapped': typeof AppLifeWrappedRoute
   '/_app/settings/2fa': typeof AppSettings2faRoute
   '/_app/settings/account': typeof AppSettingsAccountRoute
   '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
   '/_app/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/_app/discover/': typeof AppDiscoverIndexRoute
   '/_app/library/': typeof AppLibraryIndexRoute
-  '/_app/life/': typeof AppLifeIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/discover/album/$externalId': typeof AppDiscoverAlbumExternalIdRoute
   '/_app/discover/book/$externalId': typeof AppDiscoverBookExternalIdRoute
@@ -375,7 +331,6 @@ export interface FileRouteTypes {
     | '/'
     | '/welcome'
     | '/library'
-    | '/life'
     | '/settings'
     | '/$username'
     | '/auth/callback'
@@ -386,16 +341,12 @@ export interface FileRouteTypes {
     | '/library/planned'
     | '/library/ranked-list'
     | '/library/reviews'
-    | '/life/memories'
-    | '/life/timeline'
-    | '/life/wrapped'
     | '/settings/2fa'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/danger-zone'
     | '/discover/'
     | '/library/'
-    | '/life/'
     | '/settings/'
     | '/discover/album/$externalId'
     | '/discover/book/$externalId'
@@ -422,16 +373,12 @@ export interface FileRouteTypes {
     | '/library/planned'
     | '/library/ranked-list'
     | '/library/reviews'
-    | '/life/memories'
-    | '/life/timeline'
-    | '/life/wrapped'
     | '/settings/2fa'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/danger-zone'
     | '/discover'
     | '/library'
-    | '/life'
     | '/settings'
     | '/discover/album/$externalId'
     | '/discover/book/$externalId'
@@ -451,7 +398,6 @@ export interface FileRouteTypes {
     | '/_app'
     | '/welcome'
     | '/_app/library'
-    | '/_app/life'
     | '/_app/settings'
     | '/_app/$username'
     | '/auth/callback'
@@ -463,16 +409,12 @@ export interface FileRouteTypes {
     | '/_app/library/planned'
     | '/_app/library/ranked-list'
     | '/_app/library/reviews'
-    | '/_app/life/memories'
-    | '/_app/life/timeline'
-    | '/_app/life/wrapped'
     | '/_app/settings/2fa'
     | '/_app/settings/account'
     | '/_app/settings/appearance'
     | '/_app/settings/danger-zone'
     | '/_app/discover/'
     | '/_app/library/'
-    | '/_app/life/'
     | '/_app/settings/'
     | '/_app/discover/album/$externalId'
     | '/_app/discover/book/$externalId'
@@ -536,13 +478,6 @@ declare module '@tanstack/react-router' {
       path: '/library'
       fullPath: '/library'
       preLoaderRoute: typeof AppLibraryRouteRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/life': {
-      id: '/_app/life'
-      path: '/life'
-      fullPath: '/life'
-      preLoaderRoute: typeof AppLifeRouteRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings': {
@@ -621,34 +556,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/library/reviews'
       preLoaderRoute: typeof AppLibraryReviewsRouteImport
       parentRoute: typeof AppLibraryRouteRoute
-    }
-    '/_app/life/': {
-      id: '/_app/life/'
-      path: '/'
-      fullPath: '/life/'
-      preLoaderRoute: typeof AppLifeIndexRouteImport
-      parentRoute: typeof AppLifeRouteRoute
-    }
-    '/_app/life/memories': {
-      id: '/_app/life/memories'
-      path: '/memories'
-      fullPath: '/life/memories'
-      preLoaderRoute: typeof AppLifeMemoriesRouteImport
-      parentRoute: typeof AppLifeRouteRoute
-    }
-    '/_app/life/timeline': {
-      id: '/_app/life/timeline'
-      path: '/timeline'
-      fullPath: '/life/timeline'
-      preLoaderRoute: typeof AppLifeTimelineRouteImport
-      parentRoute: typeof AppLifeRouteRoute
-    }
-    '/_app/life/wrapped': {
-      id: '/_app/life/wrapped'
-      path: '/wrapped'
-      fullPath: '/life/wrapped'
-      preLoaderRoute: typeof AppLifeWrappedRouteImport
-      parentRoute: typeof AppLifeRouteRoute
     }
     '/_app/settings/': {
       id: '/_app/settings/'
@@ -810,24 +717,6 @@ const AppLibraryRouteRouteWithChildren = AppLibraryRouteRoute._addFileChildren(
   AppLibraryRouteRouteChildren,
 )
 
-interface AppLifeRouteRouteChildren {
-  AppLifeMemoriesRoute: typeof AppLifeMemoriesRoute
-  AppLifeTimelineRoute: typeof AppLifeTimelineRoute
-  AppLifeWrappedRoute: typeof AppLifeWrappedRoute
-  AppLifeIndexRoute: typeof AppLifeIndexRoute
-}
-
-const AppLifeRouteRouteChildren: AppLifeRouteRouteChildren = {
-  AppLifeMemoriesRoute: AppLifeMemoriesRoute,
-  AppLifeTimelineRoute: AppLifeTimelineRoute,
-  AppLifeWrappedRoute: AppLifeWrappedRoute,
-  AppLifeIndexRoute: AppLifeIndexRoute,
-}
-
-const AppLifeRouteRouteWithChildren = AppLifeRouteRoute._addFileChildren(
-  AppLifeRouteRouteChildren,
-)
-
 interface AppSettingsRouteRouteChildren {
   AppSettings2faRoute: typeof AppSettings2faRoute
   AppSettingsAccountRoute: typeof AppSettingsAccountRoute
@@ -849,7 +738,6 @@ const AppSettingsRouteRouteWithChildren =
 
 interface AppRouteChildren {
   AppLibraryRouteRoute: typeof AppLibraryRouteRouteWithChildren
-  AppLifeRouteRoute: typeof AppLifeRouteRouteWithChildren
   AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -870,7 +758,6 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppLibraryRouteRoute: AppLibraryRouteRouteWithChildren,
-  AppLifeRouteRoute: AppLifeRouteRouteWithChildren,
   AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
   AppIndexRoute: AppIndexRoute,
