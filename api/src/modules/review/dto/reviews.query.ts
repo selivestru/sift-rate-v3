@@ -21,6 +21,7 @@ export const REVIEW_SORT = {
 export type ReviewSort = (typeof REVIEW_SORT)[keyof typeof REVIEW_SORT]
 
 export class ReviewsQueryDto {
+  @Trim()
   @IsOptional()
   @IsString()
   @MinLength(1)

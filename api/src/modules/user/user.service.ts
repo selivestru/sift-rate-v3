@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 
-import { AuthMethod, User } from '~/generated/prisma/client'
+import { normalizeEmail } from '~/common/utils/email'
+import { AuthMethod, Prisma, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
 @Injectable()
@@ -19,27 +20,27 @@ export class UserService {
     return user
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
-      where: { email },
+      where: { email: normalizeEmail(email) },
     })
   }
 
-  async findByUsername(username: string): Promise<User | null> {
+  findByUsername(username: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { username },
     })
   }
 
-  async create(data: {
+  create(data: {
     email: string
     displayName: string
     username: string
     passwordHash: string
-  }) {
+  }): Promise<User> {
     return this.prisma.user.create({
       data: {
-        email: data.email,
+        email: normalizeEmail(data.email),
         displayName: data.displayName,
         username: data.username,
         passwordHash: data.passwordHash,
@@ -48,10 +49,14 @@ export class UserService {
     })
   }
 
-  async createGoogleUser(data: { email: string; displayName: string; avatarUrl: string | null }) {
+  createGoogleUser(data: {
+    email: string
+    displayName: string | null
+    avatarUrl: string | null
+  }): Promise<User> {
     return this.prisma.user.create({
       data: {
-        email: data.email,
+        email: normalizeEmail(data.email),
         displayName: data.displayName,
         avatarUrl: data.avatarUrl,
         method: AuthMethod.GOOGLE,
@@ -60,10 +65,22 @@ export class UserService {
     })
   }
 
-  async verifyUser(userId: string): Promise<void> {
-    await this.prisma.user.update({
+  verifyUser(userId: string): Promise<User> {
+    return this.prisma.user.update({
       where: { id: userId },
       data: { isVerified: true },
+    })
+  }
+
+  updateTwoFactor(
+    userId: string,
+    data: Pick<Prisma.UserUpdateInput, 'twoFactorEnabled' | 'twoFactorSecret'>,
+  ): Promise<User> {
+    return this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data,
     })
   }
 

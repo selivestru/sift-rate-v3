@@ -1,7 +1,8 @@
 import { ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 
+import { UserService } from '../user/user.service'
 import { generateSecret, generateURI as generateTOTPURI, verifySync } from 'otplib'
-import { PrismaService } from '~/infrastructure/prisma/prisma.service'
+import { AuthMethod } from '~/generated/prisma/client'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
@@ -9,25 +10,24 @@ export class TwoFactorService {
   private readonly logger = new Logger(TwoFactorService.name)
 
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly userService: UserService,
     private readonly redis: RedisService,
   ) {}
 
   async setup(userId: string, email: string) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        twoFactorEnabled: true,
-      },
-    })
+    const user = await this.userService.findById(userId)
 
-    if (user?.twoFactorEnabled) {
+    if (user.method === AuthMethod.GOOGLE) {
+      throw new ConflictException(
+        'Two-factor authentication is only available for credentials accounts',
+      )
+    }
+
+    if (user.twoFactorEnabled) {
       throw new ConflictException('Two-factor authentication is already enabled')
     }
 
-    const savedSecret = await this.redis.get(`2fa:${userId}`)
+    const savedSecret = await this.redis.get(`2fa:${user.id}`)
 
     if (savedSecret) {
       return {
@@ -40,7 +40,7 @@ export class TwoFactorService {
 
     const otpauthUrl = this.generateURI(secret, email)
 
-    await this.redis.set(`2fa:${userId}`, secret, 'EX', 60 * 15)
+    await this.redis.set(`2fa:${user.id}`, secret, 'EX', 60 * 15)
 
     return {
       otpauthUrl,
@@ -61,39 +61,23 @@ export class TwoFactorService {
       throw new UnauthorizedException('Invalid code or secret')
     }
 
-    const [user] = await Promise.all([
-      this.prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          twoFactorEnabled: true,
-          twoFactorSecret: savedSecret,
-        },
-        select: {
-          twoFactorEnabled: true,
-        },
+    const [updatedUser] = await Promise.all([
+      this.userService.updateTwoFactor(userId, {
+        twoFactorEnabled: true,
+        twoFactorSecret: savedSecret,
       }),
       this.redis.del(`2fa:${userId}`),
     ])
 
     this.logger.log(`2FA enabled for user ${userId}`)
 
-    return user
+    return updatedUser
   }
 
   async disable(userId: string, code: string) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        twoFactorEnabled: true,
-        twoFactorSecret: true,
-      },
-    })
+    const user = await this.userService.findById(userId)
 
-    if (!user?.twoFactorSecret) {
+    if (!user.twoFactorSecret) {
       throw new UnauthorizedException('Secret not found')
     }
 
@@ -103,17 +87,9 @@ export class TwoFactorService {
       throw new UnauthorizedException('Invalid code or secret')
     }
 
-    const updatedUser = await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        twoFactorEnabled: false,
-        twoFactorSecret: null,
-      },
-      select: {
-        twoFactorEnabled: true,
-      },
+    const updatedUser = await this.userService.updateTwoFactor(userId, {
+      twoFactorEnabled: false,
+      twoFactorSecret: null,
     })
 
     this.logger.log(`2FA disabled for user ${userId}`)
@@ -122,17 +98,9 @@ export class TwoFactorService {
   }
 
   async verifyStoredCode(userId: string, code: string) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        twoFactorEnabled: true,
-        twoFactorSecret: true,
-      },
-    })
+    const user = await this.userService.findById(userId)
 
-    if (!user?.twoFactorEnabled || !user.twoFactorSecret) {
+    if (!user.twoFactorEnabled || !user.twoFactorSecret) {
       return { valid: false }
     }
 

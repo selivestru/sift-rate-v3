@@ -5,6 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 
 import { AppModule } from './app.module'
 import { EnvConfig } from './app/config/env.config'
+import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter'
 import { RedisService } from './infrastructure/redis/redis.service'
 import RedisStore from 'connect-redis'
 import cookieParser from 'cookie-parser'
@@ -18,6 +19,8 @@ async function bootstrap() {
 
   const config = app.get(ConfigService<EnvConfig, true>)
   const redis = app.get(RedisService)
+
+  app.useGlobalFilters(new PrismaClientExceptionFilter())
 
   const isProd = config.get('NODE_ENV', { infer: true }) === 'production'
 
@@ -39,6 +42,7 @@ async function bootstrap() {
       name: isProd ? '__Host-sid' : 'sid',
       secret: config.get('SESSION_SECRET', { infer: true }),
       resave: false,
+      rolling: true,
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
@@ -54,7 +58,7 @@ async function bootstrap() {
     origin: config.get('ORIGIN', { infer: true }),
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'X-CSRF-Token'],
+    allowedHeaders: ['Content-Type'],
   })
 
   app.useGlobalPipes(

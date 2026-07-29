@@ -5,12 +5,11 @@ import sharp from 'sharp'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { S3Service } from '~/infrastructure/s3/s3.service'
 
-const FETCH_TIMEOUT_MS = 15_000
-const MAX_IMAGE_BYTES = 10 * 1024 * 1024
-
 @Injectable()
 export class PosterIngestService {
   private readonly logger = new Logger(PosterIngestService.name)
+  private readonly FETCH_TIMEOUT_MS = 15_000
+  private readonly MAX_IMAGE_BYTES = 10 * 1024 * 1024
 
   constructor(
     private readonly prisma: PrismaService,
@@ -80,7 +79,7 @@ export class PosterIngestService {
     }
 
     const response = await ky(url, {
-      timeout: FETCH_TIMEOUT_MS,
+      timeout: this.FETCH_TIMEOUT_MS,
       headers: {
         Accept: 'image/*,*/*;q=0.8',
       },
@@ -89,7 +88,7 @@ export class PosterIngestService {
           ({ response }) => {
             const contentLength = response.headers.get('content-length')
 
-            if (contentLength && Number(contentLength) > MAX_IMAGE_BYTES) {
+            if (contentLength && Number(contentLength) > this.MAX_IMAGE_BYTES) {
               throw new Error(`Poster too large: content-length ${contentLength}`)
             }
 
@@ -105,7 +104,7 @@ export class PosterIngestService {
 
     const arrayBuffer = await response.arrayBuffer()
 
-    if (arrayBuffer.byteLength > MAX_IMAGE_BYTES) {
+    if (arrayBuffer.byteLength > this.MAX_IMAGE_BYTES) {
       throw new Error(`Poster too large: ${arrayBuffer.byteLength} bytes`)
     }
 

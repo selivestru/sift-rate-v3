@@ -9,6 +9,7 @@ import { Reflector } from '@nestjs/core'
 
 import { Request } from 'express'
 import { IS_PUBLIC_KEY } from '~/common/decorators/public.decorator'
+import { SessionService } from '~/modules/session/session.service'
 import { UserService } from '~/modules/user/user.service'
 
 @Injectable()
@@ -16,6 +17,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly userService: UserService,
+    private readonly sessionService: SessionService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -28,8 +30,8 @@ export class AuthGuard implements CanActivate {
       return true
     }
 
-    const request = context.switchToHttp().getRequest<Request>()
-    const userId = request.session?.userId
+    const req = context.switchToHttp().getRequest<Request>()
+    const userId = req.session?.userId
 
     if (!userId) {
       throw new UnauthorizedException()
@@ -38,7 +40,15 @@ export class AuthGuard implements CanActivate {
     try {
       const user = await this.userService.findById(userId)
 
-      request.user = {
+      if (!user.isVerified) {
+        await this.sessionService.destroy(req)
+        throw new UnauthorizedException({
+          message: 'Please verify your email before logging in',
+          code: 'EMAIL_NOT_VERIFIED',
+        })
+      }
+
+      req.user = {
         userId: user.id,
         email: user.email,
         username: user.username,
@@ -48,6 +58,7 @@ export class AuthGuard implements CanActivate {
       return true
     } catch (error) {
       if (error instanceof NotFoundException) {
+        await this.sessionService.destroy(req)
         throw new UnauthorizedException()
       }
 

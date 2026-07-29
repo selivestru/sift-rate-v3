@@ -28,6 +28,7 @@ export class AuthController {
   ) {}
 
   @Public()
+  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
   @Post('register')
   register(@Body() dto: RegisterDto) {
     return this.authService.register(dto)
@@ -86,7 +87,7 @@ export class AuthController {
 
   @Public()
   @Get('verify')
-  async verify(@Res() res: Response, @Query('token') token?: string) {
+  async verifyEmail(@Req() req: Request, @Res() res: Response, @Query('token') token?: string) {
     const origin = this.config.get('ORIGIN', { infer: true })
 
     if (!token) {
@@ -94,9 +95,9 @@ export class AuthController {
     }
 
     try {
-      await this.authService.verifyEmail(token)
+      await this.authService.verifyEmail(req, token)
 
-      return res.redirect(`${origin}/auth/verify?success=true`)
+      return res.redirect(`${origin}/auth/callback`)
     } catch {
       return res.redirect(`${origin}/auth/verify?error=invalid_or_expired`)
     }

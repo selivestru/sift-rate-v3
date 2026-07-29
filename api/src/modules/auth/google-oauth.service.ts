@@ -6,18 +6,17 @@ import { randomBytes } from 'node:crypto'
 import { EnvConfig } from '~/app/config/env.config'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
-const STATE_PREFIX = 'oauth:state:'
-const STATE_TTL_SECONDS = 600
-
 export type GoogleProfile = {
   email: string
-  displayName: string
+  displayName: string | null
   avatarUrl: string | null
 }
 
 @Injectable()
 export class GoogleOAuthService {
   private readonly client: OAuth2Client
+  private readonly STATE_PREFIX = 'oauth:state:'
+  private readonly STATE_TTL_SECONDS = 600
 
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
@@ -33,7 +32,7 @@ export class GoogleOAuthService {
   async createAuthUrl(): Promise<{ url: string }> {
     const state = randomBytes(32).toString('base64url')
 
-    await this.redis.set(STATE_PREFIX + state, '1', 'EX', STATE_TTL_SECONDS)
+    await this.redis.set(this.STATE_PREFIX + state, '1', 'EX', this.STATE_TTL_SECONDS)
 
     const url = this.client.generateAuthUrl({
       access_type: 'online',
@@ -45,7 +44,7 @@ export class GoogleOAuthService {
   }
 
   async getProfile(code: string, state: string): Promise<GoogleProfile> {
-    const storedState = await this.redis.getdel(STATE_PREFIX + state)
+    const storedState = await this.redis.getdel(this.STATE_PREFIX + state)
 
     if (!storedState) {
       throw new BadRequestException('Invalid or expired OAuth state')
@@ -70,7 +69,7 @@ export class GoogleOAuthService {
 
     return {
       email: payload.email,
-      displayName: payload.name ?? payload.email,
+      displayName: payload.name ?? null,
       avatarUrl: payload.picture ?? null,
     }
   }

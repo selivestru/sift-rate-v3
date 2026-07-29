@@ -15,6 +15,7 @@ import { MediaModule } from './modules/media/media.module'
 import { PlannedModule } from './modules/planned/planned.module'
 import { RankedListModule } from './modules/ranked-list/ranked-list.module'
 import { ReviewModule } from './modules/review/review.module'
+import { SessionModule } from './modules/session/session.module'
 import { TwoFactorModule } from './modules/two-factor/two-factor.module'
 import { UserModule } from './modules/user/user.module'
 
@@ -50,16 +51,17 @@ import { UserModule } from './modules/user/user.module'
     RankedListModule,
     ResendModule,
     TwoFactorModule,
+    SessionModule,
   ],
   controllers: [],
   providers: [
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: ThrottlerGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: AuthGuard,
     },
   ],
 })

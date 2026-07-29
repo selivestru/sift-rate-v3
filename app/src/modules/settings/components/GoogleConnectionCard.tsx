@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import GoogleIcon from '~/common/assets/icons/google.svg?react'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
-import { AUTH_METHODS, useAuthStore } from '~/modules/auth'
+import { AUTH_METHOD, useAuthStore } from '~/modules/auth'
 
 import { mockDelay } from '../utils/mock-delay'
 import { SettingsSection } from './SettingsSection'
@@ -27,7 +27,7 @@ export const GoogleConnectionCard = () => {
     }
   }
 
-  if (method === AUTH_METHODS.GOOGLE) {
+  if (method === AUTH_METHOD.GOOGLE) {
     return
   }
 

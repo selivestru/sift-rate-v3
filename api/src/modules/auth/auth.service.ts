@@ -2,13 +2,13 @@ import { InjectQueue } from '@nestjs/bullmq'
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   Logger,
   ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
+import { SessionService } from '../session/session.service'
 import { TwoFactorService } from '../two-factor/two-factor.service'
 import { SafeUser } from '../user/types/user.types'
 import { LoginDto } from './dto/login.dto'
@@ -28,10 +28,9 @@ import {
 } from '~/infrastructure/resend/constants/email-queue'
 import { UserService } from '~/modules/user/user.service'
 
-const VERIFICATION_TTL = 86_400
-
 @Injectable()
 export class AuthService {
+  private readonly VERIFICATION_TTL = 86_400
   private readonly logger = new Logger(AuthService.name)
 
   constructor(
@@ -40,6 +39,7 @@ export class AuthService {
     private readonly googleOAuth: GoogleOAuthService,
     private readonly twoFactorService: TwoFactorService,
     private readonly redis: RedisService,
+    private readonly sessionService: SessionService,
     @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
   ) {}
 
@@ -47,13 +47,13 @@ export class AuthService {
     const existingEmail = await this.userService.findByEmail(dto.email)
 
     if (existingEmail) {
-      throw new ConflictException('Email already taken')
+      throw new ConflictException('Account with this email or username already exists')
     }
 
     const existingUsername = await this.userService.findByUsername(dto.username)
 
     if (existingUsername) {
-      throw new ConflictException('Username already taken')
+      throw new ConflictException('Account with this email or username already exists')
     }
 
     const passwordHash = (await hash(dto.password, { type: argon2id })) as string
@@ -67,8 +67,8 @@ export class AuthService {
 
     const token = randomBytes(32).toString('base64url')
 
-    await this.redis.set(`email_verify:${user.id}`, token, 'EX', VERIFICATION_TTL)
-    await this.redis.set(`email_verify_token:${token}`, user.id, 'EX', VERIFICATION_TTL)
+    await this.redis.set(`email_verify:${user.id}`, token, 'EX', this.VERIFICATION_TTL)
+    await this.redis.set(`email_verify_token:${token}`, user.id, 'EX', this.VERIFICATION_TTL)
 
     try {
       await this.emailQueue.add(
@@ -80,9 +80,11 @@ export class AuthService {
         },
       )
     } catch {
-      throw new ServiceUnavailableException(
-        'Service temporarily unavailable. You can request a new verification email later.',
-      )
+      throw new ServiceUnavailableException({
+        message:
+          'Your account was created but the verification email could not be sent. Use "Resend verification email" to receive a new link.',
+        code: 'REGISTRATION_PENDING_VERIFICATION',
+      })
     }
 
     return { message: 'Check your email to confirm your account' }
@@ -126,7 +128,7 @@ export class AuthService {
       }
     }
 
-    await this.createSession(req, existing.id)
+    await this.sessionService.create(req, existing.id)
 
     return { user: this.safeUser(existing) }
   }
@@ -146,7 +148,7 @@ export class AuthService {
 
     const user = existing ?? (await this.userService.createGoogleUser(profile))
 
-    await this.createSession(req, user.id)
+    await this.sessionService.create(req, user.id)
 
     if (!existing) {
       try {
@@ -164,18 +166,15 @@ export class AuthService {
     }
   }
 
-  async verifyEmail(token: string): Promise<void> {
-    const userId = await this.redis.get(`email_verify_token:${token}`)
+  async verifyEmail(req: Request, token: string): Promise<void> {
+    const userId = await this.redis.getdel(`email_verify_token:${token}`)
 
     if (!userId) {
       throw new UnauthorizedException('Invalid or expired verification token')
     }
 
-    await Promise.all([
-      this.redis.del(`email_verify:${userId}`),
-      this.redis.del(`email_verify_token:${token}`),
-      this.userService.verifyUser(userId),
-    ])
+    await this.userService.verifyUser(userId)
+    await this.sessionService.create(req, userId)
   }
 
   async resendVerification(email: string): Promise<{ message: string }> {
@@ -198,8 +197,8 @@ export class AuthService {
 
     const token = randomBytes(32).toString('base64url')
 
-    await this.redis.set(`email_verify:${user.id}`, token, 'EX', VERIFICATION_TTL)
-    await this.redis.set(`email_verify_token:${token}`, user.id, 'EX', VERIFICATION_TTL)
+    await this.redis.set(`email_verify:${user.id}`, token, 'EX', this.VERIFICATION_TTL)
+    await this.redis.set(`email_verify_token:${token}`, user.id, 'EX', this.VERIFICATION_TTL)
 
     try {
       await this.emailQueue.add(
@@ -227,16 +226,7 @@ export class AuthService {
     const isProd = this.config.get('NODE_ENV', { infer: true }) === 'production'
     const cookieName = isProd ? '__Host-sid' : 'sid'
 
-    await new Promise<void>((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) {
-          reject(new InternalServerErrorException('Failed to destroy session'))
-          return
-        }
-
-        resolve()
-      })
-    })
+    await this.sessionService.destroy(req)
 
     res.clearCookie(cookieName, {
       path: '/',
@@ -249,20 +239,5 @@ export class AuthService {
   private safeUser(user: User): SafeUser {
     const { passwordHash: _, twoFactorSecret: __, ...safeUser } = user
     return safeUser
-  }
-
-  private createSession(req: Request, userId: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      req.session.regenerate((err) => {
-        if (err) {
-          reject(new InternalServerErrorException('Failed to save session'))
-          return
-        }
-
-        req.session.userId = userId
-
-        resolve()
-      })
-    })
   }
 }

@@ -9,7 +9,7 @@ export const envSchema = z.object({
   DATABASE_URL: z.string(),
   REDIS_URL: z.string(),
 
-  SESSION_SECRET: z.string(),
+  SESSION_SECRET: z.string().min(32),
 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),

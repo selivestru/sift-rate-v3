@@ -8,8 +8,8 @@ import {
   Max,
   MaxLength,
   Min,
-  ValidateIf,
 } from 'class-validator'
+import { Trim } from '~/common/decorators/trim.decorator'
 import { Visibility } from '~/generated/prisma/enums'
 
 export class UpdateReviewDto {
@@ -20,7 +20,8 @@ export class UpdateReviewDto {
   @Max(10)
   rating?: number
 
-  @ValidateIf((_, value) => value !== null)
+  @Trim()
+  @IsOptional()
   @IsString()
   @MaxLength(1000)
   content?: string | null
