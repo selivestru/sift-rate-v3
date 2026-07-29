@@ -4,4 +4,6 @@ export interface LoginResponse {
   user: User
 }
 
-export type RegisterResponse = LoginResponse
+export interface RegisterResponse {
+  message: string
+}

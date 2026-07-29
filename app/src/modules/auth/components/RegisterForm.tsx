@@ -1,5 +1,14 @@
 import { Link } from '@tanstack/react-router'
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '~/common/ui/AlertDialog'
 import { Button } from '~/common/ui/Button'
 
 import { useRegisterForm } from '../hooks/useRegisterForm'
@@ -11,78 +20,99 @@ import { GoogleAuthButton } from './GoogleAuthButton'
 import { PasswordField } from './PasswordField'
 
 export const RegisterForm = () => {
-  const { register, onSubmit, isLoading, errors, serverError } = useRegisterForm()
+  const { register, onSubmit, isLoading, errors, serverError, emailVerificationDialog } =
+    useRegisterForm()
 
   return (
-    <div className="flex flex-col gap-6">
-      <AuthFormHeader
-        title="Create your account"
-        subtitle="Start building your media life archive"
-      />
-
-      <GoogleAuthButton />
-
-      <AuthDivider />
-
-      <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-        {serverError && <AuthFormAlert message={serverError} />}
-
-        <AuthTextField
-          label="Email"
-          type="email"
-          autoComplete="email"
-          placeholder="Enter your email"
-          error={errors.email}
-          {...register('email')}
+    <>
+      <div className="flex flex-col gap-6">
+        <AuthFormHeader
+          title="Create your account"
+          subtitle="Start building your media life archive"
         />
 
-        <AuthTextField
-          label="Username"
-          type="text"
-          autoComplete="username"
-          placeholder="Enter your username"
-          error={errors.username}
-          {...register('username')}
-        />
+        <GoogleAuthButton />
 
-        <AuthTextField
-          label="Display name"
-          type="text"
-          autoComplete="name"
-          placeholder="Enter your display name"
-          error={errors.displayName}
-          {...register('displayName')}
-        />
+        <AuthDivider />
 
-        <PasswordField
-          label="Password"
-          autoComplete="new-password"
-          placeholder="Enter your password"
-          error={errors.password}
-          {...register('password')}
-        />
+        <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
+          {serverError && <AuthFormAlert message={serverError} />}
 
-        <PasswordField
-          label="Confirm password"
-          autoComplete="new-password"
-          placeholder="Confirm your password"
-          error={errors.confirmPassword}
-          {...register('confirmPassword')}
-        />
+          <AuthTextField
+            label="Email"
+            type="email"
+            autoComplete="email"
+            placeholder="Enter your email"
+            error={errors.email}
+            {...register('email')}
+          />
 
-        <Button type="submit" fullWidth isLoading={isLoading}>
-          {isLoading ? 'Creating account…' : 'Create account'}
-        </Button>
-      </form>
+          <AuthTextField
+            label="Username"
+            type="text"
+            autoComplete="username"
+            placeholder="Enter your username"
+            error={errors.username}
+            {...register('username')}
+          />
 
-      <div>
-        <p className="text-muted-foreground text-center text-sm">
-          Already have an account?{' '}
-          <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
-            Sign in
-          </Link>
-        </p>
+          <AuthTextField
+            label="Display name"
+            type="text"
+            autoComplete="name"
+            placeholder="Enter your display name"
+            error={errors.displayName}
+            {...register('displayName')}
+          />
+
+          <PasswordField
+            label="Password"
+            autoComplete="new-password"
+            placeholder="Enter your password"
+            error={errors.password}
+            {...register('password')}
+          />
+
+          <PasswordField
+            label="Confirm password"
+            autoComplete="new-password"
+            placeholder="Confirm your password"
+            error={errors.confirmPassword}
+            {...register('confirmPassword')}
+          />
+
+          <Button type="submit" fullWidth isLoading={isLoading}>
+            {isLoading ? 'Creating account…' : 'Create account'}
+          </Button>
+        </form>
+
+        <div>
+          <p className="text-muted-foreground text-center text-sm">
+            Already have an account?{' '}
+            <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
+
+      <AlertDialog
+        open={emailVerificationDialog.opened}
+        onOpenChange={emailVerificationDialog.toggle}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Verify your email address</AlertDialogTitle>
+            <AlertDialogDescription>
+              We've sent a verification email to your email address. Open the email and click the
+              verification link to activate your account and sign in.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

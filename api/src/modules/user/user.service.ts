@@ -1,6 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 
-import type { SafeUser } from './types/user.types'
 import { AuthMethod, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
@@ -81,10 +80,5 @@ export class UserService {
     })
 
     return { username }
-  }
-
-  private safeUser(user: User): SafeUser {
-    const { passwordHash: _, ...safeUser } = user
-    return safeUser
   }
 }

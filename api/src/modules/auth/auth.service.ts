@@ -126,7 +126,7 @@ export class AuthService {
       }
     }
 
-    await this.saveSession(req, existing.id)
+    await this.createSession(req, existing.id)
 
     return { user: this.safeUser(existing) }
   }
@@ -146,19 +146,21 @@ export class AuthService {
 
     const user = existing ?? (await this.userService.createGoogleUser(profile))
 
-    await this.saveSession(req, user.id)
+    await this.createSession(req, user.id)
 
-    try {
-      await this.emailQueue.add(
-        WELCOME_GOOGLE_JOB,
-        { to: user.email },
-        {
-          attempts: 5,
-          backoff: { type: 'exponential', delay: 5_000 },
-        },
-      )
-    } catch {
-      this.logger.warn({ userId: user.id }, 'Failed to enqueue Google welcome email')
+    if (!existing) {
+      try {
+        await this.emailQueue.add(
+          WELCOME_GOOGLE_JOB,
+          { to: user.email },
+          {
+            attempts: 5,
+            backoff: { type: 'exponential', delay: 5_000 },
+          },
+        )
+      } catch {
+        this.logger.warn({ userId: user.id }, 'Failed to enqueue Google welcome email')
+      }
     }
   }
 
@@ -249,7 +251,7 @@ export class AuthService {
     return safeUser
   }
 
-  private saveSession(req: Request, userId: string): Promise<void> {
+  private createSession(req: Request, userId: string): Promise<void> {
     return new Promise((resolve, reject) => {
       req.session.regenerate((err) => {
         if (err) {

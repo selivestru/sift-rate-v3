@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
+import { useDisclosure } from '~/common/hooks/useDisclosure'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 
 import { registerSchema, type RegisterInput } from '../schema/auth.schema'
@@ -13,12 +14,14 @@ const REGISTER_FIELDS = ['email', 'username', 'password', 'confirmPassword'] as 
 export const useRegisterForm = () => {
   const mutation = useRegisterMutation()
 
+  const emailVerificationDialog = useDisclosure()
   const [serverError, setServerError] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = useForm<RegisterInput>({
     defaultValues: {
@@ -36,6 +39,8 @@ export const useRegisterForm = () => {
 
     try {
       await mutation.mutateAsync(data)
+      emailVerificationDialog.open()
+      reset()
     } catch (error) {
       const apiError = await getApiError(error)
       applyApiFormError({
@@ -53,5 +58,6 @@ export const useRegisterForm = () => {
     onSubmit,
     isLoading: mutation.isPending,
     serverError,
+    emailVerificationDialog,
   }
 }
