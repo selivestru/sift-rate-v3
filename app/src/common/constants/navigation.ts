@@ -91,7 +91,7 @@ export const navItems: NavItemConfig[] = [
       },
       {
         to: '/library/ranked-list',
-        label: 'Ranked List',
+        label: 'Ranked Lists',
         icon: Cup,
         description: 'Ordered rankings you build over time',
         color: '#3B82F6',
