@@ -120,14 +120,14 @@ Most common: 8 / 12 / 16 / 24 / 32px. Avoid arbitrary `p-[13px]`-style values.
 
 ### Variants
 
-| Variant            | Look                              | When                                      |
-| ------------------ | --------------------------------- | ----------------------------------------- |
-| `default`          | Solid primary                     | Primary action                            |
-| `secondary`        | Soft surface                      | Secondary / quiet                         |
-| `outline`          | Bordered, transparent fill        | Low emphasis with edge                    |
-| `ghost`            | Transparent, accent hover         | Chrome / inline                           |
-| `destructive-soft` | Quiet destructive text + soft hover | Icon / secondary delete and remove      |
-| `destructive`      | Solid destructive                 | Confirm delete / irreversible             |
+| Variant            | Look                                | When                               |
+| ------------------ | ----------------------------------- | ---------------------------------- |
+| `default`          | Solid primary                       | Primary action                     |
+| `secondary`        | Soft surface                        | Secondary / quiet                  |
+| `outline`          | Bordered, transparent fill          | Low emphasis with edge             |
+| `ghost`            | Transparent, accent hover           | Chrome / inline                    |
+| `destructive-soft` | Quiet destructive text + soft hover | Icon / secondary delete and remove |
+| `destructive`      | Solid destructive                   | Confirm delete / irreversible      |
 
 Use `destructive-soft` for quiet delete/remove actions. Use solid `destructive` for confirm dialogs.
 

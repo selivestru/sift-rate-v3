@@ -1,20 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
+import { objectKeys } from '~/common/utils/typedObject'
 
 import { loginSchema, type LoginInput } from '../schema/auth.schema'
 import { useLoginMutation } from './useLoginMutation'
-
-const LOGIN_FIELDS = ['email', 'password'] as const
+import { useResendVerificationMutation } from './useResendVerificationMutation'
 
 export const useLoginForm = () => {
   const mutation = useLoginMutation()
+  const resendMutation = useResendVerificationMutation()
 
   const [serverError, setServerError] = useState<string | null>(null)
   const [twoFactorDialogOpen, setTwoFactorDialogOpen] = useState(false)
+  const [resendDialogOpen, setResendDialogOpen] = useState(false)
+  const resendEmailRef = useRef<string | null>(null)
+  const cooldownUntilRef = useRef<number | null>(null)
 
   const {
     register,
@@ -30,6 +34,24 @@ export const useLoginForm = () => {
     resolver: zodResolver(loginSchema),
   })
 
+  const onResend = async () => {
+    if (!resendEmailRef.current) return
+    if (cooldownUntilRef.current && cooldownUntilRef.current > Date.now()) return
+
+    try {
+      const data = await resendMutation.mutateAsync({ email: resendEmailRef.current })
+      cooldownUntilRef.current = Date.now() + data.ttl * 1000
+    } catch {}
+  }
+
+  const onResendClose = () => {
+    setResendDialogOpen(false)
+    resendMutation.reset()
+    setTimeout(() => {
+      resendEmailRef.current = null
+    }, 200)
+  }
+
   const onSubmit = async (data: LoginInput) => {
     setServerError(null)
 
@@ -37,6 +59,12 @@ export const useLoginForm = () => {
       await mutation.mutateAsync(data)
     } catch (error) {
       const apiError = await getApiError(error)
+
+      if (apiError.code === 'EMAIL_NOT_VERIFIED') {
+        resendEmailRef.current = data.email
+        setResendDialogOpen(true)
+        return
+      }
 
       if (apiError.code === 'TWO_FACTOR_REQUIRED') {
         setTwoFactorDialogOpen(true)
@@ -52,7 +80,7 @@ export const useLoginForm = () => {
         apiError,
         setError,
         setServerError,
-        fields: LOGIN_FIELDS,
+        fields: objectKeys(loginSchema.shape),
       })
     }
   }
@@ -73,9 +101,21 @@ export const useLoginForm = () => {
       isOpen: twoFactorDialogOpen,
       onClose: () => {
         setTwoFactorDialogOpen(false)
-        setValue('twoFactorCode', '')
+        setValue('twoFactorCode', undefined)
       },
       onSubmit: onSubmitWithTwoFactor,
+    },
+    resendState: {
+      isOpen: resendDialogOpen,
+      email: resendEmailRef.current,
+      isLoading: resendMutation.isPending,
+      result: resendMutation.data,
+      error: resendMutation.isError ? 'Failed to resend verification email' : null,
+      cooldownSeconds: cooldownUntilRef.current
+        ? Math.max(0, Math.ceil((cooldownUntilRef.current - Date.now()) / 1000))
+        : 0,
+      onResend,
+      onClose: onResendClose,
     },
   }
 }

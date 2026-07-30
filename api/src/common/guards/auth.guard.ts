@@ -1,9 +1,9 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
     const userId = req.session?.userId
 
     if (!userId) {
-      throw new UnauthorizedException()
+      throw new ForbiddenException()
     }
 
     try {
@@ -42,7 +42,7 @@ export class AuthGuard implements CanActivate {
 
       if (!user.isVerified) {
         await this.sessionService.destroy(req)
-        throw new UnauthorizedException({
+        throw new ForbiddenException({
           message: 'Please verify your email before logging in',
           code: 'EMAIL_NOT_VERIFIED',
         })
@@ -59,7 +59,7 @@ export class AuthGuard implements CanActivate {
     } catch (error) {
       if (error instanceof NotFoundException) {
         await this.sessionService.destroy(req)
-        throw new UnauthorizedException()
+        throw new ForbiddenException()
       }
 
       throw error

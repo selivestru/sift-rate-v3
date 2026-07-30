@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
+import { objectKeys } from '~/common/utils/typedObject'
 import { VISIBILITY } from '~/modules/review'
 
 import {
@@ -13,8 +14,6 @@ import {
 import type { RankedListItem } from '../types/ranked-list.types'
 import { useCreateRankedList } from './useCreateRankedList'
 import { useUpdateRankedList } from './useUpdateRankedList'
-
-const UPSERT_FIELDS = ['title', 'visibility'] as const
 
 interface UseUpsertRankedListFormOptions {
   list?: RankedListItem | null
@@ -75,7 +74,7 @@ export const useUpsertRankedListForm = ({ list, onClose }: UseUpsertRankedListFo
         apiError,
         setError,
         setServerError,
-        fields: UPSERT_FIELDS,
+        fields: objectKeys(upsertRankedListSchema.shape),
       })
     }
   })

@@ -2,6 +2,7 @@ import { ConflictException, Injectable, Logger, UnauthorizedException } from '@n
 
 import { UserService } from '../user/user.service'
 import { generateSecret, generateURI as generateTOTPURI, verifySync } from 'otplib'
+import { safeUser } from '~/common/utils/safeUser'
 import { AuthMethod } from '~/generated/prisma/client'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
@@ -71,7 +72,7 @@ export class TwoFactorService {
 
     this.logger.log(`2FA enabled for user ${userId}`)
 
-    return updatedUser
+    return safeUser(updatedUser)
   }
 
   async disable(userId: string, code: string) {
@@ -94,7 +95,7 @@ export class TwoFactorService {
 
     this.logger.log(`2FA disabled for user ${userId}`)
 
-    return updatedUser
+    return safeUser(updatedUser)
   }
 
   async verifyStoredCode(userId: string, code: string) {

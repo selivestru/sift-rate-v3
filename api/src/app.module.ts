@@ -18,6 +18,8 @@ import { ReviewModule } from './modules/review/review.module'
 import { SessionModule } from './modules/session/session.module'
 import { TwoFactorModule } from './modules/two-factor/two-factor.module'
 import { UserModule } from './modules/user/user.module'
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
+import Redis from 'ioredis'
 
 @Module({
   imports: [
@@ -36,12 +38,20 @@ import { UserModule } from './modules/user/user.module'
     }),
     PrismaModule,
     RedisModule,
-    ThrottlerModule.forRoot([
-      {
-        ttl: seconds(60),
-        limit: 10,
-      },
-    ]),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<EnvConfig, true>) => ({
+        throttlers: [
+          {
+            ttl: seconds(60),
+            limit: 10,
+          },
+        ],
+        storage: new ThrottlerStorageRedisService(
+          new Redis(config.get('REDIS_URL', { infer: true })),
+        ),
+      }),
+    }),
     S3Module,
     AuthModule,
     MediaModule,

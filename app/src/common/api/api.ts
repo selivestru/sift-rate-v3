@@ -5,4 +5,13 @@ import { env } from '../constants/env'
 export const api = ky.create({
   prefix: env.VITE_BASE_URL,
   credentials: 'include',
+  hooks: {
+    afterResponse: [
+      ({ response }) => {
+        if (response.status === 403) {
+          window.location.href = '/'
+        }
+      },
+    ],
+  },
 })

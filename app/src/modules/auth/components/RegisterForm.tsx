@@ -9,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/common/ui/AlertDialog'
+import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
 
 import { useRegisterForm } from '../hooks/useRegisterForm'
@@ -26,6 +27,8 @@ export const RegisterForm = () => {
   return (
     <>
       <div className="flex flex-col gap-6">
+        <BackButton to="/" />
+
         <AuthFormHeader
           title="Create your account"
           subtitle="Start building your media life archive"

@@ -1,7 +1,12 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
 
-import { EMAIL_QUEUE, WELCOME_GOOGLE_JOB, WELCOME_JOB } from './constants/email-queue'
+import {
+  EMAIL_QUEUE,
+  PASSWORD_RESET_JOB,
+  WELCOME_GOOGLE_JOB,
+  WELCOME_JOB,
+} from './constants/email-queue'
 import { ResendService } from './resend.service'
 import { Job } from 'bullmq'
 
@@ -13,11 +18,13 @@ export class EmailProcessor extends WorkerHost {
     super()
   }
 
-  async process(job: Job<{ to: string; token?: string }>) {
+  async process(job: Job<{ to: string; token: string }>) {
     if (job.name === WELCOME_JOB) {
-      await this.resend.sendWelcomeEmail(job.data.to, job.data.token!)
+      await this.resend.sendWelcomeEmail(job.data.to, job.data.token)
     } else if (job.name === WELCOME_GOOGLE_JOB) {
       await this.resend.sendGoogleWelcomeEmail(job.data.to)
+    } else if (job.name === PASSWORD_RESET_JOB) {
+      await this.resend.sendPasswordResetEmail(job.data.to, job.data.token)
     }
   }
 

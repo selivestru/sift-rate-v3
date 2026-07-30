@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 
-import { normalizeEmail } from '~/common/utils/email'
+import { normalize } from '~/common/utils/normalize'
 import { AuthMethod, Prisma, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
@@ -22,13 +22,13 @@ export class UserService {
 
   findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
-      where: { email: normalizeEmail(email) },
+      where: { email: normalize(email) },
     })
   }
 
   findByUsername(username: string): Promise<User | null> {
     return this.prisma.user.findUnique({
-      where: { username },
+      where: { username: normalize(username) },
     })
   }
 
@@ -40,7 +40,7 @@ export class UserService {
   }): Promise<User> {
     return this.prisma.user.create({
       data: {
-        email: normalizeEmail(data.email),
+        email: normalize(data.email),
         displayName: data.displayName,
         username: data.username,
         passwordHash: data.passwordHash,
@@ -56,7 +56,7 @@ export class UserService {
   }): Promise<User> {
     return this.prisma.user.create({
       data: {
-        email: normalizeEmail(data.email),
+        email: normalize(data.email),
         displayName: data.displayName,
         avatarUrl: data.avatarUrl,
         method: AuthMethod.GOOGLE,
@@ -81,6 +81,13 @@ export class UserService {
         id: userId,
       },
       data,
+    })
+  }
+
+  updatePasswordHash(userId: string, passwordHash: string): Promise<User> {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
     })
   }
 

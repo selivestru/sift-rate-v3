@@ -10,6 +10,7 @@ export const envSchema = z.object({
   REDIS_URL: z.string(),
 
   SESSION_SECRET: z.string().min(32),
+  SESSION_PREFIX: z.string().min(1).default('sessions:'),
 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
@@ -28,6 +29,7 @@ export const envSchema = z.object({
   S3_PUBLIC_BASE_URL: z.url(),
 
   RESEND_API_KEY: z.string(),
+  RESEND_DOMAIN: z.string(),
 })
 
 export type EnvConfig = z.infer<typeof envSchema>

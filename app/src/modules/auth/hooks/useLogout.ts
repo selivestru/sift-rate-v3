@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 
 import { removeStorageItem } from '~/common/utils/storage'
@@ -11,6 +11,8 @@ export const useLogout = () => {
   const location = useLocation()
   const setUser = useAuthStore((state) => state.setUser)
 
+  const queryClient = useQueryClient()
+
   const mutation = useMutation({
     mutationKey: ['logout'],
     mutationFn: authApi.logout,
@@ -22,6 +24,8 @@ export const useLogout = () => {
       setUser(null)
 
       removeStorageItem('has_session')
+
+      queryClient.clear()
     },
   })
 

@@ -11,18 +11,21 @@ import { ConfigService } from '@nestjs/config'
 import { SessionService } from '../session/session.service'
 import { TwoFactorService } from '../two-factor/two-factor.service'
 import { SafeUser } from '../user/types/user.types'
+import { ResetPasswordDto } from './dto/forgot-password.dto'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
 import { GoogleOAuthService } from './google-oauth.service'
 import { argon2id, hash, verify } from 'argon2'
 import { Queue } from 'bullmq'
 import type { Request, Response } from 'express'
-import { randomBytes } from 'node:crypto'
+import { createHash, randomBytes } from 'node:crypto'
 import { EnvConfig } from '~/app/config/env.config'
-import { AuthMethod, User } from '~/generated/prisma/client'
+import { safeUser } from '~/common/utils/safeUser'
+import { AuthMethod } from '~/generated/prisma/client'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import {
   EMAIL_QUEUE,
+  PASSWORD_RESET_JOB,
   WELCOME_GOOGLE_JOB,
   WELCOME_JOB,
 } from '~/infrastructure/resend/constants/email-queue'
@@ -31,6 +34,8 @@ import { UserService } from '~/modules/user/user.service'
 @Injectable()
 export class AuthService {
   private readonly VERIFICATION_TTL = 86_400
+  private readonly PASSWORD_RESET_TTL = 3_600
+  private readonly RESEND_COOLDOWN_TTL = 60
   private readonly logger = new Logger(AuthService.name)
 
   constructor(
@@ -67,8 +72,10 @@ export class AuthService {
 
     const token = randomBytes(32).toString('base64url')
 
-    await this.redis.set(`email_verify:${user.id}`, token, 'EX', this.VERIFICATION_TTL)
-    await this.redis.set(`email_verify_token:${token}`, user.id, 'EX', this.VERIFICATION_TTL)
+    await Promise.all([
+      this.redis.set(`email_verify:${user.id}`, token, 'EX', this.VERIFICATION_TTL),
+      this.redis.set(`email_verify_token:${token}`, user.id, 'EX', this.VERIFICATION_TTL),
+    ])
 
     try {
       await this.emailQueue.add(
@@ -130,7 +137,7 @@ export class AuthService {
 
     await this.sessionService.create(req, existing.id)
 
-    return { user: this.safeUser(existing) }
+    return { user: safeUser(existing) }
   }
 
   async getGoogleAuthUrl(): Promise<{ url: string }> {
@@ -173,18 +180,21 @@ export class AuthService {
       throw new UnauthorizedException('Invalid or expired verification token')
     }
 
-    await this.userService.verifyUser(userId)
-    await this.sessionService.create(req, userId)
+    await Promise.all([
+      this.redis.del(`email_verify:${userId}`),
+      this.userService.verifyUser(userId),
+      this.sessionService.create(req, userId),
+    ])
   }
 
-  async resendVerification(email: string): Promise<{ message: string }> {
+  async resendVerification(email: string): Promise<{ message: string; ttl: number }> {
     const cannedMessage =
       'If your email is registered and not yet verified, a new email has been sent'
 
     const user = await this.userService.findByEmail(email)
 
     if (!user || user.isVerified) {
-      return { message: cannedMessage }
+      return { message: cannedMessage, ttl: this.RESEND_COOLDOWN_TTL }
     }
 
     const oldToken = await this.redis.get(`email_verify:${user.id}`)
@@ -210,16 +220,107 @@ export class AuthService {
         },
       )
     } catch {
-      return { message: cannedMessage }
+      return { message: cannedMessage, ttl: this.RESEND_COOLDOWN_TTL }
     }
 
-    return { message: cannedMessage }
+    return { message: cannedMessage, ttl: this.RESEND_COOLDOWN_TTL }
+  }
+
+  async forgotPassword(email: string): Promise<{ message: string; ttl: number }> {
+    const user = await this.userService.findByEmail(email)
+
+    if (!user || user.method !== AuthMethod.CREDENTIALS) {
+      return {
+        message: 'If an account exists for this email, a password reset link has been sent.',
+        ttl: this.PASSWORD_RESET_TTL,
+      }
+    }
+
+    await this.invalidateResetToken(user.id)
+
+    const token = randomBytes(32).toString('base64url')
+    const tokenHash = this.hashToken(token)
+
+    await Promise.all([
+      this.redis.set(`pwreset:${user.id}`, tokenHash, 'EX', this.PASSWORD_RESET_TTL),
+      this.redis.set(`pwreset_token:${tokenHash}`, user.id, 'EX', this.PASSWORD_RESET_TTL),
+    ])
+
+    try {
+      await this.emailQueue.add(
+        PASSWORD_RESET_JOB,
+        { to: user.email, token },
+        {
+          attempts: 5,
+          backoff: { type: 'exponential', delay: 5_000 },
+        },
+      )
+    } catch {
+      this.logger.warn({ userId: user.id }, 'Failed to enqueue password-reset email')
+    }
+
+    return {
+      message: 'If an account exists for this email, a password reset link has been sent.',
+      ttl: this.PASSWORD_RESET_TTL,
+    }
+  }
+
+  async resetPasswordVerify(token: string): Promise<void> {
+    const tokenHash = this.hashToken(token)
+    const userId = await this.redis.get(`pwreset_token:${tokenHash}`)
+
+    if (!userId) {
+      throw new UnauthorizedException('Invalid or expired reset token')
+    }
+  }
+
+  async resetPassword(dto: ResetPasswordDto): Promise<{ message: string }> {
+    const tokenHash = this.hashToken(dto.token)
+    const userId = await this.redis.getdel(`pwreset_token:${tokenHash}`)
+
+    if (!userId) {
+      throw new UnauthorizedException('Invalid or expired reset token')
+    }
+
+    const user = await this.userService.findById(userId)
+
+    if (user.method !== AuthMethod.CREDENTIALS) {
+      await this.invalidateResetToken(userId)
+      throw new UnauthorizedException('Invalid or expired reset token')
+    }
+
+    const passwordHash = (await hash(dto.password, { type: argon2id })) as string
+
+    await this.userService.updatePasswordHash(userId, passwordHash)
+    await this.invalidateResetToken(userId)
+    await this.sessionService.destroyAllForUser(userId)
+
+    this.logger.log({ userId }, 'Password reset completed; sessions revoked')
+
+    return { message: 'Password has been reset' }
+  }
+
+  private async invalidateResetToken(userId: string): Promise<void> {
+    const oldHash = await this.redis.get(`pwreset:${userId}`)
+
+    if (!oldHash) {
+      return
+    }
+
+    await Promise.all([
+      this.redis.del(`pwreset:${userId}`),
+      this.redis.del(`pwreset_token:${oldHash}`),
+    ])
+  }
+
+  private hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex')
   }
 
   async me(userId: string): Promise<{ user: SafeUser }> {
     const user = await this.userService.findById(userId)
 
-    return { user: this.safeUser(user) }
+    return { user: safeUser(user) }
   }
 
   async logout(req: Request, res: Response): Promise<void> {
@@ -234,10 +335,5 @@ export class AuthService {
       secure: isProd,
       sameSite: 'lax',
     })
-  }
-
-  private safeUser(user: User): SafeUser {
-    const { passwordHash: _, twoFactorSecret: __, ...safeUser } = user
-    return safeUser
   }
 }

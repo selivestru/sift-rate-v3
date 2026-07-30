@@ -5,11 +5,10 @@ import { useForm } from 'react-hook-form'
 import { getApiError } from '~/common/api'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
+import { objectKeys } from '~/common/utils/typedObject'
 
 import { registerSchema, type RegisterInput } from '../schema/auth.schema'
 import { useRegisterMutation } from './useRegisterMutation'
-
-const REGISTER_FIELDS = ['email', 'username', 'password', 'confirmPassword'] as const
 
 export const useRegisterForm = () => {
   const mutation = useRegisterMutation()
@@ -47,7 +46,7 @@ export const useRegisterForm = () => {
         apiError,
         setError,
         setServerError,
-        fields: REGISTER_FIELDS,
+        fields: objectKeys(registerSchema.shape),
       })
     }
   })

@@ -13,6 +13,7 @@ import { AuthFormHeader } from './AuthFormHeader'
 const ERROR_MESSAGES: Record<string, string> = {
   email_taken: 'This email is already registered. Sign in with your password instead.',
   google_auth_failed: 'Google sign-in failed. Please try again.',
+  invalid_or_expired: 'Invalid or expired code.',
 }
 
 interface AuthCallbackProps {
@@ -46,8 +47,8 @@ export const AuthCallback = ({ error }: AuthCallbackProps) => {
   if (error) {
     return (
       <div className="flex flex-col gap-6">
-        <AuthFormHeader title="Sign in failed" subtitle="We couldn't sign you in with Google" />
-        <AuthFormAlert message={ERROR_MESSAGES[error] ?? ERROR_MESSAGES.google_auth_failed} />
+        <AuthFormHeader title="Sign in failed" subtitle="We couldn't sign you" />
+        {ERROR_MESSAGES[error] && <AuthFormAlert message={ERROR_MESSAGES[error]} />}
         <Button fullWidth variant="secondary" className="h-11" render={<Link to="/auth/login" />}>
           Back to sign in
         </Button>

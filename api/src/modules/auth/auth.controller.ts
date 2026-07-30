@@ -13,6 +13,11 @@ import { ConfigService } from '@nestjs/config'
 import { seconds, Throttle } from '@nestjs/throttler'
 
 import { AuthService } from './auth.service'
+import {
+  ForgotPasswordDto,
+  ResetPasswordDto,
+  ResetPasswordVerifyDto,
+} from './dto/forgot-password.dto'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
 import { ResendVerificationDto } from './dto/resend-verification.dto'
@@ -91,7 +96,7 @@ export class AuthController {
     const origin = this.config.get('ORIGIN', { infer: true })
 
     if (!token) {
-      return res.redirect(`${origin}/auth/verify?error=invalid_or_expired`)
+      return res.redirect(`${origin}/auth/callback?error=invalid_or_expired`)
     }
 
     try {
@@ -99,7 +104,7 @@ export class AuthController {
 
       return res.redirect(`${origin}/auth/callback`)
     } catch {
-      return res.redirect(`${origin}/auth/verify?error=invalid_or_expired`)
+      return res.redirect(`${origin}/auth/callback?error=invalid_or_expired`)
     }
   }
 
@@ -109,5 +114,29 @@ export class AuthController {
   @HttpCode(200)
   resendVerification(@Body() dto: ResendVerificationDto) {
     return this.authService.resendVerification(dto.email)
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Post('forgot-password')
+  @HttpCode(200)
+  forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.email)
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
+  @Post('reset-password/verify')
+  @HttpCode(200)
+  resetPasswordVerify(@Body() dto: ResetPasswordVerifyDto) {
+    return this.authService.resetPasswordVerify(dto.token)
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
+  @Post('reset-password')
+  @HttpCode(200)
+  resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto)
   }
 }

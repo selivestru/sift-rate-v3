@@ -6,11 +6,11 @@ import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
 
-import { forgotPasswordSchema, type ForgotPasswordInput } from '../schema/auth.schema'
-import { useForgotPasswordMutation } from './useForgotPasswordMutation'
+import { resetPasswordSchema, type ResetPasswordInput } from '../schema/auth.schema'
+import { useResetPasswordMutation } from './useRestPasswordMutation'
 
-export const useForgotPasswordForm = () => {
-  const mutation = useForgotPasswordMutation()
+export const useResetPasswordForm = (token: string) => {
+  const mutation = useResetPasswordMutation()
   const [serverError, setServerError] = useState<string | null>(null)
 
   const {
@@ -18,25 +18,29 @@ export const useForgotPasswordForm = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<ForgotPasswordInput>({
+  } = useForm<ResetPasswordInput>({
     defaultValues: {
-      email: '',
+      password: '',
+      confirmPassword: '',
     },
-    resolver: zodResolver(forgotPasswordSchema),
+    resolver: zodResolver(resetPasswordSchema),
   })
 
   const onSubmit = handleSubmit(async (data) => {
     setServerError(null)
 
     try {
-      await mutation.mutateAsync(data)
+      await mutation.mutateAsync({
+        token,
+        password: data.password,
+      })
     } catch (error) {
       const apiError = await getApiError(error)
       applyApiFormError({
         apiError,
         setError,
         setServerError,
-        fields: objectKeys(forgotPasswordSchema.shape),
+        fields: objectKeys(resetPasswordSchema.shape),
       })
     }
   })

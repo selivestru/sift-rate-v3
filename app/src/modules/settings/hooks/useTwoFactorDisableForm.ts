@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
+import { objectKeys } from '~/common/utils/typedObject'
 
 import { twoFactorCodeSchema, type TwoFactorCodeInput } from '../schema/settings.schema'
 import { useTwoFactorDisableMutation } from './useTwoFactorDisableMutation'
@@ -33,7 +34,7 @@ export const useTwoFactorDisableForm = () => {
         apiError,
         setError,
         setServerError,
-        fields: ['code'],
+        fields: objectKeys(twoFactorCodeSchema.shape),
       })
     }
   })

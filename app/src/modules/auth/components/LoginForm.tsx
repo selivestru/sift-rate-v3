@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
+import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
 
 import { useLoginForm } from '../hooks/useLoginForm'
@@ -9,14 +10,18 @@ import { AuthFormHeader } from './AuthFormHeader'
 import { AuthTextField } from './AuthTextField'
 import { GoogleAuthButton } from './GoogleAuthButton'
 import { PasswordField } from './PasswordField'
+import { ResendVerificationDialog } from './ResendVerificationDialog'
 import { TwoFactorDialog } from './TwoFactorDialog'
 
 export const LoginForm = () => {
-  const { register, onSubmit, isLoading, errors, serverError, twoFactorState } = useLoginForm()
+  const { register, onSubmit, isLoading, errors, serverError, twoFactorState, resendState } =
+    useLoginForm()
 
   return (
     <>
       <div className="flex flex-col gap-6">
+        <BackButton to="/" />
+
         <AuthFormHeader title="Welcome back" subtitle="Sign in to your media archive" />
 
         <GoogleAuthButton />
@@ -70,6 +75,17 @@ export const LoginForm = () => {
         onSubmit={twoFactorState.onSubmit}
         isLoading={isLoading}
         error={serverError}
+      />
+
+      <ResendVerificationDialog
+        isOpen={resendState.isOpen}
+        email={resendState.email}
+        isLoading={resendState.isLoading}
+        result={resendState.result}
+        error={resendState.error}
+        cooldownSeconds={resendState.cooldownSeconds}
+        onResend={resendState.onResend}
+        onClose={resendState.onClose}
       />
     </>
   )

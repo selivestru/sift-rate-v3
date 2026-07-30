@@ -5,12 +5,11 @@ import { useForm } from 'react-hook-form'
 import { getApiError } from '~/common/api'
 import type { MediaRef } from '~/common/types/media-ref.types'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
+import { objectKeys } from '~/common/utils/typedObject'
 
 import { rateFormSchema, type RateFormValues } from '../schema/rate.schema'
 import { VISIBILITY, type Review } from '../types/review.types'
 import { useUpsertReviewMutation } from './useUpsertReviewMutation'
-
-const RATE_FIELDS = ['rating', 'content', 'visibility', 'hasSpoiler'] as const
 
 export const useUpsertReviewForm = (
   media: MediaRef,
@@ -74,7 +73,7 @@ export const useUpsertReviewForm = (
         apiError,
         setError,
         setServerError,
-        fields: RATE_FIELDS,
+        fields: objectKeys(rateFormSchema.shape),
       })
     }
   })

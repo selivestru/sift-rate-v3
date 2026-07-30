@@ -37,7 +37,7 @@ async function bootstrap() {
     session({
       store: new RedisStore({
         client: redis,
-        prefix: 'sessions:',
+        prefix: config.get('SESSION_PREFIX', { infer: true }),
       }),
       name: isProd ? '__Host-sid' : 'sid',
       secret: config.get('SESSION_SECRET', { infer: true }),
