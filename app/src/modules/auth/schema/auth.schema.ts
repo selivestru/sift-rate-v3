@@ -56,7 +56,13 @@ export const resetPasswordSchema = z
     path: ['confirmPassword'],
   })
 
+export const completeProfileSchema = z.object({
+  displayName: displayNameSchema,
+  username: usernameSchema,
+})
+
 export type LoginInput = z.infer<typeof loginSchema>
 export type RegisterInput = z.infer<typeof registerSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
+export type CompleteProfileInput = z.infer<typeof completeProfileSchema>

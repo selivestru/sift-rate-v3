@@ -1,4 +1,3 @@
-import { useNavigate } from '@tanstack/react-router'
 import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
@@ -6,15 +5,10 @@ import { Button } from '~/common/ui/Button'
 import { Field, FieldDescription, FieldError, FieldLabel } from '~/common/ui/Field'
 import { Input } from '~/common/ui/Input'
 
-import { useChangeUsernameForm } from '../hooks/useChangeUsernameForm'
+import { useCompleteProfileForm } from '../hooks/useCompleteProfileForm'
 
-export const WelcomeForm = () => {
-  const navigate = useNavigate()
-  const { register, onSubmit, isLoading, errors, serverError } = useChangeUsernameForm(() => {
-    navigate({ to: '/' })
-  })
-  const usernameError = errors.username
-  const isInvalid = !!usernameError
+export const CompleteProfileForm = () => {
+  const { register, onSubmit, isLoading, errors, serverError } = useCompleteProfileForm()
 
   return (
     <div className="flex flex-col gap-6">
@@ -24,9 +18,9 @@ export const WelcomeForm = () => {
         </span>
 
         <div className="space-y-1.5">
-          <h1 className="text-2xl font-semibold tracking-tight">Choose your username</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Complete your profile</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            This is your public handle on SiftRate — how others find your media archive.
+            Choose how your name appears and pick a unique username.
           </p>
         </div>
       </div>
@@ -39,22 +33,36 @@ export const WelcomeForm = () => {
           </Alert>
         )}
 
-        <Field isInvalid={isInvalid}>
+        <Field isInvalid={!!errors.displayName}>
+          <FieldLabel htmlFor="displayName">Username</FieldLabel>
+          <Input
+            id="displayName"
+            autoComplete="nickname"
+            placeholder="Your name"
+            isInvalid={!!errors.displayName}
+            {...register('displayName')}
+          />
+          {errors.displayName ? (
+            <FieldError>{errors.displayName.message}</FieldError>
+          ) : (
+            <FieldDescription>Use 2 to 50 characters.</FieldDescription>
+          )}
+        </Field>
+
+        <Field isInvalid={!!errors.username}>
           <FieldLabel htmlFor="username">Username</FieldLabel>
           <Input
             id="username"
-            type="text"
             autoComplete="username"
-            autoFocus
             autoCapitalize="off"
             spellCheck={false}
-            placeholder="your_handle"
-            isInvalid={isInvalid}
+            placeholder="Choose a username"
+            isInvalid={!!errors.username}
             startIcon={<span className="text-muted-foreground text-sm font-medium">@</span>}
             {...register('username')}
           />
-          {usernameError?.message ? (
-            <FieldError>{usernameError.message}</FieldError>
+          {errors.username ? (
+            <FieldError>{errors.username.message}</FieldError>
           ) : (
             <FieldDescription>
               4–25 characters. Letters, numbers, and underscores only.
@@ -63,7 +71,7 @@ export const WelcomeForm = () => {
         </Field>
 
         <Button type="submit" fullWidth isLoading={isLoading}>
-          {isLoading ? 'Saving…' : 'Continue'}
+          {isLoading ? 'Saving…' : 'Save'}
         </Button>
       </form>
     </div>

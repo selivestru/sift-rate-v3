@@ -1,8 +1,15 @@
+import { USERNAME_REGEX } from '../constants/validation'
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator'
 import { Normalize } from '~/common/decorators/normalize.decorator'
-import { USERNAME_REGEX } from '~/modules/auth/constants/validation'
+import { Trim } from '~/common/decorators/trim.decorator'
 
-export class UpdateUsernameDto {
+export class CompleteProfileDto {
+  @Trim()
+  @IsString({ message: 'Display name must be a string' })
+  @MinLength(2, { message: 'Display name must be at least 2 characters' })
+  @MaxLength(50, { message: 'Display name must be at most 50 characters' })
+  displayName!: string
+
   @Normalize()
   @IsString({ message: 'Username must be a string' })
   @MinLength(4, { message: 'Username must be at least 4 characters' })

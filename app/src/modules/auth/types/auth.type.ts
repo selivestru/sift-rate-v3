@@ -10,12 +10,19 @@ export interface RegisterResponse {
 
 export interface ForgotPasswordResponse {
   message: string
-  ttl: number
+  retryAfter: number
 }
 
 export interface ResendVerificationResponse {
   message: string
-  ttl: number
+  retryAfter: number
 }
 
-export interface ResetPasswordResponse {}
+export interface ResetPasswordResponse {
+  message: string
+}
+
+export interface CompleteProfileResponse {
+  displayName: string
+  username: string
+}

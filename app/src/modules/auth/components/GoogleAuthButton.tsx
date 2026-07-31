@@ -16,8 +16,9 @@ export const GoogleAuthButton = () => {
       const { url } = await authApi.getGoogleUrl()
       window.location.assign(url)
     } catch (error) {
-      setIsLoading(false)
       await toastApiError(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -26,7 +27,6 @@ export const GoogleAuthButton = () => {
       fullWidth
       type="button"
       variant="secondary"
-      className="h-11"
       isLoading={isLoading}
       startIcon={<GoogleIcon />}
       onClick={handlePress}

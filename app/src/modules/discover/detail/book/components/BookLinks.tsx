@@ -42,7 +42,7 @@ export const BookLinks = ({ book, className }: BookLinksProps) => {
               <Button
                 variant="outline"
                 size="sm"
-                className="min-h-11 gap-2"
+                className="gap-2"
                 render={<a href={link.url} target="_blank" rel="noopener noreferrer" />}
               >
                 <Icon className="size-3.5 shrink-0" aria-hidden />

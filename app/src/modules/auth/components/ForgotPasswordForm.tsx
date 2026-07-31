@@ -31,7 +31,7 @@ export const ForgotPasswordForm = () => {
             <Button type="button" render={<Link to="/auth/login" />}>
               Back to sign in
             </Button>
-            <TimerButton type="submit" ttl={result.ttl} label="Reset link sent" />
+            <TimerButton type="submit" ttl={result.retryAfter} label="Reset link sent" />
           </div>
         ) : (
           <>

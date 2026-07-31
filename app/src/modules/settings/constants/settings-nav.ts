@@ -1,18 +1,28 @@
-import { AlertTriangle, Palette, ShieldLock, User, type IconComponent } from 'reicon-react'
+import {
+  AlertTriangle,
+  Palette,
+  ShieldLock,
+  User as UserIcon,
+  type IconComponent,
+} from 'reicon-react'
+
+import type { FileRoutesByTo } from '~/app/routeTree.gen'
+import { AUTH_METHOD, type User } from '~/modules/auth'
 
 export type SettingsNavItem = {
-  to: '/settings/account' | '/settings/appearance' | '/settings/2fa' | '/settings/danger-zone'
+  to: keyof FileRoutesByTo
   label: string
   description: string
   icon: IconComponent
   tone?: 'default' | 'destructive'
+  show?: (user: User | null) => boolean
 }
 
 export const accountNavItem: SettingsNavItem = {
   to: '/settings/account',
   label: 'Account',
   description: 'Email, password, username, Google',
-  icon: User,
+  icon: UserIcon,
 }
 
 export const appearanceNavItem: SettingsNavItem = {
@@ -27,6 +37,7 @@ export const twoFactorNavItem: SettingsNavItem = {
   label: 'Two-factor auth',
   description: 'Authenticator app protection',
   icon: ShieldLock,
+  show: (user) => user?.method === AUTH_METHOD.CREDENTIALS,
 }
 
 export const dangerZoneNavItem: SettingsNavItem = {

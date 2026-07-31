@@ -73,7 +73,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
 
       <div className="border-border grid grid-cols-2 border-t">
         <Button
-          className="h-11 rounded-none rounded-bl-xl border-none"
+          className="rounded-none rounded-bl-xl border-none"
           variant="secondary"
           render={
             <Link
@@ -87,7 +87,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
         </Button>
 
         <Button
-          className="h-11 rounded-none rounded-br-xl border-none"
+          className="rounded-none rounded-br-xl border-none"
           aria-label={`Delete ${media.title} from planned`}
           variant="destructive-soft"
           onClick={handleDelete}

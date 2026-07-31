@@ -30,6 +30,8 @@ export const envSchema = z.object({
 
   RESEND_API_KEY: z.string(),
   RESEND_DOMAIN: z.string(),
+
+  DUMMY_HASH: z.string(),
 })
 
 export type EnvConfig = z.infer<typeof envSchema>

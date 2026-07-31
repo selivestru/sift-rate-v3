@@ -41,8 +41,8 @@ export class UserService {
     return this.prisma.user.create({
       data: {
         email: normalize(data.email),
+        username: normalize(data.username),
         displayName: data.displayName,
-        username: data.username,
         passwordHash: data.passwordHash,
         method: AuthMethod.CREDENTIALS,
       },
@@ -91,16 +91,28 @@ export class UserService {
     })
   }
 
+  async updateDisplayName(userId: string, displayName: string): Promise<{ displayName: string }> {
+    const existing = await this.findById(userId)
+
+    await this.prisma.user.update({
+      where: { id: existing.id },
+      data: { displayName },
+      select: { displayName: true },
+    })
+
+    return { displayName }
+  }
+
   async updateUsername(userId: string, username: string): Promise<{ username: string }> {
     const existing = await this.findByUsername(username)
 
-    if (existing && existing.id !== userId) {
+    if (existing) {
       throw new ConflictException('Username already taken')
     }
 
     await this.prisma.user.update({
       where: { id: userId },
-      data: { username },
+      data: { username: normalize(username) },
     })
 
     return { username }

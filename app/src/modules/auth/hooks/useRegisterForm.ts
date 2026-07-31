@@ -11,9 +11,10 @@ import { registerSchema, type RegisterInput } from '../schema/auth.schema'
 import { useRegisterMutation } from './useRegisterMutation'
 
 export const useRegisterForm = () => {
-  const mutation = useRegisterMutation()
+  const registerMutation = useRegisterMutation()
 
   const emailVerificationDialog = useDisclosure()
+
   const [serverError, setServerError] = useState<string | null>(null)
 
   const {
@@ -37,7 +38,7 @@ export const useRegisterForm = () => {
     setServerError(null)
 
     try {
-      await mutation.mutateAsync(data)
+      await registerMutation.mutateAsync(data)
       emailVerificationDialog.open()
       reset()
     } catch (error) {
@@ -55,7 +56,7 @@ export const useRegisterForm = () => {
     register,
     errors,
     onSubmit,
-    isLoading: mutation.isPending,
+    isLoading: registerMutation.isPending,
     serverError,
     emailVerificationDialog,
   }

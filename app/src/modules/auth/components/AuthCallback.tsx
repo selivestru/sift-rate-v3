@@ -1,64 +1,35 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { Link } from '@tanstack/react-router'
+import { CheckCircle, XCircle } from 'reicon-react'
 
+import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
-import { Spinner } from '~/common/ui/Spinner'
-import { setStorageItem } from '~/common/utils/storage'
 
-import { authApi } from '../api/auth.api'
-import { useAuthStore } from '../store/auth.store'
-import { AuthFormAlert } from './AuthFormAlert'
-import { AuthFormHeader } from './AuthFormHeader'
+import type { AuthCallbackSearch } from '../schema/auth-callback.schema'
 
-const ERROR_MESSAGES: Record<string, string> = {
-  email_taken: 'This email is already registered. Sign in with your password instead.',
-  google_auth_failed: 'Google sign-in failed. Please try again.',
-  invalid_or_expired: 'Invalid or expired code.',
+const ERROR_MESSAGES: Record<AuthCallbackSearch['status'], string> = {
+  invalid_or_expired: 'The confirmation link is invalid or has expired. Please request a new one.',
+  verified: 'Your email has been successfully verified. You can now sign in.',
 }
 
 interface AuthCallbackProps {
-  error?: string
+  status: AuthCallbackSearch['status']
 }
 
-export const AuthCallback = ({ error }: AuthCallbackProps) => {
-  const navigate = useNavigate()
-  const setUser = useAuthStore((state) => state.setUser)
-
-  useEffect(() => {
-    if (error) {
-      return
-    }
-
-    const handleCallback = async () => {
-      try {
-        const response = await authApi.me()
-        setUser(response.user)
-        setStorageItem('has_session', true)
-        navigate({ to: '/' })
-      } catch {
-        navigate({ to: '/auth/login' })
-      }
-    }
-
-    handleCallback()
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  if (error) {
-    return (
-      <div className="flex flex-col gap-6">
-        <AuthFormHeader title="Sign in failed" subtitle="We couldn't sign you" />
-        {ERROR_MESSAGES[error] && <AuthFormAlert message={ERROR_MESSAGES[error]} />}
-        <Button fullWidth variant="secondary" className="h-11" render={<Link to="/auth/login" />}>
-          Back to sign in
-        </Button>
-      </div>
-    )
-  }
+export const AuthCallback = ({ status }: AuthCallbackProps) => {
+  const message = ERROR_MESSAGES[status]
+  const isSuccess = status === 'verified'
+  const Icon = isSuccess ? CheckCircle : XCircle
 
   return (
-    <div className="flex min-h-40 items-center justify-center">
-      <Spinner className="text-primary size-8" />
+    <div className="flex flex-col gap-4">
+      <Alert variant={isSuccess ? 'success' : 'destructive'}>
+        <Icon />
+        <AlertTitle>{isSuccess ? 'Success' : 'Failed'}</AlertTitle>
+        <AlertDescription>{message}</AlertDescription>
+      </Alert>
+      <Button fullWidth variant="secondary" render={<Link to="/auth/login" />}>
+        Back to sign in
+      </Button>
     </div>
   )
 }

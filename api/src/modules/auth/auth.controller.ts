@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpException,
   Post,
+  Put,
   Query,
   Req,
   Res,
@@ -13,6 +14,7 @@ import { ConfigService } from '@nestjs/config'
 import { seconds, Throttle } from '@nestjs/throttler'
 
 import { AuthService } from './auth.service'
+import { CompleteProfileDto } from './dto/complete-profile.dto'
 import {
   ForgotPasswordDto,
   ResetPasswordDto,
@@ -23,6 +25,7 @@ import { RegisterDto } from './dto/register.dto'
 import { ResendVerificationDto } from './dto/resend-verification.dto'
 import type { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
+import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 
 @Controller('auth')
@@ -40,18 +43,26 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
   login(@Req() req: Request, @Body() dto: LoginDto) {
     return this.authService.login(req, dto)
   }
 
+  @Put('/complete-profile')
+  completeProfile(@CurrentUser('userId') userId: string, @Body() dto: CompleteProfileDto) {
+    return this.authService.completeProfile(userId, dto)
+  }
+
   @Public()
+  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
   @Get('google/url')
   getGoogleAuthUrl() {
     return this.authService.getGoogleAuthUrl()
   }
 
   @Public()
+  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
   @Get('google/callback')
   async googleCallback(
     @Req() req: Request,
@@ -62,26 +73,26 @@ export class AuthController {
     const origin = this.config.get('ORIGIN', { infer: true })
 
     if (!code || !state) {
-      return res.redirect(`${origin}/auth/callback?error=google_auth_failed`)
+      return res.redirect(`${origin}/auth/google/callback?status=google_auth_failed`)
     }
 
     try {
       await this.authService.loginWithGoogle(req, code, state)
 
-      return res.redirect(`${origin}/auth/callback`)
+      return res.redirect(`${origin}/auth/google/callback?status=success`)
     } catch (error) {
       const errorCode =
         error instanceof HttpException && error.getStatus() === 409
           ? 'email_taken'
           : 'google_auth_failed'
 
-      return res.redirect(`${origin}/auth/callback?error=${errorCode}`)
+      return res.redirect(`${origin}/auth/google/callback?status=${errorCode}`)
     }
   }
 
   @Get('me')
-  me(@Req() req: Request) {
-    return this.authService.me(req.session.userId!)
+  me(@CurrentUser('userId') userId: string) {
+    return this.authService.me(userId)
   }
 
   @Post('logout')
@@ -91,20 +102,20 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
   @Get('verify')
-  async verifyEmail(@Req() req: Request, @Res() res: Response, @Query('token') token?: string) {
+  async verifyEmail(@Res() res: Response, @Query('token') token?: string) {
     const origin = this.config.get('ORIGIN', { infer: true })
 
     if (!token) {
-      return res.redirect(`${origin}/auth/callback?error=invalid_or_expired`)
+      return res.redirect(`${origin}/auth/callback?status=invalid_or_expired`)
     }
 
     try {
-      await this.authService.verifyEmail(req, token)
-
-      return res.redirect(`${origin}/auth/callback`)
+      await this.authService.verifyEmail(token)
+      return res.redirect(`${origin}/auth/callback?status=verified`)
     } catch {
-      return res.redirect(`${origin}/auth/callback?error=invalid_or_expired`)
+      return res.redirect(`${origin}/auth/callback?status=invalid_or_expired`)
     }
   }
 

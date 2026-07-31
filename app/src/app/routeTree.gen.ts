@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
-import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as CompleteProfileRouteImport } from './routes/complete-profile'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
 import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
@@ -32,6 +32,7 @@ import { Route as AppSettings2faRouteImport } from './routes/_app/settings/2fa'
 import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
 import { Route as AppSettingsAppearanceRouteImport } from './routes/_app/settings/appearance'
 import { Route as AppSettingsDangerZoneRouteImport } from './routes/_app/settings/danger-zone'
+import { Route as AuthGoogleCallbackRouteImport } from './routes/auth/google.callback'
 import { Route as AppDiscoverAlbumIndexRouteImport } from './routes/_app/discover/album/index'
 import { Route as AppDiscoverAlbumExternalIdRouteImport } from './routes/_app/discover/album/$externalId'
 import { Route as AppDiscoverBookIndexRouteImport } from './routes/_app/discover/book/index'
@@ -54,9 +55,9 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WelcomeRoute = WelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
+const CompleteProfileRoute = CompleteProfileRouteImport.update({
+  id: '/complete-profile',
+  path: '/complete-profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -159,6 +160,11 @@ const AppSettingsDangerZoneRoute = AppSettingsDangerZoneRouteImport.update({
   path: '/danger-zone',
   getParentRoute: () => AppSettingsRouteRoute,
 } as any)
+const AuthGoogleCallbackRoute = AuthGoogleCallbackRouteImport.update({
+  id: '/google/callback',
+  path: '/google/callback',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AppDiscoverAlbumIndexRoute = AppDiscoverAlbumIndexRouteImport.update({
   id: '/discover/album/',
   path: '/discover/album/',
@@ -229,7 +235,7 @@ const AppDiscoverTv_showExternalIdRoute =
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/': typeof AppIndexRoute
-  '/welcome': typeof WelcomeRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/library': typeof AppLibraryRouteRouteWithChildren
   '/settings': typeof AppSettingsRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
+  '/auth/google/callback': typeof AuthGoogleCallbackRoute
   '/discover/': typeof AppDiscoverIndexRoute
   '/library/': typeof AppLibraryIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
@@ -263,7 +270,7 @@ export interface FileRoutesByFullPath {
   '/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
 }
 export interface FileRoutesByTo {
-  '/welcome': typeof WelcomeRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/$username': typeof AppUsernameRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
+  '/auth/google/callback': typeof AuthGoogleCallbackRoute
   '/discover': typeof AppDiscoverIndexRoute
   '/library': typeof AppLibraryIndexRoute
   '/settings': typeof AppSettingsIndexRoute
@@ -299,7 +307,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/auth': typeof AuthRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
-  '/welcome': typeof WelcomeRoute
+  '/complete-profile': typeof CompleteProfileRoute
   '/_app/library': typeof AppLibraryRouteRouteWithChildren
   '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/_app/settings/account': typeof AppSettingsAccountRoute
   '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
   '/_app/settings/danger-zone': typeof AppSettingsDangerZoneRoute
+  '/auth/google/callback': typeof AuthGoogleCallbackRoute
   '/_app/discover/': typeof AppDiscoverIndexRoute
   '/_app/library/': typeof AppLibraryIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
@@ -338,7 +347,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/auth'
     | '/'
-    | '/welcome'
+    | '/complete-profile'
     | '/library'
     | '/settings'
     | '/$username'
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/danger-zone'
+    | '/auth/google/callback'
     | '/discover/'
     | '/library/'
     | '/settings/'
@@ -372,7 +382,7 @@ export interface FileRouteTypes {
     | '/discover/tv_show/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/welcome'
+    | '/complete-profile'
     | '/$username'
     | '/auth/callback'
     | '/auth/forgot-password'
@@ -388,6 +398,7 @@ export interface FileRouteTypes {
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/danger-zone'
+    | '/auth/google/callback'
     | '/discover'
     | '/library'
     | '/settings'
@@ -407,7 +418,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/auth'
     | '/_app'
-    | '/welcome'
+    | '/complete-profile'
     | '/_app/library'
     | '/_app/settings'
     | '/_app/$username'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/_app/settings/account'
     | '/_app/settings/appearance'
     | '/_app/settings/danger-zone'
+    | '/auth/google/callback'
     | '/_app/discover/'
     | '/_app/library/'
     | '/_app/settings/'
@@ -445,7 +457,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
-  WelcomeRoute: typeof WelcomeRoute
+  CompleteProfileRoute: typeof CompleteProfileRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -464,11 +476,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/welcome': {
-      id: '/welcome'
-      path: '/welcome'
-      fullPath: '/welcome'
-      preLoaderRoute: typeof WelcomeRouteImport
+    '/complete-profile': {
+      id: '/complete-profile'
+      path: '/complete-profile'
+      fullPath: '/complete-profile'
+      preLoaderRoute: typeof CompleteProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -611,6 +623,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsDangerZoneRouteImport
       parentRoute: typeof AppSettingsRouteRoute
     }
+    '/auth/google/callback': {
+      id: '/auth/google/callback'
+      path: '/google/callback'
+      fullPath: '/auth/google/callback'
+      preLoaderRoute: typeof AuthGoogleCallbackRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_app/discover/album/': {
       id: '/_app/discover/album/'
       path: '/discover/album'
@@ -705,6 +724,7 @@ interface AuthRouteRouteChildren {
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   AuthIndexRoute: typeof AuthIndexRoute
+  AuthGoogleCallbackRoute: typeof AuthGoogleCallbackRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
@@ -714,6 +734,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthIndexRoute: AuthIndexRoute,
+  AuthGoogleCallbackRoute: AuthGoogleCallbackRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
@@ -802,7 +823,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AppRoute: AppRouteWithChildren,
-  WelcomeRoute: WelcomeRoute,
+  CompleteProfileRoute: CompleteProfileRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

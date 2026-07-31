@@ -23,7 +23,7 @@ export class SessionService {
     return new Promise((resolve, reject) => {
       req.session.regenerate((err) => {
         if (err) {
-          reject(new InternalServerErrorException('Failed to save session'))
+          reject(new InternalServerErrorException('Failed to save session, please try again'))
           return
         }
 

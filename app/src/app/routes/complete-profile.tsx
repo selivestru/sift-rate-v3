@@ -1,9 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { AuthShell } from '~/modules/auth'
-import { WelcomeForm } from '~/modules/user'
+import { AuthShell, CompleteProfileForm } from '~/modules/auth'
 
-export const Route = createFileRoute('/welcome')({
+export const Route = createFileRoute('/complete-profile')({
   beforeLoad: ({ context }) => {
     const { user } = context.auth
 
@@ -17,7 +16,7 @@ export const Route = createFileRoute('/welcome')({
 function RouteComponent() {
   return (
     <AuthShell>
-      <WelcomeForm />
+      <CompleteProfileForm />
     </AuthShell>
   )
 }

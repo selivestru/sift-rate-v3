@@ -10,11 +10,13 @@ import {
 } from '~/common/ui/Dialog'
 import { TimerButton } from '~/common/ui/TimerButton'
 
+import type { ResendVerificationResponse } from '../types/auth.type'
+
 interface ResendVerificationDialogProps {
   isOpen: boolean
   email: string | null
   isLoading?: boolean
-  result?: { message: string; ttl: number } | null
+  result?: ResendVerificationResponse | null
   error?: string | null
   cooldownSeconds: number
   onResend: () => void
@@ -32,6 +34,7 @@ export const ResendVerificationDialog = ({
   onClose,
 }: ResendVerificationDialogProps) => {
   const hasSent = Boolean(result) || cooldownSeconds > 0
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent showCloseButton={false}>

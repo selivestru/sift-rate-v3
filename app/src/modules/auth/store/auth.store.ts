@@ -3,6 +3,7 @@ import { create } from 'zustand'
 
 import { getStorageItem } from '~/common/utils/storage'
 
+import type { CompleteProfileInput } from '../schema/auth.schema'
 import type { User } from '../types/user.type'
 
 export interface AuthState {
@@ -13,6 +14,7 @@ export interface AuthState {
 
 interface AuthActions {
   setUser: (user: AuthState['user']) => void
+  setCompleteProfile: (data: CompleteProfileInput) => void
   setIsLoading: (isLoading: boolean) => void
   setUsername: (username: string) => void
   setTwoFactor: (twoFactorEnabled: boolean) => void
@@ -31,6 +33,7 @@ export const useAuthStore = create<Store>()((set, get) => ({
       isAuthenticated: !!user,
       isLoading: false,
     }),
+  setCompleteProfile: (data) => set({ user: { ...get().user!, ...data } }),
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
   setUsername: (username) => set({ user: { ...get().user!, username } }),
   setTwoFactor: (twoFactorEnabled) => set({ user: { ...get().user!, twoFactorEnabled } }),

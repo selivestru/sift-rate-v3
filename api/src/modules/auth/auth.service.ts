@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config'
 import { SessionService } from '../session/session.service'
 import { TwoFactorService } from '../two-factor/two-factor.service'
 import { SafeUser } from '../user/types/user.types'
+import { CompleteProfileDto } from './dto/complete-profile.dto'
 import { ResetPasswordDto } from './dto/forgot-password.dto'
 import { LoginDto } from './dto/login.dto'
 import { RegisterDto } from './dto/register.dto'
@@ -20,8 +21,10 @@ import { Queue } from 'bullmq'
 import type { Request, Response } from 'express'
 import { createHash, randomBytes } from 'node:crypto'
 import { EnvConfig } from '~/app/config/env.config'
+import { normalize } from '~/common/utils/normalize'
 import { safeUser } from '~/common/utils/safeUser'
 import { AuthMethod } from '~/generated/prisma/client'
+import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import {
   EMAIL_QUEUE,
@@ -35,11 +38,16 @@ import { UserService } from '~/modules/user/user.service'
 export class AuthService {
   private readonly VERIFICATION_TTL = 86_400
   private readonly PASSWORD_RESET_TTL = 3_600
-  private readonly RESEND_COOLDOWN_TTL = 60
+  private readonly RESEND_COOLDOWN_SECONDS = 60
+  private readonly VERIFY_CANNED_MESSAGE =
+    'If your email is registered and not yet verified, a new email has been sent'
+  private readonly FORGOT_PASSWORD_CANNED_MESSAGE =
+    'If an account exists for this email, a password reset link has been sent.'
   private readonly logger = new Logger(AuthService.name)
 
   constructor(
     private readonly userService: UserService,
+    private readonly prisma: PrismaService,
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly googleOAuth: GoogleOAuthService,
     private readonly twoFactorService: TwoFactorService,
@@ -49,15 +57,13 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto): Promise<{ message: string }> {
-    const existingEmail = await this.userService.findByEmail(dto.email)
+    const existing = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ email: normalize(dto.email) }, { username: normalize(dto.username) }],
+      },
+    })
 
-    if (existingEmail) {
-      throw new ConflictException('Account with this email or username already exists')
-    }
-
-    const existingUsername = await this.userService.findByUsername(dto.username)
-
-    if (existingUsername) {
+    if (existing) {
       throw new ConflictException('Account with this email or username already exists')
     }
 
@@ -70,23 +76,10 @@ export class AuthService {
       passwordHash,
     })
 
-    const token = randomBytes(32).toString('base64url')
-
-    await Promise.all([
-      this.redis.set(`email_verify:${user.id}`, token, 'EX', this.VERIFICATION_TTL),
-      this.redis.set(`email_verify_token:${token}`, user.id, 'EX', this.VERIFICATION_TTL),
-    ])
-
     try {
-      await this.emailQueue.add(
-        WELCOME_JOB,
-        { to: user.email, token },
-        {
-          attempts: 5,
-          backoff: { type: 'exponential', delay: 5_000 },
-        },
-      )
-    } catch {
+      await this.issueVerificationToken(user.id, user.email)
+    } catch (err) {
+      this.logger.error(`Failed to queue verification email for user ${user.id}`, err)
       throw new ServiceUnavailableException({
         message:
           'Your account was created but the verification email could not be sent. Use "Resend verification email" to receive a new link.',
@@ -100,13 +93,15 @@ export class AuthService {
   async login(req: Request, dto: LoginDto): Promise<{ user: SafeUser }> {
     const existing = await this.userService.findByEmail(dto.email)
 
-    if (!existing || existing.method !== AuthMethod.CREDENTIALS || !existing.passwordHash) {
-      throw new UnauthorizedException('Invalid credentials')
-    }
+    const isCredentialsUser =
+      !!existing && existing.method === AuthMethod.CREDENTIALS && !!existing.passwordHash
 
-    const isValidPassword = await verify(existing.passwordHash, dto.password)
+    const isValidPassword = await verify(
+      isCredentialsUser ? existing.passwordHash! : this.config.get('DUMMY_HASH', { infer: true }),
+      dto.password,
+    )
 
-    if (!isValidPassword) {
+    if (!isCredentialsUser || !isValidPassword) {
       throw new UnauthorizedException('Invalid credentials')
     }
 
@@ -138,6 +133,21 @@ export class AuthService {
     await this.sessionService.create(req, existing.id)
 
     return { user: safeUser(existing) }
+  }
+
+  async completeProfile(
+    userId: string,
+    dto: CompleteProfileDto,
+  ): Promise<Pick<SafeUser, 'displayName' | 'username'>> {
+    await Promise.all([
+      this.userService.updateDisplayName(userId, dto.displayName),
+      this.userService.updateUsername(userId, dto.username),
+    ])
+
+    return {
+      displayName: dto.displayName,
+      username: dto.username,
+    }
   }
 
   async getGoogleAuthUrl(): Promise<{ url: string }> {
@@ -173,66 +183,58 @@ export class AuthService {
     }
   }
 
-  async verifyEmail(req: Request, token: string): Promise<void> {
+  async verifyEmail(token: string): Promise<void> {
     const userId = await this.redis.getdel(`email_verify_token:${token}`)
 
     if (!userId) {
       throw new UnauthorizedException('Invalid or expired verification token')
     }
 
-    await Promise.all([
-      this.redis.del(`email_verify:${userId}`),
-      this.userService.verifyUser(userId),
-      this.sessionService.create(req, userId),
-    ])
+    await this.redis.del(`email_verify:${userId}`)
+
+    await this.userService.verifyUser(userId)
   }
 
-  async resendVerification(email: string): Promise<{ message: string; ttl: number }> {
-    const cannedMessage =
-      'If your email is registered and not yet verified, a new email has been sent'
-
+  async resendVerification(email: string): Promise<{ message: string; retryAfter: number }> {
     const user = await this.userService.findByEmail(email)
 
     if (!user || user.isVerified) {
-      return { message: cannedMessage, ttl: this.RESEND_COOLDOWN_TTL }
+      return { message: this.VERIFY_CANNED_MESSAGE, retryAfter: this.RESEND_COOLDOWN_SECONDS }
     }
 
     const oldToken = await this.redis.get(`email_verify:${user.id}`)
+
     if (oldToken) {
+      const ttl = await this.redis.ttl(`email_verify:${user.id}`)
+      const elapsed = this.VERIFICATION_TTL - ttl
+
+      if (elapsed < this.RESEND_COOLDOWN_SECONDS) {
+        const retryAfter = this.RESEND_COOLDOWN_SECONDS - elapsed
+        return { message: this.VERIFY_CANNED_MESSAGE, retryAfter }
+      }
+
       await Promise.all([
         this.redis.del(`email_verify:${user.id}`),
         this.redis.del(`email_verify_token:${oldToken}`),
       ])
     }
 
-    const token = randomBytes(32).toString('base64url')
-
-    await this.redis.set(`email_verify:${user.id}`, token, 'EX', this.VERIFICATION_TTL)
-    await this.redis.set(`email_verify_token:${token}`, user.id, 'EX', this.VERIFICATION_TTL)
-
     try {
-      await this.emailQueue.add(
-        WELCOME_JOB,
-        { to: user.email, token },
-        {
-          attempts: 5,
-          backoff: { type: 'exponential', delay: 5_000 },
-        },
-      )
-    } catch {
-      return { message: cannedMessage, ttl: this.RESEND_COOLDOWN_TTL }
+      await this.issueVerificationToken(user.id, user.email)
+    } catch (err) {
+      this.logger.error(`Failed to queue resend email for user ${user.id}`, err)
     }
 
-    return { message: cannedMessage, ttl: this.RESEND_COOLDOWN_TTL }
+    return { message: this.VERIFY_CANNED_MESSAGE, retryAfter: this.RESEND_COOLDOWN_SECONDS }
   }
 
-  async forgotPassword(email: string): Promise<{ message: string; ttl: number }> {
+  async forgotPassword(email: string): Promise<{ message: string; retryAfter: number }> {
     const user = await this.userService.findByEmail(email)
 
     if (!user || user.method !== AuthMethod.CREDENTIALS) {
       return {
-        message: 'If an account exists for this email, a password reset link has been sent.',
-        ttl: this.PASSWORD_RESET_TTL,
+        message: this.FORGOT_PASSWORD_CANNED_MESSAGE,
+        retryAfter: this.PASSWORD_RESET_TTL,
       }
     }
 
@@ -260,8 +262,8 @@ export class AuthService {
     }
 
     return {
-      message: 'If an account exists for this email, a password reset link has been sent.',
-      ttl: this.PASSWORD_RESET_TTL,
+      message: this.FORGOT_PASSWORD_CANNED_MESSAGE,
+      retryAfter: this.PASSWORD_RESET_TTL,
     }
   }
 
@@ -300,23 +302,6 @@ export class AuthService {
     return { message: 'Password has been reset' }
   }
 
-  private async invalidateResetToken(userId: string): Promise<void> {
-    const oldHash = await this.redis.get(`pwreset:${userId}`)
-
-    if (!oldHash) {
-      return
-    }
-
-    await Promise.all([
-      this.redis.del(`pwreset:${userId}`),
-      this.redis.del(`pwreset_token:${oldHash}`),
-    ])
-  }
-
-  private hashToken(token: string): string {
-    return createHash('sha256').update(token).digest('hex')
-  }
-
   async me(userId: string): Promise<{ user: SafeUser }> {
     const user = await this.userService.findById(userId)
 
@@ -335,5 +320,38 @@ export class AuthService {
       secure: isProd,
       sameSite: 'lax',
     })
+  }
+
+  private async issueVerificationToken(userId: string, email: string): Promise<void> {
+    const token = randomBytes(32).toString('base64url')
+
+    await this.redis.set(`email_verify:${userId}`, token, 'EX', this.VERIFICATION_TTL)
+    await this.redis.set(`email_verify_token:${token}`, userId, 'EX', this.VERIFICATION_TTL)
+
+    await this.emailQueue.add(
+      WELCOME_JOB,
+      { to: email, token },
+      {
+        attempts: 5,
+        backoff: { type: 'exponential', delay: 5_000 },
+      },
+    )
+  }
+
+  private async invalidateResetToken(userId: string): Promise<void> {
+    const oldHash = await this.redis.get(`pwreset:${userId}`)
+
+    if (!oldHash) {
+      return
+    }
+
+    await Promise.all([
+      this.redis.del(`pwreset:${userId}`),
+      this.redis.del(`pwreset_token:${oldHash}`),
+    ])
+  }
+
+  private hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex')
   }
 }

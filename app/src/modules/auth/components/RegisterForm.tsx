@@ -1,14 +1,5 @@
 import { Link } from '@tanstack/react-router'
 
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '~/common/ui/AlertDialog'
 import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
 
@@ -17,6 +8,7 @@ import { AuthDivider } from './AuthDivider'
 import { AuthFormAlert } from './AuthFormAlert'
 import { AuthFormHeader } from './AuthFormHeader'
 import { AuthTextField } from './AuthTextField'
+import { EmailVerificationDialog } from './EmailVerificationDialog'
 import { GoogleAuthButton } from './GoogleAuthButton'
 import { PasswordField } from './PasswordField'
 
@@ -27,7 +19,7 @@ export const RegisterForm = () => {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <BackButton to="/" />
+        <BackButton to="/auth/login" />
 
         <AuthFormHeader
           title="Create your account"
@@ -89,33 +81,18 @@ export const RegisterForm = () => {
           </Button>
         </form>
 
-        <div>
-          <p className="text-muted-foreground text-center text-sm">
-            Already have an account?{' '}
-            <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
-              Sign in
-            </Link>
-          </p>
-        </div>
+        <p className="text-muted-foreground text-center text-sm">
+          Already have an account?{' '}
+          <Link to="/auth/login" className="hover:text-primary font-medium transition-colors">
+            Sign in
+          </Link>
+        </p>
       </div>
 
-      <AlertDialog
+      <EmailVerificationDialog
         open={emailVerificationDialog.opened}
         onOpenChange={emailVerificationDialog.toggle}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Verify your email address</AlertDialogTitle>
-            <AlertDialogDescription>
-              We've sent a verification email to your email address. Open the email and click the
-              verification link to activate your account and sign in.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Close</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      />
     </>
   )
 }

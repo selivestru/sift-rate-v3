@@ -7,7 +7,7 @@ export const Route = createFileRoute('/_app')({
     const { user } = context.auth
 
     if (user && !user.username) {
-      throw redirect({ to: '/welcome' })
+      throw redirect({ to: '/complete-profile' })
     }
   },
   component: RouteComponent,

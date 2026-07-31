@@ -69,7 +69,8 @@ export class GoogleOAuthService {
 
     return {
       email: payload.email,
-      displayName: payload.name ?? null,
+      displayName:
+        payload.name ?? [payload.given_name, payload.family_name].filter(Boolean).join(' ') ?? null,
       avatarUrl: payload.picture ?? null,
     }
   }

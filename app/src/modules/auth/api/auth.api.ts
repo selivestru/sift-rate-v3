@@ -1,7 +1,13 @@
 import { api } from '~/common/api'
 
-import type { ForgotPasswordInput, LoginInput, RegisterInput } from '../schema/auth.schema'
 import type {
+  CompleteProfileInput,
+  ForgotPasswordInput,
+  LoginInput,
+  RegisterInput,
+} from '../schema/auth.schema'
+import type {
+  CompleteProfileResponse,
   ForgotPasswordResponse,
   LoginResponse,
   RegisterResponse,
@@ -16,6 +22,9 @@ export const authApi = {
   register: (body: RegisterInput) => {
     const { confirmPassword: _, ...payload } = body
     return api.post<RegisterResponse>('/auth/register', { json: payload }).json()
+  },
+  completeProfile: (body: CompleteProfileInput) => {
+    return api.put<CompleteProfileResponse>('/auth/complete-profile', { json: body }).json()
   },
   forgotPassword: (body: ForgotPasswordInput) => {
     return api.post<ForgotPasswordResponse>('/auth/forgot-password', { json: body }).json()

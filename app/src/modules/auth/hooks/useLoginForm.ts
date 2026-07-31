@@ -11,7 +11,7 @@ import { useLoginMutation } from './useLoginMutation'
 import { useResendVerificationMutation } from './useResendVerificationMutation'
 
 export const useLoginForm = () => {
-  const mutation = useLoginMutation()
+  const loginMutation = useLoginMutation()
   const resendMutation = useResendVerificationMutation()
 
   const [serverError, setServerError] = useState<string | null>(null)
@@ -40,7 +40,7 @@ export const useLoginForm = () => {
 
     try {
       const data = await resendMutation.mutateAsync({ email: resendEmailRef.current })
-      cooldownUntilRef.current = Date.now() + data.ttl * 1000
+      cooldownUntilRef.current = Date.now() + data.retryAfter * 1000
     } catch {}
   }
 
@@ -56,7 +56,7 @@ export const useLoginForm = () => {
     setServerError(null)
 
     try {
-      await mutation.mutateAsync(data)
+      await loginMutation.mutateAsync(data)
     } catch (error) {
       const apiError = await getApiError(error)
 
@@ -94,7 +94,7 @@ export const useLoginForm = () => {
     register,
     errors,
     onSubmit: handleSubmit(onSubmit),
-    isLoading: mutation.isPending,
+    isLoading: loginMutation.isPending,
     serverError,
     setValue,
     twoFactorState: {

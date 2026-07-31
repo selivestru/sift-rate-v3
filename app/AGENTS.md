@@ -71,7 +71,7 @@ src/
 - File routes under `src/app/routes/` via `@tanstack/router-plugin`
 - Generated tree: `src/app/routeTree.gen.ts` — never hand-edit
 - Route components use local `function RouteComponent()` and import module UI
-- Layout `/_app`: authenticated app chrome (`Layout`), redirects to `/welcome` if user has no username
+- Layout `/_app`: authenticated app chrome (`Layout`), redirects to `/complete-profile` if user has no username
 - Auth layout `/auth`: wraps `AuthShell`, redirects authenticated users away
 - Router context carries `auth` (Zustand store) and `queryClient`
 
@@ -105,15 +105,15 @@ Current modules: `auth`, `discover` (search + detail), `library`, `planned`, `ra
 
 File routes: `src/app/routes/`.
 
-| Area     | Paths                                                                                              | Intent                                                 |
-| -------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Auth     | `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/callback`                         | Sign-in, sign-up, reset, Google OAuth                  |
-| Welcome  | `/welcome`                                                                                         | Username onboarding when account has no username       |
-| Home     | `/`                                                                                                | Activity feed / home of the archive                    |
-| Discover | `/discover`, `/discover/{movie,tv_show,game,book,album,track}`, `/$externalId`                     | Search by type, detail by external ID                  |
-| Library  | `/library`, `/library/reviews`, `/library/ranked-list`, `/library/planned`                         | Personal library, reviews, ranked lists, planned queue |
-| Settings | `/settings`, `/settings/account`, `/settings/appearance`, `/settings/2fa`, `/settings/danger-zone` | Account settings, theme, 2FA, danger zone              |
-| Profile  | `/$username`                                                                                       | Public/personal profile by username                    |
+| Area             | Paths                                                                                              | Intent                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Auth             | `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/callback`                         | Sign-in, sign-up, reset, Google OAuth                  |
+| Complete Profile | `/complete-profile`                                                                                | Username onboarding when account has no username       |
+| Home             | `/`                                                                                                | Activity feed / home of the archive                    |
+| Discover         | `/discover`, `/discover/{movie,tv_show,game,book,album,track}`, `/$externalId`                     | Search by type, detail by external ID                  |
+| Library          | `/library`, `/library/reviews`, `/library/ranked-list`, `/library/planned`                         | Personal library, reviews, ranked lists, planned queue |
+| Settings         | `/settings`, `/settings/account`, `/settings/appearance`, `/settings/2fa`, `/settings/danger-zone` | Account settings, theme, 2FA, danger zone              |
+| Profile          | `/$username`                                                                                       | Public/personal profile by username                    |
 
 ## Data layer
 

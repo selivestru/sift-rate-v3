@@ -1,14 +1,19 @@
 import { Link } from '@tanstack/react-router'
 
 import { cn } from '~/common/utils/cn'
+import { useAuthStore } from '~/modules/auth'
 
 import { settingsNavItems } from '../constants/settings-nav'
 
 export const SettingsNav = () => {
+  const user = useAuthStore((state) => state.user)
+
+  const visibleItems = settingsNavItems.filter((item) => !item.show || item.show(user))
+
   return (
     <nav aria-label="Settings sections">
       <ul className="flex flex-col gap-1">
-        {settingsNavItems.map((item) => (
+        {visibleItems.map((item) => (
           <li key={item.to}>
             <Link
               to={item.to}
