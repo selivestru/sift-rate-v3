@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 
 import { normalize } from '~/common/utils/normalize'
 import { AuthMethod, Prisma, User } from '~/generated/prisma/client'
@@ -92,29 +92,22 @@ export class UserService {
   }
 
   async updateDisplayName(userId: string, displayName: string): Promise<{ displayName: string }> {
-    const existing = await this.findById(userId)
-
-    await this.prisma.user.update({
-      where: { id: existing.id },
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
       data: { displayName },
       select: { displayName: true },
     })
 
-    return { displayName }
+    return { displayName: updatedUser.displayName! }
   }
 
   async updateUsername(userId: string, username: string): Promise<{ username: string }> {
-    const existing = await this.findByUsername(username)
-
-    if (existing) {
-      throw new ConflictException('Username already taken')
-    }
-
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: { username: normalize(username) },
+      select: { username: true },
     })
 
-    return { username }
+    return { username: updatedUser.username! }
   }
 }
