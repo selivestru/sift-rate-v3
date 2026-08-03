@@ -22,7 +22,7 @@ function NavItem({ item, user, nested }: NavItemProps) {
         params={item.params}
         activeOptions={{ exact: true, includeSearch: false }}
         className={cn(
-          'text-muted-foreground relative flex items-center gap-2.5 rounded-md px-3 text-sm font-medium transition-colors duration-200',
+          'text-muted-foreground relative flex items-center gap-2.5 rounded-md px-3 text-sm font-medium',
           'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
           nested ? 'h-9' : 'h-10',
           'hover:bg-accent hover:text-accent-foreground',
