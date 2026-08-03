@@ -2,6 +2,8 @@ import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
 
 import {
+  EMAIL_CHANGE_CONFIRM_JOB,
+  EMAIL_CHANGE_NOTIFY_JOB,
   EMAIL_QUEUE,
   PASSWORD_CHANGED_JOB,
   PASSWORD_RESET_JOB,
@@ -11,6 +13,8 @@ import {
 import { ResendService } from './resend.service'
 import { Job } from 'bullmq'
 
+type EmailJobData = { to: string; token?: string; newEmail?: string }
+
 @Processor(EMAIL_QUEUE)
 export class EmailProcessor extends WorkerHost {
   private readonly logger = new Logger(EmailProcessor.name)
@@ -19,15 +23,19 @@ export class EmailProcessor extends WorkerHost {
     super()
   }
 
-  async process(job: Job<{ to: string; token: string }>) {
+  async process(job: Job<EmailJobData>) {
     if (job.name === WELCOME_JOB) {
-      await this.resend.sendWelcomeEmail(job.data.to, job.data.token)
+      await this.resend.sendWelcomeEmail(job.data.to, job.data.token!)
     } else if (job.name === WELCOME_GOOGLE_JOB) {
       await this.resend.sendGoogleWelcomeEmail(job.data.to)
     } else if (job.name === PASSWORD_RESET_JOB) {
-      await this.resend.sendPasswordResetEmail(job.data.to, job.data.token)
+      await this.resend.sendPasswordResetEmail(job.data.to, job.data.token!)
     } else if (job.name === PASSWORD_CHANGED_JOB) {
       await this.resend.sendPasswordChangedEmail(job.data.to)
+    } else if (job.name === EMAIL_CHANGE_CONFIRM_JOB) {
+      await this.resend.sendEmailChangeConfirmation(job.data.to, job.data.token!)
+    } else if (job.name === EMAIL_CHANGE_NOTIFY_JOB) {
+      await this.resend.sendEmailChangeRequested(job.data.to, job.data.newEmail!)
     }
   }
 

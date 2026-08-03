@@ -3,7 +3,15 @@ import z from 'zod'
 import { emailSchema, passwordSchema } from '~/modules/user'
 
 export const changeEmailSchema = z.object({
-  email: emailSchema,
+  newEmail: emailSchema,
+  currentPassword: z.string().min(1, 'Current password is required'),
+  twoFactorCode: z
+    .string()
+    .trim()
+    .refine((value) => value === '' || /^\d{6}$/.test(value), {
+      message: 'Enter the 6-digit code from your authenticator app',
+    })
+    .optional(),
 })
 
 export const changePasswordSchema = z

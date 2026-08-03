@@ -16,4 +16,7 @@ export const userApi = {
   }) => {
     return api.patch<{ message: string }>('/user/password', { json: data }).json()
   },
+  changeEmail: (data: { newEmail: string; currentPassword: string; twoFactorCode?: string }) => {
+    return api.patch<{ message: string }>('/user/email', { json: data }).json()
+  },
 }

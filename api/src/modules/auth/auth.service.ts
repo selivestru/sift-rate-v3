@@ -195,6 +195,39 @@ export class AuthService {
     await this.userService.verifyUser(userId)
   }
 
+  async confirmEmailChange(token: string): Promise<void> {
+    const tokenHash = this.hashToken(token)
+    const data = await this.redis.getdel(`email_change_token:${tokenHash}`)
+
+    if (!data) {
+      throw new UnauthorizedException('Invalid or expired email change token')
+    }
+
+    const separatorIndex = data.indexOf(':')
+    const userId = data.slice(0, separatorIndex)
+    const newEmail = data.slice(separatorIndex + 1)
+
+    const user = await this.userService.findById(userId)
+
+    if (user.method !== AuthMethod.CREDENTIALS) {
+      await this.invalidateEmailChange(userId)
+      throw new UnauthorizedException('Invalid or expired email change token')
+    }
+
+    const existing = await this.userService.findByEmail(newEmail)
+
+    if (existing && existing.id !== userId) {
+      await this.invalidateEmailChange(userId)
+      throw new ConflictException('This email is already in use')
+    }
+
+    await this.userService.updateEmail(userId, newEmail)
+    await this.invalidateEmailChange(userId)
+    await this.sessionService.destroyAllForUser(userId)
+
+    this.logger.log({ userId }, 'Email change confirmed; sessions revoked')
+  }
+
   async resendVerification(email: string): Promise<{ message: string; retryAfter: number }> {
     const user = await this.userService.findByEmail(email)
 
@@ -348,6 +381,19 @@ export class AuthService {
     await Promise.all([
       this.redis.del(`pwreset:${userId}`),
       this.redis.del(`pwreset_token:${oldHash}`),
+    ])
+  }
+
+  private async invalidateEmailChange(userId: string): Promise<void> {
+    const oldHash = await this.redis.get(`email_change:${userId}`)
+
+    if (!oldHash) {
+      return
+    }
+
+    await Promise.all([
+      this.redis.del(`email_change:${userId}`),
+      this.redis.del(`email_change_token:${oldHash}`),
     ])
   }
 

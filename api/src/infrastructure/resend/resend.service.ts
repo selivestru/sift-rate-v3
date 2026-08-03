@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { RedisService } from '../redis/redis.service'
+import EmailChangeConfirm from './templates/email-change-confirm.template'
+import EmailChangeNotify from './templates/email-change-notify.template'
 import PasswordChanged from './templates/password-changed.template'
 import ResetPassword from './templates/reset-password.template'
 import Welcome from './templates/welcome.template'
@@ -82,6 +84,41 @@ export class ResendService {
       from: this.domain,
       to,
       subject: 'Your SiftRate password was changed',
+      html,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async sendEmailChangeConfirmation(to: string, token: string) {
+    const backendUrl = this.config.get('BACKEND_URL', { infer: true })
+    const confirmUrl = `${backendUrl}/api/auth/confirm-email-change?token=${token}`
+
+    const html = await pretty(
+      await render(EmailChangeConfirm({ confirmUrl, expiresInLabel: 'expires in 24 hours' })),
+    )
+
+    const { error } = await this.resend.emails.send({
+      from: this.domain,
+      to,
+      subject: 'Confirm your new SiftRate email address',
+      html,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async sendEmailChangeRequested(to: string, newEmail: string) {
+    const html = await pretty(await render(EmailChangeNotify({ newEmail })))
+
+    const { error } = await this.resend.emails.send({
+      from: this.domain,
+      to,
+      subject: 'We received a request to change your SiftRate email',
       html,
     })
 

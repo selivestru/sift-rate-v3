@@ -9,7 +9,8 @@ export const api = ky.create({
     afterResponse: [
       ({ response }) => {
         if (response.status === 403) {
-          window.location.href = '/'
+          console.debug('ERROR')
+          window.location.href = '/' // TODO: FIX
         }
       },
     ],

@@ -1,5 +1,7 @@
 import { Body, Controller, Patch, Req } from '@nestjs/common'
+import { seconds, Throttle } from '@nestjs/throttler'
 
+import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
 import { UpdateDisplayNameDto } from './dto/update-display-name.dto'
 import { UpdateUsernameDto } from './dto/update-username.dto'
@@ -20,6 +22,13 @@ export class UserController {
   @Patch('username')
   updateUsername(@CurrentUser('userId') userId: string, @Body() dto: UpdateUsernameDto) {
     return this.userService.updateUsername(userId, dto.username)
+  }
+
+  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Patch('email')
+  @TwoFactor()
+  changeEmail(@CurrentUser('userId') userId: string, @Body() dto: ChangeEmailDto) {
+    return this.userService.changeEmail(userId, dto)
   }
 
   @Patch('password')

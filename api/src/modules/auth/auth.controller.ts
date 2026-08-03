@@ -103,6 +103,24 @@ export class AuthController {
 
   @Public()
   @Throttle({ default: { limit: 10, ttl: seconds(60) } })
+  @Get('confirm-email-change')
+  async confirmEmailChange(@Res() res: Response, @Query('token') token?: string) {
+    const origin = this.config.get('ORIGIN', { infer: true })
+
+    if (!token) {
+      return res.redirect(`${origin}/auth/callback?status=email_change_failed`)
+    }
+
+    try {
+      await this.authService.confirmEmailChange(token)
+      return res.redirect(`${origin}/auth/callback?status=email_changed`)
+    } catch {
+      return res.redirect(`${origin}/auth/callback?status=email_change_failed`)
+    }
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
   @Get('verify')
   async verifyEmail(@Res() res: Response, @Query('token') token?: string) {
     const origin = this.config.get('ORIGIN', { infer: true })
