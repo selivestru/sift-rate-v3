@@ -22,7 +22,7 @@ export const ChangeEmailForm = () => {
           title="Email"
           description="Update the address we use for account notices. You'll confirm the change from your new inbox."
           footer={
-            <Button type="submit" size="sm" isLoading={isLoading}>
+            <Button type="submit" size="sm" isLoading={isLoading} isDisabled={!isValid || !isDirty}>
               Save email
             </Button>
           }

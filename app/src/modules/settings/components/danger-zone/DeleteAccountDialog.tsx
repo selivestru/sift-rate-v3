@@ -16,7 +16,7 @@ import {
 } from '~/common/ui/AlertDialog'
 import { cn } from '~/common/utils/cn'
 
-import { mockDelay } from '../utils/mock-delay'
+import { mockDelay } from '../../utils/mock-delay'
 
 interface DeleteAccountDialogProps {
   children: ({ open }: { open: () => void }) => React.ReactNode

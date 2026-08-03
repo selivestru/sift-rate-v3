@@ -4,9 +4,9 @@ import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
 import { PageHeader } from '~/common/ui/PageHeader'
 
-import { dangerZoneNavItem } from '../constants/settings-nav'
+import { dangerZoneNavItem } from '../../constants/settings-nav'
+import { SettingsSection } from '../SettingsSection'
 import { DeleteAccountDialog } from './DeleteAccountDialog'
-import { SettingsSection } from './SettingsSection'
 
 export const DangerZoneSettings = () => {
   return (
