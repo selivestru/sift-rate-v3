@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { RedisService } from '../redis/redis.service'
+import PasswordChanged from './templates/password-changed.template'
 import ResetPassword from './templates/reset-password.template'
 import Welcome from './templates/welcome.template'
 import { pretty, render } from 'react-email'
@@ -66,6 +67,21 @@ export class ResendService {
       from: this.domain,
       to,
       subject: 'Reset your SiftRate password',
+      html,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async sendPasswordChangedEmail(to: string) {
+    const html = await pretty(await render(PasswordChanged()))
+
+    const { error } = await this.resend.emails.send({
+      from: this.domain,
+      to,
+      subject: 'Your SiftRate password was changed',
       html,
     })
 

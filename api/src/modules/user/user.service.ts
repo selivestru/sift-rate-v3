@@ -1,12 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { InjectQueue } from '@nestjs/bullmq'
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common'
 
+import { ChangePasswordDto } from './dto/change-password.dto'
+import { argon2id, hash, verify } from 'argon2'
+import { Queue } from 'bullmq'
 import { normalize } from '~/common/utils/normalize'
 import { AuthMethod, Prisma, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
+import { EMAIL_QUEUE, PASSWORD_CHANGED_JOB } from '~/infrastructure/resend/constants/email-queue'
+import { SessionService } from '~/modules/session/session.service'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(UserService.name)
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly sessionService: SessionService,
+    @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
+  ) {}
 
   async findById(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
@@ -109,5 +121,43 @@ export class UserService {
     })
 
     return { username: updatedUser.username! }
+  }
+
+  async changePassword(
+    userId: string,
+    currentSid: string,
+    dto: ChangePasswordDto,
+  ): Promise<{ message: string }> {
+    const user = await this.findById(userId)
+
+    if (user.method !== AuthMethod.CREDENTIALS || !user.passwordHash) {
+      throw new UnauthorizedException('Password change is not available for this account')
+    }
+
+    const isValidPassword = await verify(user.passwordHash, dto.currentPassword)
+
+    if (!isValidPassword) {
+      throw new UnauthorizedException('Current password is incorrect')
+    }
+
+    const passwordHash = (await hash(dto.newPassword, { type: argon2id })) as string
+
+    await this.updatePasswordHash(userId, passwordHash)
+    await this.sessionService.destroyAllForUser(userId, currentSid)
+
+    try {
+      await this.emailQueue.add(
+        PASSWORD_CHANGED_JOB,
+        { to: user.email },
+        {
+          attempts: 5,
+          backoff: { type: 'exponential', delay: 5_000 },
+        },
+      )
+    } catch {
+      this.logger.warn({ userId }, 'Failed to enqueue password-changed email')
+    }
+
+    return { message: 'Password has been changed' }
   }
 }

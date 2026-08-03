@@ -1,7 +1,19 @@
 import { api } from '~/common/api'
 
 export const userApi = {
+  changeDisplayName: (displayName: string) => {
+    return api
+      .patch<{ displayName: string }>('/user/display-name', { json: { displayName } })
+      .json()
+  },
   changeUsername: (username: string) => {
-    return api.put<{ username: string }>('/user/username', { json: { username } }).json()
+    return api.patch<{ username: string }>('/user/username', { json: { username } }).json()
+  },
+  changePassword: (data: {
+    currentPassword: string
+    newPassword: string
+    twoFactorCode?: string
+  }) => {
+    return api.patch<{ message: string }>('/user/password', { json: data }).json()
   },
 }

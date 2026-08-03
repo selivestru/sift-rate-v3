@@ -11,6 +11,13 @@ export const changePasswordSchema = z
     currentPassword: z.string().min(1, 'Current password is required'),
     newPassword: passwordSchema,
     confirmPassword: z.string().min(1, 'Confirm your password'),
+    twoFactorCode: z
+      .string()
+      .trim()
+      .refine((value) => value === '' || /^\d{6}$/.test(value), {
+        message: 'Enter the 6-digit code from your authenticator app',
+      })
+      .optional(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Passwords do not match',

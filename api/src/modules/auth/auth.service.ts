@@ -139,14 +139,14 @@ export class AuthService {
     userId: string,
     dto: CompleteProfileDto,
   ): Promise<Pick<SafeUser, 'displayName' | 'username'>> {
-    await Promise.all([
+    const [{ displayName }, { username }] = await Promise.all([
       this.userService.updateDisplayName(userId, dto.displayName),
       this.userService.updateUsername(userId, dto.username),
     ])
 
     return {
-      displayName: dto.displayName,
-      username: dto.username,
+      displayName,
+      username,
     }
   }
 

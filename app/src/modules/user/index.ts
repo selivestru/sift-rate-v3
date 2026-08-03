@@ -1,4 +1,6 @@
 export * from './api/user.api'
+export * from './hooks/useChangeDisplayNameForm'
+export * from './hooks/useChangeDisplayNameMutation'
 export * from './hooks/useChangeUsernameForm'
 export * from './schema/displayName.schema'
 export * from './schema/email.schema'

@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 
 import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
+import { TwoFactorDialog } from '~/common/ui/TwoFactorDialog'
 
 import { useLoginForm } from '../hooks/useLoginForm'
 import { AuthDivider } from './AuthDivider'
@@ -11,7 +12,6 @@ import { AuthTextField } from './AuthTextField'
 import { GoogleAuthButton } from './GoogleAuthButton'
 import { PasswordField } from './PasswordField'
 import { ResendVerificationDialog } from './ResendVerificationDialog'
-import { TwoFactorDialog } from './TwoFactorDialog'
 
 export const LoginForm = () => {
   const { register, onSubmit, isLoading, errors, serverError, twoFactorState, resendState } =

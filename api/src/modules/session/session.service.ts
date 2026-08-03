@@ -69,7 +69,7 @@ export class SessionService {
     })
   }
 
-  async destroyAllForUser(userId: string): Promise<number> {
+  async destroyAllForUser(userId: string, exceptSid?: string): Promise<number> {
     const setKey = `${this.USER_SESSIONS_PREFIX}${userId}`
     const sids = await this.redis.smembers(setKey)
 
@@ -77,11 +77,21 @@ export class SessionService {
       return 0
     }
 
-    const sessionKeys = sids.map((sid) => `${this.SESSION_PREFIX}${sid}`)
-    await Promise.all([...sessionKeys.map((key) => this.redis.del(key)), this.redis.del(setKey)])
+    const toDelete = exceptSid ? sids.filter((sid) => sid !== exceptSid) : sids
 
-    this.logger.log({ userId, deleted: sids.length }, 'Revoked user sessions')
+    if (toDelete.length === 0) {
+      return 0
+    }
 
-    return sids.length
+    const sessionKeys = toDelete.map((sid) => `${this.SESSION_PREFIX}${sid}`)
+
+    await Promise.all([
+      ...sessionKeys.map((key) => this.redis.del(key)),
+      this.redis.srem(setKey, ...toDelete),
+    ])
+
+    this.logger.log({ userId, deleted: toDelete.length }, 'Revoked user sessions')
+
+    return toDelete.length
   }
 }

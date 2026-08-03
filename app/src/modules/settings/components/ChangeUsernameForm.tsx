@@ -1,5 +1,3 @@
-import { toast } from 'sonner'
-
 import { Button } from '~/common/ui/Button'
 import { useAuthStore } from '~/modules/auth'
 import { useChangeUsernameForm } from '~/modules/user'
@@ -9,9 +7,7 @@ import { SettingsTextField } from './SettingsTextField'
 
 export const ChangeUsernameForm = () => {
   const currentUsername = useAuthStore((state) => state.user?.username)
-  const { onSubmit, isLoading, register, errors, isDirty, isValid } = useChangeUsernameForm(() => {
-    toast.success('Username updated')
-  })
+  const { onSubmit, isLoading, register, errors, isDirty, isValid } = useChangeUsernameForm()
 
   return (
     <form onSubmit={onSubmit} noValidate>

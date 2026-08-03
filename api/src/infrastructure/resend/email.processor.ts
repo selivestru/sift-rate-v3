@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common'
 
 import {
   EMAIL_QUEUE,
+  PASSWORD_CHANGED_JOB,
   PASSWORD_RESET_JOB,
   WELCOME_GOOGLE_JOB,
   WELCOME_JOB,
@@ -25,6 +26,8 @@ export class EmailProcessor extends WorkerHost {
       await this.resend.sendGoogleWelcomeEmail(job.data.to)
     } else if (job.name === PASSWORD_RESET_JOB) {
       await this.resend.sendPasswordResetEmail(job.data.to, job.data.token)
+    } else if (job.name === PASSWORD_CHANGED_JOB) {
+      await this.resend.sendPasswordChangedEmail(job.data.to)
     }
   }
 

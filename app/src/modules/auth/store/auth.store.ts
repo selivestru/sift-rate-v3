@@ -17,6 +17,7 @@ interface AuthActions {
   setCompleteProfile: (data: CompleteProfileInput) => void
   setIsLoading: (isLoading: boolean) => void
   setUsername: (username: string) => void
+  setDisplayName: (displayName: string) => void
   setTwoFactor: (twoFactorEnabled: boolean) => void
 }
 
@@ -36,5 +37,6 @@ export const useAuthStore = create<Store>()((set, get) => ({
   setCompleteProfile: (data) => set({ user: { ...get().user!, ...data } }),
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
   setUsername: (username) => set({ user: { ...get().user!, username } }),
+  setDisplayName: (displayName) => set({ user: { ...get().user!, displayName } }),
   setTwoFactor: (twoFactorEnabled) => set({ user: { ...get().user!, twoFactorEnabled } }),
 }))
