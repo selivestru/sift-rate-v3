@@ -1,5 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq'
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -9,14 +10,18 @@ import {
 
 import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
+import { DeleteAccountDto } from './dto/delete-account.dto'
 import { argon2id, hash, verify } from 'argon2'
 import { Queue } from 'bullmq'
 import { createHash, randomBytes } from 'node:crypto'
+import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
 import { AuthMethod, Prisma, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import {
+  ACCOUNT_DELETED_JOB,
+  DELETE_ACCOUNT_JOB,
   EMAIL_CHANGE_CONFIRM_JOB,
   EMAIL_CHANGE_NOTIFY_JOB,
   EMAIL_QUEUE,
@@ -28,6 +33,7 @@ import { SessionService } from '~/modules/session/session.service'
 export class UserService {
   private readonly logger = new Logger(UserService.name)
   private readonly EMAIL_CHANGE_TTL = 86_400
+  private readonly DELETE_ACCOUNT_TTL = 900
 
   constructor(
     private readonly prisma: PrismaService,
@@ -214,9 +220,9 @@ export class UserService {
     const tokenHash = this.hashToken(token)
 
     await Promise.all([
-      this.redis.set(`email_change:${userId}`, tokenHash, 'EX', this.EMAIL_CHANGE_TTL),
+      this.redis.set(REDIS_KEYS.EMAIL_CHANGE(userId), tokenHash, 'EX', this.EMAIL_CHANGE_TTL),
       this.redis.set(
-        `email_change_token:${tokenHash}`,
+        REDIS_KEYS.EMAIL_CHANGE_TOKEN(tokenHash),
         `${userId}:${dto.newEmail}`,
         'EX',
         this.EMAIL_CHANGE_TTL,
@@ -250,16 +256,149 @@ export class UserService {
   }
 
   private async invalidatePendingEmailChange(userId: string): Promise<void> {
-    const oldHash = await this.redis.get(`email_change:${userId}`)
+    const oldHash = await this.redis.get(REDIS_KEYS.EMAIL_CHANGE(userId))
 
     if (!oldHash) {
       return
     }
 
     await Promise.all([
-      this.redis.del(`email_change:${userId}`),
-      this.redis.del(`email_change_token:${oldHash}`),
+      this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId)),
+      this.redis.del(REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash)),
     ])
+  }
+
+  async requestAccountDeletion(
+    userId: string,
+    dto: DeleteAccountDto,
+  ): Promise<{ message: string }> {
+    const user = await this.findById(userId)
+
+    if (user.method === AuthMethod.CREDENTIALS) {
+      if (!dto.password) {
+        throw new BadRequestException('Password is required to delete your account')
+      }
+
+      const isValidPassword = await verify(user.passwordHash!, dto.password)
+
+      if (!isValidPassword) {
+        throw new UnauthorizedException('Current password is incorrect')
+      }
+    }
+
+    await this.invalidatePendingDeleteRequest(userId)
+
+    const token = randomBytes(32).toString('base64url')
+    const tokenHash = this.hashToken(token)
+
+    await Promise.all([
+      this.redis.set(REDIS_KEYS.DELETE_ACCOUNT(userId), tokenHash, 'EX', this.DELETE_ACCOUNT_TTL),
+      this.redis.set(
+        REDIS_KEYS.DELETE_ACCOUNT_TOKEN(tokenHash),
+        `${userId}:${user.email}`,
+        'EX',
+        this.DELETE_ACCOUNT_TTL,
+      ),
+    ])
+
+    try {
+      await this.emailQueue.add(
+        DELETE_ACCOUNT_JOB,
+        { to: user.email, token },
+        {
+          attempts: 5,
+          backoff: { type: 'exponential', delay: 5_000 },
+        },
+      )
+    } catch {
+      this.logger.warn({ userId }, 'Failed to enqueue delete-account email')
+    }
+
+    return { message: 'Check your email to confirm account deletion' }
+  }
+
+  async confirmAccountDeletion(token: string): Promise<void> {
+    const tokenHash = this.hashToken(token)
+    const data = await this.redis.getdel(REDIS_KEYS.DELETE_ACCOUNT_TOKEN(tokenHash))
+
+    if (!data) {
+      throw new UnauthorizedException('Invalid or expired account deletion token')
+    }
+
+    const separatorIndex = data.indexOf(':')
+    const userId = data.slice(0, separatorIndex)
+    const email = data.slice(separatorIndex + 1)
+
+    await this.redis.del(REDIS_KEYS.DELETE_ACCOUNT(userId))
+
+    await this.prisma.user.delete({ where: { id: userId } })
+
+    await this.sessionService.destroyAllForUser(userId)
+    await this.cleanupUserRedisState(userId)
+
+    try {
+      await this.emailQueue.add(
+        ACCOUNT_DELETED_JOB,
+        { to: email },
+        {
+          attempts: 5,
+          backoff: { type: 'exponential', delay: 5_000 },
+        },
+      )
+    } catch {
+      this.logger.warn({ userId }, 'Failed to enqueue account-deleted email')
+    }
+
+    this.logger.log({ userId }, 'Account deleted')
+  }
+
+  private async invalidatePendingDeleteRequest(userId: string): Promise<void> {
+    const oldHash = await this.redis.get(REDIS_KEYS.DELETE_ACCOUNT(userId))
+
+    if (!oldHash) {
+      return
+    }
+
+    await Promise.all([
+      this.redis.del(REDIS_KEYS.DELETE_ACCOUNT(userId)),
+      this.redis.del(REDIS_KEYS.DELETE_ACCOUNT_TOKEN(oldHash)),
+    ])
+  }
+
+  private async cleanupUserRedisState(userId: string): Promise<void> {
+    const keys: string[] = [REDIS_KEYS.TWO_FA(userId), REDIS_KEYS.USER_SESSIONS(userId)]
+
+    const reversePairs: Array<{
+      primaryKey: string
+      reverseKeyBuilder: (value: string) => string
+    }> = [
+      {
+        primaryKey: REDIS_KEYS.EMAIL_VERIFY(userId),
+        reverseKeyBuilder: REDIS_KEYS.EMAIL_VERIFY_TOKEN,
+      },
+      {
+        primaryKey: REDIS_KEYS.PASSWORD_RESET(userId),
+        reverseKeyBuilder: REDIS_KEYS.PASSWORD_RESET_TOKEN,
+      },
+      {
+        primaryKey: REDIS_KEYS.EMAIL_CHANGE(userId),
+        reverseKeyBuilder: REDIS_KEYS.EMAIL_CHANGE_TOKEN,
+      },
+      {
+        primaryKey: REDIS_KEYS.DELETE_ACCOUNT(userId),
+        reverseKeyBuilder: REDIS_KEYS.DELETE_ACCOUNT_TOKEN,
+      },
+    ]
+
+    for (const { primaryKey, reverseKeyBuilder } of reversePairs) {
+      const storedValue = await this.redis.get(primaryKey)
+
+      if (storedValue) {
+        keys.push(reverseKeyBuilder(storedValue))
+      }
+    }
+
+    await Promise.allSettled(keys.map((key) => this.redis.del(key)))
   }
 
   private hashToken(token: string): string {

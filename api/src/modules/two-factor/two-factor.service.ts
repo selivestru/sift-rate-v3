@@ -2,6 +2,7 @@ import { ConflictException, Injectable, Logger, UnauthorizedException } from '@n
 
 import { UserService } from '../user/user.service'
 import { generateSecret, generateURI as generateTOTPURI, verifySync } from 'otplib'
+import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { safeUser } from '~/common/utils/safeUser'
 import { AuthMethod } from '~/generated/prisma/client'
 import { RedisService } from '~/infrastructure/redis/redis.service'
@@ -28,7 +29,7 @@ export class TwoFactorService {
       throw new ConflictException('Two-factor authentication is already enabled')
     }
 
-    const savedSecret = await this.redis.get(`2fa:${user.id}`)
+    const savedSecret = await this.redis.get(REDIS_KEYS.TWO_FA(user.id))
 
     if (savedSecret) {
       return {
@@ -41,7 +42,7 @@ export class TwoFactorService {
 
     const otpauthUrl = this.generateURI(secret, email)
 
-    await this.redis.set(`2fa:${user.id}`, secret, 'EX', 60 * 15)
+    await this.redis.set(REDIS_KEYS.TWO_FA(user.id), secret, 'EX', 60 * 15)
 
     return {
       otpauthUrl,
@@ -50,7 +51,7 @@ export class TwoFactorService {
   }
 
   async verify(userId: string, code: string) {
-    const savedSecret = await this.redis.get(`2fa:${userId}`)
+    const savedSecret = await this.redis.get(REDIS_KEYS.TWO_FA(userId))
 
     if (!savedSecret) {
       throw new UnauthorizedException('Secret not found')
@@ -67,7 +68,7 @@ export class TwoFactorService {
         twoFactorEnabled: true,
         twoFactorSecret: savedSecret,
       }),
-      this.redis.del(`2fa:${userId}`),
+      this.redis.del(REDIS_KEYS.TWO_FA(userId)),
     ])
 
     this.logger.log(`2FA enabled for user ${userId}`)

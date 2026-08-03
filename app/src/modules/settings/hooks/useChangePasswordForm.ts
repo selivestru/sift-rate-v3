@@ -13,8 +13,8 @@ import { useChangePasswordMutation } from './useChangePasswordMutation'
 export const useChangePasswordForm = () => {
   const mutation = useChangePasswordMutation()
   const [serverError, setServerError] = useState<string | null>(null)
-  const [twoFactorDialogOpen, setTwoFactorDialogOpen] = useState(false)
   const [twoFactorError, setTwoFactorError] = useState<string | null>(null)
+  const [twoFactorDialogOpen, setTwoFactorDialogOpen] = useState(false)
 
   const {
     register,
@@ -55,8 +55,8 @@ export const useChangePasswordForm = () => {
         return
       }
 
-      if (twoFactorDialogOpen) {
-        setTwoFactorError(apiError.message)
+      if (apiError.code === 'INVALID_TWO_FACTOR_CODE') {
+        setTwoFactorError('Invalid two-factor code')
         return
       }
 

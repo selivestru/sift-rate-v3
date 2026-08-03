@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { AlertTriangle } from 'reicon-react'
-import { toast } from 'sonner'
+import { AlertTriangle, XCircle } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
+import { Alert, AlertTitle } from '~/common/ui/Alert'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +13,13 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from '~/common/ui/AlertDialog'
+import { PasswordField } from '~/common/ui/PasswordField'
+import { TwoFactorDialog } from '~/common/ui/TwoFactorDialog'
 import { cn } from '~/common/utils/cn'
+import { AUTH_METHOD } from '~/modules/auth'
+import { useAuthStore } from '~/modules/auth/store/auth.store'
 
-import { mockDelay } from '../../utils/mock-delay'
+import { useDeleteAccountForm } from '../../hooks/useDeleteAccountForm'
 
 interface DeleteAccountDialogProps {
   children: ({ open }: { open: () => void }) => React.ReactNode
@@ -24,18 +27,14 @@ interface DeleteAccountDialogProps {
 
 export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
   const { opened, open, close } = useDisclosure()
-  const [isLoading, setIsLoading] = useState(false)
+  const user = useAuthStore((state) => state.user)
+  const isCredentials = user?.method === AUTH_METHOD.CREDENTIALS
 
-  const handleConfirm = async () => {
-    setIsLoading(true)
-    try {
-      await mockDelay()
-      toast.success('Account deletion requested (demo only)')
-      close()
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { register, errors, onSubmit, isLoading, serverError, twoFactorState } =
+    useDeleteAccountForm({
+      requirePassword: isCredentials,
+      onSuccess: close,
+    })
 
   return (
     <>
@@ -53,18 +52,49 @@ export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
             </AlertDialogMedia>
             <AlertDialogTitle>Delete your account?</AlertDialogTitle>
             <AlertDialogDescription>
-              This would permanently remove your profile, reviews, lists, and media archive. This
-              demo does not call the API.
+              This would permanently remove your profile, reviews, lists, and media archive.
+              We&apos;ll send a confirmation link to your email first — your account is only deleted
+              after you confirm it.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {serverError && (
+            <Alert variant="destructive">
+              <XCircle />
+              <AlertTitle>{serverError}</AlertTitle>
+            </Alert>
+          )}
+
+          {isCredentials && (
+            <PasswordField
+              label="Password"
+              autoComplete="current-password"
+              placeholder="Enter your password"
+              error={errors.password}
+              {...register('password')}
+            />
+          )}
+
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={handleConfirm} isLoading={isLoading}>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={() => void onSubmit()}
+              isLoading={isLoading}
+            >
               Delete account
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <TwoFactorDialog
+        isOpen={twoFactorState.isOpen}
+        onClose={twoFactorState.onClose}
+        onSubmit={twoFactorState.onSubmit}
+        isLoading={twoFactorState.isLoading}
+        error={twoFactorState.error}
+      />
     </>
   )
 }

@@ -2,11 +2,11 @@ import { Link } from '@tanstack/react-router'
 
 import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
+import { PasswordField } from '~/common/ui/PasswordField'
 
 import { useResetPasswordForm } from '../hooks/useResetPasswordForm'
 import { AuthFormAlert } from './AuthFormAlert'
 import { AuthFormHeader } from './AuthFormHeader'
-import { PasswordField } from './PasswordField'
 
 interface ResetPasswordFormProps {
   token: string

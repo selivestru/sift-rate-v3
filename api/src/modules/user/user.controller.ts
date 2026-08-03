@@ -1,18 +1,25 @@
-import { Body, Controller, Patch, Req } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, Patch, Post, Query, Req, Res } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { seconds, Throttle } from '@nestjs/throttler'
 
 import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
+import { DeleteAccountDto } from './dto/delete-account.dto'
 import { UpdateDisplayNameDto } from './dto/update-display-name.dto'
 import { UpdateUsernameDto } from './dto/update-username.dto'
 import { UserService } from './user.service'
-import type { Request } from 'express'
+import type { Request, Response } from 'express'
+import { EnvConfig } from '~/app/config/env.config'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
+import { Public } from '~/common/decorators/public.decorator'
 import { TwoFactor } from '~/common/decorators/two-factor.decorator'
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly config: ConfigService<EnvConfig, true>,
+  ) {}
 
   @Patch('display-name')
   updateDisplayName(@CurrentUser('userId') userId: string, @Body() dto: UpdateDisplayNameDto) {
@@ -39,5 +46,34 @@ export class UserController {
     @Body() dto: ChangePasswordDto,
   ) {
     return this.userService.changePassword(userId, req.session.id, dto)
+  }
+
+  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Post('delete')
+  @HttpCode(202)
+  @TwoFactor()
+  requestAccountDeletion(@CurrentUser('userId') userId: string, @Body() dto: DeleteAccountDto) {
+    return this.userService.requestAccountDeletion(userId, dto)
+  }
+
+  @Public()
+  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
+  @Get('delete-confirm')
+  async confirmAccountDeletion(
+    @Res({ passthrough: true }) res: Response,
+    @Query('token') token?: string,
+  ) {
+    const origin = this.config.get('ORIGIN', { infer: true })
+
+    if (!token) {
+      return res.redirect(`${origin}/auth/callback?status=account_delete_failed`)
+    }
+
+    try {
+      await this.userService.confirmAccountDeletion(token)
+      return res.redirect(`${origin}/auth/callback?status=account_deleted`)
+    } catch {
+      return res.redirect(`${origin}/auth/callback?status=account_delete_failed`)
+    }
   }
 }

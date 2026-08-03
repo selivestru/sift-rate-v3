@@ -1,17 +1,11 @@
 import z from 'zod'
 
-import { emailSchema, passwordSchema } from '~/modules/user'
+import { emailSchema, optionalTwoFactorCodeSchema, passwordSchema } from '~/modules/user'
 
 export const changeEmailSchema = z.object({
   newEmail: emailSchema,
   currentPassword: z.string().min(1, 'Current password is required'),
-  twoFactorCode: z
-    .string()
-    .trim()
-    .refine((value) => value === '' || /^\d{6}$/.test(value), {
-      message: 'Enter the 6-digit code from your authenticator app',
-    })
-    .optional(),
+  twoFactorCode: optionalTwoFactorCodeSchema,
 })
 
 export const changePasswordSchema = z
@@ -19,13 +13,7 @@ export const changePasswordSchema = z
     currentPassword: z.string().min(1, 'Current password is required'),
     newPassword: passwordSchema,
     confirmPassword: z.string().min(1, 'Confirm your password'),
-    twoFactorCode: z
-      .string()
-      .trim()
-      .refine((value) => value === '' || /^\d{6}$/.test(value), {
-        message: 'Enter the 6-digit code from your authenticator app',
-      })
-      .optional(),
+    twoFactorCode: optionalTwoFactorCodeSchema,
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Passwords do not match',
@@ -36,14 +24,14 @@ export const changePasswordSchema = z
     path: ['newPassword'],
   })
 
-export const twoFactorCodeSchema = z.object({
-  code: z
-    .string()
-    .trim()
-    .min(1, 'Verification code is required')
-    .regex(/^\d{6}$/, 'Enter the 6-digit code from your authenticator app'),
-})
+export const createDeleteAccountSchema = (requirePassword: boolean) =>
+  z.object({
+    password: requirePassword
+      ? z.string().trim().min(1, 'Password is required')
+      : z.string().trim().optional(),
+    twoFactorCode: optionalTwoFactorCodeSchema,
+  })
 
 export type ChangeEmailInput = z.infer<typeof changeEmailSchema>
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
-export type TwoFactorCodeInput = z.infer<typeof twoFactorCodeSchema>
+export type DeleteAccountInput = z.infer<ReturnType<typeof createDeleteAccountSchema>>

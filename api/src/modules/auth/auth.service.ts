@@ -21,6 +21,7 @@ import { Queue } from 'bullmq'
 import type { Request, Response } from 'express'
 import { createHash, randomBytes } from 'node:crypto'
 import { EnvConfig } from '~/app/config/env.config'
+import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
 import { safeUser } from '~/common/utils/safeUser'
 import { AuthMethod } from '~/generated/prisma/client'
@@ -184,20 +185,20 @@ export class AuthService {
   }
 
   async verifyEmail(token: string): Promise<void> {
-    const userId = await this.redis.getdel(`email_verify_token:${token}`)
+    const userId = await this.redis.getdel(REDIS_KEYS.EMAIL_VERIFY_TOKEN(token))
 
     if (!userId) {
       throw new UnauthorizedException('Invalid or expired verification token')
     }
 
-    await this.redis.del(`email_verify:${userId}`)
+    await this.redis.del(REDIS_KEYS.EMAIL_VERIFY(userId))
 
     await this.userService.verifyUser(userId)
   }
 
   async confirmEmailChange(token: string): Promise<void> {
     const tokenHash = this.hashToken(token)
-    const data = await this.redis.getdel(`email_change_token:${tokenHash}`)
+    const data = await this.redis.getdel(REDIS_KEYS.EMAIL_CHANGE_TOKEN(tokenHash))
 
     if (!data) {
       throw new UnauthorizedException('Invalid or expired email change token')
@@ -235,10 +236,10 @@ export class AuthService {
       return { message: this.VERIFY_CANNED_MESSAGE, retryAfter: this.RESEND_COOLDOWN_SECONDS }
     }
 
-    const oldToken = await this.redis.get(`email_verify:${user.id}`)
+    const oldToken = await this.redis.get(REDIS_KEYS.EMAIL_VERIFY(user.id))
 
     if (oldToken) {
-      const ttl = await this.redis.ttl(`email_verify:${user.id}`)
+      const ttl = await this.redis.ttl(REDIS_KEYS.EMAIL_VERIFY(user.id))
       const elapsed = this.VERIFICATION_TTL - ttl
 
       if (elapsed < this.RESEND_COOLDOWN_SECONDS) {
@@ -247,8 +248,8 @@ export class AuthService {
       }
 
       await Promise.all([
-        this.redis.del(`email_verify:${user.id}`),
-        this.redis.del(`email_verify_token:${oldToken}`),
+        this.redis.del(REDIS_KEYS.EMAIL_VERIFY(user.id)),
+        this.redis.del(REDIS_KEYS.EMAIL_VERIFY_TOKEN(oldToken)),
       ])
     }
 
@@ -277,8 +278,13 @@ export class AuthService {
     const tokenHash = this.hashToken(token)
 
     await Promise.all([
-      this.redis.set(`pwreset:${user.id}`, tokenHash, 'EX', this.PASSWORD_RESET_TTL),
-      this.redis.set(`pwreset_token:${tokenHash}`, user.id, 'EX', this.PASSWORD_RESET_TTL),
+      this.redis.set(REDIS_KEYS.PASSWORD_RESET(user.id), tokenHash, 'EX', this.PASSWORD_RESET_TTL),
+      this.redis.set(
+        REDIS_KEYS.PASSWORD_RESET_TOKEN(tokenHash),
+        user.id,
+        'EX',
+        this.PASSWORD_RESET_TTL,
+      ),
     ])
 
     try {
@@ -302,7 +308,7 @@ export class AuthService {
 
   async resetPasswordVerify(token: string): Promise<void> {
     const tokenHash = this.hashToken(token)
-    const userId = await this.redis.get(`pwreset_token:${tokenHash}`)
+    const userId = await this.redis.get(REDIS_KEYS.PASSWORD_RESET_TOKEN(tokenHash))
 
     if (!userId) {
       throw new UnauthorizedException('Invalid or expired reset token')
@@ -311,7 +317,7 @@ export class AuthService {
 
   async resetPassword(dto: ResetPasswordDto): Promise<{ message: string }> {
     const tokenHash = this.hashToken(dto.token)
-    const userId = await this.redis.getdel(`pwreset_token:${tokenHash}`)
+    const userId = await this.redis.getdel(REDIS_KEYS.PASSWORD_RESET_TOKEN(tokenHash))
 
     if (!userId) {
       throw new UnauthorizedException('Invalid or expired reset token')
@@ -358,8 +364,8 @@ export class AuthService {
   private async issueVerificationToken(userId: string, email: string): Promise<void> {
     const token = randomBytes(32).toString('base64url')
 
-    await this.redis.set(`email_verify:${userId}`, token, 'EX', this.VERIFICATION_TTL)
-    await this.redis.set(`email_verify_token:${token}`, userId, 'EX', this.VERIFICATION_TTL)
+    await this.redis.set(REDIS_KEYS.EMAIL_VERIFY(userId), token, 'EX', this.VERIFICATION_TTL)
+    await this.redis.set(REDIS_KEYS.EMAIL_VERIFY_TOKEN(token), userId, 'EX', this.VERIFICATION_TTL)
 
     await this.emailQueue.add(
       WELCOME_JOB,
@@ -372,28 +378,28 @@ export class AuthService {
   }
 
   private async invalidateResetToken(userId: string): Promise<void> {
-    const oldHash = await this.redis.get(`pwreset:${userId}`)
+    const oldHash = await this.redis.get(REDIS_KEYS.PASSWORD_RESET(userId))
 
     if (!oldHash) {
       return
     }
 
     await Promise.all([
-      this.redis.del(`pwreset:${userId}`),
-      this.redis.del(`pwreset_token:${oldHash}`),
+      this.redis.del(REDIS_KEYS.PASSWORD_RESET(userId)),
+      this.redis.del(REDIS_KEYS.PASSWORD_RESET_TOKEN(oldHash)),
     ])
   }
 
   private async invalidateEmailChange(userId: string): Promise<void> {
-    const oldHash = await this.redis.get(`email_change:${userId}`)
+    const oldHash = await this.redis.get(REDIS_KEYS.EMAIL_CHANGE(userId))
 
     if (!oldHash) {
       return
     }
 
     await Promise.all([
-      this.redis.del(`email_change:${userId}`),
-      this.redis.del(`email_change_token:${oldHash}`),
+      this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId)),
+      this.redis.del(REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash)),
     ])
   }
 

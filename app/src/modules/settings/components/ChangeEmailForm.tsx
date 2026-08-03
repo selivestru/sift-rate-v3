@@ -2,9 +2,9 @@ import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
+import { PasswordField } from '~/common/ui/PasswordField'
 import { TwoFactorDialog } from '~/common/ui/TwoFactorDialog'
 import { useAuthStore } from '~/modules/auth'
-import { PasswordField } from '~/modules/auth/components/PasswordField'
 
 import { useChangeEmailForm } from '../hooks/useChangeEmailForm'
 import { SettingsSection } from './SettingsSection'

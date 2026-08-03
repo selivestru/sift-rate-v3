@@ -2,6 +2,8 @@ import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq'
 import { Logger } from '@nestjs/common'
 
 import {
+  ACCOUNT_DELETED_JOB,
+  DELETE_ACCOUNT_JOB,
   EMAIL_CHANGE_CONFIRM_JOB,
   EMAIL_CHANGE_NOTIFY_JOB,
   EMAIL_QUEUE,
@@ -36,6 +38,10 @@ export class EmailProcessor extends WorkerHost {
       await this.resend.sendEmailChangeConfirmation(job.data.to, job.data.token!)
     } else if (job.name === EMAIL_CHANGE_NOTIFY_JOB) {
       await this.resend.sendEmailChangeRequested(job.data.to, job.data.newEmail!)
+    } else if (job.name === DELETE_ACCOUNT_JOB) {
+      await this.resend.sendDeleteAccountConfirmation(job.data.to, job.data.token!)
+    } else if (job.name === ACCOUNT_DELETED_JOB) {
+      await this.resend.sendAccountDeletedEmail(job.data.to)
     }
   }
 

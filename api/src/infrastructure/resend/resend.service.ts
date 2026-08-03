@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { RedisService } from '../redis/redis.service'
+import AccountDeleted from './templates/account-deleted.template'
+import DeleteAccount from './templates/delete-account.template'
 import EmailChangeConfirm from './templates/email-change-confirm.template'
 import EmailChangeNotify from './templates/email-change-notify.template'
 import PasswordChanged from './templates/password-changed.template'
@@ -119,6 +121,41 @@ export class ResendService {
       from: this.domain,
       to,
       subject: 'We received a request to change your SiftRate email',
+      html,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async sendDeleteAccountConfirmation(to: string, token: string) {
+    const backendUrl = this.config.get('BACKEND_URL', { infer: true })
+    const confirmUrl = `${backendUrl}/api/user/delete-confirm?token=${token}`
+
+    const html = await pretty(
+      await render(DeleteAccount({ confirmUrl, expiresInLabel: 'expires in 15 minutes' })),
+    )
+
+    const { error } = await this.resend.emails.send({
+      from: this.domain,
+      to,
+      subject: 'Confirm deletion of your SiftRate account',
+      html,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  async sendAccountDeletedEmail(to: string) {
+    const html = await pretty(await render(AccountDeleted()))
+
+    const { error } = await this.resend.emails.send({
+      from: this.domain,
+      to,
+      subject: 'Your SiftRate account has been deleted',
       html,
     })
 

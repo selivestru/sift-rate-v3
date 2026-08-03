@@ -1,6 +1,12 @@
 import z from 'zod'
 
-import { displayNameSchema, emailSchema, passwordSchema, usernameSchema } from '~/modules/user'
+import {
+  displayNameSchema,
+  emailSchema,
+  optionalTwoFactorCodeSchema,
+  passwordSchema,
+  usernameSchema,
+} from '~/modules/user'
 
 export const loginPasswordSchema = z
   .string()
@@ -10,11 +16,7 @@ export const loginPasswordSchema = z
 export const loginSchema = z.object({
   email: emailSchema,
   password: loginPasswordSchema,
-  twoFactorCode: z
-    .string()
-    .min(6, 'Two-factor code is required')
-    .max(6, 'Two-factor code must be 6 digits')
-    .optional(),
+  twoFactorCode: optionalTwoFactorCodeSchema,
 })
 
 export const registerSchema = z

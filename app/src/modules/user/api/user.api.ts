@@ -3,7 +3,9 @@ import { api } from '~/common/api'
 export const userApi = {
   changeDisplayName: (displayName: string) => {
     return api
-      .patch<{ displayName: string }>('/user/display-name', { json: { displayName } })
+      .patch<{ displayName: string }>('/user/display-name', {
+        json: { displayName },
+      })
       .json()
   },
   changeUsername: (username: string) => {
@@ -18,5 +20,8 @@ export const userApi = {
   },
   changeEmail: (data: { newEmail: string; currentPassword: string; twoFactorCode?: string }) => {
     return api.patch<{ message: string }>('/user/email', { json: data }).json()
+  },
+  deleteAccount: (data: { password?: string; twoFactorCode?: string }) => {
+    return api.post<{ message: string }>('/user/delete', { json: data }).json()
   },
 }

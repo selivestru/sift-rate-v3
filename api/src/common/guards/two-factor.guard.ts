@@ -34,7 +34,10 @@ export class TwoFactorGuard implements CanActivate {
     const result = await this.twoFactorService.verifyStoredCode(userId, code)
 
     if (!result.valid) {
-      throw new UnauthorizedException('Invalid two-factor authentication code')
+      throw new UnauthorizedException({
+        message: 'Invalid two-factor authentication code',
+        code: 'INVALID_TWO_FACTOR_CODE',
+      })
     }
 
     return true

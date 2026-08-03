@@ -6,14 +6,21 @@ import { toast } from 'sonner'
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
-import { useAuthStore } from '~/modules/auth'
 
-import { changeEmailSchema, type ChangeEmailInput } from '../schema/settings.schema'
-import { useChangeEmailMutation } from './useChangeEmailMutation'
+import { createDeleteAccountSchema, type DeleteAccountInput } from '../schema/settings.schema'
+import { useDeleteAccountMutation } from './useDeleteAccountMutation'
 
-export const useChangeEmailForm = () => {
-  const mutation = useChangeEmailMutation()
-  const currentEmail = useAuthStore((state) => state.user?.email)
+interface UseDeleteAccountFormOptions {
+  requirePassword?: boolean
+  onSuccess?: () => void
+}
+
+export const useDeleteAccountForm = ({
+  requirePassword = false,
+  onSuccess,
+}: UseDeleteAccountFormOptions = {}) => {
+  const mutation = useDeleteAccountMutation()
+  const schema = createDeleteAccountSchema(requirePassword)
   const [serverError, setServerError] = useState<string | null>(null)
   const [twoFactorError, setTwoFactorError] = useState<string | null>(null)
   const [twoFactorDialogOpen, setTwoFactorDialogOpen] = useState(false)
@@ -23,39 +30,26 @@ export const useChangeEmailForm = () => {
     handleSubmit,
     setError,
     setValue,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isValid },
     reset,
-  } = useForm<ChangeEmailInput>({
+  } = useForm<DeleteAccountInput>({
     defaultValues: {
-      newEmail: '',
-      currentPassword: '',
+      password: '',
     },
-    resolver: zodResolver(changeEmailSchema),
-    mode: 'onChange',
+    resolver: zodResolver(schema),
   })
 
-  const onFormSubmit = async (data: ChangeEmailInput) => {
+  const onFormSubmit = async (data: DeleteAccountInput) => {
     if (mutation.isPending) return
-
-    if (currentEmail === data.newEmail) {
-      setError('newEmail', {
-        type: 'manual',
-        message: 'New email must be different from your current email',
-      })
-      return
-    }
 
     setServerError(null)
     setTwoFactorError(null)
 
     try {
-      await mutation.mutateAsync({
-        newEmail: data.newEmail,
-        currentPassword: data.currentPassword,
-        twoFactorCode: data.twoFactorCode,
-      })
-      toast.success('Check your new email to confirm the change')
+      await mutation.mutateAsync(data)
+      toast.success('Check your email to confirm account deletion')
       setTwoFactorDialogOpen(false)
+      onSuccess?.()
       reset()
     } catch (error) {
       const apiError = await getApiError(error)
@@ -74,7 +68,7 @@ export const useChangeEmailForm = () => {
         apiError,
         setError,
         setServerError,
-        fields: objectKeys(changeEmailSchema.shape),
+        fields: objectKeys(schema.shape),
       })
     }
   }
@@ -98,8 +92,8 @@ export const useChangeEmailForm = () => {
     onSubmit,
     isLoading: mutation.isPending,
     serverError,
-    isDirty,
     isValid,
+    reset,
     twoFactorState: {
       isOpen: twoFactorDialogOpen,
       onClose: onCloseTwoFactorDialog,

@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 
 import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
+import { PasswordField } from '~/common/ui/PasswordField'
 
 import { useRegisterForm } from '../hooks/useRegisterForm'
 import { AuthDivider } from './AuthDivider'
@@ -10,7 +11,6 @@ import { AuthFormHeader } from './AuthFormHeader'
 import { AuthTextField } from './AuthTextField'
 import { EmailVerificationDialog } from './EmailVerificationDialog'
 import { GoogleAuthButton } from './GoogleAuthButton'
-import { PasswordField } from './PasswordField'
 
 export const RegisterForm = () => {
   const { register, onSubmit, isLoading, errors, serverError, emailVerificationDialog } =

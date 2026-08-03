@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form'
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
+import { twoFactorCodeFormSchema, type TwoFactorCodeFormInput } from '~/modules/user'
 
-import { twoFactorCodeSchema, type TwoFactorCodeInput } from '../schema/settings.schema'
 import { useTwoFactorEnableMutation } from './useTwoFactorEnableMutation'
 
 export const useTwoFactorEnableForm = () => {
@@ -14,11 +14,11 @@ export const useTwoFactorEnableForm = () => {
 
   const twoFactorEnable = useTwoFactorEnableMutation()
 
-  const { handleSubmit, setError, ...form } = useForm<TwoFactorCodeInput>({
+  const { handleSubmit, setError, ...form } = useForm<TwoFactorCodeFormInput>({
     defaultValues: {
       code: '',
     },
-    resolver: zodResolver(twoFactorCodeSchema),
+    resolver: zodResolver(twoFactorCodeFormSchema),
   })
 
   const onSubmit = handleSubmit(async (data) => {
@@ -34,7 +34,7 @@ export const useTwoFactorEnableForm = () => {
         apiError,
         setError,
         setServerError,
-        fields: objectKeys(twoFactorCodeSchema.shape),
+        fields: objectKeys(twoFactorCodeFormSchema.shape),
       })
     }
   })

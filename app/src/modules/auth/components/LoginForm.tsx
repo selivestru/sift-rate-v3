@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 
 import { BackButton } from '~/common/ui/BackButton'
 import { Button } from '~/common/ui/Button'
+import { PasswordField } from '~/common/ui/PasswordField'
 import { TwoFactorDialog } from '~/common/ui/TwoFactorDialog'
 
 import { useLoginForm } from '../hooks/useLoginForm'
@@ -10,7 +11,6 @@ import { AuthFormAlert } from './AuthFormAlert'
 import { AuthFormHeader } from './AuthFormHeader'
 import { AuthTextField } from './AuthTextField'
 import { GoogleAuthButton } from './GoogleAuthButton'
-import { PasswordField } from './PasswordField'
 import { ResendVerificationDialog } from './ResendVerificationDialog'
 
 export const LoginForm = () => {

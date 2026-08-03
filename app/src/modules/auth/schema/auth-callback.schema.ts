@@ -1,7 +1,14 @@
 import z from 'zod'
 
 export const authCallbackSearchSchema = z.object({
-  status: z.enum(['verified', 'invalid_or_expired', 'email_changed', 'email_change_failed']),
+  status: z.enum([
+    'verified',
+    'invalid_or_expired',
+    'email_changed',
+    'email_change_failed',
+    'account_deleted',
+    'account_delete_failed',
+  ]),
 })
 
 export const authGoogleCallbackSearchSchema = z.object({
