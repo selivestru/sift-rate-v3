@@ -1,4 +1,5 @@
 import type {
+  MediaRatingBreakdownItem,
   MovieImage,
   MoviePerson,
   MovieSimilarItem,
@@ -35,7 +36,7 @@ export interface TvShowSearchItem {
   title: string
   year: string
   posterUrl: string | null
-  rating: number
+  rating: number | null
   genres: string[]
   overview: string
 }
@@ -80,6 +81,7 @@ export interface TvShowDetail {
   videos: MovieVideo[]
   backdrops: MovieImage[]
   posters: MovieImage[]
+  ratingBreakdown: MediaRatingBreakdownItem[]
   similar: MovieSimilarItem[]
 }
 

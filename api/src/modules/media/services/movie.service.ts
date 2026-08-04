@@ -12,6 +12,7 @@ import {
   MovieSearchResult,
   MovieSimilarItem,
   MovieVideo,
+  TmdbExternalIdsRaw,
   TmdbImageRaw,
   TmdbImageSize,
   TmdbMovieDetailRaw,
@@ -19,9 +20,12 @@ import {
   TmdbVideoRaw,
 } from '../types/movie.types'
 import { getImdbRating } from '../utils/imdb'
+import { getRatingBreakdown } from '../utils/media-stats'
 import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
+import { MediaType } from '~/generated/prisma/enums'
+import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
@@ -38,6 +42,7 @@ export class MovieService {
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly redis: RedisService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<MovieSearchItem>> {
@@ -55,16 +60,20 @@ export class MovieService {
 
     const response = await ky<MovieSearchResult>(url.toString()).json()
 
-    const result: MediaSearchResponse<MovieSearchItem> = {
-      results: response.results.slice(0, 10).map((movie) => ({
+    const results = await Promise.all(
+      response.results.slice(0, 10).map(async (movie) => ({
         id: String(movie.id),
         title: movie.title,
         year: movie.release_date ? movie.release_date.split('-')[0] : '',
         posterUrl: movie.poster_path ? `${this.TMDB_IMAGE_URL}/w500${movie.poster_path}` : null,
-        rating: Math.round(movie.vote_average * 10) / 10,
+        rating: await this.fetchImdbRating(String(movie.id)),
         genres: movie.genre_ids.map((id) => MOVIE_GENRES[id]).filter(Boolean),
         overview: movie.overview,
       })),
+    )
+
+    const result: MediaSearchResponse<MovieSearchItem> = {
+      results,
       totalResults: response.total_results,
       totalPages: Math.min(response.total_pages, 10),
     }
@@ -73,52 +82,79 @@ export class MovieService {
     return result
   }
 
+  private async fetchImdbRating(tmdbId: string): Promise<number | null> {
+    const externalUrl = new URL(`${this.TMDB_API_URL}/movie/${tmdbId}/external_ids`)
+    externalUrl.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+
+    let external: TmdbExternalIdsRaw
+
+    try {
+      external = await ky<TmdbExternalIdsRaw>(externalUrl.toString()).json()
+    } catch {
+      return null
+    }
+
+    if (!external.imdb_id) return null
+
+    const imdb = await getImdbRating(this.config, this.redis, external.imdb_id)
+    return imdb?.rating ?? null
+  }
+
   async getById(id: string): Promise<MovieDetail> {
     const cacheKey = `movie:${id}`
+
+    let result: MovieDetail | null = null
 
     try {
       const cached = await this.redis.get(cacheKey)
       if (cached) {
-        return JSON.parse(cached) as MovieDetail
+        result = JSON.parse(cached) as MovieDetail
       }
     } catch {
       // ignore
     }
 
-    const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
-    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
-    url.searchParams.set('language', 'en-US')
-    url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
-    url.searchParams.set('include_image_language', 'en,null')
-
-    let raw: TmdbMovieDetailRaw
-
-    try {
-      raw = await ky.get(url.toString()).json<TmdbMovieDetailRaw>()
-    } catch (error) {
-      if (error instanceof HTTPError && error.response.status === 404) {
-        throw new NotFoundException('Movie not found')
-      }
-      throw new InternalServerErrorException(
-        `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    if (!result) {
+      const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
+      url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+      url.searchParams.set('language', 'en-US')
+      url.searchParams.set(
+        'append_to_response',
+        'credits,videos,images,recommendations,external_ids',
       )
+      url.searchParams.set('include_image_language', 'en,null')
+
+      let raw: TmdbMovieDetailRaw
+
+      try {
+        raw = await ky.get(url.toString()).json<TmdbMovieDetailRaw>()
+      } catch (error) {
+        if (error instanceof HTTPError && error.response.status === 404) {
+          throw new NotFoundException('Movie not found')
+        }
+        throw new InternalServerErrorException(
+          `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        )
+      }
+
+      result = this.mapMovieDetail(raw)
+
+      const imdbId = raw.external_ids?.imdb_id
+
+      if (imdbId) {
+        const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
+        result.imdbRating = imdbRating?.rating ?? null
+        result.imdbVoteCount = imdbRating?.votes ?? null
+      }
+
+      try {
+        await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.MOVIE_CACHE_TTL_SECONDS)
+      } catch {
+        // ignore
+      }
     }
 
-    const result = this.mapMovieDetail(raw)
-
-    const imdbId = raw.external_ids?.imdb_id
-
-    if (imdbId) {
-      const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
-      result.imdbRating = imdbRating?.rating ?? null
-      result.imdbVoteCount = imdbRating?.votes ?? null
-    }
-
-    try {
-      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.MOVIE_CACHE_TTL_SECONDS)
-    } catch {
-      // ignore
-    }
+    result.ratingBreakdown = await getRatingBreakdown(this.prisma, MediaType.MOVIE, id)
 
     return result
   }
@@ -267,6 +303,7 @@ export class MovieService {
       videos: this.mapVideos(raw.videos?.results),
       backdrops: this.mapImages(raw.images?.backdrops, 'w780'),
       posters: this.mapImages(raw.images?.posters, 'w500'),
+      ratingBreakdown: [],
       similar: this.mapSimilar(raw.recommendations?.results),
     }
   }

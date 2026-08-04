@@ -9,6 +9,7 @@ import {
   MoviePerson,
   MovieSimilarItem,
   MovieVideo,
+  TmdbExternalIdsRaw,
   TmdbImageRaw,
   TmdbImageSize,
   TmdbVideoRaw,
@@ -23,9 +24,12 @@ import {
   TvShowSearchResult,
 } from '../types/tv-show.types'
 import { getImdbRating } from '../utils/imdb'
+import { getRatingBreakdown } from '../utils/media-stats'
 import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
+import { MediaType } from '~/generated/prisma/enums'
+import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
@@ -40,6 +44,7 @@ export class TvShowService {
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly redis: RedisService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<TvShowSearchItem>> {
@@ -57,16 +62,20 @@ export class TvShowService {
 
     const response = await ky<TvShowSearchResult>(url.toString()).json()
 
-    const result: MediaSearchResponse<TvShowSearchItem> = {
-      results: response.results.slice(0, 10).map((show) => ({
+    const results = await Promise.all(
+      response.results.slice(0, 10).map(async (show) => ({
         id: String(show.id),
         title: show.name,
         year: show.first_air_date ? show.first_air_date.split('-')[0] : '',
         posterUrl: show.poster_path ? `${this.TMDB_IMAGE_URL}/w500${show.poster_path}` : null,
-        rating: Math.round(show.vote_average * 10) / 10,
+        rating: await this.fetchImdbRating(String(show.id)),
         genres: show.genre_ids.map((id) => TV_GENRES[id]).filter(Boolean),
         overview: show.overview,
       })),
+    )
+
+    const result: MediaSearchResponse<TvShowSearchItem> = {
+      results,
       totalResults: response.total_results,
       totalPages: Math.min(response.total_pages, 10),
     }
@@ -75,52 +84,79 @@ export class TvShowService {
     return result
   }
 
+  private async fetchImdbRating(tmdbId: string): Promise<number | null> {
+    const externalUrl = new URL(`${this.TMDB_API_URL}/tv/${tmdbId}/external_ids`)
+    externalUrl.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+
+    let external: TmdbExternalIdsRaw
+
+    try {
+      external = await ky<TmdbExternalIdsRaw>(externalUrl.toString()).json()
+    } catch {
+      return null
+    }
+
+    if (!external.imdb_id) return null
+
+    const imdb = await getImdbRating(this.config, this.redis, external.imdb_id)
+    return imdb?.rating ?? null
+  }
+
   async getById(id: string): Promise<TvShowDetail> {
     const cacheKey = `tv:${id}`
+
+    let result: TvShowDetail | null = null
 
     try {
       const cached = await this.redis.get(cacheKey)
       if (cached) {
-        return JSON.parse(cached) as TvShowDetail
+        result = JSON.parse(cached) as TvShowDetail
       }
     } catch {
       // ignore
     }
 
-    const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
-    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
-    url.searchParams.set('language', 'en-US')
-    url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
-    url.searchParams.set('include_image_language', 'en,null')
-
-    let raw: TmdbTvShowRaw
-
-    try {
-      raw = await ky.get(url.toString()).json<TmdbTvShowRaw>()
-    } catch (error) {
-      if (error instanceof HTTPError && error.response.status === 404) {
-        throw new NotFoundException('TV show not found')
-      }
-      throw new InternalServerErrorException(
-        `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    if (!result) {
+      const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
+      url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+      url.searchParams.set('language', 'en-US')
+      url.searchParams.set(
+        'append_to_response',
+        'credits,videos,images,recommendations,external_ids',
       )
+      url.searchParams.set('include_image_language', 'en,null')
+
+      let raw: TmdbTvShowRaw
+
+      try {
+        raw = await ky.get(url.toString()).json<TmdbTvShowRaw>()
+      } catch (error) {
+        if (error instanceof HTTPError && error.response.status === 404) {
+          throw new NotFoundException('TV show not found')
+        }
+        throw new InternalServerErrorException(
+          `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        )
+      }
+
+      result = this.mapTvShowDetail(raw)
+
+      const imdbId = raw.external_ids?.imdb_id
+
+      if (imdbId) {
+        const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
+        result.imdbRating = imdbRating?.rating ?? null
+        result.imdbVoteCount = imdbRating?.votes ?? null
+      }
+
+      try {
+        await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
+      } catch {
+        // ignore
+      }
     }
 
-    const result = this.mapTvShowDetail(raw)
-
-    const imdbId = raw.external_ids?.imdb_id
-
-    if (imdbId) {
-      const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
-      result.imdbRating = imdbRating?.rating ?? null
-      result.imdbVoteCount = imdbRating?.votes ?? null
-    }
-
-    try {
-      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
-    } catch {
-      // ignore
-    }
+    result.ratingBreakdown = await getRatingBreakdown(this.prisma, MediaType.TV_SHOW, id)
 
     return result
   }
@@ -261,6 +297,7 @@ export class TvShowService {
       videos: this.mapVideos(raw.videos?.results),
       backdrops: this.mapImages(raw.images?.backdrops, 'w780'),
       posters: this.mapImages(raw.images?.posters, 'w500'),
+      ratingBreakdown: [],
       similar: this.mapSimilar(raw.recommendations?.results),
     }
   }
