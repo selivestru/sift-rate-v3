@@ -12,7 +12,7 @@ export interface TvSeasonSummary {
   airDate: string
   episodeCount: number
   posterUrl: string | null
-  tmdbRating: number
+  imdbRating: number
 }
 
 export interface TvShowDetail {
@@ -31,8 +31,8 @@ export interface TvShowDetail {
   seasonCount: number
   episodeCount: number
   genres: string[]
-  tmdbRating: number
-  tmdbVoteCount: number
+  imdbRating: number
+  imdbVoteCount: number
   posterUrl: string | null
   backdropUrl: string | null
   networks: string[]

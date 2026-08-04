@@ -38,9 +38,9 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
           {label}
         </div>
 
-        {season.tmdbRating > 0 && (
+        {season.imdbRating > 0 && (
           <RatingBadge
-            rating={season.tmdbRating}
+            rating={season.imdbRating}
             size="xs"
             className="absolute top-1.5 right-1.5"
           />

@@ -134,17 +134,17 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
             )}
           </div>
 
-          {show.tmdbRating > 0 && (
+          {show.imdbRating > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               <div
                 className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
-                title={`${show.tmdbVoteCount.toLocaleString()} TMDB votes`}
+                title={`${show.imdbVoteCount.toLocaleString()} IMDB votes`}
               >
                 <Star weight="Filled" className="text-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
-                  {show.tmdbRating.toFixed(1)}
+                  {show.imdbRating.toFixed(1)}
                 </span>
-                <span className="text-muted-foreground text-[10px]">TMDB</span>
+                <span className="text-muted-foreground text-[10px]">IMDB</span>
               </div>
             </div>
           )}

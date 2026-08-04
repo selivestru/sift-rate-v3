@@ -17,6 +17,7 @@ export const envSchema = z.object({
   GOOGLE_REDIRECT_URI: z.url(),
 
   TMDB_API_KEY: z.string(),
+  OMDB_API_KEY: z.string(),
   IGDB_CLIENT_ID: z.string(),
   IGDB_CLIENT_SECRET: z.string(),
   GOOGLE_BOOKS_API_KEY: z.string(),

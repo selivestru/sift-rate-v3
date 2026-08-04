@@ -124,17 +124,17 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
             )}
           </div>
 
-          {movie.tmdbRating > 0 && (
+          {movie.imdbRating > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               <div
                 className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
-                title={`${movie.tmdbVoteCount.toLocaleString()} TMDB votes`}
+                title={`${movie.imdbVoteCount.toLocaleString()} IMDB votes`}
               >
                 <Star weight="Filled" className="text-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
-                  {movie.tmdbRating.toFixed(1)}
+                  {movie.imdbRating.toFixed(1)}
                 </span>
-                <span className="text-muted-foreground text-[10px]">TMDB</span>
+                <span className="text-muted-foreground text-[10px]">IMDB</span>
               </div>
             </div>
           )}

@@ -67,8 +67,8 @@ export interface MovieDetail {
   runtimeMinutes: number | null
   status: string
   genres: string[]
-  tmdbRating: number
-  tmdbVoteCount: number
+  imdbRating: number | null
+  imdbVoteCount: number | null
   posterUrl: string | null
   backdropUrl: string | null
   languages: string[]
@@ -147,6 +147,10 @@ export interface TmdbRecommendationRaw {
   vote_average: number
 }
 
+export interface TmdbExternalIdsRaw {
+  imdb_id: string | null
+}
+
 export interface TmdbMovieDetailRaw {
   id: number
   title: string
@@ -180,4 +184,5 @@ export interface TmdbMovieDetailRaw {
   recommendations?: {
     results: TmdbRecommendationRaw[]
   }
+  external_ids?: TmdbExternalIdsRaw
 }

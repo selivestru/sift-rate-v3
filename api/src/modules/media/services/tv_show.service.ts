@@ -22,6 +22,7 @@ import {
   TvShowSearchItem,
   TvShowSearchResult,
 } from '../types/tv-show.types'
+import { getImdbRating } from '../utils/imdb'
 import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
@@ -89,7 +90,7 @@ export class TvShowService {
     const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
     url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('language', 'en-US')
-    url.searchParams.set('append_to_response', 'credits,videos,images,recommendations')
+    url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
     url.searchParams.set('include_image_language', 'en,null')
 
     let raw: TmdbTvShowRaw
@@ -106,6 +107,14 @@ export class TvShowService {
     }
 
     const result = this.mapTvShowDetail(raw)
+
+    const imdbId = raw.external_ids?.imdb_id
+
+    if (imdbId) {
+      const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
+      result.imdbRating = imdbRating?.rating ?? null
+      result.imdbVoteCount = imdbRating?.votes ?? null
+    }
 
     try {
       await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
@@ -200,7 +209,6 @@ export class TvShowService {
       airDate: season.air_date || '',
       episodeCount: season.episode_count,
       posterUrl: this.buildImageUrl(season.poster_path, 'w342'),
-      tmdbRating: Math.round(season.vote_average * 10) / 10,
     }))
 
     const regular = mapped
@@ -238,8 +246,8 @@ export class TvShowService {
       seasonCount: raw.number_of_seasons,
       episodeCount: raw.number_of_episodes,
       genres: raw.genres.map((g) => g.name),
-      tmdbRating: Math.round(raw.vote_average * 10) / 10,
-      tmdbVoteCount: raw.vote_count,
+      imdbRating: null,
+      imdbVoteCount: null,
       posterUrl: this.buildImageUrl(raw.poster_path, 'w780'),
       backdropUrl: this.buildImageUrl(raw.backdrop_path, 'original'),
       networks: raw.networks.map((n) => n.name).filter(Boolean),
