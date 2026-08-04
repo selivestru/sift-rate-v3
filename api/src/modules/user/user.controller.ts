@@ -60,6 +60,7 @@ export class UserController {
   @Throttle({ default: { limit: 10, ttl: seconds(60) } })
   @Get('delete-confirm')
   async confirmAccountDeletion(
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Query('token') token?: string,
   ) {
@@ -70,7 +71,7 @@ export class UserController {
     }
 
     try {
-      await this.userService.confirmAccountDeletion(token)
+      await this.userService.confirmAccountDeletion(req, res, token)
       return res.redirect(`${origin}/auth/callback?status=account_deleted`)
     } catch {
       return res.redirect(`${origin}/auth/callback?status=account_delete_failed`)

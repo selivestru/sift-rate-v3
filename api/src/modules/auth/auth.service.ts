@@ -348,17 +348,7 @@ export class AuthService {
   }
 
   async logout(req: Request, res: Response): Promise<void> {
-    const isProd = this.config.get('NODE_ENV', { infer: true }) === 'production'
-    const cookieName = isProd ? '__Host-sid' : 'sid'
-
-    await this.sessionService.destroy(req)
-
-    res.clearCookie(cookieName, {
-      path: '/',
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'lax',
-    })
+    await this.sessionService.revokeCurrent(req, res)
   }
 
   private async issueVerificationToken(userId: string, email: string): Promise<void> {

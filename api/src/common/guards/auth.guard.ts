@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import { IS_PUBLIC_KEY } from '~/common/decorators/public.decorator'
 import { SessionService } from '~/modules/session/session.service'
 import { UserService } from '~/modules/user/user.service'
@@ -31,6 +31,7 @@ export class AuthGuard implements CanActivate {
     }
 
     const req = context.switchToHttp().getRequest<Request>()
+    const res = context.switchToHttp().getResponse<Response>()
     const userId = req.session?.userId
 
     if (!userId) {
@@ -41,7 +42,7 @@ export class AuthGuard implements CanActivate {
       const user = await this.userService.findById(userId)
 
       if (!user.isVerified) {
-        await this.sessionService.destroy(req)
+        await this.sessionService.revokeCurrent(req, res)
         throw new ForbiddenException({
           message: 'Please verify your email before logging in',
           code: 'EMAIL_NOT_VERIFIED',
@@ -58,7 +59,7 @@ export class AuthGuard implements CanActivate {
       return true
     } catch (error) {
       if (error instanceof NotFoundException) {
-        await this.sessionService.destroy(req)
+        await this.sessionService.revokeCurrent(req, res)
         throw new ForbiddenException()
       }
 

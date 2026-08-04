@@ -13,6 +13,7 @@ import { ChangePasswordDto } from './dto/change-password.dto'
 import { DeleteAccountDto } from './dto/delete-account.dto'
 import { argon2id, hash, verify } from 'argon2'
 import { Queue } from 'bullmq'
+import type { Request, Response } from 'express'
 import { createHash, randomBytes } from 'node:crypto'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
@@ -317,7 +318,7 @@ export class UserService {
     return { message: 'Check your email to confirm account deletion' }
   }
 
-  async confirmAccountDeletion(token: string): Promise<void> {
+  async confirmAccountDeletion(req: Request, res: Response, token: string): Promise<void> {
     const tokenHash = this.hashToken(token)
     const data = await this.redis.getdel(REDIS_KEYS.DELETE_ACCOUNT_TOKEN(tokenHash))
 
@@ -335,6 +336,10 @@ export class UserService {
 
     await this.sessionService.destroyAllForUser(userId)
     await this.cleanupUserRedisState(userId)
+
+    if (req.session?.userId === userId) {
+      await this.sessionService.revokeCurrent(req, res)
+    }
 
     try {
       await this.emailQueue.add(

@@ -1,7 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-import { Request } from 'express'
+import type { CookieOptions } from 'express'
+import { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { RedisService } from '~/infrastructure/redis/redis.service'
@@ -10,14 +11,24 @@ import { RedisService } from '~/infrastructure/redis/redis.service'
 export class SessionService {
   private readonly logger = new Logger(SessionService.name)
   private readonly SESSION_PREFIX: string
-  private readonly USER_SESSIONS_PREFIX = REDIS_KEYS.USER_SESSIONS
   private readonly SESSION_TTL_SECONDS = 604_800
+  private readonly cookieName: string
+  private readonly cookieOptions: CookieOptions
 
   constructor(
     private readonly redis: RedisService,
     config: ConfigService<EnvConfig, true>,
   ) {
     this.SESSION_PREFIX = config.get('SESSION_PREFIX', { infer: true })
+
+    const isProd = config.get('NODE_ENV', { infer: true }) === 'production'
+    this.cookieName = isProd ? '__Host-sid' : 'sid'
+    this.cookieOptions = {
+      path: '/',
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+    }
   }
 
   create(req: Request, userId: string): Promise<void> {
@@ -31,7 +42,7 @@ export class SessionService {
         req.session.userId = userId
 
         const sid = req.session.id
-        const setKey = this.USER_SESSIONS_PREFIX(userId)
+        const setKey = REDIS_KEYS.USER_SESSIONS(userId)
 
         void Promise.all([
           this.redis.sadd(setKey, sid),
@@ -45,7 +56,12 @@ export class SessionService {
     })
   }
 
-  destroy(req: Request): Promise<void> {
+  async revokeCurrent(req: Request, res: Response): Promise<void> {
+    await this.destroy(req)
+    res.clearCookie(this.cookieName, this.cookieOptions)
+  }
+
+  private destroy(req: Request): Promise<void> {
     const sid = req.session.id
     const userId = req.session.userId
 
@@ -57,7 +73,7 @@ export class SessionService {
         }
 
         if (userId) {
-          this.redis.srem(this.USER_SESSIONS_PREFIX(userId), sid).catch((redisErr) => {
+          this.redis.srem(REDIS_KEYS.USER_SESSIONS(userId), sid).catch((redisErr) => {
             this.logger.warn(
               { userId, err: String(redisErr) },
               'Failed to remove session from index',
@@ -71,7 +87,7 @@ export class SessionService {
   }
 
   async destroyAllForUser(userId: string, exceptSid?: string): Promise<number> {
-    const setKey = this.USER_SESSIONS_PREFIX(userId)
+    const setKey = REDIS_KEYS.USER_SESSIONS(userId)
     const sids = await this.redis.smembers(setKey)
 
     if (sids.length === 0) {
