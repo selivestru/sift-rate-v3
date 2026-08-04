@@ -25,11 +25,6 @@ export interface MovieSearchItem {
   overview: string
 }
 
-export interface MediaRatingBreakdownItem {
-  rating: number
-  count: number
-}
-
 export type TmdbImageSize = 'w185' | 'w300' | 'w342' | 'w500' | 'w780' | 'w1280' | 'original'
 
 export interface MoviePerson {
@@ -88,7 +83,6 @@ export interface MovieDetail {
   videos: MovieVideo[]
   backdrops: MovieImage[]
   posters: MovieImage[]
-  ratingBreakdown: MediaRatingBreakdownItem[]
   similar: MovieSimilarItem[]
 }
 

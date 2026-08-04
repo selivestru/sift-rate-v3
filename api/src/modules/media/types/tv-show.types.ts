@@ -1,5 +1,4 @@
 import type {
-  MediaRatingBreakdownItem,
   MovieImage,
   MoviePerson,
   MovieSimilarItem,
@@ -81,7 +80,6 @@ export interface TvShowDetail {
   videos: MovieVideo[]
   backdrops: MovieImage[]
   posters: MovieImage[]
-  ratingBreakdown: MediaRatingBreakdownItem[]
   similar: MovieSimilarItem[]
 }
 

@@ -24,12 +24,9 @@ import {
   TvShowSearchResult,
 } from '../types/tv-show.types'
 import { getImdbRating } from '../utils/imdb'
-import { getRatingBreakdown } from '../utils/media-stats'
 import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
-import { MediaType } from '~/generated/prisma/enums'
-import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
@@ -44,7 +41,6 @@ export class TvShowService {
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly redis: RedisService,
-    private readonly prisma: PrismaService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<TvShowSearchItem>> {
@@ -155,8 +151,6 @@ export class TvShowService {
         // ignore
       }
     }
-
-    result.ratingBreakdown = await getRatingBreakdown(this.prisma, MediaType.TV_SHOW, id)
 
     return result
   }
@@ -297,7 +291,6 @@ export class TvShowService {
       videos: this.mapVideos(raw.videos?.results),
       backdrops: this.mapImages(raw.images?.backdrops, 'w780'),
       posters: this.mapImages(raw.images?.posters, 'w500'),
-      ratingBreakdown: [],
       similar: this.mapSimilar(raw.recommendations?.results),
     }
   }

@@ -4,6 +4,7 @@ import { Star } from 'reicon-react'
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
+import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
 
 import { MediaCoverLightbox } from '../../shared'
 import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
@@ -136,15 +137,23 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
 
           {show.imdbRating > 0 && (
             <div className="flex flex-wrap items-center gap-2">
-              <div
-                className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm"
-                title={`${show.imdbVoteCount.toLocaleString()} IMDB votes`}
-              >
+              <div className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm">
                 <Star weight="Filled" className="text-rating size-3.5" aria-hidden />
                 <span className="text-foreground text-xs font-semibold tabular-nums">
                   {show.imdbRating.toFixed(1)}
                 </span>
                 <span className="text-muted-foreground text-[10px]">IMDB</span>
+                {show.imdbVoteCount > 0 && (
+                  <>
+                    <span className="text-muted-foreground" aria-hidden>
+                      ·
+                    </span>
+                    <span className="text-foreground text-[10px] font-semibold tabular-nums">
+                      {formatCompactNumber(show.imdbVoteCount)}
+                    </span>
+                    <span className="text-muted-foreground text-[10px]">votes</span>
+                  </>
+                )}
               </div>
             </div>
           )}
