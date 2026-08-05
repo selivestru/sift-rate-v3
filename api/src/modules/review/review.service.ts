@@ -191,13 +191,11 @@ export class ReviewService {
           mediaId: media.id,
           rating: dto.rating,
           content: dto.content ?? null,
-          visibility: dto.visibility,
           hasSpoiler: dto.hasSpoiler,
         },
         update: {
           rating: dto.rating,
           content: dto.content,
-          visibility: dto.visibility,
           hasSpoiler: dto.hasSpoiler,
         },
         include: { media: true },

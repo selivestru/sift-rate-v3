@@ -1,16 +1,6 @@
 import { Type } from 'class-transformer'
-import {
-  IsBoolean,
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-} from 'class-validator'
+import { IsBoolean, IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator'
 import { Trim } from '~/common/decorators/trim.decorator'
-import { Visibility } from '~/generated/prisma/enums'
 
 export class UpdateReviewDto {
   @IsOptional()
@@ -25,10 +15,6 @@ export class UpdateReviewDto {
   @IsString()
   @MaxLength(1000)
   content?: string | null
-
-  @IsOptional()
-  @IsEnum(Visibility)
-  visibility?: Visibility
 
   @IsOptional()
   @Type(() => Boolean)

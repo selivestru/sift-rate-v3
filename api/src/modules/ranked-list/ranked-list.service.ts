@@ -41,7 +41,6 @@ export class RankedListService {
     return this.prisma.rankedList.create({
       data: {
         title: dto.title,
-        visibility: dto.visibility,
         userId,
       },
     })
@@ -56,7 +55,6 @@ export class RankedListService {
       },
       data: {
         title: dto.title,
-        visibility: dto.visibility,
       },
     })
   }

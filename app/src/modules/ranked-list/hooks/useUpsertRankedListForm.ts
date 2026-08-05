@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
-import { VISIBILITY } from '~/modules/review'
 
 import {
   upsertRankedListSchema,
@@ -31,7 +30,6 @@ export const useUpsertRankedListForm = ({ list, onClose }: UseUpsertRankedListFo
   const { handleSubmit, reset, setError, ...form } = useForm<UpsertRankedListFormValues>({
     defaultValues: {
       title: list?.title ?? '',
-      visibility: list?.visibility ?? VISIBILITY.PRIVATE,
     },
     resolver: zodResolver(upsertRankedListSchema),
   })
@@ -39,7 +37,6 @@ export const useUpsertRankedListForm = ({ list, onClose }: UseUpsertRankedListFo
   useEffect(() => {
     reset({
       title: list?.title ?? '',
-      visibility: list?.visibility ?? VISIBILITY.PRIVATE,
     })
   }, [list, reset])
 
@@ -47,7 +44,7 @@ export const useUpsertRankedListForm = ({ list, onClose }: UseUpsertRankedListFo
     setServerError(null)
 
     if (isEdit && list) {
-      if (list.title === values.title && list.visibility === values.visibility) {
+      if (list.title === values.title) {
         onClose()
         return
       }
@@ -58,12 +55,10 @@ export const useUpsertRankedListForm = ({ list, onClose }: UseUpsertRankedListFo
         await updateMutation.mutateAsync({
           listId: list.id,
           title: values.title,
-          visibility: values.visibility,
         })
       } else {
         await createMutation.mutateAsync({
           title: values.title,
-          visibility: values.visibility,
         })
       }
 

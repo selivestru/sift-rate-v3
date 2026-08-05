@@ -14,9 +14,7 @@ import {
 } from '~/common/ui/Dialog'
 import { Field, FieldError, FieldLabel } from '~/common/ui/Field'
 import { Input } from '~/common/ui/Input'
-import { Tabs, TabsIndicator, TabsList, TabsTab } from '~/common/ui/Tabs'
 import { cn } from '~/common/utils/cn'
-import { VISIBILITY_OPTIONS } from '~/modules/review'
 
 import { useUpsertRankedListForm } from '../hooks/useUpsertRankedListForm'
 import type { RankedListItem } from '../types/ranked-list.types'
@@ -78,31 +76,6 @@ export const UpsertRankedListDialog = ({ list, children }: UpsertRankedListDialo
                     {...field}
                   />
                   {fieldState.error?.message && <FieldError>{fieldState.error.message}</FieldError>}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="visibility"
-              control={control}
-              render={({ field }) => (
-                <Field>
-                  <FieldLabel>Visibility</FieldLabel>
-                  <Tabs value={field.value} onValueChange={field.onChange}>
-                    <TabsList className="h-11 w-full">
-                      <TabsIndicator />
-                      {VISIBILITY_OPTIONS.map((option) => {
-                        const Icon = option.icon
-
-                        return (
-                          <TabsTab key={option.value} value={option.value}>
-                            <Icon className="size-3.5" />
-                            <span className="truncate">{option.label}</span>
-                          </TabsTab>
-                        )
-                      })}
-                    </TabsList>
-                  </Tabs>
                 </Field>
               )}
             />

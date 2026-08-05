@@ -9,7 +9,6 @@ import { RatingBadge } from '~/common/ui/RatingBadge'
 import { cn } from '~/common/utils/cn'
 import { formatDate } from '~/common/utils/formatDate'
 
-import { reviewVisibilityConfig } from '../constants/visibility'
 import type { Review } from '../types/review.types'
 import { DeleteReviewDialog } from './DeleteReviewDialog'
 import { PerfectStardust } from './PerfectStardust'
@@ -24,8 +23,6 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   const typeMeta = mediaTypeMeta[media.mediaType]
   const accent = typeMeta.color
   const TypeIcon = typeMeta.icon
-  const visibility = reviewVisibilityConfig[review.visibility]
-  const VisibilityIcon = visibility.icon
   const isMusic = media.mediaType === MEDIA_TYPES.ALBUM || media.mediaType === MEDIA_TYPES.TRACK
   const detailTo = mediaDetailRouteByType[media.mediaType]
   const hasContent = Boolean(review.content?.trim())
@@ -135,10 +132,6 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               Perfect
             </Badge>
           )}
-
-          <Badge color={visibility.color} startIcon={<VisibilityIcon />}>
-            {visibility.label}
-          </Badge>
 
           {review.hasSpoiler && (
             <Badge variant="destructive" startIcon={<TriangleWarning />}>

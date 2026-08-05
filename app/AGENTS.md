@@ -169,7 +169,6 @@ Interactive control patterns (sizes, variants, props) — see [`DESIGN.md`](./DE
 
 - `Subscription`: `FREE | MONTHLY | YEARLY | LIFETIME` — `src/modules/auth/types/user.type.ts`
 - `MediaType`: `MOVIE | TV_SHOW | GAME | BOOK | ALBUM | TRACK` — `src/common/constants/media-type.ts`
-- `Visibility`: `PRIVATE | FRIENDS | PUBLIC` — `src/modules/review/constants/visibility.ts`
 
 ## Agent best practices
 

@@ -357,13 +357,6 @@ button:not(:disabled),
   animation-delay: var(--stardust-delay, 0s);
 }
 
-html.theme-transitioning,
-html.theme-transitioning *,
-html.theme-transitioning *::before,
-html.theme-transitioning *::after {
-  transition: none !important;
-}
-
 ::view-transition-group(root) {
   animation-timing-function: var(--expo-out);
 }
@@ -399,13 +392,6 @@ html.theme-transitioning *::after {
     -webkit-mask-image: none !important;
     mask-image: none !important;
     clip-path: none !important;
-  }
-
-  html.theme-transitioning,
-  html.theme-transitioning *,
-  html.theme-transitioning *::before,
-  html.theme-transitioning *::after {
-    transition: none !important;
   }
 
   .animate-perfect-stardust {

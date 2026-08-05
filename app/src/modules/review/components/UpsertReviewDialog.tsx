@@ -8,11 +8,9 @@ import { Button } from '~/common/ui/Button'
 import { Dialog, DialogContent, DialogFooter } from '~/common/ui/Dialog'
 import { Field, FieldError, FieldLabel } from '~/common/ui/Field'
 import { Switch } from '~/common/ui/Switch'
-import { Tabs, TabsIndicator, TabsList, TabsTab } from '~/common/ui/Tabs'
 import { Textarea } from '~/common/ui/Textarea'
 import { cn } from '~/common/utils/cn'
 
-import { VISIBILITY_OPTIONS } from '../constants/visibility'
 import { useUpsertReviewForm } from '../hooks/useUpsertReviewForm'
 import { MAX_REVIEW_LENGTH } from '../schema/rate.schema'
 import type { Review } from '../types/review.types'
@@ -173,30 +171,6 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                 )}
               />
             </div>
-            <Controller
-              name="visibility"
-              control={control}
-              render={({ field }) => (
-                <Field>
-                  <FieldLabel>Visibility</FieldLabel>
-                  <Tabs value={field.value} onValueChange={field.onChange}>
-                    <TabsList className="h-11 w-full">
-                      <TabsIndicator />
-                      {VISIBILITY_OPTIONS.map((option) => {
-                        const Icon = option.icon
-
-                        return (
-                          <TabsTab key={option.value} value={option.value}>
-                            <Icon className="size-3.5" />
-                            <span className="truncate">{option.label}</span>
-                          </TabsTab>
-                        )
-                      })}
-                    </TabsList>
-                  </Tabs>
-                </Field>
-              )}
-            />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel

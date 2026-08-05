@@ -65,6 +65,26 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
         />
       )}
 
+      {show.imdbRating > 0 && (
+        <div className="border-border/30 bg-background/75 absolute top-3 right-3 z-20 flex items-center gap-1.5 rounded-full border px-3 py-1.5 shadow-sm backdrop-blur-lg sm:top-4 sm:right-4">
+          <Star weight="Filled" className="text-rating size-4 sm:size-4.5" aria-hidden />
+          <span className="text-foreground text-sm font-bold tabular-nums sm:text-base">
+            {show.imdbRating.toFixed(1)}
+          </span>
+          <span className="text-muted-foreground text-[11px] font-medium">IMDB</span>
+          {show.imdbVoteCount > 0 && (
+            <>
+              <span className="text-muted-foreground" aria-hidden>
+                ·
+              </span>
+              <span className="text-foreground text-[11px] font-semibold tabular-nums">
+                {formatCompactNumber(show.imdbVoteCount)}
+              </span>
+            </>
+          )}
+        </div>
+      )}
+
       <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-start sm:gap-5 sm:p-6 sm:pt-8">
         <div className="bg-muted ring-border relative aspect-2/3 w-36 shrink-0 overflow-hidden rounded-xl shadow-sm ring-1 sm:w-48">
           <MediaCoverLightbox
@@ -134,29 +154,6 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
               </>
             )}
           </div>
-
-          {show.imdbRating > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm">
-                <Star weight="Filled" className="text-rating size-3.5" aria-hidden />
-                <span className="text-foreground text-xs font-semibold tabular-nums">
-                  {show.imdbRating.toFixed(1)}
-                </span>
-                <span className="text-muted-foreground text-[10px]">IMDB</span>
-                {show.imdbVoteCount > 0 && (
-                  <>
-                    <span className="text-muted-foreground" aria-hidden>
-                      ·
-                    </span>
-                    <span className="text-foreground text-[10px] font-semibold tabular-nums">
-                      {formatCompactNumber(show.imdbVoteCount)}
-                    </span>
-                    <span className="text-muted-foreground text-[10px]">votes</span>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
 
           <MediaStateButtons externalId={show.id} mediaType={MEDIA_TYPES.TV_SHOW} />
 

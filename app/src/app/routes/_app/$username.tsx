@@ -1,9 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { ProfilePage } from '~/modules/profile'
+
 export const Route = createFileRoute('/_app/$username')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello "/_app/$username"!</div>
+  const { username } = Route.useParams()
+  return <ProfilePage username={username} />
 }

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Pen, Star, Trash6, Users } from 'reicon-react'
+import { Pen, Star, Trash6 } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
@@ -9,7 +9,7 @@ import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
-import { DeleteReviewDialog, UpsertReviewDialog, VISIBILITY } from '~/modules/review'
+import { DeleteReviewDialog, UpsertReviewDialog } from '~/modules/review'
 
 import type { MediaReviewItem } from '../types/media-state.types'
 
@@ -50,12 +50,6 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
               >
                 {user.username}
               </Link>
-
-              {review.visibility === VISIBILITY.FRIENDS && (
-                <Badge size="sm" startIcon={<Users />}>
-                  Friends
-                </Badge>
-              )}
 
               {isPerfect && (
                 <Badge variant="rating" size="sm">

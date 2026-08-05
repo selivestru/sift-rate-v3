@@ -1,6 +1,5 @@
 import { Plus } from 'reicon-react'
 
-import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import {
   Dialog,
@@ -9,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '~/common/ui/Dialog'
-import { reviewVisibilityConfig } from '~/modules/review'
 
 import type { RankedListItem } from '../types/ranked-list.types'
 import { AddRankedItemDialog } from './AddRankedItemDialog'
@@ -27,8 +25,6 @@ export const RankedListDetailDialog = ({
   onOpenChange,
 }: RankedListDetailDialogProps) => {
   const sortedItems = list.items.sort((a, b) => a.position - b.position)
-  const visibility = reviewVisibilityConfig[list.visibility]
-  const VisibilityIcon = visibility.icon
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onOpenChange(false)}>
@@ -41,9 +37,6 @@ export const RankedListDetailDialog = ({
             <div className="flex min-w-0 flex-col gap-1.5">
               <DialogTitle className="text-lg">{list.title}</DialogTitle>
               <DialogDescription className="flex flex-wrap items-center gap-2">
-                <Badge size="sm" color={visibility.color} startIcon={<VisibilityIcon />}>
-                  {visibility.label}
-                </Badge>
                 <span className="text-muted-foreground text-xs tabular-nums">
                   {sortedItems.length} ranked
                 </span>

@@ -8,7 +8,7 @@ import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
 
 import { rateFormSchema, type RateFormValues } from '../schema/rate.schema'
-import { VISIBILITY, type Review } from '../types/review.types'
+import { type Review } from '../types/review.types'
 import { useUpsertReviewMutation } from './useUpsertReviewMutation'
 
 export const useUpsertReviewForm = (
@@ -23,7 +23,6 @@ export const useUpsertReviewForm = (
     defaultValues: {
       rating: initialData?.rating ?? 5,
       content: initialData?.content ?? '',
-      visibility: initialData?.visibility ?? VISIBILITY.PRIVATE,
       hasSpoiler: initialData?.hasSpoiler ?? false,
     },
     resolver: zodResolver(rateFormSchema),
@@ -34,7 +33,6 @@ export const useUpsertReviewForm = (
       reset({
         rating: initialData.rating ?? 5,
         content: initialData.content ?? '',
-        visibility: initialData.visibility ?? VISIBILITY.PRIVATE,
         hasSpoiler: initialData.hasSpoiler ?? false,
       })
     }
@@ -45,10 +43,9 @@ export const useUpsertReviewForm = (
 
     const sameRating = initialData?.rating === values.rating
     const sameContent = initialData?.content === values.content
-    const sameVisibility = initialData?.visibility === values.visibility
     const sameHasSpoiler = initialData?.hasSpoiler === values.hasSpoiler
 
-    if (sameRating && sameContent && sameVisibility && sameHasSpoiler) {
+    if (sameRating && sameContent && sameHasSpoiler) {
       onClose()
       return
     }
@@ -61,7 +58,6 @@ export const useUpsertReviewForm = (
         externalId: media.externalId,
         rating: values.rating,
         content: values.content ? values.content.trim() : null,
-        visibility: values.visibility,
         hasSpoiler: content ? values.hasSpoiler : false,
         previousReview: initialData ? { id: initialData.id, rating: initialData.rating } : null,
       })

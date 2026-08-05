@@ -9,8 +9,8 @@ import { optimisticUpdateList, reconcileUpdateList } from '../utils/ranked-list-
 export const useUpdateRankedList = (onClose: () => void) => {
   return useMutation({
     mutationKey: ['update-ranked-list'],
-    mutationFn: ({ listId, title, visibility }: UpdateRankedListVariables) =>
-      rankedListApi.updateList(listId, { title, visibility }),
+    mutationFn: ({ listId, title }: UpdateRankedListVariables) =>
+      rankedListApi.updateList(listId, { title }),
     onMutate: async (variables, context) => {
       await context.client.cancelQueries({ queryKey: QUERIES_KEYS.RANKED_LISTS })
 
@@ -20,7 +20,6 @@ export const useUpdateRankedList = (onClose: () => void) => {
         QUERIES_KEYS.RANKED_LISTS,
         optimisticUpdateList(previous, variables.listId, {
           title: variables.title,
-          visibility: variables.visibility,
         }),
       )
 

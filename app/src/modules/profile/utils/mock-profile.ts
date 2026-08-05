@@ -1,0 +1,110 @@
+import { MEDIA_TYPES } from '~/common/constants/media-type'
+import { SUBSCRIPTIONS } from '~/modules/auth'
+
+import type { Profile } from '../types/profile.types'
+
+export const mockProfile: Profile = {
+  user: {
+    id: 'usr_1',
+    username: 'johndoe',
+    displayName: 'John Doe',
+    avatarUrl: null,
+    bannerUrl: null,
+    subscription: SUBSCRIPTIONS.YEARLY,
+    createdAt: '2024-01-15T10:00:00Z',
+  },
+  stats: {
+    friends: 42,
+    reviews: 187,
+    rankedLists: 5,
+  },
+  ratingDistribution: {
+    10: 47,
+    9: 32,
+    8: 28,
+    7: 35,
+    6: 18,
+    5: 12,
+    4: 7,
+    3: 4,
+    2: 2,
+    1: 0,
+  },
+  reviewStats: {
+    total: 187,
+    byMediaType: {
+      [MEDIA_TYPES.MOVIE]: 89,
+      [MEDIA_TYPES.TV_SHOW]: 34,
+      [MEDIA_TYPES.GAME]: 28,
+      [MEDIA_TYPES.BOOK]: 21,
+      [MEDIA_TYPES.ALBUM]: 10,
+      [MEDIA_TYPES.TRACK]: 5,
+    },
+  },
+  achievements: [
+    {
+      id: 'ach_1',
+      title: 'Cinephile',
+      description: 'Rate 50 movies',
+      iconName: 'Clapperboard',
+      rarity: 'rare',
+      unlockedAt: '2024-03-10T12:00:00Z',
+    },
+    {
+      id: 'ach_2',
+      title: 'Bookworm',
+      description: 'Rate 20 books',
+      iconName: 'BookOpen',
+      rarity: 'rare',
+      unlockedAt: '2024-06-22T15:30:00Z',
+    },
+    {
+      id: 'ach_3',
+      title: 'Marathon',
+      description: 'Rate 10 items in one day',
+      iconName: 'Flame',
+      rarity: 'common',
+      unlockedAt: '2024-08-05T20:00:00Z',
+    },
+    {
+      id: 'ach_4',
+      title: 'Explorer',
+      description: 'Rate items in all media types',
+      iconName: 'Compass',
+      rarity: 'epic',
+      unlockedAt: '2024-09-14T11:00:00Z',
+    },
+    {
+      id: 'ach_5',
+      title: 'Critic',
+      description: 'Write 25 reviews',
+      iconName: 'PenLine',
+      rarity: 'epic',
+      unlockedAt: '2024-11-01T09:00:00Z',
+    },
+    {
+      id: 'ach_6',
+      title: 'Collector',
+      description: 'Create 5 ranked lists',
+      iconName: 'List',
+      rarity: 'rare',
+      unlockedAt: null,
+    },
+    {
+      id: 'ach_7',
+      title: 'Socialite',
+      description: 'Add 25 friends',
+      iconName: 'Users',
+      rarity: 'common',
+      unlockedAt: '2025-01-20T18:00:00Z',
+    },
+    {
+      id: 'ach_8',
+      title: 'Perfectionist',
+      description: 'Give 100 ratings of 10',
+      iconName: 'Star',
+      rarity: 'legendary',
+      unlockedAt: null,
+    },
+  ],
+}

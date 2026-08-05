@@ -15,4 +15,5 @@ export const QUERIES_KEYS = {
     data.externalId,
   ],
   RANKED_LISTS: ['ranked-lists'],
+  USER_PROFILE: (username: string) => ['user-profile', username],
 }

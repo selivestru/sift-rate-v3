@@ -1,10 +1,8 @@
 import { Pen, Trash6 } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
-import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
-import { reviewVisibilityConfig } from '~/modules/review'
 
 import type { RankedListItem } from '../types/ranked-list.types'
 import { DeleteRankedListDialog } from './DeleteRankedListDialog'
@@ -18,8 +16,6 @@ interface RankedListCardProps {
 
 export const RankedListCard = ({ item }: RankedListCardProps) => {
   const detail = useDisclosure()
-  const visibility = reviewVisibilityConfig[item.visibility]
-  const VisibilityIcon = visibility.icon
   const count = item.items.length
 
   return (
@@ -46,13 +42,8 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
             <h2 className="text-foreground line-clamp-2 text-base font-semibold tracking-tight">
               {item.title}
             </h2>
-            <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
-              <Badge size="sm" color={visibility.color} startIcon={<VisibilityIcon />}>
-                {visibility.label}
-              </Badge>
-              <span className="tabular-nums">
-                {count} {count === 1 ? 'item' : 'items'}
-              </span>
+            <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs tabular-nums">
+              {count} {count === 1 ? 'item' : 'items'}
             </div>
           </div>
 

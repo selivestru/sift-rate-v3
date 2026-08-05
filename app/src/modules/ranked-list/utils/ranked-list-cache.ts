@@ -58,7 +58,6 @@ export const optimisticCreateList = (
     tempId: string
     userId: string
     title: string
-    visibility: RankedListItem['visibility']
   },
 ): RankedListResponse => {
   const now = new Date().toISOString()
@@ -66,7 +65,6 @@ export const optimisticCreateList = (
     id: input.tempId,
     userId: input.userId,
     title: input.title,
-    visibility: input.visibility,
     items: [],
     createdAt: now,
     updatedAt: now,
@@ -98,7 +96,7 @@ export const reconcileCreateList = (
 export const optimisticUpdateList = (
   prev: RankedListResponse | undefined,
   listId: string,
-  patch: Pick<RankedListItem, 'title' | 'visibility'>,
+  patch: Pick<RankedListItem, 'title'>,
 ): RankedListResponse | undefined => {
   return mapLists(prev, (lists) =>
     lists.map((list) => {
@@ -107,7 +105,6 @@ export const optimisticUpdateList = (
       return {
         ...list,
         title: patch.title,
-        visibility: patch.visibility,
         updatedAt: new Date().toISOString(),
       }
     }),
@@ -125,7 +122,6 @@ export const reconcileUpdateList = (
       return {
         ...list,
         title: server.title,
-        visibility: server.visibility,
         updatedAt: server.updatedAt,
       }
     }),

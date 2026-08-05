@@ -1,5 +1,4 @@
 import type { MediaType } from '~/common/constants/media-type'
-import type { Visibility } from '~/modules/review'
 
 export interface RankedMedia {
   id: string
@@ -23,7 +22,6 @@ export interface RankedListItem {
   id: string
   userId: string
   title: string
-  visibility: Visibility
   items: RankedListEntry[]
   createdAt: string
   updatedAt: string
@@ -35,7 +33,6 @@ export interface RankedListResponse {
 
 export interface UpsertRankedListBody {
   title: string
-  visibility: Visibility
 }
 
 export interface ReorderRankedItemBody {

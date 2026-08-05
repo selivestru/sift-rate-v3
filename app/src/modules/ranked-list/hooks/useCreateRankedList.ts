@@ -25,7 +25,6 @@ export const useCreateRankedList = (onSuccess: () => void) => {
           tempId,
           userId: userId!,
           title: body.title,
-          visibility: body.visibility,
         }),
       )
 

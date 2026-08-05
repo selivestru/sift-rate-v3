@@ -199,9 +199,9 @@ Content cards must **not** use:
 
 ### Domain accent policy (allowed residuals)
 
-Runtime domain colors (media type, visibility, library section, perfect rating) may appear **only** on:
+Runtime domain colors (media type, library section, perfect rating) may appear **only** on:
 
-- badges (`MediaTypeBadge`, visibility chips, `Badge color=…`)
+- badges (`MediaTypeBadge`, `Badge color=…`)
 - icons (inline `style={{ color }}` on type icons)
 - poster/image scrims (black gradients for title legibility)
 - hero metric number tint
@@ -255,7 +255,7 @@ Soft pill: `rounded-full`, icon + label.
 | `warning`     | Caution meta                |
 | `blur`        | Over photo (restrained)     |
 
-Dynamic `color` / `isSolid` for media-type and visibility chips. Prefer `MediaTypeBadge` / `RatingBadge` wrappers.
+Dynamic `color` / `isSolid` for media-type chips. Prefer `MediaTypeBadge` / `RatingBadge` wrappers.
 
 ---
 
