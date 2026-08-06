@@ -24,6 +24,13 @@ export interface ReviewStats {
   byMediaType: Partial<Record<MediaType, number>>
 }
 
+export interface ReviewActivityDay {
+  date: string
+  count: number
+}
+
+export type ReviewActivityByYear = Record<number, ReviewActivityDay[]>
+
 export type AchievementRarity = 'common' | 'rare' | 'epic' | 'legendary'
 
 export interface Achievement {
@@ -40,5 +47,6 @@ export interface Profile {
   stats: ProfileStats
   ratingDistribution: RatingDistribution
   reviewStats: ReviewStats
+  reviewActivity: ReviewActivityByYear
   achievements: Achievement[]
 }

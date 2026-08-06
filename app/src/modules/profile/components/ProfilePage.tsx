@@ -4,6 +4,7 @@ import { useProfileQuery } from '../hooks/useProfileQuery'
 import { AchievementsGrid } from './AchievementsGrid'
 import { ProfileHero } from './ProfileHero'
 import { RatingDistribution } from './RatingDistribution'
+import { ReviewActivity } from './ReviewActivity'
 import { ReviewStatsSection } from './ReviewStatsSection'
 
 interface ProfilePageProps {
@@ -24,6 +25,7 @@ export const ProfilePage = ({ username }: ProfilePageProps) => {
       <div className="space-y-6 p-4">
         <AchievementsGrid achievements={data.achievements} />
         <RatingDistribution distribution={data.ratingDistribution} />
+        <ReviewActivity activity={data.reviewActivity} />
         <ReviewStatsSection reviewStats={data.reviewStats} />
       </div>
     </div>
