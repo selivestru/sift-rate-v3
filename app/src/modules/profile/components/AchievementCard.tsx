@@ -54,7 +54,7 @@ export const AchievementCard = ({ achievement }: AchievementCardProps) => {
       >
         <Icon className="size-5" />
       </div>
-      <div className="min-w-0 space-y-1">
+      <div className="space-y-1">
         <p className="truncate text-xs font-semibold">{achievement.title}</p>
         {isUnlocked && (
           <p className="text-muted-foreground line-clamp-2 text-xs">{achievement.description}</p>

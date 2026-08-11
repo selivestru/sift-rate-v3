@@ -69,7 +69,7 @@ export const AppearanceSettings = () => {
                   >
                     <Icon className="size-4" strokeWidth={1.75} />
                   </span>
-                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <span className="flex flex-1 flex-col gap-0.5">
                     <span className="text-sm font-medium">{THEME_LABELS[mode]}</span>
                     <span className="text-muted-foreground text-xs"></span>
                   </span>

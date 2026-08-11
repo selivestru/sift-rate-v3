@@ -47,7 +47,7 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
         )}
       </div>
 
-      <div className="min-w-0 px-0.5">
+      <div className="px-0.5">
         <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
           {season.name}
         </p>

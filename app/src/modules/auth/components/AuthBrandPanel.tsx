@@ -71,7 +71,7 @@ export const AuthBrandPanel = () => {
               <span className="bg-accent text-primary flex size-10 shrink-0 items-center justify-center rounded-lg">
                 <Icon className="size-4" strokeWidth={1.75} />
               </span>
-              <div className="min-w-0 space-y-0.5 pt-0.5">
+              <div className="space-y-0.5 pt-0.5">
                 <p className="text-sm font-medium">{title}</p>
                 <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
               </div>

@@ -1,6 +1,5 @@
 import { Transform, Type } from 'class-transformer'
 import {
-  IsBoolean,
   IsEnum,
   IsInt,
   IsOptional,
@@ -36,8 +35,4 @@ export class UpsertReviewDto {
   @IsString()
   @MaxLength(1000)
   content!: string | null
-
-  @Type(() => Boolean)
-  @IsBoolean()
-  hasSpoiler!: boolean
 }

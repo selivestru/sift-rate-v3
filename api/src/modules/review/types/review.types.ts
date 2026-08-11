@@ -1,3 +1,4 @@
+import { JsonValue } from '@prisma/client/runtime/client'
 import { MediaType } from '~/generated/prisma/enums'
 
 export type ReviewMediaCard = {
@@ -6,20 +7,20 @@ export type ReviewMediaCard = {
   mediaType: MediaType
   title: string
   posterUrl: string | null
+  metadata: JsonValue | null
 }
 
-export type ReviewResponse = {
+export type ReviewItem = {
   id: string
   rating: number
   content: string | null
-  hasSpoiler: boolean
   createdAt: Date
   updatedAt: Date
   media: ReviewMediaCard
 }
 
-export type ReviewListResponse = {
-  data: ReviewResponse[]
+export type ReviewsResponse = {
+  data: ReviewItem[]
   nextCursor: string | null
 }
 

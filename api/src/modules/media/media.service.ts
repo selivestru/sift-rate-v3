@@ -33,7 +33,7 @@ export type EnsureMediaResult = {
 @Injectable()
 export class MediaService {
   private readonly logger = new Logger(MediaService.name)
-  private readonly REVIEWS_LIMIT = 10
+  private readonly REVIEWS_LIMIT = 20
 
   constructor(
     private readonly prisma: PrismaService,
@@ -162,6 +162,7 @@ export class MediaService {
           select: {
             id: true,
             username: true,
+            displayName: true,
             avatarUrl: true,
           },
         },

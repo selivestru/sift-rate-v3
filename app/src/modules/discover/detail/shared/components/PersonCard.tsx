@@ -33,7 +33,7 @@ export const PersonCard = ({ name, profileUrl, subtitle, className }: PersonCard
           </div>
         )}
       </div>
-      <div className="min-w-0 px-0.5">
+      <div className="px-0.5">
         <p className="text-foreground truncate text-sm font-medium">{name}</p>
         {subtitle && (
           <p className="text-muted-foreground line-clamp-2 text-xs leading-snug">{subtitle}</p>

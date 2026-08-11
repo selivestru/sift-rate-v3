@@ -1,5 +1,7 @@
 import { HTTPError, isHTTPError, isNetworkError, isTimeoutError } from 'ky'
 
+import { objectEntries } from '../utils/typedObject'
+
 export interface ApiError {
   message: string
   fieldErrors?: Record<string, string>
@@ -42,7 +44,7 @@ const normalizeFieldErrors = (
 
   const fieldErrors: Record<string, string> = {}
 
-  for (const [key, value] of Object.entries(errors)) {
+  for (const [key, value] of objectEntries(errors)) {
     const message = Array.isArray(value) ? value[0] : value
     if (typeof message === 'string' && message.length > 0) {
       fieldErrors[key] = message

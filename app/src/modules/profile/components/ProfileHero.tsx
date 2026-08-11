@@ -44,7 +44,7 @@ export const ProfileHero = ({ user }: ProfileHeroProps) => {
           </Avatar>
 
           <div className="flex flex-1 items-end justify-between gap-4 pb-1">
-            <div className="min-w-0 flex-1">
+            <div className="flex-1">
               <h1 className="truncate text-2xl font-bold tracking-tight max-md:text-xl">
                 {user.displayName}
               </h1>

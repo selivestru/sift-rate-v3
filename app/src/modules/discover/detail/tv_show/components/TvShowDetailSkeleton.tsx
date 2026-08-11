@@ -2,14 +2,14 @@ import { Skeleton } from '~/common/ui/Skeleton'
 
 export const TvShowDetailSkeleton = () => {
   return (
-    <div className="flex max-w-full min-w-0 flex-col overflow-x-clip">
+    <div className="flex max-w-full flex-col overflow-x-clip">
       <div className="relative overflow-hidden rounded-t-2xl">
         <Skeleton className="absolute inset-0 rounded-none" />
 
         <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-start sm:gap-5 sm:p-6 sm:pt-8">
           <Skeleton className="aspect-2/3 w-36 shrink-0 rounded-xl sm:w-48" />
 
-          <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+          <div className="flex flex-1 flex-col gap-2.5">
             <Skeleton className="h-3 w-14 rounded-lg" />
             <Skeleton className="h-9 w-3/4 rounded-lg sm:h-10" />
             <Skeleton className="h-4 w-48 rounded-lg" />
@@ -36,8 +36,8 @@ export const TvShowDetailSkeleton = () => {
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
-        <section className="min-w-0">
+      <div className="flex flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-24 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 5 }, (_, index) => (
@@ -50,7 +50,7 @@ export const TvShowDetailSkeleton = () => {
           </div>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-16 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 5 }, (_, index) => (
@@ -92,7 +92,7 @@ export const TvShowDetailSkeleton = () => {
           </div>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-40 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 4 }, (_, index) => (

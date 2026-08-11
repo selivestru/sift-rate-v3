@@ -43,7 +43,7 @@ export const GamePlatforms = ({ platforms, className }: GamePlatformsProps) => {
   )
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby="platforms-heading">
+    <section className={cn('', className)} aria-labelledby="platforms-heading">
       <div className="mb-3 flex items-center gap-2">
         <Monitor className="text-muted-foreground size-4" aria-hidden />
         <h2 id="platforms-heading" className="text-foreground text-lg font-semibold">

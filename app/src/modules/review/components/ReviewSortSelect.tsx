@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/common/ui/Select'
+import { objectFromEntries } from '~/common/utils/typedObject'
 
 import {
   DEFAULT_REVIEW_SORT,
@@ -12,9 +13,7 @@ const items = reviewSortMeta.map((item) => ({
   label: item.label,
 }))
 
-const sortMetaByValue = Object.fromEntries(
-  reviewSortMeta.map((item) => [item.value, item]),
-) as Record<ReviewSort, (typeof reviewSortMeta)[number]>
+const sortMetaByValue = objectFromEntries(reviewSortMeta.map((item) => [item.value, item]))
 
 interface ReviewSortSelectProps {
   value: ReviewSort

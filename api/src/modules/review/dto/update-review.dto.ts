@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer'
-import { IsBoolean, IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator'
+import { IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator'
 import { Trim } from '~/common/decorators/trim.decorator'
 
 export class UpdateReviewDto {
@@ -15,9 +15,4 @@ export class UpdateReviewDto {
   @IsString()
   @MaxLength(1000)
   content?: string | null
-
-  @IsOptional()
-  @Type(() => Boolean)
-  @IsBoolean()
-  hasSpoiler?: boolean
 }

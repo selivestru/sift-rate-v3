@@ -34,10 +34,10 @@ export const TvShowDetailView = ({ show }: TvShowDetailViewProps) => {
     show.episodeRunTimeMinutes != null
 
   return (
-    <div className="flex max-w-full min-w-0 flex-col overflow-x-clip">
+    <div className="flex max-w-full flex-col overflow-x-clip">
       <TvShowHero show={show} />
 
-      <div className="flex min-w-0 flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
+      <div className="flex flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
         <TvShowSeasons seasons={show.seasons} />
 
         {hasCast && <TvShowCast cast={show.cast} />}

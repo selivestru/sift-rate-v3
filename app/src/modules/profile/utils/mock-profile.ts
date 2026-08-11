@@ -2,6 +2,7 @@ import { MEDIA_TYPES } from '~/common/constants/media-type'
 import { SUBSCRIPTIONS } from '~/modules/auth'
 
 import type { Profile } from '../types/profile.types'
+import { mockFeed } from './mock-feed'
 
 export const mockProfile: Profile = {
   user: {
@@ -12,11 +13,6 @@ export const mockProfile: Profile = {
     bannerUrl: null,
     subscription: SUBSCRIPTIONS.YEARLY,
     createdAt: '2024-01-15T10:00:00Z',
-  },
-  stats: {
-    friends: 42,
-    reviews: 187,
-    rankedLists: 5,
   },
   ratingDistribution: {
     10: 47,
@@ -143,4 +139,5 @@ export const mockProfile: Profile = {
       unlockedAt: null,
     },
   ],
+  feed: mockFeed,
 }

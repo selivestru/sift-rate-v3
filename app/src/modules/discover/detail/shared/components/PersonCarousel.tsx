@@ -33,8 +33,8 @@ export const PersonCarousel = ({
   const headingId = titleId ?? `person-carousel-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby={headingId}>
-      <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full min-w-0">
+    <section className={cn('', className)} aria-labelledby={headingId}>
+      <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id={headingId} className="text-foreground text-lg font-semibold">
             {title}

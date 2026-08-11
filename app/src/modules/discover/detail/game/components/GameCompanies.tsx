@@ -21,7 +21,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
   if (companies.length === 0) return null
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby="companies-heading">
+    <section className={cn('', className)} aria-labelledby="companies-heading">
       <div className="mb-3 flex items-center gap-2">
         <Building2 className="text-muted-foreground size-4" aria-hidden />
         <h2 id="companies-heading" className="text-foreground text-lg font-semibold">
@@ -49,7 +49,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
                 <Building2 className="text-muted-foreground size-5" aria-hidden />
               )}
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="flex-1">
               <p className="text-foreground truncate text-sm font-medium">{company.name}</p>
               <div className="mt-1 flex flex-wrap gap-1">
                 {company.roles.map((role) => (

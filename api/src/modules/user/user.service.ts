@@ -8,16 +8,21 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 
+import { FeedService } from '../feed/feed.service'
+import { FeedResponse } from '../feed/types/feed.types'
 import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
 import { DeleteAccountDto } from './dto/delete-account.dto'
+import { ReviewActivity, ReviewStats, UserProfile } from './types/user-profile.types'
 import { argon2id, hash, verify } from 'argon2'
 import { Queue } from 'bullmq'
 import type { Request, Response } from 'express'
 import { createHash, randomBytes } from 'node:crypto'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
-import { AuthMethod, Prisma, User } from '~/generated/prisma/client'
+import { omit } from '~/common/utils/omit'
+import { safeUser } from '~/common/utils/safeUser'
+import { AuthMethod, MediaType, Prisma, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import {
@@ -39,9 +44,46 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly sessionService: SessionService,
+    private readonly feedService: FeedService,
     private readonly redis: RedisService,
     @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
   ) {}
+
+  async getUserProfile(username: string): Promise<UserProfile> {
+    const user = await this.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    const omitUser = omit(safeUser(user), ['isVerified', 'method', 'twoFactorEnabled'])
+    const [ratingDistribution, reviewStats] = await Promise.all([
+      this.getUserRatingDistribution(user.id),
+      this.getUserReviewStats(user.id),
+    ])
+
+    const userProfile: UserProfile = {
+      user: omitUser,
+      ratingDistribution,
+      reviewStats,
+    }
+
+    return userProfile
+  }
+
+  async getUserActivity(username: string, year: number): Promise<ReviewActivity[]> {
+    const user = await this.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    return this.getReviewActivity(user.id, year)
+  }
+
+  getUserFeed(username: string, cursor?: string): Promise<FeedResponse> {
+    return this.feedService.getUserFeed(username, cursor)
+  }
 
   async findById(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
@@ -67,7 +109,7 @@ export class UserService {
     })
   }
 
-  create(data: {
+  createUser(data: {
     email: string
     displayName: string
     username: string
@@ -133,24 +175,20 @@ export class UserService {
     })
   }
 
-  async updateDisplayName(userId: string, displayName: string): Promise<{ displayName: string }> {
-    const updatedUser = await this.prisma.user.update({
+  updateDisplayName(userId: string, displayName: string): Promise<Pick<User, 'displayName'>> {
+    return this.prisma.user.update({
       where: { id: userId },
       data: { displayName },
       select: { displayName: true },
     })
-
-    return { displayName: updatedUser.displayName! }
   }
 
-  async updateUsername(userId: string, username: string): Promise<{ username: string }> {
-    const updatedUser = await this.prisma.user.update({
+  updateUsername(userId: string, username: string): Promise<Pick<User, 'username'>> {
+    return this.prisma.user.update({
       where: { id: userId },
       data: { username: normalize(username) },
       select: { username: true },
     })
-
-    return { username: updatedUser.username! }
   }
 
   async changePassword(
@@ -256,19 +294,6 @@ export class UserService {
     return { message: 'Check your new email to confirm the change' }
   }
 
-  private async invalidatePendingEmailChange(userId: string): Promise<void> {
-    const oldHash = await this.redis.get(REDIS_KEYS.EMAIL_CHANGE(userId))
-
-    if (!oldHash) {
-      return
-    }
-
-    await Promise.all([
-      this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId)),
-      this.redis.del(REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash)),
-    ])
-  }
-
   async requestAccountDeletion(
     userId: string,
     dto: DeleteAccountDto,
@@ -355,6 +380,83 @@ export class UserService {
     }
 
     this.logger.log({ userId }, 'Account deleted')
+  }
+
+  private async getUserRatingDistribution(userId: string): Promise<Record<number, number>> {
+    const ratings = await this.prisma.review.findMany({
+      where: { userId },
+      select: { rating: true },
+    })
+
+    const ratingDistribution = Object.fromEntries(Array.from({ length: 10 }, (_, i) => [i + 1, 0]))
+
+    for (const { rating } of ratings) {
+      ratingDistribution[rating]++
+    }
+
+    return ratingDistribution
+  }
+
+  private async getUserReviewStats(userId: string): Promise<ReviewStats> {
+    const rows = await this.prisma.$queryRaw<{ mediaType: MediaType; count: bigint }[]>(Prisma.sql`
+      SELECT
+        m."mediaType",
+        COUNT(*)::bigint AS count
+      FROM "Review" r
+      JOIN "Media" m ON m.id = r."mediaId"
+      WHERE r."userId" = ${userId}
+      GROUP BY m."mediaType"
+    `)
+
+    const byMediaType = Object.values(MediaType).reduce(
+      (acc, type) => {
+        acc[type] = 0
+        return acc
+      },
+      {} as Record<MediaType, number>,
+    )
+
+    let total = 0
+
+    for (const { mediaType, count } of rows) {
+      const value = Number(count)
+
+      byMediaType[mediaType] = value
+      total += value
+    }
+
+    return {
+      total,
+      byMediaType,
+    }
+  }
+
+  private getReviewActivity(userId: string, year: number): Promise<ReviewActivity[]> {
+    return this.prisma.$queryRaw<ReviewActivity[]>(Prisma.sql`
+      SELECT
+        TO_CHAR(DATE(r."createdAt"), 'YYYY-MM-DD') AS date,
+        COUNT(*)::int AS count
+      FROM "Review" r
+      WHERE
+        r."userId" = ${userId}
+        AND r."createdAt" >= make_date(${year}, 1, 1)
+        AND r."createdAt" < make_date(${year} + 1, 1, 1)
+      GROUP BY DATE(r."createdAt")
+      ORDER BY DATE(r."createdAt");
+    `)
+  }
+
+  private async invalidatePendingEmailChange(userId: string): Promise<void> {
+    const oldHash = await this.redis.get(REDIS_KEYS.EMAIL_CHANGE(userId))
+
+    if (!oldHash) {
+      return
+    }
+
+    await Promise.all([
+      this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId)),
+      this.redis.del(REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash)),
+    ])
   }
 
   private async invalidatePendingDeleteRequest(userId: string): Promise<void> {

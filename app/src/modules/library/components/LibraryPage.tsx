@@ -36,7 +36,7 @@ export const LibraryPage = () => {
               <section.icon className="size-5" strokeWidth={1.75} />
             </span>
 
-            <div className="min-w-0 flex-1 space-y-0.5">
+            <div className="flex-1 space-y-0.5">
               <p className="text-sm font-semibold tracking-tight sm:text-base">{section.label}</p>
               <p className="text-muted-foreground truncate text-sm leading-relaxed">
                 {section.description}

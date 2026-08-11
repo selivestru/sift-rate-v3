@@ -52,7 +52,7 @@ export const SimilarPosterCard = ({
           <RatingBadge rating={item.rating} className="absolute top-1.5 right-1.5" />
         )}
       </div>
-      <div className="min-w-0 px-0.5">
+      <div className="px-0.5">
         <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
           {item.title}
         </p>

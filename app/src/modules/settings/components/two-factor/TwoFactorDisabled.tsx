@@ -34,7 +34,7 @@ export const TwoFactorDisabled = ({ otpauthUrl, secret }: TwoFactorDisabledProps
           >
             <QRCodeSVG title={`${secret} QR code`} value={otpauthUrl} size={128} />
           </div>
-          <div className="flex min-w-0 flex-1 flex-col gap-3 text-center sm:text-left">
+          <div className="flex flex-1 flex-col gap-3 text-center sm:text-left">
             <div className="flex flex-col gap-2">
               <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                 Secret key

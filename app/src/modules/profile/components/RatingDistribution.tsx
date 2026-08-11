@@ -1,3 +1,5 @@
+import { objectValues } from '~/common/utils/typedObject'
+
 import type { RatingDistribution as RatingDistributionType } from '../types/profile.types'
 
 interface RatingDistributionProps {
@@ -7,7 +9,7 @@ interface RatingDistributionProps {
 const RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export const RatingDistribution = ({ distribution }: RatingDistributionProps) => {
-  const maxCount = Math.max(...Object.values(distribution), 1)
+  const maxCount = Math.max(...objectValues(distribution), 1)
 
   return (
     <section className="flex flex-col gap-8">

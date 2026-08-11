@@ -2,12 +2,12 @@ import { Skeleton } from '~/common/ui/Skeleton'
 
 export const BookDetailSkeleton = () => {
   return (
-    <div className="flex max-w-full min-w-0 flex-col overflow-x-clip">
-      <div className="relative min-w-0 overflow-hidden rounded-t-2xl">
+    <div className="flex max-w-full flex-col overflow-x-clip">
+      <div className="relative overflow-hidden rounded-t-2xl">
         <div className="relative z-10 flex flex-col items-center px-5 pt-10 pb-7 sm:px-8 sm:pt-12 sm:pb-9">
           <Skeleton className="mb-7 aspect-2/3 w-38 rounded-sm sm:mb-8 sm:w-48" />
 
-          <div className="flex w-full max-w-md min-w-0 flex-col items-center">
+          <div className="flex w-full max-w-md flex-col items-center">
             <Skeleton className="mb-3 h-3 w-16 rounded-lg" />
             <Skeleton className="mb-2 h-8 w-4/5 max-w-md rounded-lg sm:h-9" />
             <Skeleton className="mb-4 h-4 w-1/2 max-w-xs rounded-lg" />
@@ -22,10 +22,7 @@ export const BookDetailSkeleton = () => {
 
             <div className="mb-5 flex flex-wrap items-start justify-center">
               {Array.from({ length: 4 }, (_, index) => (
-                <div
-                  key={index}
-                  className="flex min-w-0 flex-col items-center gap-1 px-3.5 sm:px-4"
-                >
+                <div key={index} className="flex flex-col items-center gap-1 px-3.5 sm:px-4">
                   <Skeleton className="h-2.5 w-12 rounded-lg" />
                   <Skeleton className="h-4 w-14 rounded-lg" />
                 </div>
@@ -42,8 +39,8 @@ export const BookDetailSkeleton = () => {
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
-        <section className="min-w-0">
+      <div className="flex flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-24 rounded-lg" />
           <div className="flex flex-col gap-1.5">
             <Skeleton className="h-3.5 w-full rounded-lg" />
@@ -69,7 +66,7 @@ export const BookDetailSkeleton = () => {
           </div>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-16 rounded-lg" />
           <div className="flex flex-wrap gap-2">
             <Skeleton className="h-11 w-28 rounded-xl" />
@@ -78,7 +75,7 @@ export const BookDetailSkeleton = () => {
           </div>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-36 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 4 }, (_, index) => (

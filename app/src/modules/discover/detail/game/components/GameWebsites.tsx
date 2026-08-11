@@ -32,7 +32,7 @@ export const GameWebsites = ({ websites, className }: GameWebsitesProps) => {
   if (websites.length === 0) return null
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby="websites-heading">
+    <section className={cn('', className)} aria-labelledby="websites-heading">
       <div className="mb-3 flex items-center gap-2">
         <MediaTypeIcon className="text-muted-foreground size-4" aria-hidden />
         <h2 id="websites-heading" className="text-foreground text-lg font-semibold">

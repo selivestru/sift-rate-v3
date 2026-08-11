@@ -4,7 +4,6 @@ export interface Review {
   id: string
   rating: number
   content: string | null
-  hasSpoiler: boolean
   createdAt: string
   updatedAt: string
   media: ReviewMediaCard
@@ -34,7 +33,6 @@ export interface RateMediaBody {
   externalId: string
   rating: number
   content: string | null
-  hasSpoiler: boolean
 }
 
 export type UpsertReviewVariables = RateMediaBody & {

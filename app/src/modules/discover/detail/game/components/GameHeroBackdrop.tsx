@@ -51,7 +51,7 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
       )}
 
       <div className="relative z-10 flex min-h-56 flex-col justify-end p-5 pb-16 sm:min-h-72 sm:p-6 sm:pb-20">
-        <div className="flex max-w-xl min-w-0 flex-col gap-2.5">
+        <div className="flex max-w-xl flex-col gap-2.5">
           <span className="text-xs font-medium tracking-widest uppercase" style={{ color: accent }}>
             Game
           </span>

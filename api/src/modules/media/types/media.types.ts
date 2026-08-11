@@ -1,20 +1,18 @@
-import { Media, PlannedItem, Review, User } from '~/generated/prisma/client'
+import { Author } from '~/common/types/user.types'
+import { Media, PlannedItem, Review } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
 
 export type MediaTypeSlug = Lowercase<MediaType>
 
 export const mediaTypeToSlug = Object.fromEntries(
-  (Object.values(MediaType) as MediaType[]).map((type) => [
-    type,
-    type.toLowerCase() as MediaTypeSlug,
-  ]),
+  Object.values(MediaType).map((type) => [type, type.toLowerCase()]),
 ) as { [K in MediaType]: Lowercase<K> }
 
 export const mediaTypeFromSlug = Object.fromEntries(
-  (Object.values(MediaType) as MediaType[]).map((type) => [type.toLowerCase(), type]),
+  Object.values(MediaType).map((type) => [type.toLowerCase(), type]),
 ) as { [K in MediaType as Lowercase<K>]: K }
 
-export const MEDIA_TYPE_SLUGS = Object.keys(mediaTypeFromSlug) as MediaTypeSlug[]
+export const MEDIA_TYPE_SLUGS = Object.keys(mediaTypeFromSlug)
 
 export const isMediaTypeSlug = (value: string): value is MediaTypeSlug => {
   return value in mediaTypeFromSlug
@@ -45,6 +43,7 @@ export interface MediaSearchResponse<T> {
 export interface MediaSnapshot {
   title: string
   posterUrl: string | null
+  metadata?: Record<string, unknown>
 }
 
 export interface EnsureMediaResult {
@@ -58,7 +57,7 @@ export type MediaStateResponse = {
 }
 
 type MediaReview = Review & {
-  user: Pick<User, 'id' | 'username' | 'avatarUrl'>
+  user: Author
 }
 
 export interface MediaReviewsResponse {

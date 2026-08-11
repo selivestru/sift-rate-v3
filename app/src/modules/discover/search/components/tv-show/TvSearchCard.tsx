@@ -40,7 +40,7 @@ export const TvSearchCard = ({ item }: TvSearchCardProps) => {
         )}
       </div>
 
-      <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 py-4 pr-4">
+      <div className="relative flex flex-1 flex-col justify-center gap-2 py-4 pr-4">
         <MediaTypeBadge mediaType={MEDIA_TYPES.TV_SHOW} />
 
         {item.rating != null && (

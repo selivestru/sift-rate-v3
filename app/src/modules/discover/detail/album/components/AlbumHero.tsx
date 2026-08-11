@@ -22,7 +22,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
   }
 
   return (
-    <div className="relative min-w-0 overflow-hidden rounded-t-2xl">
+    <div className="relative overflow-hidden rounded-t-2xl">
       <div className="relative min-h-64 sm:min-h-72">
         {backdropUrl ? (
           <>
@@ -61,7 +61,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
         )}
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
-          <div className="bg-card ring-border flex min-w-0 gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
+          <div className="bg-card ring-border flex gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
             <div className="bg-muted ring-border relative size-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:size-48">
               <MediaCoverLightbox
                 src={album.coverUrl}
@@ -78,7 +78,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
               />
             </div>
 
-            <div className="flex min-w-0 flex-1 flex-col justify-end gap-1.5 py-0.5">
+            <div className="flex flex-1 flex-col justify-end gap-1.5 py-0.5">
               <div className="flex flex-wrap items-center gap-2">
                 <span
                   className="text-[10px] font-semibold tracking-[0.2em] uppercase"

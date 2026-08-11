@@ -7,7 +7,7 @@ import type { MediaReviewResponse, MediaStateResponse } from '../types/media-sta
 export const discoverDetailApi = {
   getMediaState: (mediaType: MediaType, externalId: string) => {
     return api
-      .get<MediaStateResponse>(`/media/state/${mediaType.toLowerCase()}/${externalId}`)
+      .get<MediaStateResponse>(`/media/${mediaType.toLowerCase()}/${externalId}/state`)
       .json()
   },
   getMediaReviews: ({ mediaType, externalId }: MediaRef, cursor?: string) => {
@@ -18,7 +18,7 @@ export const discoverDetailApi = {
     }
 
     return api
-      .get<MediaReviewResponse>(`/media/reviews/${mediaType.toLowerCase()}/${externalId}`, {
+      .get<MediaReviewResponse>(`/media/${mediaType.toLowerCase()}/${externalId}/reviews`, {
         searchParams,
       })
       .json()

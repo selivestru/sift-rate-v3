@@ -37,7 +37,7 @@ export class RankedListService {
     return { data }
   }
 
-  async createList(userId: string, dto: UpsertRankedListDto) {
+  createList(userId: string, dto: UpsertRankedListDto) {
     return this.prisma.rankedList.create({
       data: {
         title: dto.title,

@@ -70,7 +70,7 @@ export class AuthService {
 
     const passwordHash = (await hash(dto.password, { type: argon2id })) as string
 
-    const user = await this.userService.create({
+    const user = await this.userService.createUser({
       email: dto.email,
       displayName: dto.displayName,
       username: dto.username,

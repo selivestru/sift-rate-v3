@@ -1,5 +1,10 @@
 import type { MediaType } from '~/common/constants/media-type'
 import type { Subscription } from '~/modules/auth'
+import type { ReviewMediaCard } from '~/modules/review'
+
+export interface ProfileResponse {
+  id: string
+}
 
 export interface ProfileUser {
   id: string
@@ -11,17 +16,11 @@ export interface ProfileUser {
   createdAt: string
 }
 
-export interface ProfileStats {
-  friends: number
-  reviews: number
-  rankedLists: number
-}
-
 export type RatingDistribution = Record<number, number>
 
 export interface ReviewStats {
   total: number
-  byMediaType: Partial<Record<MediaType, number>>
+  byMediaType: Record<MediaType, number>
 }
 
 export interface ReviewActivityDay {
@@ -30,6 +29,36 @@ export interface ReviewActivityDay {
 }
 
 export type ReviewActivityByYear = Record<number, ReviewActivityDay[]>
+
+export interface FeedAuthor {
+  username: string
+  displayName: string
+  avatarUrl: string | null
+}
+
+export interface FeedItemBase {
+  id: string
+  author: FeedAuthor
+  createdAt: string
+  likeCount: number
+  commentCount: number
+  isLiked: boolean
+}
+
+export interface ReviewFeedItem extends FeedItemBase {
+  kind: 'review'
+  rating: number
+  content: string | null
+  media: ReviewMediaCard
+}
+
+export interface PostFeedItem extends FeedItemBase {
+  kind: 'post'
+  content: string
+  media?: ReviewMediaCard
+}
+
+export type FeedItem = ReviewFeedItem | PostFeedItem
 
 export type AchievementRarity = 'common' | 'rare' | 'epic' | 'legendary'
 
@@ -44,9 +73,9 @@ export interface Achievement {
 
 export interface Profile {
   user: ProfileUser
-  stats: ProfileStats
+  achievements: Achievement[]
   ratingDistribution: RatingDistribution
   reviewStats: ReviewStats
   reviewActivity: ReviewActivityByYear
-  achievements: Achievement[]
+  feed: FeedItem[]
 }

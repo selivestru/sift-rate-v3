@@ -1,5 +1,7 @@
 import type { Activity } from 'react-activity-calendar'
 
+import { objectKeys } from '~/common/utils/typedObject'
+
 import type { ReviewActivityByYear, ReviewActivityDay } from '../types/profile.types'
 
 const DAY_IN_MILLISECONDS = 86_400_000
@@ -13,7 +15,7 @@ const getActivityLevel = (count: number, maxCount: number) => {
 }
 
 export const getReviewActivityYears = (activity: ReviewActivityByYear) => {
-  return Object.keys(activity)
+  return objectKeys(activity)
     .map(Number)
     .sort((firstYear, secondYear) => secondYear - firstYear)
 }

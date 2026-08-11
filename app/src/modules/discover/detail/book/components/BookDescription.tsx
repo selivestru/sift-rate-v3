@@ -13,7 +13,7 @@ export const BookDescription = ({ description }: BookDescriptionProps) => {
   if (!description) return null
 
   return (
-    <section className="min-w-0" aria-labelledby="book-description-heading">
+    <section className="" aria-labelledby="book-description-heading">
       <h2 id="book-description-heading" className="text-foreground mb-3 text-lg font-semibold">
         Synopsis
       </h2>

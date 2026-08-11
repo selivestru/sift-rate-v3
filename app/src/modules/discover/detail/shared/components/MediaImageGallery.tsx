@@ -87,9 +87,9 @@ export const MediaImageGallery = ({
   if (!hasBackdrops && !hasPosters) return null
 
   return (
-    <div className={cn('min-w-0', className)}>
+    <div className={cn('', className)}>
       <Tabs value={tab} onValueChange={handleTabChange}>
-        <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-foreground text-lg font-semibold">Gallery</h2>
           <TabsList className="shrink-0 p-0.5">
             <TabsIndicator />
@@ -127,7 +127,7 @@ export const MediaImageGallery = ({
           </TabsList>
         </div>
 
-        <div className="min-w-0">
+        <div className="">
           {tab === 'posters' && hasPosters ? (
             <div className="flex flex-col gap-3">
               <GalleryGrid

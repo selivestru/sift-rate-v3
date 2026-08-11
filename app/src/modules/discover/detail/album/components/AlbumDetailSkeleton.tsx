@@ -2,15 +2,15 @@ import { Skeleton } from '~/common/ui/Skeleton'
 
 export const AlbumDetailSkeleton = () => {
   return (
-    <div className="flex max-w-full min-w-0 flex-col overflow-x-clip">
+    <div className="flex max-w-full flex-col overflow-x-clip">
       <div className="relative min-h-64 overflow-hidden rounded-t-2xl sm:min-h-72">
         <Skeleton className="absolute inset-0 scale-105 rounded-none" />
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
-          <div className="bg-card ring-border flex min-w-0 gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
+          <div className="bg-card ring-border flex gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
             <Skeleton className="size-32 shrink-0 rounded-xl sm:size-48" />
 
-            <div className="flex min-w-0 flex-1 flex-col justify-end gap-1.5 py-0.5">
+            <div className="flex flex-1 flex-col justify-end gap-1.5 py-0.5">
               <Skeleton className="h-3 w-12 rounded-lg" />
               <Skeleton className="h-6 w-4/5 rounded-lg sm:h-7" />
               <Skeleton className="h-4 w-1/2 rounded-lg" />
@@ -31,7 +31,7 @@ export const AlbumDetailSkeleton = () => {
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
+      <div className="flex flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
         <section className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Skeleton className="h-6 w-20 rounded-lg" />
@@ -45,7 +45,7 @@ export const AlbumDetailSkeleton = () => {
                 className="bg-card ring-border flex min-h-14 items-center gap-3 rounded-2xl p-2 pr-3 ring-1"
               >
                 <Skeleton className="size-10 shrink-0 rounded-xl sm:size-11" />
-                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex flex-1 flex-col gap-0.5">
                   <Skeleton className="h-3.5 w-2/5 rounded-lg" />
                   <Skeleton className="h-3 w-12 rounded-lg" />
                 </div>
@@ -64,7 +64,7 @@ export const AlbumDetailSkeleton = () => {
                 className="bg-card ring-border flex items-center gap-3 rounded-xl p-2.5 ring-1"
               >
                 <Skeleton className="size-11 shrink-0 rounded-full" />
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <div className="flex flex-1 flex-col gap-1">
                   <Skeleton className="h-3.5 w-2/5 rounded-lg" />
                   <Skeleton className="h-3 w-1/4 rounded-lg" />
                 </div>
@@ -73,7 +73,7 @@ export const AlbumDetailSkeleton = () => {
           </ul>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-36 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 4 }, (_, index) => (
@@ -86,7 +86,7 @@ export const AlbumDetailSkeleton = () => {
           </div>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-40 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 4 }, (_, index) => (

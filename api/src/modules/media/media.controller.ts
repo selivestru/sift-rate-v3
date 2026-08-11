@@ -6,6 +6,7 @@ import { SearchMediaQueryDto } from './dto/search-media.query'
 import { MediaService } from './media.service'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
+import { PaginationCursor } from '~/common/types/pagination-cursor.types'
 
 @Controller('media')
 export class MediaController {
@@ -23,14 +24,14 @@ export class MediaController {
     return this.mediaService.getMediaById(params)
   }
 
-  @Get('state/:mediaType/:externalId')
+  @Get(':mediaType/:externalId/state')
   getMediaState(@CurrentUser('userId') userId: string, @Param() params: MediaByIdParamsDto) {
     return this.mediaService.getMediaState(userId, params)
   }
 
   @Public()
-  @Get('reviews/:mediaType/:externalId')
-  getMediaReviews(@Param() params: MediaByIdParamsDto, @Query('cursor') cursor?: string) {
-    return this.mediaService.getMediaReviews(params, cursor)
+  @Get(':mediaType/:externalId/reviews')
+  getMediaReviews(@Param() params: MediaByIdParamsDto, @Query() query?: PaginationCursor) {
+    return this.mediaService.getMediaReviews(params, query?.cursor)
   }
 }

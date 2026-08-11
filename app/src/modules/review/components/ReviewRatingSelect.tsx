@@ -54,7 +54,7 @@ export const ReviewRatingSelect = ({
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false} align="start">
         <SelectItem value={null}>
-          <span className="flex w-full min-w-0 items-center justify-between gap-3">
+          <span className="flex w-full items-center justify-between gap-3">
             <span className="text-rating inline-flex items-center gap-2">
               <Star weight="Filled" className="text-rating" />
               All ratings
@@ -68,7 +68,7 @@ export const ReviewRatingSelect = ({
 
           return (
             <SelectItem key={rating} value={rating} disabled={count === 0}>
-              <span className="flex w-full min-w-0 items-center justify-between gap-3">
+              <span className="flex w-full items-center justify-between gap-3">
                 <span className="text-rating inline-flex items-center gap-1.5">
                   <Star weight="Filled" />
                   <span className="font-semibold tabular-nums">{rating}</span>

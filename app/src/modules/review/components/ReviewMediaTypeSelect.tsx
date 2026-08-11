@@ -59,7 +59,7 @@ export const ReviewMediaTypeSelect = ({
           if (item.value == null) {
             return (
               <SelectItem key="all" value={null}>
-                <span className="flex w-full min-w-0 items-center justify-between gap-3">
+                <span className="flex w-full items-center justify-between gap-3">
                   <span className="text-primary inline-flex items-center gap-2">
                     <Layers />
                     {item.label}
@@ -76,7 +76,7 @@ export const ReviewMediaTypeSelect = ({
 
           return (
             <SelectItem key={item.value} value={item.value} disabled={count === 0}>
-              <span className="flex w-full min-w-0 items-center justify-between gap-3">
+              <span className="flex w-full items-center justify-between gap-3">
                 <span className="inline-flex items-center gap-2" style={{ color: meta.color }}>
                   <Icon />
                   {item.label}

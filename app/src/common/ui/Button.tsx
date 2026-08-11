@@ -18,9 +18,8 @@ export const buttonVariants = cva(
         'destructive-soft':
           'text-destructive bg-destructive/20 hover:bg-destructive/30 aria-expanded:bg-accent aria-expanded:text-destructive focus-visible:border-destructive focus-visible:ring-destructive/30',
         outline:
-          'border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent',
-        ghost:
-          'hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground',
+          'border-border bg-background text-foreground hover:bg-muted aria-expanded:bg-muted',
+        ghost: 'hover:bg-muted aria-expanded:bg-muted',
       },
       size: {
         default: 'h-10 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5',

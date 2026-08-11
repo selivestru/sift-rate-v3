@@ -34,7 +34,7 @@ export const RankedListDetailDialog = ({
       >
         <DialogHeader className="pr-8">
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="flex min-w-0 flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5">
               <DialogTitle className="text-lg">{list.title}</DialogTitle>
               <DialogDescription className="flex flex-wrap items-center gap-2">
                 <span className="text-muted-foreground text-xs tabular-nums">

@@ -125,7 +125,7 @@ export const Carousel = ({
     <CarouselContext.Provider value={contextValue}>
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn('relative max-w-full min-w-0', className)}
+        className={cn('relative max-w-full ', className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -169,7 +169,7 @@ export const CarouselItem = ({ className, ...props }: React.ComponentProps<'div'
       aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(
-        'min-w-0 shrink-0 grow-0 basis-full',
+        ' shrink-0 grow-0 basis-full',
         orientation === 'horizontal' ? 'pl-4' : 'pt-4',
         className,
       )}

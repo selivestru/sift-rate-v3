@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Calendar, CrownStar, Pen, Trash6, TriangleWarning } from 'reicon-react'
+import { Calendar, CrownStar, Pen, Trash6 } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -123,19 +123,13 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         )}
       </Link>
 
-      <div className="z-px relative flex min-w-0 flex-1 flex-col gap-2 sm:gap-2.5">
+      <div className="z-px relative flex flex-1 flex-col gap-2 sm:gap-2.5">
         <div className="flex flex-wrap items-center gap-1.5">
           <MediaTypeBadge mediaType={media.mediaType} />
 
           {isPerfect && (
             <Badge variant="rating" startIcon={<CrownStar />}>
               Perfect
-            </Badge>
-          )}
-
-          {review.hasSpoiler && (
-            <Badge variant="destructive" startIcon={<TriangleWarning />}>
-              Spoilers
             </Badge>
           )}
         </div>

@@ -51,7 +51,7 @@ export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) =>
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex flex-1 flex-col gap-0.5">
         <span className="text-foreground truncate text-sm leading-snug font-medium">
           {track.title}
         </span>

@@ -23,7 +23,6 @@ export const useUpsertReviewForm = (
     defaultValues: {
       rating: initialData?.rating ?? 5,
       content: initialData?.content ?? '',
-      hasSpoiler: initialData?.hasSpoiler ?? false,
     },
     resolver: zodResolver(rateFormSchema),
   })
@@ -33,7 +32,6 @@ export const useUpsertReviewForm = (
       reset({
         rating: initialData.rating ?? 5,
         content: initialData.content ?? '',
-        hasSpoiler: initialData.hasSpoiler ?? false,
       })
     }
   }, [reset, initialData])
@@ -41,24 +39,22 @@ export const useUpsertReviewForm = (
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null)
 
-    const sameRating = initialData?.rating === values.rating
-    const sameContent = initialData?.content === values.content
-    const sameHasSpoiler = initialData?.hasSpoiler === values.hasSpoiler
+    const content = values.content?.trim()
 
-    if (sameRating && sameContent && sameHasSpoiler) {
+    const sameRating = initialData?.rating === values.rating
+    const sameContent = initialData?.content === content
+
+    if (sameRating && sameContent) {
       onClose()
       return
     }
-
-    const content = values.content ? values.content.trim() : null
 
     try {
       await mutation.mutateAsync({
         mediaType: media.mediaType,
         externalId: media.externalId,
         rating: values.rating,
-        content: values.content ? values.content.trim() : null,
-        hasSpoiler: content ? values.hasSpoiler : false,
+        content: content && content.length > 0 ? content : null,
         previousReview: initialData ? { id: initialData.id, rating: initialData.rating } : null,
       })
 

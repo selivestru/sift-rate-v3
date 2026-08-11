@@ -40,7 +40,7 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-3">
+      <div className="flex flex-1 flex-col gap-1.5 p-3">
         <MediaTypeBadge mediaType={MEDIA_TYPES.BOOK} className="w-fit" size="sm" />
 
         <h3 className="text-foreground line-clamp-2 text-base leading-snug font-semibold">

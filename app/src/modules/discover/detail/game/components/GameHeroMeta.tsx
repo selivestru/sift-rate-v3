@@ -22,14 +22,14 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
   const hasStudio = game.developers.length > 0 || game.publishers.length > 0
 
   return (
-    <div className="bg-card ring-border min-w-0 flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
-      <div className="flex min-w-0 flex-col gap-3">
+    <div className="bg-card ring-border flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
+      <div className="flex flex-col gap-3">
         <MediaStateButtons externalId={game.id} mediaType={MEDIA_TYPES.GAME} />
 
         {hasStudio && (
           <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-1.5">
             {game.developers.length > 0 && (
-              <div className="min-w-0">
+              <div className="">
                 <p className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase">
                   Developer
                 </p>
@@ -39,7 +39,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
               </div>
             )}
             {game.publishers.length > 0 && (
-              <div className="min-w-0">
+              <div className="">
                 <p className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase">
                   Publisher
                 </p>

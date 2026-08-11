@@ -7,7 +7,6 @@ import { Alert, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
 import { Dialog, DialogContent, DialogFooter } from '~/common/ui/Dialog'
 import { Field, FieldError, FieldLabel } from '~/common/ui/Field'
-import { Switch } from '~/common/ui/Switch'
 import { Textarea } from '~/common/ui/Textarea'
 import { cn } from '~/common/utils/cn'
 
@@ -97,7 +96,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           type="button"
                           onClick={() => field.onChange(value)}
                           className={cn(
-                            'group focus-visible:ring-ring/30 flex aspect-square min-h-11 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border',
+                            'group focus-visible:ring-ring/30 flex aspect-square min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border',
                             isSelected
                               ? 'bg-rating/20 hover:bg-rating/30'
                               : isFilled
@@ -123,54 +122,38 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                 </Field>
               )}
             />
-            <div className="bg-muted ring-border flex flex-col gap-4 rounded-2xl p-4 ring-1">
-              <Controller
-                name="content"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <div className="flex items-center justify-between gap-2">
-                      <FieldLabel htmlFor="review-content">Review (optional)</FieldLabel>
-                      <span
-                        className={cn(
-                          'text-xs tabular-nums',
-                          field.value &&
-                            field.value.length >= MAX_REVIEW_LENGTH &&
-                            'text-destructive',
-                        )}
-                        aria-live="polite"
-                      >
-                        {field.value?.length ?? 0}/{MAX_REVIEW_LENGTH}
-                      </span>
-                    </div>
-                    <Textarea
-                      id="review-content"
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      onBlur={field.onBlur}
-                      placeholder="What stayed with you?"
-                      maxLength={MAX_REVIEW_LENGTH}
-                      className="border-border h-50 scrollbar-none break-all"
-                    />
-                    {fieldState.error?.message && (
-                      <FieldError>{fieldState.error.message}</FieldError>
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="hasSpoiler"
-                control={control}
-                render={({ field }) => (
-                  <Field orientation="horizontal" className="w-fit items-center">
-                    <FieldLabel onClick={() => field.onChange(!field.value)}>
-                      Contains spoilers
-                    </FieldLabel>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </Field>
-                )}
-              />
-            </div>
+            <Controller
+              name="content"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field className="bg-muted ring-border flex flex-col gap-4 rounded-2xl p-4 ring-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <FieldLabel htmlFor="review-content">Review (optional)</FieldLabel>
+                    <span
+                      className={cn(
+                        'text-xs tabular-nums',
+                        field.value &&
+                          field.value.length >= MAX_REVIEW_LENGTH &&
+                          'text-destructive',
+                      )}
+                      aria-live="polite"
+                    >
+                      {field.value?.length ?? 0}/{MAX_REVIEW_LENGTH}
+                    </span>
+                  </div>
+                  <Textarea
+                    id="review-content"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    placeholder="What stayed with you?"
+                    maxLength={MAX_REVIEW_LENGTH}
+                    className="border-border h-50 scrollbar-none break-all"
+                  />
+                  {fieldState.error?.message && <FieldError>{fieldState.error.message}</FieldError>}
+                </Field>
+              )}
+            />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel

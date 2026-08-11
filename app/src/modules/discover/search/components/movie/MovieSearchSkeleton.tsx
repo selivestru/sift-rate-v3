@@ -5,7 +5,7 @@ export const MovieSearchSkeleton = () => {
     <div className="bg-card border-border relative flex gap-4 overflow-hidden rounded-xl border">
       <Skeleton className="aspect-2/3 w-27.5 shrink-0 rounded-none sm:w-37.5" />
 
-      <div className="relative flex min-w-0 flex-1 flex-col justify-center gap-2 py-4 pr-4">
+      <div className="relative flex flex-1 flex-col justify-center gap-2 py-4 pr-4">
         <Skeleton className="absolute top-3.5 right-3.5 h-7 w-12 rounded-full" />
 
         <Skeleton className="h-5 w-16 rounded-full" />

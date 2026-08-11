@@ -98,7 +98,7 @@ export const GameFacts = ({ game }: GameFactsProps) => {
   if (facts.length === 0) return null
 
   return (
-    <section className="min-w-0" aria-labelledby="game-facts-heading">
+    <section className="" aria-labelledby="game-facts-heading">
       <h2 id="game-facts-heading" className="text-foreground mb-3 text-lg font-semibold">
         Game info
       </h2>

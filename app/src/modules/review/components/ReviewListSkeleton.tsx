@@ -17,7 +17,7 @@ export const ReviewListSkeleton = () => {
 
           <Skeleton className="aspect-2/3 max-h-64 w-full shrink-0 rounded-lg sm:max-h-none sm:w-36 md:w-42" />
 
-          <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-2.5">
+          <div className="flex flex-1 flex-col gap-2 sm:gap-2.5">
             <div className="flex flex-wrap gap-1.5">
               <Skeleton className="h-5 w-16 rounded-full" />
               <Skeleton className="h-5 w-14 rounded-full" />

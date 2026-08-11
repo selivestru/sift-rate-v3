@@ -24,7 +24,7 @@ export const GameRelated = ({ game }: GameRelatedProps) => {
   if (visible.length === 0) return null
 
   return (
-    <div className="flex min-w-0 flex-col gap-8">
+    <div className="flex flex-col gap-8">
       {visible.map((section) => (
         <SimilarRow
           key={section.title}

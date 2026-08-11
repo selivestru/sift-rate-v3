@@ -35,9 +35,9 @@ export const MediaReviews = (props: MediaReviewsProps) => {
               className="bg-card border-border flex gap-3 rounded-xl border p-4"
             >
               <Skeleton className="size-10 shrink-0 rounded-full" />
-              <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+              <div className="flex flex-1 flex-col gap-2.5">
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 flex-col gap-0.5">
+                  <div className="flex flex-col gap-0.5">
                     <Skeleton className="h-3.5 w-28 rounded-lg" />
                     <Skeleton className="h-3 w-16 rounded-lg" />
                   </div>

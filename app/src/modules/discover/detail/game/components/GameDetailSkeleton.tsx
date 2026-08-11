@@ -2,12 +2,12 @@ import { Skeleton } from '~/common/ui/Skeleton'
 
 export const GameDetailSkeleton = () => {
   return (
-    <div className="flex max-w-full min-w-0 flex-col overflow-x-clip">
+    <div className="flex max-w-full flex-col overflow-x-clip">
       <div className="relative min-h-56 overflow-hidden rounded-t-2xl sm:min-h-72">
         <Skeleton className="absolute inset-0 rounded-none" />
 
         <div className="relative z-10 flex min-h-56 flex-col justify-end p-5 pb-16 sm:min-h-72 sm:p-6 sm:pb-20">
-          <div className="flex max-w-xl min-w-0 flex-col gap-2.5">
+          <div className="flex max-w-xl flex-col gap-2.5">
             <Skeleton className="h-3 w-12 rounded-lg" />
             <Skeleton className="h-9 w-3/4 rounded-lg sm:h-10" />
             <Skeleton className="h-4 w-28 rounded-lg" />
@@ -16,22 +16,22 @@ export const GameDetailSkeleton = () => {
         </div>
       </div>
 
-      <div className="relative z-10 -mt-12 flex min-w-0 flex-col gap-4 px-5 sm:-mt-14 sm:flex-row sm:items-start sm:gap-4 sm:px-6">
+      <div className="relative z-10 -mt-12 flex flex-col gap-4 px-5 sm:-mt-14 sm:flex-row sm:items-start sm:gap-4 sm:px-6">
         <Skeleton className="aspect-2/3 w-32 shrink-0 rounded-xl sm:w-40" />
 
-        <div className="bg-card ring-border min-w-0 flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
-          <div className="flex min-w-0 flex-col gap-3">
+        <div className="bg-card ring-border flex-1 rounded-2xl p-3.5 ring-1 sm:p-4">
+          <div className="flex flex-col gap-3">
             <div className="flex flex-wrap gap-2">
               <Skeleton className="h-10 w-20 rounded-xl" />
               <Skeleton className="h-10 w-22 rounded-xl" />
             </div>
 
             <div className="flex flex-col gap-1.5 sm:flex-row sm:gap-x-5">
-              <div className="flex min-w-0 flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <Skeleton className="h-3 w-16 rounded-lg" />
                 <Skeleton className="h-4 w-32 rounded-lg" />
               </div>
-              <div className="flex min-w-0 flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <Skeleton className="h-3 w-16 rounded-lg" />
                 <Skeleton className="h-4 w-28 rounded-lg" />
               </div>
@@ -52,8 +52,8 @@ export const GameDetailSkeleton = () => {
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
-        <section className="min-w-0">
+      <div className="flex flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-28 rounded-lg" />
           <div className="flex flex-wrap gap-2">
             {Array.from({ length: 5 }, (_, index) => (
@@ -91,7 +91,7 @@ export const GameDetailSkeleton = () => {
           </div>
         </section>
 
-        <section className="min-w-0">
+        <section className="">
           <Skeleton className="mb-3 h-6 w-40 rounded-lg" />
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 4 }, (_, index) => (

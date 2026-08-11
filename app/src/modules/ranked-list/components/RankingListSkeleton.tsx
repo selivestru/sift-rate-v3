@@ -11,7 +11,7 @@ export const RankingListSkeleton = () => {
           className="bg-card border-border flex flex-col gap-4 overflow-hidden rounded-xl border p-4"
         >
           <div className="flex items-start justify-between gap-3">
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <div className="flex flex-1 flex-col gap-2">
               <Skeleton className="h-5 w-2/3 rounded-lg" />
               <Skeleton className="h-3.5 w-1/3 rounded-lg" />
             </div>

@@ -8,7 +8,7 @@ import {
 import { REVIEW_SORT, ReviewsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
 import { UpsertReviewDto } from './dto/upsert-review.dto'
-import { ReviewListResponse, ReviewResponse, ReviewStatsResponse } from './types/review.types'
+import { ReviewItem, ReviewsResponse, ReviewStatsResponse } from './types/review.types'
 import { Prisma } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { MediaService } from '~/modules/media/media.service'
@@ -16,14 +16,14 @@ import { MediaSnapshot } from '~/modules/media/types/media.types'
 
 @Injectable()
 export class ReviewService {
-  private readonly REVIEWS_LIMIT = 10
+  private readonly REVIEWS_LIMIT = 20
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
   ) {}
 
-  async findMine(userId: string, query: ReviewsQueryDto): Promise<ReviewListResponse> {
+  async findMine(userId: string, query: ReviewsQueryDto): Promise<ReviewsResponse> {
     const mediaFilter: Prisma.MediaWhereInput = {
       ...(query.mediaType && { mediaType: query.mediaType }),
       ...(query.q && {
@@ -110,11 +110,7 @@ export class ReviewService {
     }
   }
 
-  async updateReview(
-    userId: string,
-    reviewId: string,
-    dto: UpdateReviewDto,
-  ): Promise<ReviewResponse> {
+  async updateReview(userId: string, reviewId: string, dto: UpdateReviewDto): Promise<ReviewItem> {
     if (Object.values(dto).every((value) => value === undefined)) {
       throw new BadRequestException('No fields to update')
     }
@@ -136,7 +132,7 @@ export class ReviewService {
     return review
   }
 
-  async upsertReview(userId: string, dto: UpsertReviewDto): Promise<ReviewResponse> {
+  async upsertReview(userId: string, dto: UpsertReviewDto): Promise<ReviewItem> {
     const existingMedia = await this.mediaService.findByExternalId(dto.mediaType, dto.externalId)
 
     let snapshot: MediaSnapshot
@@ -191,12 +187,10 @@ export class ReviewService {
           mediaId: media.id,
           rating: dto.rating,
           content: dto.content ?? null,
-          hasSpoiler: dto.hasSpoiler,
         },
         update: {
           rating: dto.rating,
           content: dto.content,
-          hasSpoiler: dto.hasSpoiler,
         },
         include: { media: true },
       })
@@ -218,7 +212,7 @@ export class ReviewService {
     return review
   }
 
-  async deleteReview(userId: string, reviewId: string): Promise<ReviewResponse> {
+  async deleteReview(userId: string, reviewId: string): Promise<ReviewItem> {
     const review = await this.prisma.review.findFirst({
       where: { id: reviewId, userId },
     })

@@ -190,7 +190,7 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
                       ) : null}
                     </div>
 
-                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <div className="flex flex-1 flex-col gap-1.5">
                       <span className="text-foreground line-clamp-2 text-base font-semibold tracking-tight">
                         {review.media.title}
                       </span>

@@ -30,7 +30,7 @@ export const BookLinks = ({ book, className }: BookLinksProps) => {
   if (links.length === 0) return null
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby="book-links-heading">
+    <section className={cn('', className)} aria-labelledby="book-links-heading">
       <h2 id="book-links-heading" className="text-foreground mb-3 text-lg font-semibold">
         Links
       </h2>

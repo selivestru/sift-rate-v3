@@ -26,7 +26,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
   if (book.publisher) stats.push({ label: 'Publisher', value: book.publisher })
 
   return (
-    <div className="relative min-w-0 overflow-hidden rounded-t-2xl">
+    <div className="relative overflow-hidden rounded-t-2xl">
       <div
         aria-hidden
         className="absolute inset-0"
@@ -92,7 +92,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
           </div>
         </div>
 
-        <div className="flex w-full max-w-md min-w-0 flex-col items-center text-center">
+        <div className="flex w-full max-w-md flex-col items-center text-center">
           <div className="mb-3 flex items-center gap-2.5">
             <span
               aria-hidden
@@ -148,7 +148,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
                 <div
                   key={stat.label}
                   className={cn(
-                    'flex min-w-0 flex-col items-center px-3.5 sm:px-4',
+                    'flex flex-col items-center px-3.5 sm:px-4',
                     index > 0 && 'border-l border-border',
                   )}
                 >

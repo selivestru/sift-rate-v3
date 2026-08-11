@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '~/common/utils/cn'
 
 export const inputVariants = cva(
-  'w-full min-w-0 rounded-md border border-transparent bg-clip-padding text-sm font-medium transition-colors duration-200 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30',
+  'w-full rounded-md border border-transparent bg-clip-padding text-sm font-medium transition-colors duration-200 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30',
   {
     variants: {
       variant: {
@@ -85,7 +85,7 @@ export const Input = ({
       <InputPrimitive
         type={type}
         data-slot="input-control"
-        className="placeholder:text-muted-foreground h-full min-w-0 flex-1 border-0 bg-transparent p-0 text-inherit shadow-none ring-0 outline-none focus-visible:ring-0 disabled:cursor-not-allowed"
+        className="placeholder:text-muted-foreground h-full flex-1 border-0 bg-transparent p-0 text-inherit shadow-none ring-0 outline-none focus-visible:ring-0 disabled:cursor-not-allowed"
         {...props}
         aria-invalid={isInvalid || undefined}
       />

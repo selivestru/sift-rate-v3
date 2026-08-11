@@ -35,8 +35,8 @@ export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
   const headingId = toHeadingId(title)
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby={headingId}>
-      <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full min-w-0">
+    <section className={cn('', className)} aria-labelledby={headingId}>
+      <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id={headingId} className="text-foreground text-lg font-semibold">
             {title}
@@ -70,7 +70,7 @@ export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
                     </div>
                   )}
                 </div>
-                <div className="min-w-0 px-0.5">
+                <div className="px-0.5">
                   <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
                     {item.title}
                   </p>

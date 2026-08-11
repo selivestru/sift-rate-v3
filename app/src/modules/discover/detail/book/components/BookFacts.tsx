@@ -79,7 +79,7 @@ export const BookFacts = ({ book }: BookFactsProps) => {
   if (facts.length === 0) return null
 
   return (
-    <section className="min-w-0" aria-labelledby="book-facts-heading">
+    <section className="" aria-labelledby="book-facts-heading">
       <h2 id="book-facts-heading" className="text-foreground mb-3 text-lg font-semibold">
         Book info
       </h2>

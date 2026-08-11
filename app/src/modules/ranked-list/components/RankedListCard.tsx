@@ -38,7 +38,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
         )}
       >
         <div className="relative flex items-start justify-between gap-2">
-          <div className="flex min-w-0 flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5">
             <h2 className="text-foreground line-clamp-2 text-base font-semibold tracking-tight">
               {item.title}
             </h2>

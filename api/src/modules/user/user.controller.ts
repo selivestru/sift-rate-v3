@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpCode, Patch, Post, Query, Req, Res } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { seconds, Throttle } from '@nestjs/throttler'
 
@@ -7,12 +18,14 @@ import { ChangePasswordDto } from './dto/change-password.dto'
 import { DeleteAccountDto } from './dto/delete-account.dto'
 import { UpdateDisplayNameDto } from './dto/update-display-name.dto'
 import { UpdateUsernameDto } from './dto/update-username.dto'
+import { UserActivityQuery } from './dto/user-activity-query.dto'
 import { UserService } from './user.service'
 import type { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 import { TwoFactor } from '~/common/decorators/two-factor.decorator'
+import { PaginationCursor } from '~/common/types/pagination-cursor.types'
 
 @Controller('user')
 export class UserController {
@@ -20,6 +33,24 @@ export class UserController {
     private readonly userService: UserService,
     private readonly config: ConfigService<EnvConfig, true>,
   ) {}
+
+  @Public()
+  @Get(':username')
+  getUser(@Param('username') username: string) {
+    return this.userService.getUserProfile(username)
+  }
+
+  @Public()
+  @Get(':username/activity')
+  getUserActivity(@Param('username') username: string, @Query() query: UserActivityQuery) {
+    return this.userService.getUserActivity(username, query.year)
+  }
+
+  @Public()
+  @Get(':username/feed')
+  getUserFeed(@Param('username') username: string, @Query() query?: PaginationCursor) {
+    return this.userService.getUserFeed(username, query?.cursor)
+  }
 
   @Patch('display-name')
   updateDisplayName(@CurrentUser('userId') userId: string, @Body() dto: UpdateDisplayNameDto) {

@@ -6,7 +6,6 @@ export interface RankedMedia {
   mediaType: MediaType
   title: string
   posterUrl: string | null
-  watchUrl?: string | null
 }
 
 export interface RankedListEntry {

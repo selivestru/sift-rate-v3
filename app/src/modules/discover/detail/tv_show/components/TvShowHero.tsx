@@ -101,7 +101,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
           />
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+        <div className="flex flex-1 flex-col gap-2.5">
           <span className="text-xs font-medium tracking-widest uppercase" style={{ color: accent }}>
             Series
           </span>

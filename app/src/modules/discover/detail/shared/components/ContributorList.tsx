@@ -34,7 +34,7 @@ export const ContributorList = ({ contributors }: ContributorListProps) => {
               </div>
             )}
 
-            <div className="flex min-w-0 flex-col">
+            <div className="flex flex-col">
               <p className="text-foreground truncate text-sm font-medium">{contributor.name}</p>
               {contributor.role && (
                 <p className="text-muted-foreground truncate text-xs">{contributor.role}</p>

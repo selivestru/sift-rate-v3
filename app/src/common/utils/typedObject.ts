@@ -8,3 +8,6 @@ export const objectEntries = <T extends object>(obj: T) =>
       [K in keyof T]: [K, T[K]]
     }[keyof T]
   >
+
+export const objectFromEntries = <T extends object>(entries: Array<[keyof T, T[keyof T]]>) =>
+  Object.fromEntries(entries) as T

@@ -1,4 +1,5 @@
-import { mediaTypeMeta, type MediaType } from '~/common/constants/media-type'
+import { mediaTypeMeta } from '~/common/constants/media-type'
+import { objectEntries } from '~/common/utils/typedObject'
 
 import type { ReviewStats } from '../types/profile.types'
 
@@ -7,7 +8,7 @@ interface ReviewStatsSectionProps {
 }
 
 export const ReviewStatsSection = ({ reviewStats }: ReviewStatsSectionProps) => {
-  const entries = Object.entries(reviewStats.byMediaType) as [MediaType, number][]
+  const entries = objectEntries(reviewStats.byMediaType)
 
   return (
     <section className="space-y-3">
@@ -34,7 +35,7 @@ export const ReviewStatsSection = ({ reviewStats }: ReviewStatsSectionProps) => 
               >
                 <Icon className="size-4" style={{ color: meta.color }} />
               </div>
-              <div className="min-w-0 flex-1">
+              <div className="flex-1">
                 <p className="text-sm leading-tight font-medium">{meta.label}</p>
                 <p className="text-muted-foreground text-xs tabular-nums">{count}</p>
               </div>

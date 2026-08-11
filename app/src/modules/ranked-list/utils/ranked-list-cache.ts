@@ -49,7 +49,7 @@ export const reorderItems = (
 
   updatedItems.splice(clampedIndex, 0, movedItem)
 
-  return updatedItems.map((item, index) => ({ ...item, position: index + 1 }))
+  return updatedItems.map((item, index) => Object.assign(item, { position: index + 1 }))
 }
 
 export const optimisticCreateList = (

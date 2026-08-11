@@ -38,7 +38,7 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex flex-1 flex-col gap-0.5">
         <h3 className="text-foreground line-clamp-1 text-sm font-semibold">{item.title}</h3>
         <p className="text-muted-foreground line-clamp-1 text-xs">
           {item.artist} · {item.albumTitle}

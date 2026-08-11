@@ -34,8 +34,8 @@ export const TvShowSeasons = ({ seasons, className }: TvShowSeasonsProps) => {
   }
 
   return (
-    <section className={cn('min-w-0', className)} aria-labelledby="seasons-heading">
-      <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full min-w-0">
+    <section className={cn('', className)} aria-labelledby="seasons-heading">
+      <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id="seasons-heading" className="text-foreground text-lg font-semibold">
             Seasons

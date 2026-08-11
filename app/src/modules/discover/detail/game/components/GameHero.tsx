@@ -17,10 +17,10 @@ export const GameHero = ({ game }: GameHeroProps) => {
     game.alternativeName.trim().toLowerCase() !== game.title.trim().toLowerCase()
 
   return (
-    <div className="relative min-w-0 overflow-x-clip">
+    <div className="relative overflow-x-clip">
       <GameHeroBackdrop game={game} showAlt={showAlt} />
 
-      <div className="relative z-10 -mt-12 flex min-w-0 flex-col gap-4 px-5 sm:-mt-14 sm:flex-row sm:items-start sm:gap-4 sm:px-6">
+      <div className="relative z-10 -mt-12 flex flex-col gap-4 px-5 sm:-mt-14 sm:flex-row sm:items-start sm:gap-4 sm:px-6">
         <div
           className="bg-muted ring-border relative aspect-2/3 w-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:w-40"
           style={{
