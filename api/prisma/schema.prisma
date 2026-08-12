@@ -73,6 +73,7 @@ model Follow {
   following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
+  @@index([followingId])
 }
 
 model Media {
@@ -88,6 +89,7 @@ model Media {
   rankedItems  RankedItem[]
 
   @@unique([externalId, mediaType])
+  @@index([mediaType])
 }
 
 model Review {
@@ -104,6 +106,8 @@ model Review {
   post  Post?
 
   @@unique([userId, mediaId])
+  @@index([userId, createdAt])
+  @@index([mediaId, createdAt(sort: Desc), id(sort: Desc)])
 }
 
 model PlannedItem {
@@ -140,6 +144,7 @@ model RankedItem {
   media Media      @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
   @@unique([listId, mediaId])
+  @@index([listId, position])
 }
 
 model Post {
@@ -151,4 +156,7 @@ model Post {
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   review Review? @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
 }
