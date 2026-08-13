@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import RedisStore from 'connect-redis'
 import type { CookieOptions, RequestHandler } from 'express'
 import session from 'express-session'
 import { EnvConfig } from '~/app/config/env.config'
+import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
 export const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
@@ -12,7 +13,8 @@ export const SESSION_TTL_SECONDS = SESSION_MAX_AGE_MS / 1000
 
 @Injectable()
 export class SessionMiddlewareService {
-  private readonly middleware: RequestHandler
+  private readonly logger = new Logger(SessionMiddlewareService.name)
+  private readonly middleware: RequestHandler[]
   private readonly cookieName: string
   private readonly cookieOptions: CookieOptions
   private readonly sessionPrefix: string
@@ -29,7 +31,7 @@ export class SessionMiddlewareService {
       path: '/',
     }
 
-    this.middleware = session({
+    const sessionHandler = session({
       store: new RedisStore({
         client: redis,
         prefix: this.sessionPrefix,
@@ -44,9 +46,30 @@ export class SessionMiddlewareService {
         maxAge: SESSION_MAX_AGE_MS,
       },
     })
+
+    this.middleware = [
+      sessionHandler,
+      (req, _res, next) => {
+        const sid = req.session?.id
+        const userId = req.session?.userId
+
+        if (userId && sid) {
+          void redis
+            .hexpire(REDIS_KEYS.USER_SESSIONS(userId), SESSION_TTL_SECONDS, 'FIELDS', 1, sid)
+            .catch((err) => {
+              this.logger.warn(
+                { userId, sid, err: String(err) },
+                'Failed to refresh session metadata TTL',
+              )
+            })
+        }
+
+        next()
+      },
+    ]
   }
 
-  getMiddleware(): RequestHandler {
+  getMiddleware(): RequestHandler[] {
     return this.middleware
   }
 

@@ -91,7 +91,7 @@ export class AuthService {
     return { message: 'Check your email to confirm your account' }
   }
 
-  async login(req: Request, dto: LoginDto): Promise<{ user: SafeUser }> {
+  async login(req: Request, res: Response, dto: LoginDto): Promise<{ user: SafeUser }> {
     const existing = await this.userService.findByEmail(dto.email)
 
     const isCredentialsUser =
@@ -131,7 +131,7 @@ export class AuthService {
       }
     }
 
-    await this.sessionService.create(req, existing.id)
+    await this.sessionService.create(req, res, existing.id)
 
     return { user: safeUser(existing) }
   }
@@ -155,7 +155,7 @@ export class AuthService {
     return this.googleOAuth.createAuthUrl()
   }
 
-  async loginWithGoogle(req: Request, code: string, state: string): Promise<void> {
+  async loginWithGoogle(req: Request, res: Response, code: string, state: string): Promise<void> {
     const profile = await this.googleOAuth.getProfile(code, state)
 
     const existing = await this.userService.findByEmail(profile.email)
@@ -166,7 +166,7 @@ export class AuthService {
 
     const user = existing ?? (await this.userService.createGoogleUser(profile))
 
-    await this.sessionService.create(req, user.id)
+    await this.sessionService.create(req, res, user.id)
 
     if (!existing) {
       try {

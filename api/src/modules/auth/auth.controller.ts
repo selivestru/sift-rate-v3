@@ -45,8 +45,8 @@ export class AuthController {
   @Public()
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
-  login(@Req() req: Request, @Body() dto: LoginDto) {
-    return this.authService.login(req, dto)
+  login(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Body() dto: LoginDto) {
+    return this.authService.login(req, res, dto)
   }
 
   @Put('/complete-profile')
@@ -77,7 +77,7 @@ export class AuthController {
     }
 
     try {
-      await this.authService.loginWithGoogle(req, code, state)
+      await this.authService.loginWithGoogle(req, res, code, state)
 
       return res.redirect(`${origin}/auth/google/callback?status=success`)
     } catch (error) {
