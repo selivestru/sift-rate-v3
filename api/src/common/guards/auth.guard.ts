@@ -50,6 +50,7 @@ export class AuthGuard implements CanActivate {
       }
 
       req.user = {
+        sessionId: req.session.id,
         userId: user.id,
         email: user.email,
         username: user.username,

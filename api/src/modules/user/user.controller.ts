@@ -72,11 +72,11 @@ export class UserController {
   @Patch('password')
   @TwoFactor()
   changePassword(
-    @Req() req: Request,
+    @CurrentUser('sessionId') sessionId: string,
     @CurrentUser('userId') userId: string,
     @Body() dto: ChangePasswordDto,
   ) {
-    return this.userService.changePassword(userId, req.session.id, dto)
+    return this.userService.changePassword(userId, sessionId, dto)
   }
 
   @Throttle({ default: { limit: 3, ttl: seconds(60) } })

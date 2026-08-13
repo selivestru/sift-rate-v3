@@ -2,6 +2,8 @@ import { InjectQueue } from '@nestjs/bullmq'
 import {
   BadRequestException,
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -44,6 +46,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly sessionService: SessionService,
+    @Inject(forwardRef(() => FeedService))
     private readonly feedService: FeedService,
     private readonly redis: RedisService,
     @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
@@ -453,10 +456,7 @@ export class UserService {
       return
     }
 
-    await Promise.all([
-      this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId)),
-      this.redis.del(REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash)),
-    ])
+    await this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId), REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash))
   }
 
   private async invalidatePendingDeleteRequest(userId: string): Promise<void> {
@@ -466,10 +466,10 @@ export class UserService {
       return
     }
 
-    await Promise.all([
-      this.redis.del(REDIS_KEYS.DELETE_ACCOUNT(userId)),
-      this.redis.del(REDIS_KEYS.DELETE_ACCOUNT_TOKEN(oldHash)),
-    ])
+    await this.redis.del(
+      REDIS_KEYS.DELETE_ACCOUNT(userId),
+      REDIS_KEYS.DELETE_ACCOUNT_TOKEN(oldHash),
+    )
   }
 
   private async cleanupUserRedisState(userId: string): Promise<void> {
@@ -505,7 +505,7 @@ export class UserService {
       }
     }
 
-    await Promise.allSettled(keys.map((key) => this.redis.del(key)))
+    await this.redis.del(...keys)
   }
 
   private hashToken(token: string): string {

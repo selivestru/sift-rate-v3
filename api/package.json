@@ -19,7 +19,7 @@
     "format:fix": "prettier --write \"src/**/*.ts\"",
     "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "start": "bun run build && node dist/main"
+    "start": "bun run build && node dist/src/main"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1091.0",

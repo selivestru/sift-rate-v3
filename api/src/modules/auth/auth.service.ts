@@ -247,10 +247,10 @@ export class AuthService {
         return { message: this.VERIFY_CANNED_MESSAGE, retryAfter }
       }
 
-      await Promise.all([
-        this.redis.del(REDIS_KEYS.EMAIL_VERIFY(user.id)),
-        this.redis.del(REDIS_KEYS.EMAIL_VERIFY_TOKEN(oldToken)),
-      ])
+      await this.redis.del(
+        REDIS_KEYS.EMAIL_VERIFY(user.id),
+        REDIS_KEYS.EMAIL_VERIFY_TOKEN(oldToken),
+      )
     }
 
     try {
@@ -374,10 +374,10 @@ export class AuthService {
       return
     }
 
-    await Promise.all([
-      this.redis.del(REDIS_KEYS.PASSWORD_RESET(userId)),
-      this.redis.del(REDIS_KEYS.PASSWORD_RESET_TOKEN(oldHash)),
-    ])
+    await this.redis.del(
+      REDIS_KEYS.PASSWORD_RESET(userId),
+      REDIS_KEYS.PASSWORD_RESET_TOKEN(oldHash),
+    )
   }
 
   private async invalidateEmailChange(userId: string): Promise<void> {
@@ -387,10 +387,7 @@ export class AuthService {
       return
     }
 
-    await Promise.all([
-      this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId)),
-      this.redis.del(REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash)),
-    ])
+    await this.redis.del(REDIS_KEYS.EMAIL_CHANGE(userId), REDIS_KEYS.EMAIL_CHANGE_TOKEN(oldHash))
   }
 
   private hashToken(token: string): string {

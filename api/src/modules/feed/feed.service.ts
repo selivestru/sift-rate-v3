@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common'
 
 import { UserService } from '../user/user.service'
 import { FeedResponse } from './types/feed.types'
@@ -10,6 +10,7 @@ export class FeedService {
 
   constructor(
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 

@@ -16,8 +16,12 @@ export class TwoFactorController {
 
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('verify')
-  verify(@CurrentUser('userId') userId: string, @Body() dto: TwoFactorCodeDto) {
-    return this.twoFactorService.verify(userId, dto.code)
+  verify(
+    @CurrentUser('sessionId') sessionId: string,
+    @CurrentUser('userId') userId: string,
+    @Body() dto: TwoFactorCodeDto,
+  ) {
+    return this.twoFactorService.verify(userId, dto.code, sessionId)
   }
 
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })

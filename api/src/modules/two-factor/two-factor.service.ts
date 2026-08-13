@@ -6,6 +6,7 @@ import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { safeUser } from '~/common/utils/safeUser'
 import { AuthMethod } from '~/generated/prisma/client'
 import { RedisService } from '~/infrastructure/redis/redis.service'
+import { SessionService } from '~/modules/session/session.service'
 
 @Injectable()
 export class TwoFactorService {
@@ -14,6 +15,7 @@ export class TwoFactorService {
   constructor(
     private readonly userService: UserService,
     private readonly redis: RedisService,
+    private readonly sessionService: SessionService,
   ) {}
 
   async setup(userId: string, email: string) {
@@ -50,7 +52,7 @@ export class TwoFactorService {
     }
   }
 
-  async verify(userId: string, code: string) {
+  async verify(userId: string, code: string, currentSid: string) {
     const savedSecret = await this.redis.get(REDIS_KEYS.TWO_FA(userId))
 
     if (!savedSecret) {
@@ -70,6 +72,8 @@ export class TwoFactorService {
       }),
       this.redis.del(REDIS_KEYS.TWO_FA(userId)),
     ])
+
+    await this.sessionService.destroyAllForUser(userId, currentSid)
 
     this.logger.log(`2FA enabled for user ${userId}`)
 

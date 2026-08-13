@@ -1,9 +1,7 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 
-import type { CookieOptions } from 'express'
-import { Request, Response } from 'express'
-import { EnvConfig } from '~/app/config/env.config'
+import { SESSION_TTL_SECONDS, SessionMiddlewareService } from './session.middleware'
+import type { CookieOptions, Request, Response } from 'express'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
@@ -11,24 +9,17 @@ import { RedisService } from '~/infrastructure/redis/redis.service'
 export class SessionService {
   private readonly logger = new Logger(SessionService.name)
   private readonly SESSION_PREFIX: string
-  private readonly SESSION_TTL_SECONDS = 604_800
+  private readonly SESSION_TTL_SECONDS = SESSION_TTL_SECONDS
   private readonly cookieName: string
   private readonly cookieOptions: CookieOptions
 
   constructor(
     private readonly redis: RedisService,
-    config: ConfigService<EnvConfig, true>,
+    sessionMiddleware: SessionMiddlewareService,
   ) {
-    this.SESSION_PREFIX = config.get('SESSION_PREFIX', { infer: true })
-
-    const isProd = config.get('NODE_ENV', { infer: true }) === 'production'
-    this.cookieName = isProd ? '__Host-sid' : 'sid'
-    this.cookieOptions = {
-      path: '/',
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'lax',
-    }
+    this.SESSION_PREFIX = sessionMiddleware.getSessionPrefix()
+    this.cookieName = sessionMiddleware.getCookieName()
+    this.cookieOptions = sessionMiddleware.getCookieOptions()
   }
 
   create(req: Request, userId: string): Promise<void> {
@@ -44,10 +35,12 @@ export class SessionService {
         const sid = req.session.id
         const setKey = REDIS_KEYS.USER_SESSIONS(userId)
 
-        void Promise.all([
-          this.redis.sadd(setKey, sid),
-          this.redis.expire(setKey, this.SESSION_TTL_SECONDS),
-        ]).catch((redisErr) => {
+        const pipeline = this.redis.pipeline()
+
+        pipeline.sadd(setKey, sid)
+        pipeline.expire(setKey, this.SESSION_TTL_SECONDS)
+
+        void pipeline.exec().catch((redisErr) => {
           this.logger.warn({ userId, err: String(redisErr) }, 'Failed to index user session')
         })
 
@@ -102,13 +95,17 @@ export class SessionService {
 
     const sessionKeys = toDelete.map((sid) => `${this.SESSION_PREFIX}${sid}`)
 
-    await Promise.all([
-      ...sessionKeys.map((key) => this.redis.del(key)),
-      this.redis.srem(setKey, ...toDelete),
-    ])
+    const pipeline = this.redis.pipeline()
 
-    this.logger.log({ userId, deleted: toDelete.length }, 'Revoked user sessions')
+    pipeline.del(...sessionKeys)
+    pipeline.srem(setKey, ...toDelete)
 
-    return toDelete.length
+    const results = await pipeline.exec()
+
+    const deletedCount = (results?.[0]?.[1] as number | undefined) ?? 0
+
+    this.logger.log({ userId, deleted: deletedCount }, 'Revoked user sessions')
+
+    return deletedCount
   }
 }
