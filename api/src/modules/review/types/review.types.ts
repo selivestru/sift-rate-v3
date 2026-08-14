@@ -1,4 +1,5 @@
 import { JsonValue } from '@prisma/client/runtime/client'
+import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
 import { MediaType } from '~/generated/prisma/enums'
 
 export type ReviewMediaCard = {
@@ -19,10 +20,7 @@ export type ReviewItem = {
   media: ReviewMediaCard
 }
 
-export type ReviewsResponse = {
-  data: ReviewItem[]
-  nextCursor: string | null
-}
+export type ReviewsResponse = PaginationCursorResponse<ReviewItem>
 
 export type ReviewStatsResponse = {
   total: number

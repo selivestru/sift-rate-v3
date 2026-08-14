@@ -1,3 +1,4 @@
+import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
 import { Author } from '~/common/types/user.types'
 import { Media, PlannedItem, Review } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
@@ -60,7 +61,4 @@ type MediaReview = Review & {
   user: Author
 }
 
-export interface MediaReviewsResponse {
-  data: MediaReview[]
-  nextCursor: string | null
-}
+export type MediaReviewsResponse = PaginationCursorResponse<MediaReview>

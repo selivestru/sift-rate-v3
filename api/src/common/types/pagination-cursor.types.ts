@@ -7,3 +7,8 @@ export class PaginationCursor {
   @IsUUID('7', { message: 'Cursor must be a valid UUID' })
   cursor?: string
 }
+
+export interface PaginationCursorResponse<T> {
+  data: T[]
+  nextCursor: string | null
+}

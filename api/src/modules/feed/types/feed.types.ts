@@ -1,3 +1,4 @@
+import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
 import { Author } from '~/common/types/user.types'
 import { ReviewItem } from '~/modules/review/types/review.types'
 
@@ -13,7 +14,4 @@ export interface FeedItem {
   review: ReviewItem | null
 }
 
-export interface FeedResponse {
-  data: FeedItem[]
-  nextCursor: string | null
-}
+export type FeedResponse = PaginationCursorResponse<FeedItem>
