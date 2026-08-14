@@ -1,6 +1,5 @@
 import type { ProfileResponse } from '../types/profile.types'
 import { AchievementsGrid } from './AchievementsGrid'
-import { ActivityFeed } from './activity-feed/ActivityFeed'
 import { ProfileHero } from './ProfileHero'
 import { RatingDistribution } from './RatingDistribution'
 import { ReviewActivity } from './ReviewActivity'
@@ -22,7 +21,6 @@ export const ProfilePage = ({ data }: ProfilePageProps) => {
           <RatingDistribution distribution={data.ratingDistribution} />
           <ReviewActivity activity={data.reviewActivity} />
         </div>
-        <ActivityFeed feed={data.feed} user={data.user} />
       </div>
     </div>
   )

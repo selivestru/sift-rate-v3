@@ -35,8 +35,8 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
       )}
     >
       <Avatar size="lg">
-        <AvatarImage src={user.avatarUrl!} alt={user.username!} />
-        <AvatarFallback>{getFirstLetter(user.username!)}</AvatarFallback>
+        <AvatarImage src={user.avatarUrl ?? undefined} alt={user.username ?? undefined} />
+        <AvatarFallback>{getFirstLetter(user.username)}</AvatarFallback>
       </Avatar>
 
       <div className="flex flex-1 flex-col gap-2.5">

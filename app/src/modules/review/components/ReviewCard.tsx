@@ -89,7 +89,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         params={{ externalId: media.externalId }}
         aria-label={`Open ${media.title}`}
         className={cn(
-          'bg-muted group/poster relative z-px w-full shrink-0 overflow-hidden rounded-lg border border-border outline-none',
+          'bg-muted group/poster relative z-px w-full shrink-0 overflow-hidden rounded-lg border border-border outline-none h-fit',
           'focus-visible:ring-2 focus-visible:ring-ring/40',
           isMusic
             ? 'aspect-square max-h-56 sm:max-h-none sm:size-36 md:size-42'

@@ -37,7 +37,7 @@ export const ProfileHero = ({ user }: ProfileHeroProps) => {
       <div className="relative px-6 pt-0 pb-6 max-md:px-4">
         <div className="-mt-16 flex items-end gap-5 max-md:-mt-12 max-md:gap-4">
           <Avatar className="ring-card size-32 ring-4 max-md:size-24">
-            <AvatarImage src={user.avatarUrl!} alt={user.displayName} />
+            <AvatarImage src={user.avatarUrl ?? undefined} alt={user.displayName} />
             <AvatarFallback className="text-4xl max-md:text-2xl">
               {getFirstLetter(user.displayName)}
             </AvatarFallback>

@@ -16,4 +16,5 @@ export const QUERIES_KEYS = {
   ],
   RANKED_LISTS: ['ranked-lists'],
   PROFILE: (username: string) => ['profile', username],
+  FEED: (tab: string) => ['feed', tab],
 }

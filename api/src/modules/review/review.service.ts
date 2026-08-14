@@ -175,25 +175,49 @@ export class ReviewService {
         inserted = true
       }
 
-      const review = await tx.review.upsert({
+      const hasReview = await tx.review.findUnique({
         where: {
           userId_mediaId: {
             userId,
             mediaId: media.id,
           },
         },
-        create: {
-          userId,
-          mediaId: media.id,
-          rating: dto.rating,
-          content: dto.content ?? null,
-        },
-        update: {
-          rating: dto.rating,
-          content: dto.content,
-        },
-        include: { media: true },
       })
+
+      let review: ReviewItem
+
+      if (!hasReview) {
+        review = await tx.review.create({
+          data: {
+            userId,
+            mediaId: media.id,
+            rating: dto.rating,
+            content: dto.content ?? null,
+          },
+          include: { media: true },
+        })
+
+        await tx.post.create({
+          data: {
+            reviewId: review.id,
+            userId,
+          },
+        })
+      } else {
+        review = await tx.review.update({
+          where: {
+            userId_mediaId: {
+              userId,
+              mediaId: media.id,
+            },
+          },
+          data: {
+            rating: dto.rating,
+            content: dto.content,
+          },
+          include: { media: true },
+        })
+      }
 
       await tx.plannedItem.deleteMany({
         where: {

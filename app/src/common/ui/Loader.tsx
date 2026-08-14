@@ -1,5 +1,5 @@
 import { Spinner } from './Spinner'
 
-export const PendingComponent = () => {
+export const Loader = () => {
   return <Spinner className="mx-auto size-10" />
 }

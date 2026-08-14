@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { PendingComponent } from '~/common/ui/PendingComponent'
+import { Loader } from '~/common/ui/Loader'
 import {
   authApi,
   ResetPasswordForm,
@@ -14,7 +14,7 @@ export const Route = createFileRoute('/auth/reset-password')({
   loader: async ({ deps }) => {
     return authApi.resetPasswordVerify(deps.token)
   },
-  pendingComponent: PendingComponent,
+  pendingComponent: Loader,
   errorComponent: ResetPasswordVerifyError,
   component: RouteComponent,
 })

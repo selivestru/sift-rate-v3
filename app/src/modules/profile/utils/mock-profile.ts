@@ -2,7 +2,6 @@ import { MEDIA_TYPES } from '~/common/constants/media-type'
 import { SUBSCRIPTIONS } from '~/modules/auth'
 
 import type { Profile } from '../types/profile.types'
-import { mockFeed } from './mock-feed'
 
 export const mockProfile: Profile = {
   user: {
@@ -139,5 +138,4 @@ export const mockProfile: Profile = {
       unlockedAt: null,
     },
   ],
-  feed: mockFeed,
 }
