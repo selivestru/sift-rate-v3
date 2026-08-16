@@ -15,6 +15,7 @@ import { FeedModule } from './modules/feed/feed.module'
 import { FollowModule } from './modules/follow/follow.module'
 import { MediaModule } from './modules/media/media.module'
 import { PlannedModule } from './modules/planned/planned.module'
+import { PostModule } from './modules/post/post.module'
 import { RankedListModule } from './modules/ranked-list/ranked-list.module'
 import { ReviewModule } from './modules/review/review.module'
 import { SessionModule } from './modules/session/session.module'
@@ -60,6 +61,7 @@ import Redis from 'ioredis'
     UserModule,
     ReviewModule,
     PlannedModule,
+    PostModule,
     RankedListModule,
     ResendModule,
     TwoFactorModule,

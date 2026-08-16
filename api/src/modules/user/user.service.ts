@@ -84,8 +84,8 @@ export class UserService {
     return this.getReviewActivity(user.id, year)
   }
 
-  getUserFeed(username: string, cursor?: string): Promise<FeedResponse> {
-    return this.feedService.getUserFeed(username, cursor)
+  getUserFeed(username: string, userId?: string, cursor?: string): Promise<FeedResponse> {
+    return this.feedService.getUserFeed(username, userId, cursor)
   }
 
   async findById(id: string): Promise<User> {

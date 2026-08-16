@@ -23,6 +23,8 @@ import { UserService } from './user.service'
 import type { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
+import { OptionalAuth } from '~/common/decorators/optional-auth.decorator'
+import { OptionalCurrentUser } from '~/common/decorators/optional-current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 import { TwoFactor } from '~/common/decorators/two-factor.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
@@ -46,10 +48,14 @@ export class UserController {
     return this.userService.getUserActivity(username, query.year)
   }
 
-  @Public()
+  @OptionalAuth()
   @Get(':username/feed')
-  getUserFeed(@Param('username') username: string, @Query() query?: PaginationCursor) {
-    return this.userService.getUserFeed(username, query?.cursor)
+  getUserFeed(
+    @Param('username') username: string,
+    @Query() query?: PaginationCursor,
+    @OptionalCurrentUser('userId') userId?: string,
+  ) {
+    return this.userService.getUserFeed(username, userId, query?.cursor)
   }
 
   @Patch('display-name')

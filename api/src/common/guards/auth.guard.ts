@@ -8,6 +8,7 @@ import {
 import { Reflector } from '@nestjs/core'
 
 import { Request, Response } from 'express'
+import { IS_OPTIONAL_AUTH_KEY } from '~/common/decorators/optional-auth.decorator'
 import { IS_PUBLIC_KEY } from '~/common/decorators/public.decorator'
 import { SessionService } from '~/modules/session/session.service'
 import { UserService } from '~/modules/user/user.service'
@@ -30,11 +31,20 @@ export class AuthGuard implements CanActivate {
       return true
     }
 
+    const isOptionalAuth = this.reflector.getAllAndOverride<boolean>(IS_OPTIONAL_AUTH_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ])
+
     const req = context.switchToHttp().getRequest<Request>()
     const res = context.switchToHttp().getResponse<Response>()
     const userId = req.session?.userId
 
     if (!userId) {
+      if (isOptionalAuth) {
+        return true
+      }
+
       throw new ForbiddenException()
     }
 
@@ -43,6 +53,11 @@ export class AuthGuard implements CanActivate {
 
       if (!user.isVerified) {
         await this.sessionService.revokeCurrent(req, res)
+
+        if (isOptionalAuth) {
+          return true
+        }
+
         throw new ForbiddenException({
           message: 'Please verify your email before logging in',
           code: 'EMAIL_NOT_VERIFIED',
@@ -61,6 +76,11 @@ export class AuthGuard implements CanActivate {
     } catch (error) {
       if (error instanceof NotFoundException) {
         await this.sessionService.revokeCurrent(req, res)
+
+        if (isOptionalAuth) {
+          return true
+        }
+
         throw new ForbiddenException()
       }
 

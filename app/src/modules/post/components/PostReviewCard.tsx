@@ -6,13 +6,13 @@ import { RatingBadge } from '~/common/ui/RatingBadge'
 import { cn } from '~/common/utils/cn'
 import type { Review } from '~/modules/review'
 
-import { FeedContent } from './FeedContent'
+import { PostContent } from './PostContent'
 
-interface FeedReviewCardProps {
+interface PostReviewCardProps {
   review: Review
 }
 
-export const FeedReviewCard = ({ review }: FeedReviewCardProps) => {
+export const PostReviewCard = ({ review }: PostReviewCardProps) => {
   const { media } = review
   const typeMeta = mediaTypeMeta[media.mediaType]
   const TypeIcon = typeMeta.icon
@@ -65,7 +65,7 @@ export const FeedReviewCard = ({ review }: FeedReviewCardProps) => {
         </div>
       </div>
 
-      {review.content && <FeedContent content={review.content} />}
+      {review.content && <PostContent content={review.content} />}
     </div>
   )
 }

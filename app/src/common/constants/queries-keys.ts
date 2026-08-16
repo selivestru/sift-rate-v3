@@ -1,5 +1,7 @@
 import type { MediaType } from './media-type'
 
+export type FeedTabKey = 'ALL' | 'FOLLOWING'
+
 export const QUERIES_KEYS = {
   PLANNED_LIST: ['planned-list'],
   MEDIA_STATE: (data: { mediaType: MediaType; externalId: string }) => [
@@ -16,5 +18,5 @@ export const QUERIES_KEYS = {
   ],
   RANKED_LISTS: ['ranked-lists'],
   PROFILE: (username: string) => ['profile', username],
-  FEED: (tab: string) => ['feed', tab],
+  FEED: (tab: FeedTabKey) => ['feed', tab],
 }

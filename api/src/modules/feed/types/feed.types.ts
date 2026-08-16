@@ -1,17 +1,6 @@
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
-import { Author } from '~/common/types/user.types'
-import { ReviewItem } from '~/modules/review/types/review.types'
+import { PostItem } from '~/modules/post/types/post.types'
 
-export type FeedItemKind = 'REVIEW' | 'POST'
-
-export interface FeedItem {
-  id: string
-  content: string | null
-  userId: string
-  reviewId: string | null
-  createdAt: Date
-  user: Author
-  review: ReviewItem | null
-}
+export type FeedItem = PostItem
 
 export type FeedResponse = PaginationCursorResponse<FeedItem>

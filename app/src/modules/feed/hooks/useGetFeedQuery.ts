@@ -1,9 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 
-import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+import { QUERIES_KEYS, type FeedTabKey } from '~/common/constants/queries-keys'
 
 import { feedApi } from '../api/feed.api'
-import type { FeedResponse, FeedTabKey } from '../types/feed.types'
+import type { FeedResponse } from '../types/feed.types'
 
 const fetchers: Record<FeedTabKey, (cursor?: string) => Promise<FeedResponse>> = {
   ALL: feedApi.getFeed,

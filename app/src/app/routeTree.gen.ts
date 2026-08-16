@@ -27,6 +27,7 @@ import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index
 import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
 import { Route as AppLibraryRankedListRouteImport } from './routes/_app/library/ranked-list'
 import { Route as AppLibraryReviewsRouteImport } from './routes/_app/library/reviews'
+import { Route as AppPostPostIdRouteImport } from './routes/_app/post.$postId'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettings2faRouteImport } from './routes/_app/settings/2fa'
 import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
@@ -134,6 +135,11 @@ const AppLibraryReviewsRoute = AppLibraryReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
   getParentRoute: () => AppLibraryRouteRoute,
+} as any)
+const AppPostPostIdRoute = AppPostPostIdRouteImport.update({
+  id: '/post/$postId',
+  path: '/post/$postId',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   id: '/',
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/library/planned': typeof AppLibraryPlannedRoute
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
+  '/post/$postId': typeof AppPostPostIdRoute
   '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/library/planned': typeof AppLibraryPlannedRoute
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
+  '/post/$postId': typeof AppPostPostIdRoute
   '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/_app/library/planned': typeof AppLibraryPlannedRoute
   '/_app/library/ranked-list': typeof AppLibraryRankedListRoute
   '/_app/library/reviews': typeof AppLibraryReviewsRoute
+  '/_app/post/$postId': typeof AppPostPostIdRoute
   '/_app/settings/2fa': typeof AppSettings2faRoute
   '/_app/settings/account': typeof AppSettingsAccountRoute
   '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
@@ -360,6 +369,7 @@ export interface FileRouteTypes {
     | '/library/planned'
     | '/library/ranked-list'
     | '/library/reviews'
+    | '/post/$postId'
     | '/settings/2fa'
     | '/settings/account'
     | '/settings/appearance'
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
     | '/library/planned'
     | '/library/ranked-list'
     | '/library/reviews'
+    | '/post/$postId'
     | '/settings/2fa'
     | '/settings/account'
     | '/settings/appearance'
@@ -432,6 +443,7 @@ export interface FileRouteTypes {
     | '/_app/library/planned'
     | '/_app/library/ranked-list'
     | '/_app/library/reviews'
+    | '/_app/post/$postId'
     | '/_app/settings/2fa'
     | '/_app/settings/account'
     | '/_app/settings/appearance'
@@ -587,6 +599,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/library/reviews'
       preLoaderRoute: typeof AppLibraryReviewsRouteImport
       parentRoute: typeof AppLibraryRouteRoute
+    }
+    '/_app/post/$postId': {
+      id: '/_app/post/$postId'
+      path: '/post/$postId'
+      fullPath: '/post/$postId'
+      preLoaderRoute: typeof AppPostPostIdRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/settings/': {
       id: '/_app/settings/'
@@ -783,6 +802,7 @@ interface AppRouteChildren {
   AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppPostPostIdRoute: typeof AppPostPostIdRoute
   AppDiscoverIndexRoute: typeof AppDiscoverIndexRoute
   AppDiscoverAlbumExternalIdRoute: typeof AppDiscoverAlbumExternalIdRoute
   AppDiscoverBookExternalIdRoute: typeof AppDiscoverBookExternalIdRoute
@@ -803,6 +823,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
   AppIndexRoute: AppIndexRoute,
+  AppPostPostIdRoute: AppPostPostIdRoute,
   AppDiscoverIndexRoute: AppDiscoverIndexRoute,
   AppDiscoverAlbumExternalIdRoute: AppDiscoverAlbumExternalIdRoute,
   AppDiscoverBookExternalIdRoute: AppDiscoverBookExternalIdRoute,

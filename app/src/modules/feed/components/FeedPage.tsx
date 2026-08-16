@@ -1,16 +1,16 @@
 import { m } from 'motion/react'
 import { useState } from 'react'
 
+import type { FeedTabKey } from '~/common/constants/queries-keys'
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
 import { EmptyState } from '~/common/ui/EmptyState'
 import { ErrorState } from '~/common/ui/ErrorState'
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore } from '~/modules/auth'
+import { PostItem } from '~/modules/post'
 
 import { useGetFeedQuery } from '../hooks/useGetFeedQuery'
-import type { FeedTabKey } from '../types/feed.types'
-import { FeedRow } from './FeedRow'
 import { FeedRowSkeletons } from './FeedRowSkeletons'
 import { PostComposer } from './PostComposer'
 
@@ -88,7 +88,7 @@ export const FeedPage = () => {
       {!isFetching && !isError && items.length > 0 && (
         <>
           {items.map((item) => (
-            <FeedRow key={item.id} data={item} />
+            <PostItem key={item.id} data={item} />
           ))}
         </>
       )}

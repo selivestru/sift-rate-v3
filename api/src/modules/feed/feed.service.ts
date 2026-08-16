@@ -2,7 +2,9 @@ import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/commo
 
 import { UserService } from '../user/user.service'
 import { FeedResponse } from './types/feed.types'
+import { Prisma } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
+import { buildPostInclude, mapPost } from '~/modules/post/post.query'
 
 @Injectable()
 export class FeedService {
@@ -14,104 +16,41 @@ export class FeedService {
     private readonly userService: UserService,
   ) {}
 
-  async getFeed(cursor?: string): Promise<FeedResponse> {
-    const posts = await this.prisma.post.findMany({
-      ...(cursor && {
-        cursor: { id: cursor },
-        skip: 1,
-      }),
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: this.POSTS_LIMIT + 1,
-      include: {
-        review: {
-          include: {
-            media: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-            displayName: true,
-            avatarUrl: true,
-          },
-        },
-      },
-    })
-
-    const hasNextPage = posts.length > this.POSTS_LIMIT
-
-    if (hasNextPage) {
-      posts.pop()
-    }
-
-    return {
-      data: posts,
-      nextCursor: hasNextPage ? posts[posts.length - 1].id : null,
-    }
+  async getFeed(userId?: string, cursor?: string): Promise<FeedResponse> {
+    return this.fetchPosts(userId, cursor)
   }
 
   async getFollowingFeed(userId: string, cursor?: string): Promise<FeedResponse> {
-    const posts = await this.prisma.post.findMany({
-      where: {
-        user: {
-          followers: {
-            some: {
-              followerId: userId,
-            },
-          },
-        },
-      },
-      ...(cursor && {
-        cursor: { id: cursor },
-        skip: 1,
-      }),
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: this.POSTS_LIMIT + 1,
-      include: {
-        review: {
-          include: {
-            media: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-            displayName: true,
-            avatarUrl: true,
+    return this.fetchPosts(userId, cursor, {
+      user: {
+        followers: {
+          some: {
+            followerId: userId,
           },
         },
       },
     })
-
-    const hasNextPage = posts.length > this.POSTS_LIMIT
-
-    if (hasNextPage) {
-      posts.pop()
-    }
-
-    return {
-      data: posts,
-      nextCursor: hasNextPage ? posts[posts.length - 1].id : null,
-    }
   }
 
-  async getUserFeed(username: string, cursor?: string): Promise<FeedResponse> {
+  async getUserFeed(username: string, userId?: string, cursor?: string): Promise<FeedResponse> {
     const user = await this.userService.findByUsername(username)
 
     if (!user) {
       throw new NotFoundException('User not found')
     }
 
+    return this.fetchPosts(userId, cursor, {
+      userId: user.id,
+    })
+  }
+
+  private async fetchPosts(
+    userId?: string,
+    cursor?: string,
+    where?: Prisma.PostWhereInput,
+  ): Promise<FeedResponse> {
     const posts = await this.prisma.post.findMany({
-      where: {
-        userId: user.id,
-      },
+      where,
       ...(cursor && {
         cursor: { id: cursor },
         skip: 1,
@@ -120,21 +59,7 @@ export class FeedService {
         createdAt: 'desc',
       },
       take: this.POSTS_LIMIT + 1,
-      include: {
-        review: {
-          include: {
-            media: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-            displayName: true,
-            avatarUrl: true,
-          },
-        },
-      },
+      include: buildPostInclude(userId),
     })
 
     const hasNextPage = posts.length > this.POSTS_LIMIT
@@ -144,7 +69,7 @@ export class FeedService {
     }
 
     return {
-      data: posts,
+      data: posts.map(mapPost),
       nextCursor: hasNextPage ? posts[posts.length - 1].id : null,
     }
   }
