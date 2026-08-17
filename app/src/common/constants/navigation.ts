@@ -1,7 +1,7 @@
 import { CalendarCheck, Compass, Cup, Home, Library, Star, type IconComponent } from 'reicon-react'
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
-import type { User } from '~/modules/auth/types/user.type'
+import type { User } from '~/modules/auth'
 
 import { mediaTypeMeta, mediaTypeToSlug, type MediaTypeSlug } from './media-type'
 

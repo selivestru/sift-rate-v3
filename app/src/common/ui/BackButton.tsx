@@ -1,19 +1,17 @@
-import { Link } from '@tanstack/react-router'
 import { ArrowLeft } from 'reicon-react'
-
-import type { FileRoutesByTo } from '~/app/routeTree.gen'
 
 import { Button, type ButtonProps } from './Button'
 
 type BackButtonProps = ButtonProps & {
-  to: keyof FileRoutesByTo
+  render: React.ReactNode
+  params?: Record<string, string>
 }
 
-export const BackButton = ({ children, to, ...props }: BackButtonProps) => {
+export const BackButton = ({ children, render, ...props }: BackButtonProps) => {
   return (
     <Button
       type="button"
-      render={<Link to={to} />}
+      render={render}
       className="w-fit"
       startIcon={<ArrowLeft />}
       variant="secondary"

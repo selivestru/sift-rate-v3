@@ -27,7 +27,7 @@ export const PostReviewCard = ({ review }: PostReviewCardProps) => {
           params={{ externalId: media.externalId }}
           aria-label={`Open ${media.title}`}
           className={cn(
-            'bg-muted border-border relative shrink-0 overflow-hidden rounded-lg border outline-none',
+            'bg-muted border-border relative z-10 shrink-0 overflow-hidden rounded-lg border outline-none',
             'focus-visible:ring-ring/40 focus-visible:ring-2',
             isMusic ? 'aspect-square w-20 sm:w-24' : 'aspect-2/3 w-20 sm:w-24',
           )}
@@ -46,7 +46,7 @@ export const PostReviewCard = ({ review }: PostReviewCardProps) => {
           )}
         </Link>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <div className="flex flex-1 flex-col gap-1.5">
           <div className="flex flex-wrap items-center gap-1.5">
             <MediaTypeBadge mediaType={media.mediaType} />
             <RatingBadge rating={review.rating} />
@@ -56,7 +56,7 @@ export const PostReviewCard = ({ review }: PostReviewCardProps) => {
             to={detailTo}
             params={{ externalId: media.externalId }}
             className={cn(
-              'text-foreground hover:text-primary focus-visible:text-primary line-clamp-2 w-fit text-base font-semibold tracking-tight outline-none transition-colors duration-200',
+              'text-foreground hover:text-primary focus-visible:text-primary relative z-10 line-clamp-2 w-fit text-base font-semibold tracking-tight outline-none transition-colors duration-200',
               'sm:text-xl',
             )}
           >
@@ -65,7 +65,7 @@ export const PostReviewCard = ({ review }: PostReviewCardProps) => {
         </div>
       </div>
 
-      {review.content && <PostContent content={review.content} />}
+      {review.content && <PostContent isReview content={review.content} />}
     </div>
   )
 }

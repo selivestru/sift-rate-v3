@@ -19,7 +19,7 @@ export const RegisterForm = () => {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <BackButton to="/auth/login" />
+        <BackButton render={<Link to="/auth/login" />} />
 
         <AuthFormHeader
           title="Create your account"

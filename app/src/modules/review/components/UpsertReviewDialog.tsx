@@ -2,6 +2,7 @@ import { Controller } from 'react-hook-form'
 import { Star, XCircle } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
+import { CONTENT_MAX_LENGTH } from '~/common/schema/content.schema'
 import type { MediaRef } from '~/common/types/media-ref.types'
 import { Alert, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
@@ -11,7 +12,6 @@ import { Textarea } from '~/common/ui/Textarea'
 import { cn } from '~/common/utils/cn'
 
 import { useUpsertReviewForm } from '../hooks/useUpsertReviewForm'
-import { MAX_REVIEW_LENGTH } from '../schema/rate.schema'
 import type { Review } from '../types/review.types'
 
 interface UpsertReviewDialogProps {
@@ -133,12 +133,12 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                       className={cn(
                         'text-xs tabular-nums',
                         field.value &&
-                          field.value.length >= MAX_REVIEW_LENGTH &&
+                          field.value.length >= CONTENT_MAX_LENGTH &&
                           'text-destructive',
                       )}
                       aria-live="polite"
                     >
-                      {field.value?.length ?? 0}/{MAX_REVIEW_LENGTH}
+                      {field.value?.length ?? 0}/{CONTENT_MAX_LENGTH}
                     </span>
                   </div>
                   <Textarea
@@ -147,7 +147,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                     onChange={(e) => field.onChange(e.target.value)}
                     onBlur={field.onBlur}
                     placeholder="What stayed with you?"
-                    maxLength={MAX_REVIEW_LENGTH}
+                    maxLength={CONTENT_MAX_LENGTH}
                     className="border-border h-50 scrollbar-none break-all"
                   />
                   {fieldState.error?.message && <FieldError>{fieldState.error.message}</FieldError>}

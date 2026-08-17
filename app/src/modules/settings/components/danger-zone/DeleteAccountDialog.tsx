@@ -16,8 +16,7 @@ import {
 import { PasswordField } from '~/common/ui/PasswordField'
 import { TwoFactorDialog } from '~/common/ui/TwoFactorDialog'
 import { cn } from '~/common/utils/cn'
-import { AUTH_METHOD } from '~/modules/auth'
-import { useAuthStore } from '~/modules/auth/store/auth.store'
+import { AUTH_METHOD, useAuthStore } from '~/modules/auth'
 
 import { useDeleteAccountForm } from '../../hooks/useDeleteAccountForm'
 

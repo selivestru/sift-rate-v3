@@ -425,5 +425,5 @@ html.composer-vt::view-transition-new(root) {
 }
 
 .app-container {
-  @apply max-w-237.5;
+  @apply mx-auto w-full max-w-237.5;
 }

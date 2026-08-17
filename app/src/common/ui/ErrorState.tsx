@@ -15,7 +15,7 @@ interface ErrorStateProps {
 
 export const ErrorState = ({
   title = 'Something went wrong',
-  description,
+  description = 'Please try again later.',
   onRetry,
   retryLabel = 'Retry',
   action,

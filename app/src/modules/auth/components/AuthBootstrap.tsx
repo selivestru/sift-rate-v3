@@ -1,3 +1,4 @@
+import { isHTTPError } from 'ky'
 import { useEffect } from 'react'
 import z from 'zod'
 
@@ -24,9 +25,12 @@ export const AuthBootstrap = ({ children }: { children: React.ReactNode }) => {
       try {
         const response = await authApi.me()
         setUser(response.user)
-      } catch {
+      } catch (error) {
         setUser(null)
-        removeStorageItem('has_session')
+
+        if (isHTTPError(error) && error.response.status === 403) {
+          removeStorageItem('has_session')
+        }
       } finally {
         setIsLoading(false)
       }

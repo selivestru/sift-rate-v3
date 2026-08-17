@@ -50,7 +50,10 @@ export class FeedService {
     where?: Prisma.PostWhereInput,
   ): Promise<FeedResponse> {
     const posts = await this.prisma.post.findMany({
-      where,
+      where: {
+        ...where,
+        parentId: null,
+      },
       ...(cursor && {
         cursor: { id: cursor },
         skip: 1,

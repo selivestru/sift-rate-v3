@@ -1,14 +1,6 @@
 import { Transform, Type } from 'class-transformer'
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-} from 'class-validator'
+import { IsEnum, IsInt, IsString, Max, MaxLength, Min, MinLength } from 'class-validator'
+import { Content } from '~/common/decorators/content.decorator'
 import { Trim } from '~/common/decorators/trim.decorator'
 import { MediaType } from '~/generated/prisma/enums'
 import { transformMediaTypeSlug } from '~/modules/media/types/media.types'
@@ -30,9 +22,6 @@ export class UpsertReviewDto {
   @Max(10)
   rating!: number
 
-  @Trim()
-  @IsOptional()
-  @IsString()
-  @MaxLength(1000)
+  @Content({ optional: true })
   content!: string | null
 }

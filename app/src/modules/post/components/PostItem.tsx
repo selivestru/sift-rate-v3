@@ -3,6 +3,7 @@ import { Comment } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Button } from '~/common/ui/Button'
+import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
@@ -14,58 +15,105 @@ import { PostReviewCard } from './PostReviewCard'
 
 interface PostItemProps {
   data: Post
+  isParent?: boolean
 }
 
-export const PostItem = ({ data }: PostItemProps) => {
-  return (
-    <article className="hover:bg-muted/35 grid grid-cols-[auto_1fr] gap-2 p-2 transition-colors duration-300 sm:gap-3 sm:p-4">
-      <Link to="/$username" params={{ username: data.user.username }} className="h-fit">
-        <Avatar size="lg">
-          <AvatarImage src={data.user.avatarUrl ?? undefined} alt={data.user.displayName} />
-          <AvatarFallback className="text-base sm:text-lg">
-            {getFirstLetter(data.user.displayName)}
-          </AvatarFallback>
-        </Avatar>
+export const PostItem = ({ data, isParent = false }: PostItemProps) => {
+  const avatar = (
+    <Link
+      to="/$username"
+      params={{ username: data.user.username }}
+      className="relative z-10 h-fit shrink-0"
+    >
+      <Avatar size="lg">
+        <AvatarImage src={data.user.avatarUrl ?? undefined} alt={data.user.displayName} />
+        <AvatarFallback className="text-base sm:text-lg">
+          {getFirstLetter(data.user.displayName)}
+        </AvatarFallback>
+      </Avatar>
+    </Link>
+  )
+
+  const userInfo = (
+    <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+      <Link
+        to="/$username"
+        params={{ username: data.user.username }}
+        className="hover:text-primary focus-visible:text-primary relative z-10 truncate font-semibold outline-none sm:text-base"
+      >
+        {data.user.displayName}
       </Link>
+      <span className="text-muted-foreground truncate text-sm">@{data.user.username}</span>
+      <span className="text-muted-foreground text-sm" aria-hidden>
+        ·
+      </span>
+      <time className="text-muted-foreground text-sm" dateTime={data.createdAt}>
+        {formatRelativeTime(data.createdAt)}
+      </time>
+    </div>
+  )
 
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-            <Link
-              to="/$username"
-              params={{ username: data.user.username }}
-              className="hover:text-primary focus-visible:text-primary truncate font-semibold outline-none sm:text-base"
-            >
-              {data.user.displayName}
-            </Link>
-            <span className="text-muted-foreground truncate text-sm">@{data.user.username}</span>
-            <span className="text-muted-foreground text-sm" aria-hidden>
-              ·
-            </span>
-            <time className="text-muted-foreground text-sm" dateTime={data.createdAt}>
-              {formatRelativeTime(data.createdAt)}
-            </time>
-          </div>
+  const content = data.review ? (
+    <PostReviewCard review={data.review} />
+  ) : (
+    data.content && <PostContent isReview={false} content={data.content} />
+  )
+
+  const actions = (
+    <div className="relative z-10 -ml-3 flex w-fit items-center gap-1">
+      <LikePostButton
+        postId={data.id}
+        parentId={data.parentId}
+        isLiked={data.isLiked}
+        likesCount={data.likesCount}
+      />
+      <Button
+        variant="ghost"
+        size="sm"
+        startIcon={<Comment className="size-5" />}
+        className="text-muted-foreground relative z-10 h-9 gap-2 rounded-full px-3!"
+        aria-label="Open comments"
+        render={<Link to="/post/$postId" params={{ postId: data.id }} />}
+      >
+        {formatCompactNumber(data.repliesCount)}
+      </Button>
+    </div>
+  )
+
+  const overlay = (
+    <Link
+      to="/post/$postId"
+      params={{ postId: data.id }}
+      aria-label={`Open post by ${data.user.displayName}`}
+      className="focus-visible:ring-ring/40 absolute inset-0 z-0 focus-visible:ring-2 focus-visible:outline-none"
+    />
+  )
+
+  if (isParent) {
+    return (
+      <article className="hover:bg-muted/35 relative flex flex-col gap-2 p-2 pb-2! transition-colors duration-300 sm:gap-3 sm:p-4">
+        {overlay}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {avatar}
+          {userInfo}
         </div>
+        {content}
+        {actions}
+      </article>
+    )
+  }
 
-        {data.review ? (
-          <PostReviewCard review={data.review} />
-        ) : (
-          data.content && <PostContent content={data.content} />
-        )}
+  return (
+    <article className="hover:bg-muted/35 relative grid grid-cols-[auto_1fr] gap-2 p-2 pb-2! transition-colors duration-300 sm:gap-3 sm:p-4">
+      {overlay}
+      {avatar}
 
-        <div className="-ml-3 flex items-center gap-1">
-          <LikePostButton postId={data.id} isLiked={data.isLiked} likesCount={data.likesCount} />
-          <Button
-            variant="ghost"
-            size="sm"
-            startIcon={<Comment className="size-5" />}
-            className="text-muted-foreground h-9 gap-2 rounded-full px-3!"
-            aria-label="Open comments"
-          >
-            {formatCompactNumber(data.commentsCount)}
-          </Button>
+      <div>
+        <div className={cn('flex items-center justify-between gap-2', data.review && 'mb-1.5')}>
+          {userInfo}
         </div>
+        {content}
+        {actions}
       </div>
     </article>
   )

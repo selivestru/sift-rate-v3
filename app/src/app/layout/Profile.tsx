@@ -11,8 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '~/common/ui/DropdownMenu'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
-import { useAuthStore } from '~/modules/auth'
-import { useLogout } from '~/modules/auth/hooks/useLogout'
+import { useAuthStore, useLogout } from '~/modules/auth'
 
 export const Profile = () => {
   const user = useAuthStore((state) => state.user!)

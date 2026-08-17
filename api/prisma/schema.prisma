@@ -57,9 +57,7 @@ model User {
   plannedItems PlannedItem[]
   rankedLists  RankedList[]
   posts        Post[]
-  comments     Comment[]
   postLikes    PostLike[]
-  commentLikes CommentLike[]
 
   @@unique([email])
   @@unique([username])
@@ -151,39 +149,26 @@ model RankedItem {
 }
 
 model Post {
-  id        String   @id @default(uuid(7))
+  id        String    @id @default(uuid(7))
   content   String?
   userId    String
-  reviewId  String?  @unique
-  createdAt DateTime @default(now())
-
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  review   Review?    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  comments Comment[]
-  likes    PostLike[]
-
-  @@index([createdAt(sort: Desc), id(sort: Desc)])
-  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
-}
-
-model Comment {
-  id        String    @id @default(uuid(7))
-  postId    String
-  userId    String
+  reviewId  String?   @unique
   parentId  String?
-  content   String
+  rootId    String?
   deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parent  Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction)
-  replies Comment[]     @relation("CommentReplies")
-  likes   CommentLike[]
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review Review?    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  parent Post?      @relation("PostReplies", fields: [parentId], references: [id], onDelete: NoAction)
+  replies Post[]    @relation("PostReplies")
+  likes   PostLike[]
 
-  @@index([postId, parentId, createdAt(sort: Desc), id(sort: Desc)])
-  @@index([parentId, createdAt, id])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([parentId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([rootId, createdAt, id])
 }
 
 model PostLike {
@@ -196,18 +181,5 @@ model PostLike {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([postId, userId])
-  @@index([userId])
-}
-
-model CommentLike {
-  id        String   @id @default(uuid(7))
-  commentId String
-  userId    String
-  createdAt DateTime @default(now())
-
-  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([commentId, userId])
   @@index([userId])
 }

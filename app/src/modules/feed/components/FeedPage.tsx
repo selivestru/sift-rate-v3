@@ -1,5 +1,6 @@
 import { m } from 'motion/react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import type { FeedTabKey } from '~/common/constants/queries-keys'
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
@@ -8,10 +9,9 @@ import { ErrorState } from '~/common/ui/ErrorState'
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore } from '~/modules/auth'
-import { PostItem } from '~/modules/post'
+import { PostItem, PostListSkeleton } from '~/modules/post'
 
 import { useGetFeedQuery } from '../hooks/useGetFeedQuery'
-import { FeedRowSkeletons } from './FeedRowSkeletons'
 import { PostComposer } from './PostComposer'
 
 const tabs: Array<{ title: string; tab: FeedTabKey }> = [
@@ -30,20 +30,9 @@ export const FeedPage = () => {
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
-  const { data, isPending, isError, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useGetFeedQuery(feedTab)
-
-  const items = data?.pages.flatMap((page) => page.data) ?? []
-  const isEmpty = !isFetching && !isError && items.length === 0
-
-  const loadMoreRef = useIntersectionObserver(
-    () => fetchNextPage(),
-    hasNextPage && !isFetchingNextPage,
-  )
-
   return (
     <div className="divide-border border-border divide-y border-b">
-      {!isAuthenticated && (
+      {isAuthenticated && (
         <>
           <nav aria-label="Feed" className="grid grid-cols-2">
             {tabs.map(({ title, tab }) => {
@@ -79,23 +68,39 @@ export const FeedPage = () => {
         </>
       )}
 
-      {isPending && <FeedRowSkeletons />}
+      <ErrorBoundary fallback={<ErrorState />}>
+        <Suspense fallback={<PostListSkeleton />}>
+          <FeedList tab={feedTab} />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  )
+}
 
-      {isError && <ErrorState />}
+const FeedList = ({ tab }: { tab: FeedTabKey }) => {
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useGetFeedQuery(tab)
 
-      {isEmpty && <EmptyState title="No activity yet" />}
+  const items = data.pages.flatMap((page) => page.data)
+  const isEmpty = !isFetching && items.length === 0
 
-      {!isFetching && !isError && items.length > 0 && (
-        <>
-          {items.map((item) => (
-            <PostItem key={item.id} data={item} />
-          ))}
-        </>
-      )}
+  const loadMoreRef = useIntersectionObserver(
+    () => fetchNextPage(),
+    hasNextPage && !isFetchingNextPage,
+  )
+
+  if (isEmpty) {
+    return <EmptyState title="No activity yet" />
+  }
+
+  return (
+    <>
+      {items.map((item) => (
+        <PostItem key={item.id} data={item} />
+      ))}
 
       <div ref={loadMoreRef} className={cn(isFetching && 'py-5 text-center')}>
-        {!isPending && isFetching && <Spinner className="inline-flex size-10" />}
+        {isFetching && <Spinner className="inline-flex size-10" />}
       </div>
-    </div>
+    </>
   )
 }

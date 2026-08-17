@@ -22,9 +22,7 @@ export const useLogout = () => {
       }
 
       setUser(null)
-
       removeStorageItem('has_session')
-
       queryClient.clear()
     },
   })

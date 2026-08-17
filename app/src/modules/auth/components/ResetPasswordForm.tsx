@@ -17,7 +17,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <BackButton to="/auth/login" />
+      <BackButton render={<Link to="/auth/login" />} />
       {result ? (
         <>
           <AuthFormHeader

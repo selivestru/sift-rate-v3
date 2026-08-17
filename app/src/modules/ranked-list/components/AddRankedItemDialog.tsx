@@ -19,7 +19,7 @@ import { Input } from '~/common/ui/Input'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
-import { useMyReviewsQuery } from '~/modules/review/hooks/useMyReviewsQuery'
+import { useMyReviewsQuery } from '~/modules/review'
 
 import { useAddRankedItem } from '../hooks/useAddRankedItem'
 import type { RankedListItem } from '../types/ranked-list.types'

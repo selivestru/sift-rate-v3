@@ -95,7 +95,7 @@ modules/<name>/
 
 Rules:
 
-- Public imports from other layers should go through the module barrel when practical.
+- **Barrel-first.** New public files (hooks, components, schemas, api, stores, types) must be re-exported from the module's `index.ts` (`export * from './file'`) before being imported by other modules. Cross-module imports go through the barrel — `import { useCreatePostForm } from '~/modules/post'` — never deep paths like `~/modules/post/hooks/useCreatePostForm`.
 - Routes stay thin: load guards + render module/page components.
 - New domains should follow the same shape; do not invent a new folder taxonomy.
 

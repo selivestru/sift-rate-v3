@@ -4,17 +4,19 @@ import { X } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Button } from '~/common/ui/Button'
-import { Textarea } from '~/common/ui/Textarea'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore } from '~/modules/auth'
+
+import { PostComposerForm } from './PostComposerForm'
 
 const COMPOSER_CARD_ID = 'post-composer-card'
 
 export const PostComposer = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [content, setContent] = useState('')
 
   const user = useAuthStore((state) => state.user)
+
+  const close = () => setIsOpen(false)
 
   useEffect(() => {
     if (!isOpen) return
@@ -65,7 +67,7 @@ export const PostComposer = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              onClick={() => setIsOpen(false)}
+              onClick={close}
               className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             />
             <m.div
@@ -86,29 +88,12 @@ export const PostComposer = () => {
               >
                 <div className="flex items-center justify-between">
                   <h2 className="text-base font-medium">Create post</h2>
-                  <Button
-                    isIconOnly
-                    variant="ghost"
-                    size="sm"
-                    aria-label="Close"
-                    onClick={() => setIsOpen(false)}
-                  >
+                  <Button isIconOnly variant="ghost" size="sm" aria-label="Close" onClick={close}>
                     <X />
                   </Button>
                 </div>
 
-                <Textarea
-                  autoFocus
-                  placeholder="What's new?"
-                  value={content}
-                  onChange={(event) => setContent(event.target.value)}
-                  aria-label="Post content"
-                  className="min-h-52"
-                />
-
-                <div className="flex justify-end">
-                  <Button onClick={() => setIsOpen(false)}>Publish post</Button>
-                </div>
+                <PostComposerForm onClose={close} />
               </m.div>
             </m.div>
           </>

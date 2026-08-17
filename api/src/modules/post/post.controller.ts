@@ -1,19 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 
-import { CommentService } from './comment.service'
-import { CreateCommentDto } from './dto/create-comment.dto'
+import { CreatePostDto } from './dto/create-post.dto'
+import { ListRepliesQueryDto } from './dto/list-replies.query'
+import { UpdatePostDto } from './dto/update-post.dto'
 import { PostService } from './post.service'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { OptionalAuth } from '~/common/decorators/optional-auth.decorator'
 import { OptionalCurrentUser } from '~/common/decorators/optional-current-user.decorator'
-import { PaginationCursor } from '~/common/types/pagination-cursor.types'
 
 @Controller('posts')
 export class PostController {
-  constructor(
-    private readonly postService: PostService,
-    private readonly commentService: CommentService,
-  ) {}
+  constructor(private readonly postService: PostService) {}
 
   @OptionalAuth()
   @Get(':id')
@@ -22,22 +19,41 @@ export class PostController {
   }
 
   @OptionalAuth()
-  @Get(':id/comments')
-  listComments(
+  @Get(':id/replies')
+  listReplies(
     @Param('id') id: string,
-    @Query() query?: PaginationCursor,
+    @Query() query: ListRepliesQueryDto,
     @OptionalCurrentUser('userId') userId?: string,
   ) {
-    return this.postService.listComments(id, query?.cursor, userId)
+    return this.postService.listReplies(id, query, userId)
   }
 
-  @Post(':id/comments')
-  createComment(
+  @Post()
+  createPost(@CurrentUser('userId') userId: string, @Body() dto: CreatePostDto) {
+    return this.postService.createPost(userId, dto)
+  }
+
+  @Post(':id/replies')
+  createReply(
     @Param('id') id: string,
     @CurrentUser('userId') userId: string,
-    @Body() dto: CreateCommentDto,
+    @Body() dto: CreatePostDto,
   ) {
-    return this.commentService.createComment(id, userId, dto)
+    return this.postService.createReply(id, userId, dto)
+  }
+
+  @Patch(':id')
+  updatePost(
+    @Param('id') id: string,
+    @CurrentUser('userId') userId: string,
+    @Body() dto: UpdatePostDto,
+  ) {
+    return this.postService.updatePost(id, userId, dto)
+  }
+
+  @Delete(':id')
+  deletePost(@Param('id') id: string, @CurrentUser('userId') userId: string) {
+    return this.postService.deletePost(id, userId)
   }
 
   @Post(':id/like')

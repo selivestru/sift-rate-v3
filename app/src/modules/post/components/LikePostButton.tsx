@@ -3,12 +3,13 @@ import { LikeButton } from './LikeButton'
 
 interface LikePostButtonProps {
   postId: string
+  parentId: string | null
   isLiked: boolean
   likesCount: number
 }
 
-export const LikePostButton = ({ postId, isLiked, likesCount }: LikePostButtonProps) => {
-  const { toggleLike, isPending } = useToggleLikePost(postId, isLiked)
+export const LikePostButton = ({ postId, parentId, isLiked, likesCount }: LikePostButtonProps) => {
+  const { toggleLike, isPending } = useToggleLikePost(postId, isLiked, parentId)
 
   return (
     <LikeButton

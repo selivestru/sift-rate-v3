@@ -10,10 +10,10 @@ export const api = ky.create({
     afterResponse: [
       ({ response }) => {
         if (response.status === 403) {
-          console.debug('ERROR')
+          console.debug('ERROR', response)
 
           if (!location.pathname.includes('/auth/callback')) {
-            window.location.href = '/' // TODO: FIX
+            // window.location.href = '/' // TODO: FIX
           }
         }
       },

@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
-import { ProfileError, ProfilePage, ProfileSkeleton } from '~/modules/profile'
-import { mockProfile } from '~/modules/profile/utils/mock-profile'
+import { mockProfile, ProfileError, ProfilePage, ProfileSkeleton } from '~/modules/profile'
 
 export const Route = createFileRoute('/_app/$username')({
   loader: async ({ context, params }) => {

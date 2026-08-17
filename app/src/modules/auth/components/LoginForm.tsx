@@ -20,7 +20,7 @@ export const LoginForm = () => {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <BackButton to="/" />
+        <BackButton render={<Link to="/" />} />
 
         <AuthFormHeader title="Welcome back" subtitle="Sign in to your media archive" />
 

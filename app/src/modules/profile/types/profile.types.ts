@@ -1,10 +1,6 @@
 import type { MediaType } from '~/common/constants/media-type'
 import type { Subscription } from '~/modules/auth'
 
-export interface ProfileResponse {
-  id: string
-}
-
 export interface ProfileUser {
   id: string
   username: string

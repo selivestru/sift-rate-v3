@@ -1,4 +1,4 @@
-import type { ProfileResponse } from '../types/profile.types'
+import type { Profile } from '../types/profile.types'
 import { AchievementsGrid } from './AchievementsGrid'
 import { ProfileHero } from './ProfileHero'
 import { RatingDistribution } from './RatingDistribution'
@@ -6,7 +6,7 @@ import { ReviewActivity } from './ReviewActivity'
 import { ReviewStatsSection } from './ReviewStatsSection'
 
 interface ProfilePageProps {
-  data: ProfileResponse
+  data: Profile
 }
 
 export const ProfilePage = ({ data }: ProfilePageProps) => {

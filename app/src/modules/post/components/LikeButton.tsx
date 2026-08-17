@@ -1,8 +1,10 @@
 import { Heart } from 'reicon-react'
+import { toast } from 'sonner'
 
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
+import { useAuthStore } from '~/modules/auth'
 
 interface LikeButtonProps {
   isLiked: boolean
@@ -12,6 +14,17 @@ interface LikeButtonProps {
 }
 
 export const LikeButton = ({ isLiked, likesCount, onClick, isDisabled }: LikeButtonProps) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+
+  const handleClick = () => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to like posts')
+      return
+    }
+
+    onClick()
+  }
+
   return (
     <Button
       variant="ghost"
@@ -23,7 +36,7 @@ export const LikeButton = ({ isLiked, likesCount, onClick, isDisabled }: LikeBut
       )}
       aria-label={isLiked ? 'Unlike activity' : 'Like activity'}
       aria-pressed={isLiked}
-      onClick={onClick}
+      onClick={handleClick}
       isDisabled={isDisabled}
     >
       {formatCompactNumber(likesCount)}

@@ -19,4 +19,6 @@ export const QUERIES_KEYS = {
   RANKED_LISTS: ['ranked-lists'],
   PROFILE: (username: string) => ['profile', username],
   FEED: (tab: FeedTabKey) => ['feed', tab],
+  POST: (postId: string) => ['post', postId],
+  POST_REPLIES: (postId: string) => ['post', postId, 'replies'],
 }

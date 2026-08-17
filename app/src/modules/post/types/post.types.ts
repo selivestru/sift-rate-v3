@@ -1,3 +1,4 @@
+import type { ResponseWithCursor } from '~/common/types/response-with-cursor.types'
 import type { Review } from '~/modules/review'
 
 export interface Author {
@@ -13,13 +14,19 @@ export interface Post {
   userId: string
   reviewId: string | null
   createdAt: string
+  updatedAt: string
   user: Author
   review: Review | null
   likesCount: number
-  commentsCount: number
+  repliesCount: number
   isLiked: boolean
+  deleted: boolean
+  parentId: string | null
+  rootId: string | null
 }
 
 export interface LikePostResponse {
   success: boolean
 }
+
+export type PostListResponse = ResponseWithCursor<Post>

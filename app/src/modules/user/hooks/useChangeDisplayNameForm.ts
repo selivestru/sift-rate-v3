@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
-import { useAuthStore } from '~/modules/auth/store/auth.store'
+import { useAuthStore } from '~/modules/auth'
 
 import { changeDisplayNameSchema, type ChangeDisplayNameInput } from '../schema/displayName.schema'
 import { useChangeDisplayNameMutation } from './useChangeDisplayNameMutation'
