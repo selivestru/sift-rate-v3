@@ -20,7 +20,6 @@ export interface Post {
   likesCount: number
   repliesCount: number
   isLiked: boolean
-  deleted: boolean
   parentId: string | null
   rootId: string | null
 }

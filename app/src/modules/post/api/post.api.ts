@@ -20,6 +20,12 @@ export const postApi = {
   createReply: async (postId: string, body: CreatePostInput) => {
     return api.post<Post>(`/posts/${postId}/replies`, { json: body }).json()
   },
+  updatePost: async (id: string, body: CreatePostInput) => {
+    return api.patch<Post>(`/posts/${id}`, { json: body }).json()
+  },
+  deletePost: async (id: string) => {
+    return api.delete<Post>(`/posts/${id}`).json()
+  },
   likePost: async (id: string) => {
     return api.post<LikePostResponse>(`/posts/${id}/like`).json()
   },

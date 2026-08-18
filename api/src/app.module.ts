@@ -53,6 +53,7 @@ import Redis from 'ioredis'
         storage: new ThrottlerStorageRedisService(
           new Redis(config.get('REDIS_URL', { infer: true })),
         ),
+        errorMessage: 'Too many requests, please try again later',
       }),
     }),
     S3Module,

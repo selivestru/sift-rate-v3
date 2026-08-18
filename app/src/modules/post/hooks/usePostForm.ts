@@ -8,13 +8,25 @@ import { objectKeys } from '~/common/utils/typedObject'
 
 import { createPostSchema, type CreatePostInput } from '../schema/create-post.schema'
 import { useCreatePostMutation } from './useCreatePostMutation'
+import { useUpdatePostMutation } from './useUpdatePostMutation'
 
-interface UseCreatePostFormOptions {
+interface UsePostFormOptions {
+  postId?: string
+  initialContent?: string
+  parentId?: string | null
   onSuccess: () => void
 }
 
-export const useCreatePostForm = ({ onSuccess }: UseCreatePostFormOptions) => {
+export const usePostForm = ({
+  postId,
+  initialContent,
+  parentId,
+  onSuccess,
+}: UsePostFormOptions) => {
+  const isEdit = postId != null
+
   const createMutation = useCreatePostMutation()
+  const updateMutation = useUpdatePostMutation(parentId ?? null)
 
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -23,10 +35,11 @@ export const useCreatePostForm = ({ onSuccess }: UseCreatePostFormOptions) => {
     handleSubmit,
     setError,
     watch,
+    reset,
     formState: { errors, isValid },
   } = useForm<CreatePostInput>({
     defaultValues: {
-      content: '',
+      content: initialContent ?? '',
     },
     mode: 'onChange',
     resolver: zodResolver(createPostSchema),
@@ -38,8 +51,15 @@ export const useCreatePostForm = ({ onSuccess }: UseCreatePostFormOptions) => {
     setServerError(null)
 
     try {
-      await createMutation.mutateAsync(values)
+      if (isEdit) {
+        await updateMutation.mutateAsync({ postId: postId!, content: values.content })
+      } else {
+        await createMutation.mutateAsync(values)
+      }
+
       onSuccess()
+
+      setTimeout(reset, 100)
     } catch (error) {
       const apiError = await getApiError(error)
       applyApiFormError({
@@ -55,9 +75,10 @@ export const useCreatePostForm = ({ onSuccess }: UseCreatePostFormOptions) => {
     register,
     errors,
     onSubmit,
-    isLoading: createMutation.isPending,
+    isLoading: createMutation.isPending || updateMutation.isPending,
     serverError,
     isValid,
     content,
+    reset,
   }
 }

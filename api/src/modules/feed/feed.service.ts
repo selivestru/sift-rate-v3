@@ -52,6 +52,7 @@ export class FeedService {
     const posts = await this.prisma.post.findMany({
       where: {
         ...where,
+        deletedAt: null,
         parentId: null,
       },
       ...(cursor && {

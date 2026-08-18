@@ -9,7 +9,7 @@ import { ErrorState } from '~/common/ui/ErrorState'
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore } from '~/modules/auth'
-import { PostItem, PostListSkeleton } from '~/modules/post'
+import { PostItem, PostListSkeleton, PostModals } from '~/modules/post'
 
 import { useGetFeedQuery } from '../hooks/useGetFeedQuery'
 import { PostComposer } from './PostComposer'
@@ -73,6 +73,8 @@ export const FeedPage = () => {
           <FeedList tab={feedTab} />
         </Suspense>
       </ErrorBoundary>
+
+      <PostModals />
     </div>
   )
 }

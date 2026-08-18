@@ -1,10 +1,11 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 
 import { BackButton } from '~/common/ui/BackButton'
 import { useAuthStore } from '~/modules/auth'
 
 import { useGetPostQuery } from '../hooks/useGetPostQuery'
 import { PostItem } from './PostItem'
+import { PostModals } from './PostModals'
 import { PostReplies } from './PostReplies'
 import { PostReplyInput } from './PostReplyInput'
 
@@ -13,6 +14,7 @@ interface PostDetailPageProps {
 }
 
 export const PostDetailPage = ({ postId }: PostDetailPageProps) => {
+  const navigate = useNavigate()
   const post = useGetPostQuery(postId)
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -29,6 +31,8 @@ export const PostDetailPage = ({ postId }: PostDetailPageProps) => {
       <PostItem isParent data={post} />
       {isAuthenticated && <PostReplyInput postId={post.id} author={post.user.username} />}
       <PostReplies postId={post.id} />
+
+      <PostModals parentPostId={post.id} onParentDeleted={() => navigate({ to: '/' })} />
     </div>
   )
 }

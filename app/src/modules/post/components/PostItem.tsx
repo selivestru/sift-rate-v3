@@ -11,6 +11,7 @@ import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import type { Post } from '../types/post.types'
 import { LikePostButton } from './LikePostButton'
 import { PostContent } from './PostContent'
+import { PostDropdownMenu } from './PostDropdownMenu'
 import { PostReviewCard } from './PostReviewCard'
 
 interface PostItemProps {
@@ -23,7 +24,7 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
     <Link
       to="/$username"
       params={{ username: data.user.username }}
-      className="relative z-10 h-fit shrink-0"
+      className="z-px relative h-fit shrink-0"
     >
       <Avatar size="lg">
         <AvatarImage src={data.user.avatarUrl ?? undefined} alt={data.user.displayName} />
@@ -35,21 +36,23 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
   )
 
   const userInfo = (
-    <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+    <div className="z-px relative flex items-center gap-x-1.5 overflow-hidden max-sm:flex-col max-sm:items-start">
       <Link
         to="/$username"
         params={{ username: data.user.username }}
-        className="hover:text-primary focus-visible:text-primary relative z-10 truncate font-semibold outline-none sm:text-base"
+        className="hover:text-primary focus-visible:text-primary z-px relative truncate font-semibold outline-none sm:text-base"
       >
         {data.user.displayName}
       </Link>
-      <span className="text-muted-foreground truncate text-sm">@{data.user.username}</span>
-      <span className="text-muted-foreground text-sm" aria-hidden>
-        ·
-      </span>
-      <time className="text-muted-foreground text-sm" dateTime={data.createdAt}>
-        {formatRelativeTime(data.createdAt)}
-      </time>
+      <div className="flex items-center gap-1.5">
+        <span className="text-muted-foreground truncate text-sm">@{data.user.username}</span>
+        <span className="text-muted-foreground shrink-0 text-sm" aria-hidden>
+          ·
+        </span>
+        <time className="text-muted-foreground shrink-0 text-sm" dateTime={data.createdAt}>
+          {formatRelativeTime(data.createdAt)}
+        </time>
+      </div>
     </div>
   )
 
@@ -60,7 +63,7 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
   )
 
   const actions = (
-    <div className="relative z-10 -ml-3 flex w-fit items-center gap-1">
+    <div className="z-px relative -ml-3 flex w-fit items-center gap-1">
       <LikePostButton
         postId={data.id}
         parentId={data.parentId}
@@ -71,7 +74,7 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
         variant="ghost"
         size="sm"
         startIcon={<Comment className="size-5" />}
-        className="text-muted-foreground relative z-10 h-9 gap-2 rounded-full px-3!"
+        className="text-muted-foreground z-px relative h-9 gap-2 rounded-full px-3!"
         aria-label="Open comments"
         render={<Link to="/post/$postId" params={{ postId: data.id }} />}
       >
@@ -79,6 +82,8 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
       </Button>
     </div>
   )
+
+  const menu = <PostDropdownMenu post={data} />
 
   const overlay = (
     <Link
@@ -91,11 +96,12 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
 
   if (isParent) {
     return (
-      <article className="hover:bg-muted/35 relative flex flex-col gap-2 p-2 pb-2! transition-colors duration-300 sm:gap-3 sm:p-4">
+      <article className="hover:bg-muted/35 relative flex flex-col gap-2 p-3 pb-2! transition-colors duration-300 sm:gap-3 sm:p-4">
         {overlay}
         <div className="flex items-center gap-2 sm:gap-3">
           {avatar}
           {userInfo}
+          <div className="ml-auto">{menu}</div>
         </div>
         {content}
         {actions}
@@ -111,6 +117,7 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
       <div>
         <div className={cn('flex items-center justify-between gap-2', data.review && 'mb-1.5')}>
           {userInfo}
+          {menu}
         </div>
         {content}
         {actions}

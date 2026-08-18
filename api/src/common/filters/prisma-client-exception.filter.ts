@@ -8,10 +8,6 @@ export class PrismaClientExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(PrismaClientExceptionFilter.name)
 
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost): void {
-    if (host.getType() !== 'http') {
-      throw exception
-    }
-
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
 
