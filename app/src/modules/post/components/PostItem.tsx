@@ -3,7 +3,6 @@ import { Comment } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Button } from '~/common/ui/Button'
-import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
@@ -115,7 +114,7 @@ export const PostItem = ({ data, isParent = false }: PostItemProps) => {
       {avatar}
 
       <div>
-        <div className={cn('flex items-center justify-between gap-2', data.review && 'mb-1.5')}>
+        <div className="flex items-center justify-between gap-2">
           {userInfo}
           {menu}
         </div>

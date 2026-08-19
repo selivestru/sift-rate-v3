@@ -18,16 +18,30 @@ export class FollowService {
 
     await this.userService.findById(followingId)
 
-    await this.prisma.follow.upsert({
-      where: {
-        followerId_followingId: { followerId, followingId },
-      },
-      create: { followerId, followingId },
-      update: {},
+    const isFollowing = await this.isFollowing(followerId, followingId)
+
+    if (isFollowing) {
+      throw new BadRequestException('Already following')
+    }
+
+    await this.prisma.follow.create({
+      data: { followerId, followingId },
     })
   }
 
   async unfollow(followerId: string, followingId: string): Promise<void> {
+    if (followerId === followingId) {
+      throw new BadRequestException('You cannot unfollow yourself')
+    }
+
+    await this.userService.findById(followingId)
+
+    const isFollowing = await this.isFollowing(followerId, followingId)
+
+    if (!isFollowing) {
+      throw new BadRequestException('Not following')
+    }
+
     await this.prisma.follow.deleteMany({
       where: { followerId, followingId },
     })
