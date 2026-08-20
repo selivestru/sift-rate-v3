@@ -2,6 +2,7 @@ import { ThemeProvider } from '~/common/theme'
 import { Toaster } from '~/common/ui/Sonner'
 import { TooltipProvider } from '~/common/ui/Tooltip'
 import { AuthBootstrap } from '~/modules/auth'
+import { NotificationsProvider } from '~/modules/notifications'
 
 import { MotionProvider } from './MotionProvider'
 import { TanstackQueryProvider } from './TanstackQueryProvider'
@@ -13,9 +14,11 @@ export const Providers = () => {
       <MotionProvider>
         <ThemeProvider>
           <AuthBootstrap>
-            <TooltipProvider>
-              <TanstackRouterProvider />
-            </TooltipProvider>
+            <NotificationsProvider>
+              <TooltipProvider>
+                <TanstackRouterProvider />
+              </TooltipProvider>
+            </NotificationsProvider>
           </AuthBootstrap>
         </ThemeProvider>
       </MotionProvider>

@@ -1,11 +1,10 @@
-import { Link } from '@tanstack/react-router'
-import { Crown, PenCircle } from 'reicon-react'
+import { Crown } from 'reicon-react'
 
+import { subscriptionMeta } from '~/common/constants/subscriptions-meta'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Badge } from '~/common/ui/Badge'
-import { Button } from '~/common/ui/Button'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
-import { SUBSCRIPTIONS, useAuthStore } from '~/modules/auth'
+import { SUBSCRIPTIONS } from '~/modules/auth'
 
 import type { ProfileUser } from '../types/profile.types'
 
@@ -13,16 +12,7 @@ interface ProfileHeroProps {
   user: ProfileUser
 }
 
-const subscriptionMeta = {
-  [SUBSCRIPTIONS.FREE]: { label: 'Free', color: undefined },
-  [SUBSCRIPTIONS.MONTHLY]: { label: 'Monthly', color: '#60A5FA' },
-  [SUBSCRIPTIONS.YEARLY]: { label: 'Yearly', color: '#A78BFA' },
-  [SUBSCRIPTIONS.LIFETIME]: { label: 'Lifetime', color: '#FBBF24' },
-} as const
-
 export const ProfileHero = ({ user }: ProfileHeroProps) => {
-  const currentUser = useAuthStore((state) => state.user)
-  const isOwn = currentUser?.username === user.username
   const sub = subscriptionMeta[user.subscription]
 
   return (
@@ -65,17 +55,6 @@ export const ProfileHero = ({ user }: ProfileHeroProps) => {
                 )}
               </div>
             </div>
-
-            {isOwn && (
-              <Button
-                variant="outline"
-                size="sm"
-                render={<Link to="/settings/account" />}
-                startIcon={<PenCircle />}
-              >
-                Edit
-              </Button>
-            )}
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { REVIEW_SORT, ReviewsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
 import { UpsertReviewDto } from './dto/upsert-review.dto'
 import { ReviewItem, ReviewsResponse, ReviewStatsResponse } from './types/review.types'
+import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { Prisma } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { MediaService } from '~/modules/media/media.service'
@@ -16,8 +17,6 @@ import { MediaSnapshot } from '~/modules/media/types/media.types'
 
 @Injectable()
 export class ReviewService {
-  private readonly REVIEWS_LIMIT = 20
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly mediaService: MediaService,
@@ -48,11 +47,11 @@ export class ReviewService {
       orderBy: {
         createdAt: query.sort === REVIEW_SORT.OLDEST ? 'asc' : 'desc',
       },
-      take: this.REVIEWS_LIMIT + 1,
+      take: DEFAULT_PAGE_SIZE + 1,
       include: { media: true },
     })
 
-    const hasNextPage = reviews.length > this.REVIEWS_LIMIT
+    const hasNextPage = reviews.length > DEFAULT_PAGE_SIZE
 
     if (hasNextPage) {
       reviews.pop()

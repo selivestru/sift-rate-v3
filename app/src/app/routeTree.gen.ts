@@ -15,6 +15,7 @@ import { Route as CompleteProfileRouteImport } from './routes/complete-profile'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
 import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
+import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
@@ -74,6 +75,11 @@ const AppUsernameRoute = AppUsernameRouteImport.update({
 const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
   id: '/library',
   path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/library': typeof AppLibraryRouteRouteWithChildren
   '/settings': typeof AppSettingsRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
+  '/notifications': typeof AppNotificationsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/complete-profile': typeof CompleteProfileRoute
   '/$username': typeof AppUsernameRoute
+  '/notifications': typeof AppNotificationsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/_app/library': typeof AppLibraryRouteRouteWithChildren
   '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
+  '/_app/notifications': typeof AppNotificationsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
@@ -360,6 +369,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/settings'
     | '/$username'
+    | '/notifications'
     | '/auth/callback'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
   to:
     | '/complete-profile'
     | '/$username'
+    | '/notifications'
     | '/auth/callback'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/_app/library'
     | '/_app/settings'
     | '/_app/$username'
+    | '/_app/notifications'
     | '/auth/callback'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -514,6 +526,13 @@ declare module '@tanstack/react-router' {
       path: '/library'
       fullPath: '/library'
       preLoaderRoute: typeof AppLibraryRouteRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings': {
@@ -801,6 +820,7 @@ interface AppRouteChildren {
   AppLibraryRouteRoute: typeof AppLibraryRouteRouteWithChildren
   AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppPostPostIdRoute: typeof AppPostPostIdRoute
   AppDiscoverIndexRoute: typeof AppDiscoverIndexRoute
@@ -822,6 +842,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLibraryRouteRoute: AppLibraryRouteRouteWithChildren,
   AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
   AppIndexRoute: AppIndexRoute,
   AppPostPostIdRoute: AppPostPostIdRoute,
   AppDiscoverIndexRoute: AppDiscoverIndexRoute,

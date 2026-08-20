@@ -21,6 +21,7 @@ import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
 import { Queue } from 'bullmq'
+import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { Media } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
@@ -33,7 +34,6 @@ export type EnsureMediaResult = {
 @Injectable()
 export class MediaService {
   private readonly logger = new Logger(MediaService.name)
-  private readonly REVIEWS_LIMIT = 20
 
   constructor(
     private readonly prisma: PrismaService,
@@ -156,7 +156,7 @@ export class MediaService {
       orderBy: {
         createdAt: 'desc',
       },
-      take: this.REVIEWS_LIMIT + 1,
+      take: DEFAULT_PAGE_SIZE + 1,
       include: {
         user: {
           select: {
@@ -169,7 +169,7 @@ export class MediaService {
       },
     })
 
-    const hasNextPage = reviews.length > this.REVIEWS_LIMIT
+    const hasNextPage = reviews.length > DEFAULT_PAGE_SIZE
 
     if (hasNextPage) {
       reviews.pop()

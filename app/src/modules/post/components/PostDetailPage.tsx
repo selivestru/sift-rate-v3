@@ -21,7 +21,7 @@ export const PostDetailPage = ({ postId }: PostDetailPageProps) => {
 
   return (
     <div className="divide-border divide-y">
-      <div className="mb-2 p-3">
+      <div className="p-3">
         {post.parentId ? (
           <BackButton render={<Link to="/post/$postId" params={{ postId: post.parentId }} />} />
         ) : (

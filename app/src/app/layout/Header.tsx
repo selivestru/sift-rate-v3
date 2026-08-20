@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 
 import { Button } from '~/common/ui/Button'
 import { useAuthStore } from '~/modules/auth'
+import { NotificationsBell } from '~/modules/notifications'
 
 import { NavDrawer } from './NavDrawer'
 import { Profile } from './Profile'
@@ -19,7 +20,14 @@ export const Header = () => {
             SiftRate
           </Link>
         </div>
-        {user ? <Profile /> : <Button render={<Link to="/auth/login">Войти</Link>} />}
+        {user ? (
+          <div className="flex items-center gap-3">
+            <NotificationsBell />
+            <Profile />
+          </div>
+        ) : (
+          <Button render={<Link to="/auth/login">Войти</Link>} />
+        )}
       </div>
     </header>
   )

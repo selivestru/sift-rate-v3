@@ -28,13 +28,15 @@ No tests exist (`*.spec.ts` absent; jest/supertest deps are starter leftovers).
 - Cookie sessions (express-session + Redis via `SessionMiddlewareService`), **not** JWT.
 - Global `AuthGuard` protects all routes by default — opt out with `@Public()`. Unverified users get `EMAIL_NOT_VERIFIED`; deleted users' sessions are revoked.
 - `@CurrentUser('userId')` reads `req.user` (`sessionId`, `userId`, `email`, `username`, `subscription`); `@TwoFactor()` + `TwoFactorGuard` for 2FA-sensitive routes.
-- Global `ThrottlerGuard` (10 req/min, Redis-backed); tighten with `@Throttle(...)`.
+- Global `ThrottlerGuard` (10 req/min, Redis-backed); tighten with `@Throttle(...)`; SSE endpoint `GET /api/notifications/stream` is `@SkipThrottle()`.
+- SSE: `NotificationsStreamService` (in `notifications` module, exported) — in-process RxJS bus keyed by `userId → sessionId`; `emit(userId, NotificationDto)` pushes `event: notification`; `closeSession(sid)` closes streams on logout/revoke (hooked in `SessionService`); heartbeat = wire-level `event: ping` every 30s (invisible to the client); live-only, no catch-up on connect.
+- Notifications: persisted in Postgres (`Notification` model, `NotificationType` enum, `payload Json`); `NotificationsService.create(recipientId, type, payload)` writes a row and emits SSE; stored payload per type defined in `notifications/types/notification.types.ts` (`NotificationPayloadMap`, currently `FOLLOW: { userId }`); responses (list + SSE) carry an enriched `payload` (`NotificationResponsePayloadMap` — user fields resolved from `payload.userId`, dangling user → null fields, no explicit marker). Per-type resolution lives in `NotificationPayloadResolverService` (`notification-payload.resolver.ts`): `resolve(rows)` groups by type and delegates to one method per type, which decides its own queries (FOLLOW batch-resolves users; types without a user ref issue no query); list (`GET /api/notifications`, cursor, 20/page); `GET /unread-count`, `POST /read` (`{ notificationIds }`), `POST /read-all` → 204; `FOLLOW` published from `FollowService`.
 
 ## Architecture
 
 - `src/app/` — bootstrap + env config; `src/common/` — cross-cutting (decorators `Public`/`CurrentUser`/`Trim`/`LowerCase`/`Normalize`/`StrongPassword`/`TwoFactor`, guards, `PrismaClientExceptionFilter`, types, constants)
 - `src/infrastructure/` — `prisma/`, `redis/`, `s3/`, `resend/` (react-email `.tsx` templates + BullMQ email processor)
-- `src/modules/` — features: `auth`, `feed`, `follow`, `media`, `planned`, `ranked-list`, `review`, `session`, `two-factor`, `user`
+- `src/modules/` — features: `auth`, `feed`, `follow`, `media`, `notifications`, `planned`, `ranked-list`, `review`, `session`, `two-factor`, `user`
 - `src/generated/prisma/` — generated, gitignored: after editing `prisma/schema.prisma` run `db:generate`; fresh clones fail to compile until generated. Import as `~/generated/prisma/client`.
 - Module shape: `*.module/controller/service.ts` + `dto/` (class-validator — no zod server-side) + `constants/` + `types/`; external providers (TMDB, IGDB, …) and slow work live in `media` under `services/` + `processors/` (BullMQ).
 

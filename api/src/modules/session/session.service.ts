@@ -12,6 +12,7 @@ import type { CookieOptions, Request, Response } from 'express'
 import UAParser from 'ua-parser-js'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { RedisService } from '~/infrastructure/redis/redis.service'
+import { NotificationsStreamService } from '~/modules/notifications/notifications-stream.service'
 
 @Injectable()
 export class SessionService {
@@ -23,6 +24,7 @@ export class SessionService {
   constructor(
     private readonly redis: RedisService,
     readonly sessionMiddleware: SessionMiddlewareService,
+    private readonly stream: NotificationsStreamService,
   ) {
     this.sessionPrefix = sessionMiddleware.getSessionPrefix()
     this.cookieName = sessionMiddleware.getCookieName()
@@ -142,6 +144,8 @@ export class SessionService {
     if (userId) {
       await this.redis.hdel(REDIS_KEYS.USER_SESSIONS(userId), sid)
     }
+
+    this.stream.closeSession(sid)
   }
 
   async destroyAllForUser(userId: string, exceptSid?: string): Promise<number> {
@@ -156,6 +160,10 @@ export class SessionService {
 
     if (sidsToDelete.length === 0) {
       return 0
+    }
+
+    for (const sid of sidsToDelete) {
+      this.stream.closeSession(sid)
     }
 
     const pipeline = this.redis.pipeline()
@@ -216,6 +224,8 @@ export class SessionService {
     if (deletedCount === 0) {
       throw new NotFoundException('Session not found')
     }
+
+    this.stream.closeSession(sid)
 
     return { revoked: deletedCount }
   }

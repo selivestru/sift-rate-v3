@@ -1,3 +1,5 @@
+import { ErrorState } from '~/common/ui/ErrorState'
+
 export const ProfileError = () => {
-  return <div>ProfileError</div>
+  return <ErrorState title="Couldn't load profile" />
 }

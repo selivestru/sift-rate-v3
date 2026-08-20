@@ -1,8 +1,6 @@
 import type { Activity } from 'react-activity-calendar'
 
-import { objectKeys } from '~/common/utils/typedObject'
-
-import type { ReviewActivityByYear, ReviewActivityDay } from '../types/profile.types'
+import type { UserActivity } from '../types/profile.types'
 
 const DAY_IN_MILLISECONDS = 86_400_000
 
@@ -14,13 +12,17 @@ const getActivityLevel = (count: number, maxCount: number) => {
   return Math.min(4, Math.ceil((count / maxCount) * 4))
 }
 
-export const getReviewActivityYears = (activity: ReviewActivityByYear) => {
-  return objectKeys(activity)
-    .map(Number)
-    .sort((firstYear, secondYear) => secondYear - firstYear)
+export const getUserActivityYears = (activity?: UserActivity[]) => {
+  if (!activity || activity.length === 0) return [new Date().getFullYear()]
+
+  return [...new Set(activity.map(({ date }) => new Date(date).getFullYear()))].sort(
+    (a, b) => b - a,
+  )
 }
 
-export const getReviewActivityData = (year: number, entries: ReviewActivityDay[]): Activity[] => {
+export const getUserActivityData = (year: number, entries?: UserActivity[]): Activity[] => {
+  if (!entries || entries.length === 0) return []
+
   const countsByDate = new Map<string, number>()
 
   for (const entry of entries) {

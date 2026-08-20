@@ -348,9 +348,9 @@ button:not(:disabled),
   }
 }
 
-.react-activity-calendar__scroll-container {
+/* .react-activity-calendar__scroll-container {
   @apply pb-2;
-}
+} */
 
 @utility transition-backdrop {
   transition-property: backdrop-filter;

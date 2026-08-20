@@ -26,9 +26,9 @@ export const ErrorState = ({
     <div
       role="alert"
       className={cn(
-        'bg-card border-transparent flex flex-col items-center gap-4 rounded-xl border px-4 py-14 text-center',
+        'bg-card border-transparent flex flex-col items-center gap-4 border px-4 py-14 text-center',
         className,
-        border && 'border-border',
+        border && 'border-border rounded-xl',
       )}
     >
       <span className="bg-destructive/10 text-destructive flex size-11 items-center justify-center rounded-lg">

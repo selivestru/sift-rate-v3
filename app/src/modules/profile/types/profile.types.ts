@@ -18,28 +18,13 @@ export interface ReviewStats {
   byMediaType: Record<MediaType, number>
 }
 
-export interface ReviewActivityDay {
+export interface UserActivity {
   date: string
   count: number
 }
 
-export type ReviewActivityByYear = Record<number, ReviewActivityDay[]>
-
-export type AchievementRarity = 'common' | 'rare' | 'epic' | 'legendary'
-
-export interface Achievement {
-  id: string
-  title: string
-  description: string
-  iconName: string
-  rarity: AchievementRarity
-  unlockedAt: string | null
-}
-
 export interface Profile {
   user: ProfileUser
-  achievements: Achievement[]
   ratingDistribution: RatingDistribution
   reviewStats: ReviewStats
-  reviewActivity: ReviewActivityByYear
 }

@@ -3,23 +3,23 @@ import { objectEntries } from '~/common/utils/typedObject'
 
 import type { ReviewStats } from '../types/profile.types'
 
-interface ReviewStatsSectionProps {
+interface UserStatsSectionProps {
   reviewStats: ReviewStats
 }
 
-export const ReviewStatsSection = ({ reviewStats }: ReviewStatsSectionProps) => {
+export const UserStatsSection = ({ reviewStats }: UserStatsSectionProps) => {
   const entries = objectEntries(reviewStats.byMediaType)
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold tracking-tight">
+    <section>
+      <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">
         Reviews
         <span className="text-muted-foreground ml-2 text-base font-normal tabular-nums">
           {reviewStats.total}
         </span>
       </h2>
 
-      <div className="grid grid-cols-3 gap-3 max-md:grid-cols-2">
+      <div className="grid grid-cols-3 gap-3 p-4 max-md:grid-cols-2">
         {entries.map(([type, count]) => {
           const meta = mediaTypeMeta[type]
           const Icon = meta.icon

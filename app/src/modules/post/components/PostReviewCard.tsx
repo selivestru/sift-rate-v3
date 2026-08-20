@@ -20,7 +20,7 @@ export const PostReviewCard = ({ review }: PostReviewCardProps) => {
   const detailTo = mediaDetailRouteByType[media.mediaType]
 
   return (
-    <div className="bg-card border-border overflow-hidden rounded-xl border">
+    <div className="bg-card border-border mb-2 overflow-hidden rounded-xl border">
       <div className="flex gap-3 p-3">
         <Link
           to={detailTo}

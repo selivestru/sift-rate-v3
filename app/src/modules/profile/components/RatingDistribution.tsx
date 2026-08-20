@@ -6,16 +6,18 @@ interface RatingDistributionProps {
   distribution: RatingDistributionType
 }
 
-const RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 
 export const RatingDistribution = ({ distribution }: RatingDistributionProps) => {
   const maxCount = Math.max(...objectValues(distribution), 1)
 
   return (
     <section className="flex flex-col gap-8">
-      <h2 className="text-lg font-semibold tracking-tight">Rating Distribution</h2>
+      <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">
+        Rating Distribution
+      </h2>
 
-      <div className="flex h-56 items-end gap-1.5 max-md:h-48">
+      <div className="flex h-56 items-end gap-1.5 p-4 max-md:h-48">
         {RATINGS.map((rating) => {
           const count = distribution[rating] ?? 0
           const height = Math.max((count / maxCount) * 100, 2)

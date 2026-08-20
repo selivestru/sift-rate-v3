@@ -1,27 +1,24 @@
-import type { Profile } from '../types/profile.types'
-import { AchievementsGrid } from './AchievementsGrid'
+import { useGetUserProfileQuery } from '../hooks/useGetUserProfileQuery'
 import { ProfileHero } from './ProfileHero'
 import { RatingDistribution } from './RatingDistribution'
-import { ReviewActivity } from './ReviewActivity'
-import { ReviewStatsSection } from './ReviewStatsSection'
+import { UserActivity } from './UserActivity'
+import { UserFeed } from './UserFeed'
+import { UserStatsSection } from './UserStatsSection'
 
 interface ProfilePageProps {
-  data: Profile
+  username: string
 }
 
-export const ProfilePage = ({ data }: ProfilePageProps) => {
-  return (
-    <div className="flex flex-col">
-      <ProfileHero user={data.user} />
+export const ProfilePage = ({ username }: ProfilePageProps) => {
+  const { data } = useGetUserProfileQuery(username)
 
-      <div className="space-y-6">
-        <div className="space-y-6 p-4">
-          <AchievementsGrid achievements={data.achievements} />
-          <ReviewStatsSection reviewStats={data.reviewStats} />
-          <RatingDistribution distribution={data.ratingDistribution} />
-          <ReviewActivity activity={data.reviewActivity} />
-        </div>
-      </div>
+  return (
+    <div className="divide-border flex flex-col divide-y">
+      <ProfileHero user={data.user} />
+      <UserStatsSection reviewStats={data.reviewStats} />
+      <RatingDistribution distribution={data.ratingDistribution} />
+      <UserActivity username={data.user.username} />
+      <UserFeed username={data.user.username} />
     </div>
   )
 }

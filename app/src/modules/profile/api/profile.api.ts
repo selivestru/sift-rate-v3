@@ -1,13 +1,22 @@
 import { api } from '~/common/api'
+import type { FeedResponse } from '~/modules/feed'
 
-import type { ProfileResponse } from '../types/profile.types'
+import type { Profile, UserActivity } from '../types/profile.types'
 
 export const profileApi = {
-  // getProfile: async (username: string) => {
-  //   const response = await fetch(`/api/profile/${username}`)
-  //   return await response.json()
-  // },
   getProfile: (username: string) => {
-    return api.get<ProfileResponse>(`/user/${username}`).json()
+    return api.get<Profile>(`/user/${username}`).json()
+  },
+  getUserActivity: (username: string) => {
+    return api.get<UserActivity[]>(`/user/${username}/activity`).json()
+  },
+  getUserFeed: (username: string, cursor?: string) => {
+    const searchParams = new URLSearchParams()
+
+    if (cursor) {
+      searchParams.set('cursor', cursor)
+    }
+
+    return api.get<FeedResponse>(`/user/${username}/feed`, { searchParams }).json()
   },
 }

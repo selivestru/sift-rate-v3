@@ -2,14 +2,13 @@ import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/commo
 
 import { UserService } from '../user/user.service'
 import { FeedResponse } from './types/feed.types'
+import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { Prisma } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { buildPostInclude, mapPost } from '~/modules/post/post.query'
 
 @Injectable()
 export class FeedService {
-  private readonly POSTS_LIMIT = 20
-
   constructor(
     private readonly prisma: PrismaService,
     @Inject(forwardRef(() => UserService))
@@ -62,11 +61,11 @@ export class FeedService {
       orderBy: {
         createdAt: 'desc',
       },
-      take: this.POSTS_LIMIT + 1,
+      take: DEFAULT_PAGE_SIZE + 1,
       include: buildPostInclude(userId),
     })
 
-    const hasNextPage = posts.length > this.POSTS_LIMIT
+    const hasNextPage = posts.length > DEFAULT_PAGE_SIZE
 
     if (hasNextPage) {
       posts.pop()

@@ -2,13 +2,16 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 
 import { UserService } from '../user/user.service'
 import { Author } from '~/common/types/user.types'
+import { NotificationType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
+import { NotificationsService } from '~/modules/notifications/notifications.service'
 
 @Injectable()
 export class FollowService {
   constructor(
     private prisma: PrismaService,
     private readonly userService: UserService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async follow(followerId: string, followingId: string): Promise<void> {
@@ -26,6 +29,10 @@ export class FollowService {
 
     await this.prisma.follow.create({
       data: { followerId, followingId },
+    })
+
+    await this.notificationsService.create(followingId, NotificationType.FOLLOW, {
+      userId: followerId,
     })
   }
 

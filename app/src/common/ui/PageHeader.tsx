@@ -6,7 +6,7 @@ type PageHeaderProps = {
   icon: IconComponent
   label: string
   title: string
-  description: string
+  description?: string
   iconColor?: string
   iconWell?: 'accent' | 'muted'
   className?: string
@@ -41,7 +41,9 @@ export const PageHeader = ({
         <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">{label}</p>
       </div>
       <h1 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">{title}</h1>
-      <p className="text-muted-foreground text-sm leading-relaxed text-pretty">{description}</p>
+      {description && (
+        <p className="text-muted-foreground text-sm leading-relaxed text-pretty">{description}</p>
+      )}
       {children}
     </div>
   )

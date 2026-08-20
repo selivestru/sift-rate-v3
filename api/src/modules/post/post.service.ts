@@ -5,12 +5,11 @@ import { ListRepliesQueryDto, REPLIES_SORT } from './dto/list-replies.query'
 import { UpdatePostDto } from './dto/update-post.dto'
 import { buildPostInclude, mapPost } from './post.query'
 import { LikeResponse, PostItem, PostListResponse } from './types/post.types'
+import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
 @Injectable()
 export class PostService {
-  private readonly REPLIES_LIMIT = 20
-
   constructor(private readonly prisma: PrismaService) {}
 
   async getPostById(postId: string, userId?: string): Promise<PostItem> {
@@ -46,11 +45,11 @@ export class PostService {
         query.sort === REPLIES_SORT.OLDEST
           ? [{ createdAt: 'asc' }, { id: 'asc' }]
           : [{ createdAt: 'desc' }, { id: 'desc' }],
-      take: this.REPLIES_LIMIT + 1,
+      take: DEFAULT_PAGE_SIZE + 1,
       include: buildPostInclude(userId),
     })
 
-    const hasNextPage = replies.length > this.REPLIES_LIMIT
+    const hasNextPage = replies.length > DEFAULT_PAGE_SIZE
 
     if (hasNextPage) {
       replies.pop()
