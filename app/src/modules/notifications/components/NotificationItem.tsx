@@ -17,8 +17,10 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
 
   const { mutate: markRead } = useMarkReadMutation()
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     if (isUnread) {
+      e.preventDefault()
+
       markRead([notification.id])
     }
   }

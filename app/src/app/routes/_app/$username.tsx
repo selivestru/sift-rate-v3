@@ -8,11 +8,13 @@ export const Route = createFileRoute('/_app/$username')({
   component: RouteComponent,
 })
 
+const renderProfileError = ({ error }: { error: unknown }) => <ProfileError error={error} />
+
 function RouteComponent() {
   const { username } = Route.useParams()
 
   return (
-    <ErrorBoundary fallback={<ProfileError />}>
+    <ErrorBoundary fallbackRender={renderProfileError}>
       <Suspense fallback={<ProfileSkeleton />}>
         <ProfilePage key={username} username={username} />
       </Suspense>
