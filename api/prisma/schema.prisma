@@ -29,12 +29,6 @@ enum MediaType {
   TRACK
 }
 
-enum AchievementRarity {
-  COMMON
-  RARE
-  LEGENDARY
-}
-
 enum NotificationType {
   FOLLOW
 }

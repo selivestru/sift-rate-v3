@@ -5,23 +5,23 @@ pre-commit:
     api-lint:
       root: api
       glob: "api/**/*.{js,ts}"
-      run: bun run lint:fix
+      run: bun run lint:fix {staged_files}
       stage_fixed: true
 
     api-format:
       root: api
       glob: "api/**/*.{js,ts}"
-      run: bun run format:fix
+      run: bun run format:fix {staged_files}
       stage_fixed: true
 
     app-lint:
       root: app
       glob: "app/**/*.{js,jsx,ts,tsx}"
-      run: bun run lint:fix
+      run: bun run lint:fix {staged_files}
       stage_fixed: true
 
     app-format:
       root: app
       glob: "app/**/*.{js,jsx,ts,tsx,json,css,scss}"
-      run: bun run format:fix
+      run: bun run format:fix {staged_files}
       stage_fixed: true

@@ -16,12 +16,16 @@ export class S3Service {
     this.publicBaseUrl = this.config.get('S3_PUBLIC_BASE_URL', { infer: true })
     this.ownedHost = new URL(this.publicBaseUrl).host
 
+    const endpoint = this.config.get('S3_ENDPOINT', { infer: true })
+
     this.client = new S3Client({
+      endpoint,
       region: this.config.get('S3_REGION', { infer: true }),
       credentials: {
         accessKeyId: this.config.get('S3_ACCESS_KEY_ID', { infer: true }),
         secretAccessKey: this.config.get('S3_SECRET_ACCESS_KEY', { infer: true }),
       },
+      forcePathStyle: !!endpoint,
     })
   }
 
@@ -38,19 +42,13 @@ export class S3Service {
     return `${this.publicBaseUrl}/${normalizedKey}`
   }
 
-  async putObject(params: {
-    key: string
-    body: Buffer
-    contentType: string
-    cacheControl?: string
-  }): Promise<void> {
+  async putObject(params: { key: string; body: Buffer; contentType: string }): Promise<void> {
     await this.client.send(
       new PutObjectCommand({
         Bucket: this.bucket,
         Key: params.key,
         Body: params.body,
         ContentType: params.contentType,
-        CacheControl: params.cacheControl ?? 'public, max-age=31536000, immutable',
       }),
     )
   }

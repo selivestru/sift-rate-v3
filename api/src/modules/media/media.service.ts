@@ -230,7 +230,7 @@ export class MediaService {
           sourcePosterUrl: media.posterUrl,
         },
         {
-          jobId: `poster:${media.id}`,
+          jobId: `poster-${media.id}`,
           attempts: 3,
           backoff: { type: 'exponential', delay: 2000 },
           removeOnComplete: true,

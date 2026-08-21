@@ -22,6 +22,7 @@ export const envSchema = z.object({
   IGDB_CLIENT_SECRET: z.string(),
   GOOGLE_BOOKS_API_KEY: z.string(),
 
+  S3_ENDPOINT: z.url(),
   S3_BUCKET: z.string().min(1),
   S3_REGION: z.string().min(1),
   S3_ACCESS_KEY_ID: z.string().min(1),
