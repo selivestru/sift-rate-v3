@@ -300,6 +300,10 @@ html.dark[data-accent='yellow'] {
   --radius-4xl: calc(var(--radius) * 3);
 }
 
+html {
+  @apply scrollbar-gutter-stable;
+}
+
 body {
   @apply bg-background text-foreground relative min-h-dvh overflow-x-hidden font-sans antialiased;
 }
@@ -347,10 +351,6 @@ button:not(:disabled),
     transform: translate3d(0, -22px, 0) scale(1);
   }
 }
-
-/* .react-activity-calendar__scroll-container {
-  @apply pb-2;
-} */
 
 @utility transition-backdrop {
   transition-property: backdrop-filter;

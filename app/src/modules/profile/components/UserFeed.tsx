@@ -43,13 +43,12 @@ const UserFeedList = ({ username }: UserFeedProps) => {
     hasNextPage && !isFetchingNextPage,
   )
 
-  if (isEmpty) {
-    return <EmptyState title="No activity yet" />
-  }
-
   return (
     <section className="flex flex-col">
       <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">Feed</h2>
+
+      {isEmpty && <EmptyState title="No activity yet" />}
+
       <div className="divide-border divide-y">
         {items.map((item) => (
           <PostItem key={item.id} data={item} />
