@@ -15,7 +15,7 @@ export const useMarkAllReadMutation = () => {
       const readAt = new Date().toISOString()
 
       queryClient.setQueryData<InfiniteData<NotificationsResponse>>(
-        QUERIES_KEYS.NOTIFICATIONS,
+        QUERIES_KEYS.notifications,
         (prev) => {
           if (!prev) return prev
 
@@ -30,7 +30,7 @@ export const useMarkAllReadMutation = () => {
       )
 
       queryClient.setQueryData<NotificationUnreadCount>(
-        QUERIES_KEYS.NOTIFICATIONS_UNREAD_COUNT,
+        QUERIES_KEYS.notificationsUnreadCount,
         () => {
           return { count: 0 }
         },

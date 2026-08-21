@@ -28,7 +28,7 @@ export const PostDetailPage = ({ postId }: PostDetailPageProps) => {
           <BackButton render={<Link to="/" />} />
         )}
       </div>
-      <PostItem isParent data={post} />
+      <PostItem isDetailView data={post} />
       {isAuthenticated && <PostReplyInput postId={post.id} author={post.user.username} />}
       <PostReplies postId={post.id} />
 

@@ -11,7 +11,7 @@ export const useAddToPlannedList = () => {
     mutationKey: ['add-to-planned-list'],
     mutationFn: plannedApi.addToPlannedList,
     onSuccess: (data, __, ___, context) => {
-      context.client.setQueryData<PlannedListResponse>(QUERIES_KEYS.PLANNED_LIST, (prev) => {
+      context.client.setQueryData<PlannedListResponse>(QUERIES_KEYS.plannedList, (prev) => {
         if (!prev) return prev
 
         return {
@@ -23,7 +23,7 @@ export const useAddToPlannedList = () => {
       const { media } = data
 
       context.client.setQueryData<MediaStateResponse>(
-        QUERIES_KEYS.MEDIA_STATE({ externalId: media.externalId, mediaType: media.mediaType }),
+        QUERIES_KEYS.mediaState({ externalId: media.externalId, mediaType: media.mediaType }),
         (prev) => {
           if (!prev) return prev
 

@@ -211,7 +211,7 @@ export class UserService {
       throw new UnauthorizedException('Current password is incorrect')
     }
 
-    const passwordHash = (await hash(dto.newPassword, { type: argon2id })) as string
+    const passwordHash = await hash(dto.newPassword, { type: argon2id })
 
     await this.updatePasswordHash(userId, passwordHash)
     await this.sessionService.destroyAllForUser(userId, currentSid)

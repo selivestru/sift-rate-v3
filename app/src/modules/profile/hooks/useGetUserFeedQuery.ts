@@ -6,7 +6,7 @@ import { profileApi } from '../api/profile.api'
 
 export const useGetFeedQuery = (username: string) => {
   return useSuspenseInfiniteQuery({
-    queryKey: QUERIES_KEYS.USER_FEED(username),
+    queryKey: QUERIES_KEYS.userFeed(username),
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) => profileApi.getUserFeed(username, pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor,

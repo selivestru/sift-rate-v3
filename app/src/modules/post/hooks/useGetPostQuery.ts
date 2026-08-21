@@ -6,7 +6,7 @@ import { postApi } from '../api/post.api'
 
 export const useGetPostQuery = (postId: string) => {
   const { data } = useSuspenseQuery({
-    queryKey: QUERIES_KEYS.POST(postId),
+    queryKey: QUERIES_KEYS.post(postId),
     queryFn: () => postApi.getPostById(postId),
   })
 

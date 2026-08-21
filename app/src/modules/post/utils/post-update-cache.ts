@@ -86,7 +86,7 @@ const updatePostInRepliesCaches = (
   postId: string,
   updater: (post: Post) => Post,
 ) => {
-  client.setQueryData<InfiniteData<PostListResponse>>(QUERIES_KEYS.POST_REPLIES(parentId), (prev) =>
+  client.setQueryData<InfiniteData<PostListResponse>>(QUERIES_KEYS.postReplies(parentId), (prev) =>
     updateRepliesPost(prev, postId, updater),
   )
 }
@@ -94,7 +94,7 @@ const updatePostInRepliesCaches = (
 export const updatePostInCaches = (client: QueryClient, post: Post, parentId: string | null) => {
   updatePostInFeedCaches(client, post.id, () => post)
 
-  client.setQueryData<Post>(QUERIES_KEYS.POST(post.id), post)
+  client.setQueryData<Post>(QUERIES_KEYS.post(post.id), post)
 
   if (parentId) {
     updatePostInRepliesCaches(client, parentId, post.id, () => post)
@@ -112,7 +112,7 @@ export const removePostFromCaches = (
 
   if (parentId) {
     client.setQueryData<InfiniteData<PostListResponse>>(
-      QUERIES_KEYS.POST_REPLIES(parentId),
+      QUERIES_KEYS.postReplies(parentId),
       (prev) => removeRepliesPost(prev, postId),
     )
   }
@@ -126,7 +126,7 @@ export const decrementPostRepliesCount = (client: QueryClient, parentId: string)
 
   updatePostInFeedCaches(client, parentId, updater)
 
-  client.setQueryData<Post>(QUERIES_KEYS.POST(parentId), (prev) =>
+  client.setQueryData<Post>(QUERIES_KEYS.post(parentId), (prev) =>
     prev ? updater(prev) : undefined,
   )
 

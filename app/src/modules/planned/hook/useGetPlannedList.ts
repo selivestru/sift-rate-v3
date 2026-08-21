@@ -6,7 +6,7 @@ import { plannedApi } from '../api/planned.api'
 
 export const useGetPlannedList = () => {
   return useQuery({
-    queryKey: QUERIES_KEYS.PLANNED_LIST,
+    queryKey: QUERIES_KEYS.plannedList,
     queryFn: plannedApi.getPlannedList,
   })
 }

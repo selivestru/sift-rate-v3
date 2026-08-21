@@ -9,7 +9,7 @@ export const useGetUnreadCountQuery = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   return useQuery({
-    queryKey: QUERIES_KEYS.NOTIFICATIONS_UNREAD_COUNT,
+    queryKey: QUERIES_KEYS.notificationsUnreadCount,
     queryFn: notificationsApi.getUnreadCount,
     enabled: isAuthenticated,
   })

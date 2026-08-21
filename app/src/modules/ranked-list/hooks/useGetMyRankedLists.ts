@@ -6,7 +6,7 @@ import { rankedListApi } from '../api/ranked-list.api'
 
 export const useGetMyRankedLists = () => {
   return useQuery({
-    queryKey: QUERIES_KEYS.RANKED_LISTS,
+    queryKey: QUERIES_KEYS.rankedLists,
     queryFn: rankedListApi.getMyRankedLists,
   })
 }

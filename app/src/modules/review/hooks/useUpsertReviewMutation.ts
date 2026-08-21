@@ -16,12 +16,12 @@ export const useUpsertReviewMutation = () => {
     onMutate: async (variables, context) => {
       const { client } = context
 
-      await client.cancelQueries({ queryKey: QUERIES_KEYS.MY_REVIEW_STATS })
+      await client.cancelQueries({ queryKey: QUERIES_KEYS.myReviewStats })
 
-      const previousStats = client.getQueryData<ReviewStats>(QUERIES_KEYS.MY_REVIEW_STATS)
+      const previousStats = client.getQueryData<ReviewStats>(QUERIES_KEYS.myReviewStats)
 
       const mediaState = client.getQueryData<MediaStateResponse>(
-        QUERIES_KEYS.MEDIA_STATE({
+        QUERIES_KEYS.mediaState({
           mediaType: variables.mediaType,
           externalId: variables.externalId,
         }),
@@ -54,7 +54,7 @@ export const useUpsertReviewMutation = () => {
     },
     onError: (_error, _variables, onMutateResult, context) => {
       if (onMutateResult?.previousStats) {
-        context.client.setQueryData(QUERIES_KEYS.MY_REVIEW_STATS, onMutateResult.previousStats)
+        context.client.setQueryData(QUERIES_KEYS.myReviewStats, onMutateResult.previousStats)
       }
     },
     onSuccess: (data, _variables, onMutateResult, context) => {
@@ -62,22 +62,22 @@ export const useUpsertReviewMutation = () => {
 
       if (!onMutateResult?.previousStats) {
         context.client.invalidateQueries({
-          queryKey: QUERIES_KEYS.MY_REVIEW_STATS,
+          queryKey: QUERIES_KEYS.myReviewStats,
         })
       }
 
       context.client.invalidateQueries({
-        queryKey: QUERIES_KEYS.MY_REVIEWS,
+        queryKey: QUERIES_KEYS.myReviews,
       })
       context.client.invalidateQueries({
-        queryKey: QUERIES_KEYS.MEDIA_REVIEWS({
+        queryKey: QUERIES_KEYS.mediaReviews({
           mediaType: media.mediaType,
           externalId: media.externalId,
         }),
       })
 
       context.client.setQueryData<MediaStateResponse>(
-        QUERIES_KEYS.MEDIA_STATE({ externalId: media.externalId, mediaType: media.mediaType }),
+        QUERIES_KEYS.mediaState({ externalId: media.externalId, mediaType: media.mediaType }),
         (prev) => {
           if (!prev) return prev
 

@@ -12,12 +12,12 @@ export const useUpdateRankedList = (onClose: () => void) => {
     mutationFn: ({ listId, title }: UpdateRankedListVariables) =>
       rankedListApi.updateList(listId, { title }),
     onMutate: async (variables, context) => {
-      await context.client.cancelQueries({ queryKey: QUERIES_KEYS.RANKED_LISTS })
+      await context.client.cancelQueries({ queryKey: QUERIES_KEYS.rankedLists })
 
-      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.RANKED_LISTS)
+      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
 
       context.client.setQueryData<RankedListResponse>(
-        QUERIES_KEYS.RANKED_LISTS,
+        QUERIES_KEYS.rankedLists,
         optimisticUpdateList(previous, variables.listId, {
           title: variables.title,
         }),
@@ -29,11 +29,11 @@ export const useUpdateRankedList = (onClose: () => void) => {
     },
     onError: (_error, _variables, onMutateResult, context) => {
       if (onMutateResult?.previous) {
-        context.client.setQueryData(QUERIES_KEYS.RANKED_LISTS, onMutateResult.previous)
+        context.client.setQueryData(QUERIES_KEYS.rankedLists, onMutateResult.previous)
       }
     },
     onSuccess: (server, _variables, _onMutateResult, context) => {
-      context.client.setQueryData<RankedListResponse>(QUERIES_KEYS.RANKED_LISTS, (prev) =>
+      context.client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
         reconcileUpdateList(prev, server),
       )
     },

@@ -12,7 +12,7 @@ const fetchers: Record<FeedTabKey, (cursor?: string) => Promise<FeedResponse>> =
 
 export const useGetFeedQuery = (tab: FeedTabKey) => {
   return useSuspenseInfiniteQuery({
-    queryKey: QUERIES_KEYS.FEED(tab),
+    queryKey: QUERIES_KEYS.feed(tab),
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) => fetchers[tab](pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor,

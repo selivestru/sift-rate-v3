@@ -15,7 +15,7 @@ export const bumpPostRepliesCount = (client: QueryClient, postId: string) => {
 
   updatePostInFeedCaches(client, updated)
 
-  client.setQueryData<Post>(QUERIES_KEYS.POST(post.id), (prev) =>
+  client.setQueryData<Post>(QUERIES_KEYS.post(post.id), (prev) =>
     prev ? { ...prev, repliesCount: prev.repliesCount + 1 } : undefined,
   )
 
@@ -42,7 +42,7 @@ const updatePostInFeedCaches = (client: QueryClient, updated: Post) => {
 
 const bumpPostInRepliesCache = (client: QueryClient, parentId: string, postId: string) => {
   client.setQueryData<InfiniteData<PostListResponse>>(
-    QUERIES_KEYS.POST_REPLIES(parentId),
+    QUERIES_KEYS.postReplies(parentId),
     (prev) => {
       if (!prev) return prev
 

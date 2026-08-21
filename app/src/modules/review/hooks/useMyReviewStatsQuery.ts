@@ -6,7 +6,7 @@ import { reviewApi } from '../api/review.api'
 
 export const useMyReviewStatsQuery = (options?: { enabled?: boolean }) => {
   return useQuery({
-    queryKey: QUERIES_KEYS.MY_REVIEW_STATS,
+    queryKey: QUERIES_KEYS.myReviewStats,
     queryFn: reviewApi.getMyReviewStats,
     enabled: options?.enabled ?? true,
   })

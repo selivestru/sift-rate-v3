@@ -12,7 +12,7 @@ export const useCreatePostMutation = () => {
     mutationKey: ['create-post'],
     mutationFn: postApi.createPost,
     onSuccess: (post) => {
-      queryClient.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.FEED('ALL'), (prev) => {
+      queryClient.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.feed('ALL'), (prev) => {
         if (!prev) return prev
 
         return {

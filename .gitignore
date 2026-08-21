@@ -8,3 +8,5 @@ coverage
 *.lockb
 .env
 .env.local
+docker/minio.license
+backups/

@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const getStorageItem = <T>(key: string, schema: z.ZodType<T>, fallback: T): T => {
   try {

@@ -6,7 +6,7 @@ import { profileApi } from '../api/profile.api'
 
 export const useGetUserActivityQuery = (username: string) => {
   return useSuspenseQuery({
-    queryKey: QUERIES_KEYS.USER_ACTIVITY(username),
+    queryKey: QUERIES_KEYS.userActivity(username),
     queryFn: () => profileApi.getUserActivity(username),
   })
 }

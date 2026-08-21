@@ -21,7 +21,7 @@ export const useMyReviewsQuery = (options?: UseMyReviewsQueryOptions) => {
   const sort = options?.sort ?? DEFAULT_REVIEW_SORT
 
   return useInfiniteQuery({
-    queryKey: [...QUERIES_KEYS.MY_REVIEWS, normalizedQ ?? '', mediaType ?? '', rating ?? '', sort],
+    queryKey: [...QUERIES_KEYS.myReviews, normalizedQ ?? '', mediaType ?? '', rating ?? '', sort],
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) =>
       reviewApi.getMyReviews({

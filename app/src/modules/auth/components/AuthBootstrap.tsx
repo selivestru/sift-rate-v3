@@ -1,6 +1,6 @@
 import { isHTTPError } from 'ky'
 import { useEffect } from 'react'
-import z from 'zod'
+import { z } from 'zod'
 
 import { Spinner } from '~/common/ui/Spinner'
 import { getStorageItem, removeStorageItem } from '~/common/utils/storage'

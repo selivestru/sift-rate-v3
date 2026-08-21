@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 const TWO_FACTOR_CODE_REGEX = /^\d{6}$/
 const TWO_FACTOR_CODE_MESSAGE = 'Enter the 6-digit code from your authenticator app'

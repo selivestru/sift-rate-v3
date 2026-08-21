@@ -18,5 +18,6 @@ export const useDidUpdate = (effect: EffectCallback, deps?: DependencyList) => {
 
     mountedRef.current = true
     return undefined
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 }

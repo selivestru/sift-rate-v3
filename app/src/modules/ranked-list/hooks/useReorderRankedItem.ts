@@ -13,12 +13,12 @@ export const useReorderRankedItem = () => {
       return rankedListApi.reorderItem(listId, itemId, { position })
     },
     onMutate: async (variables, context) => {
-      await context.client.cancelQueries({ queryKey: QUERIES_KEYS.RANKED_LISTS })
+      await context.client.cancelQueries({ queryKey: QUERIES_KEYS.rankedLists })
 
-      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.RANKED_LISTS)
+      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
 
       context.client.setQueryData<RankedListResponse>(
-        QUERIES_KEYS.RANKED_LISTS,
+        QUERIES_KEYS.rankedLists,
         optimisticReorderItem(previous, variables.listId, variables.itemId, variables.position),
       )
 
@@ -26,7 +26,7 @@ export const useReorderRankedItem = () => {
     },
     onError: (_error, _variables, onMutateResult, context) => {
       if (onMutateResult?.previous) {
-        context.client.setQueryData(QUERIES_KEYS.RANKED_LISTS, onMutateResult.previous)
+        context.client.setQueryData(QUERIES_KEYS.rankedLists, onMutateResult.previous)
       }
     },
   })

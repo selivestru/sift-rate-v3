@@ -17,7 +17,7 @@ export const useCreateReplyMutation = (postId: string) => {
       bumpPostRepliesCount(queryClient, postId)
 
       queryClient.setQueryData<InfiniteData<PostListResponse>>(
-        QUERIES_KEYS.POST_REPLIES(postId),
+        QUERIES_KEYS.postReplies(postId),
         (prev) => {
           if (!prev) return prev
 

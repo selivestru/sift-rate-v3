@@ -1,28 +1,20 @@
-import type { MediaType } from './media-type'
+import type { MediaRef } from '../types/media-ref.types'
 
 export type FeedTabKey = 'ALL' | 'FOLLOWING'
 
 export const QUERIES_KEYS = {
-  PLANNED_LIST: ['planned-list'],
-  MEDIA_STATE: (data: { mediaType: MediaType; externalId: string }) => [
-    'media-state',
-    data.mediaType,
-    data.externalId,
-  ],
-  MY_REVIEWS: ['my-reviews'],
-  MY_REVIEW_STATS: ['my-review-stats'],
-  MEDIA_REVIEWS: (data: { mediaType: MediaType; externalId: string }) => [
-    'media-reviews',
-    data.mediaType,
-    data.externalId,
-  ],
-  RANKED_LISTS: ['ranked-lists'],
-  NOTIFICATIONS: ['notifications'],
-  NOTIFICATIONS_UNREAD_COUNT: ['notifications-unread-count'],
-  PROFILE: (username: string) => ['profile', username],
-  USER_ACTIVITY: (username: string) => ['user-activity', username],
-  USER_FEED: (username: string) => ['user-feed', username],
-  FEED: (tab: FeedTabKey) => ['feed', tab],
-  POST: (postId: string) => ['post', postId],
-  POST_REPLIES: (postId: string) => ['post', postId, 'replies'],
-}
+  plannedList: ['planned-list'],
+  mediaState: (data: MediaRef) => ['media-state', data.mediaType, data.externalId],
+  myReviews: ['my-reviews'],
+  myReviewStats: ['my-review-stats'],
+  mediaReviews: (data: MediaRef) => ['media-reviews', data.mediaType, data.externalId],
+  rankedLists: ['ranked-lists'],
+  notifications: ['notifications'],
+  notificationsUnreadCount: ['notifications-unread-count'],
+  profile: (username: string) => ['profile', username],
+  userActivity: (username: string) => ['user-activity', username],
+  userFeed: (username: string) => ['user-feed', username],
+  feed: (tab: FeedTabKey) => ['feed', tab],
+  post: (postId: string) => ['post', postId],
+  postReplies: (postId: string) => ['post', postId, 'replies'],
+} as const

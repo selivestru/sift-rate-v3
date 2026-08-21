@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const displayNameSchema = z
   .string('Display name is required')

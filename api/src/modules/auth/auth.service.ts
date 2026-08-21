@@ -68,7 +68,7 @@ export class AuthService {
       throw new ConflictException('Account with this email or username already exists')
     }
 
-    const passwordHash = (await hash(dto.password, { type: argon2id })) as string
+    const passwordHash = await hash(dto.password, { type: argon2id })
 
     const user = await this.userService.createUser({
       email: dto.email,
@@ -330,7 +330,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid or expired reset token')
     }
 
-    const passwordHash = (await hash(dto.password, { type: argon2id })) as string
+    const passwordHash = await hash(dto.password, { type: argon2id })
 
     await this.userService.updatePasswordHash(userId, passwordHash)
     await this.invalidateResetToken(userId)

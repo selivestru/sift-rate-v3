@@ -8,7 +8,7 @@ export const patchMyReviewStats = (
   client: QueryClient,
   recipe: (prev: ReviewStats) => ReviewStats,
 ) => {
-  client.setQueryData<ReviewStats>(QUERIES_KEYS.MY_REVIEW_STATS, (prev) => {
+  client.setQueryData<ReviewStats>(QUERIES_KEYS.myReviewStats, (prev) => {
     if (!prev) return prev
     return recipe(prev)
   })

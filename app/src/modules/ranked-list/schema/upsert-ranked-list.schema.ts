@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const upsertRankedListSchema = z.object({
   title: z

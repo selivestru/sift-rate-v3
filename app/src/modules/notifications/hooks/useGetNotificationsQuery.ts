@@ -6,7 +6,7 @@ import { notificationsApi } from '../api/notifications.api'
 
 export const useGetNotificationsQuery = () => {
   return useSuspenseInfiniteQuery({
-    queryKey: QUERIES_KEYS.NOTIFICATIONS,
+    queryKey: QUERIES_KEYS.notifications,
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) => notificationsApi.getNotifications(pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor,

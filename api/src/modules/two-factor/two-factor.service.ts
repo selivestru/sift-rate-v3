@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 
 import { UserService } from '../user/user.service'
-import { generateSecret, generateURI as generateTOTPURI, verifySync } from 'otplib'
+import { generateSecret, generateURI as generateTOTPURI, VerifyResult, verifySync } from 'otplib'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { safeUser } from '~/common/utils/safeUser'
 import { AuthMethod } from '~/generated/prisma/client'
@@ -103,7 +103,7 @@ export class TwoFactorService {
     return safeUser(updatedUser)
   }
 
-  async verifyStoredCode(userId: string, code: string) {
+  async verifyStoredCode(userId: string, code: string): Promise<VerifyResult> {
     const user = await this.userService.findById(userId)
 
     if (!user.twoFactorEnabled || !user.twoFactorSecret) {
@@ -122,10 +122,12 @@ export class TwoFactorService {
   }
 
   private verifySecret(secret: string, code: string) {
-    return verifySync({
+    const result = verifySync({
       secret,
       token: code,
       counterTolerance: 1,
     })
+
+    return result as VerifyResult
   }
 }

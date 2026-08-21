@@ -1,0 +1,27 @@
+pre-commit:
+  parallel: true
+
+  commands:
+    api-lint:
+      root: api
+      glob: "api/**/*.{js,ts}"
+      run: bun run lint:fix
+      stage_fixed: true
+
+    api-format:
+      root: api
+      glob: "api/**/*.{js,ts}"
+      run: bun run format:fix
+      stage_fixed: true
+
+    app-lint:
+      root: app
+      glob: "app/**/*.{js,jsx,ts,tsx}"
+      run: bun run lint:fix
+      stage_fixed: true
+
+    app-format:
+      root: app
+      glob: "app/**/*.{js,jsx,ts,tsx,json,css,scss}"
+      run: bun run format:fix
+      stage_fixed: true

@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 const USERNAME_REGEX = /^[a-z0-9_]+$/
 

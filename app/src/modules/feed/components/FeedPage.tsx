@@ -31,7 +31,7 @@ export const FeedPage = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   return (
-    <div className="divide-border border-border divide-y border-b">
+    <div className="divide-border divide-y">
       {isAuthenticated && (
         <>
           <nav aria-label="Feed" className="grid grid-cols-2">

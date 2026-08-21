@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import { Check, Monitor, Moon, Sun } from 'reicon-react'
 
 import {

@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const CONTENT_MAX_LENGTH = 1000
 

@@ -35,12 +35,14 @@ export const useLoginForm = () => {
   })
 
   const onResend = async () => {
+    const now = new Date().getTime()
+
     if (!resendEmailRef.current) return
-    if (cooldownUntilRef.current && cooldownUntilRef.current > Date.now()) return
+    if (cooldownUntilRef.current && cooldownUntilRef.current > now) return
 
     try {
       const data = await resendMutation.mutateAsync({ email: resendEmailRef.current })
-      cooldownUntilRef.current = Date.now() + data.retryAfter * 1000
+      cooldownUntilRef.current = now + data.retryAfter * 1000
     } catch {}
   }
 

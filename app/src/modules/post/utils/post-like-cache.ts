@@ -5,7 +5,7 @@ import type { FeedResponse } from '~/modules/feed'
 
 import type { Post, PostListResponse } from '../types/post.types'
 
-export const POST_FEED_KEYS: string[][] = [QUERIES_KEYS.FEED('ALL'), QUERIES_KEYS.FEED('FOLLOWING')]
+export const POST_FEED_KEYS: string[][] = [QUERIES_KEYS.feed('ALL'), QUERIES_KEYS.feed('FOLLOWING')]
 
 export interface PostLikeSnapshot {
   key: string[]
@@ -66,7 +66,7 @@ export const updateRepliesPostLike = (
 
 export const getCachedPost = (client: QueryClient, postId: string): Post | undefined => {
   return (
-    client.getQueryData<Post>(QUERIES_KEYS.POST(postId)) ?? findPostInFeedCaches(client, postId)
+    client.getQueryData<Post>(QUERIES_KEYS.post(postId)) ?? findPostInFeedCaches(client, postId)
   )
 }
 
@@ -113,7 +113,7 @@ export const snapshotPostLikes = (
     )
   }
 
-  snapshotPostLikeCache<Post>(client, QUERIES_KEYS.POST(postId), snapshots, (prev) =>
+  snapshotPostLikeCache<Post>(client, QUERIES_KEYS.post(postId), snapshots, (prev) =>
     updateSinglePostLike(prev, delta, isLiked),
   )
 
@@ -122,7 +122,7 @@ export const snapshotPostLikes = (
   if (repliesParentId) {
     snapshotPostLikeCache<InfiniteData<PostListResponse>>(
       client,
-      QUERIES_KEYS.POST_REPLIES(repliesParentId),
+      QUERIES_KEYS.postReplies(repliesParentId),
       snapshots,
       (prev) => updateRepliesPostLike(prev, postId, delta, isLiked),
     )

@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useDidUpdate } from './useDidUpdate'
 
-export type PositiveInteger<Value extends number> = `${Value}` extends `-${any}` | `${any}.${any}`
+export type PositiveInteger<Value extends number> = `${Value}` extends
+  | `-${number}`
+  | `${number}.${number}`
   ? never
   : Value
 
@@ -52,7 +54,7 @@ export interface UseTimer {
   (seconds: PositiveInteger<number>, options?: UseTimerOptions): UseTimerReturn
 }
 
-export const useTimer = ((...params: any[]) => {
+export const useTimer = ((...params: unknown[]) => {
   const initialSeconds = Math.max((params[0] ?? 0) as PositiveInteger<number>, 0)
   const options = (typeof params[1] === 'object' ? params[1] : { onExpire: params[1] }) as
     | UseTimerOptions
@@ -109,8 +111,8 @@ export const useTimer = ((...params: any[]) => {
     setActive(!active)
   }
 
-  const restart = (seconds: PositiveInteger<number>, immediately = true) => {
-    setSeconds(seconds)
+  const restart = (num: PositiveInteger<number>, immediately = true) => {
+    setSeconds(num)
     if (immediately) setActive(true)
   }
 
@@ -126,11 +128,10 @@ export const useTimer = ((...params: any[]) => {
     setSeconds(0)
   }
 
-  const increase = (seconds: PositiveInteger<number>) =>
-    setSeconds((prevSeconds) => prevSeconds + seconds)
-  const decrease = (seconds: PositiveInteger<number>) => {
+  const increase = (num: PositiveInteger<number>) => setSeconds((prevSeconds) => prevSeconds + num)
+  const decrease = (num: PositiveInteger<number>) => {
     setSeconds((prevSeconds) => {
-      const updatedSeconds = prevSeconds - seconds
+      const updatedSeconds = prevSeconds - num
       if (updatedSeconds <= 0) {
         setActive(false)
         return 0

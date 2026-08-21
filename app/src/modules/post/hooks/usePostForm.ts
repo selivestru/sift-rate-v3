@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 
 import { getApiError } from '~/common/api'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
@@ -34,7 +34,7 @@ export const usePostForm = ({
     register,
     handleSubmit,
     setError,
-    watch,
+    control,
     reset,
     formState: { errors, isValid },
   } = useForm<CreatePostInput>({
@@ -45,7 +45,10 @@ export const usePostForm = ({
     resolver: zodResolver(createPostSchema),
   })
 
-  const content = watch('content')
+  const content = useWatch({
+    control,
+    name: 'content',
+  })
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null)

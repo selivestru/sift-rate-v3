@@ -10,9 +10,10 @@ import { PostContent } from './PostContent'
 
 interface PostReviewCardProps {
   review: Review
+  isDetailView: boolean
 }
 
-export const PostReviewCard = ({ review }: PostReviewCardProps) => {
+export const PostReviewCard = ({ review, isDetailView }: PostReviewCardProps) => {
   const { media } = review
   const typeMeta = mediaTypeMeta[media.mediaType]
   const TypeIcon = typeMeta.icon
@@ -20,7 +21,12 @@ export const PostReviewCard = ({ review }: PostReviewCardProps) => {
   const detailTo = mediaDetailRouteByType[media.mediaType]
 
   return (
-    <div className="bg-card border-border mb-2 overflow-hidden rounded-xl border">
+    <div
+      className={cn(
+        'bg-card border-border overflow-hidden rounded-xl border',
+        !isDetailView && 'mb-2',
+      )}
+    >
       <div className="flex gap-3 p-3">
         <Link
           to={detailTo}

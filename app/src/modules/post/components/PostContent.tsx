@@ -15,7 +15,7 @@ export const PostContent = ({ content, isReview = false, maxLength = 280 }: Post
   const visible = expanded || !isLong ? content : `${content.slice(0, maxLength)}…`
 
   return (
-    <blockquote className={cn(isReview ? 'border-border border-t px-3 py-2' : 'mb-2')}>
+    <blockquote className={cn(isReview ? 'border-border border-t px-3 py-2' : '')}>
       <p className="text-foreground text-[15px] leading-relaxed break-all">{visible}</p>
 
       {isLong && !expanded && (

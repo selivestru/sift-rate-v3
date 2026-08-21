@@ -13,6 +13,8 @@ import { useAuthStore } from '../store/auth.store'
 import { useCompleteProfileMutation } from './useCompleteProfileMutation'
 
 export const useCompleteProfileForm = () => {
+  const displayName = useAuthStore((state) => state.user?.displayName)
+
   const navigate = useNavigate()
   const setCompleteProfile = useAuthStore((state) => state.setCompleteProfile)
   const completeProfileMutation = useCompleteProfileMutation()
@@ -26,7 +28,7 @@ export const useCompleteProfileForm = () => {
     formState: { errors },
   } = useForm<CompleteProfileInput>({
     defaultValues: {
-      displayName: useAuthStore.getState().user?.displayName ?? '',
+      displayName: displayName ?? '',
       username: '',
     },
     resolver: zodResolver(completeProfileSchema),

@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 const PASSWORD_LOWER = /[a-z]/
 const PASSWORD_UPPER = /[A-Z]/

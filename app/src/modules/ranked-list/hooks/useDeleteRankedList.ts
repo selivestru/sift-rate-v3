@@ -11,12 +11,12 @@ export const useDeleteRankedList = () => {
     mutationKey: ['delete-ranked-list'],
     mutationFn: (listId: string) => rankedListApi.deleteList(listId),
     onMutate: async (listId, context) => {
-      await context.client.cancelQueries({ queryKey: QUERIES_KEYS.RANKED_LISTS })
+      await context.client.cancelQueries({ queryKey: QUERIES_KEYS.rankedLists })
 
-      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.RANKED_LISTS)
+      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
 
       context.client.setQueryData<RankedListResponse>(
-        QUERIES_KEYS.RANKED_LISTS,
+        QUERIES_KEYS.rankedLists,
         optimisticDeleteList(previous, listId),
       )
 
@@ -24,7 +24,7 @@ export const useDeleteRankedList = () => {
     },
     onError: (_error, _listId, onMutateResult, context) => {
       if (onMutateResult?.previous) {
-        context.client.setQueryData(QUERIES_KEYS.RANKED_LISTS, onMutateResult.previous)
+        context.client.setQueryData(QUERIES_KEYS.rankedLists, onMutateResult.previous)
       }
     },
   })

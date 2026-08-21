@@ -14,8 +14,11 @@ export default defineConfig({
   },
 
   rules: {
-    'react/rules-of-hooks': 'error',
+    'react/immutability': 'off',
+    'react/purity': 'off',
+    'react/refs': 'off',
 
+    'react/rules-of-hooks': 'error',
     'react/jsx-pascal-case': 'error',
     'react/jsx-key': 'error',
     'react/no-array-index-key': 'warn',
@@ -30,7 +33,7 @@ export default defineConfig({
     'react/react-in-jsx-scope': 'off',
 
     'import/no-duplicates': 'error',
-    'import/no-cycle': 'warn',
+    // 'import/no-cycle': 'warn',
     'import/no-self-import': 'error',
     'import/no-unassigned-import': 'off',
 

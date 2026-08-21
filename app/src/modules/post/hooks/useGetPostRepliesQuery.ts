@@ -7,7 +7,7 @@ import type { PostListResponse } from '../types/post.types'
 
 export const useGetPostRepliesQuery = (postId: string) => {
   return useSuspenseInfiniteQuery({
-    queryKey: QUERIES_KEYS.POST_REPLIES(postId),
+    queryKey: QUERIES_KEYS.postReplies(postId),
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) => postApi.getPostReplies(postId, pageParam),
     getNextPageParam: (lastPage: PostListResponse) => lastPage.nextCursor,

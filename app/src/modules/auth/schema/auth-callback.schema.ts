@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const authCallbackSearchSchema = z.object({
   status: z.enum([

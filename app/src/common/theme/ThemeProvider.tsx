@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import z from 'zod'
+import { z } from 'zod'
 
 import { getStorageItem, setStorageItem } from '../utils/storage'
 import {

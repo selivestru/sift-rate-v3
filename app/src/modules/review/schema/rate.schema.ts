@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 import { contentSchema } from '~/common/schema/content.schema'
 

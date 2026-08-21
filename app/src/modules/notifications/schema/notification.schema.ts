@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 import { NOTIFICATION_TYPE } from '../types/notification.types'
 

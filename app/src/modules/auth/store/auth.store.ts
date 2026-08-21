@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 import { create } from 'zustand'
 
 import { getStorageItem } from '~/common/utils/storage'
