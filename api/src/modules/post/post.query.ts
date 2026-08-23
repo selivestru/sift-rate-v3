@@ -1,4 +1,5 @@
 import { PostItem, PostWithIncludes } from './types/post.types'
+import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { Prisma } from '~/generated/prisma/client'
 
 export const buildPostInclude = (userId?: string) =>
@@ -9,12 +10,7 @@ export const buildPostInclude = (userId?: string) =>
       },
     },
     user: {
-      select: {
-        id: true,
-        username: true,
-        displayName: true,
-        avatarUrl: true,
-      },
+      select: AUTHOR_SELECT,
     },
     _count: {
       select: {

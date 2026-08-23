@@ -10,7 +10,7 @@ const WEEKDAY_TO_INDEX: Record<string, number> = {
   Sat: 6,
 }
 
-type ZonedParts = {
+interface ZonedParts {
   weekday: string
   year: number
   month: number

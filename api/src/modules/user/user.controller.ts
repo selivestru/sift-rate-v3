@@ -17,6 +17,7 @@ import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
 import { DeleteAccountDto } from './dto/delete-account.dto'
 import { UpdateDisplayNameDto } from './dto/update-display-name.dto'
+import { UpdatePrivacyDto } from './dto/update-privacy.dto'
 import { UpdateUsernameDto } from './dto/update-username.dto'
 import { UserActivityQuery } from './dto/user-activity-query.dto'
 import { UserService } from './user.service'
@@ -36,10 +37,10 @@ export class UserController {
     private readonly config: ConfigService<EnvConfig, true>,
   ) {}
 
-  @Public()
+  @OptionalAuth()
   @Get(':username')
-  getUser(@Param('username') username: string) {
-    return this.userService.getUserProfile(username)
+  getUser(@Param('username') username: string, @OptionalCurrentUser('userId') viewerId?: string) {
+    return this.userService.getUserProfile(username, viewerId)
   }
 
   @Public()
@@ -66,6 +67,11 @@ export class UserController {
   @Patch('username')
   updateUsername(@CurrentUser('userId') userId: string, @Body() dto: UpdateUsernameDto) {
     return this.userService.updateUsername(userId, dto.username)
+  }
+
+  @Patch('privacy')
+  updatePrivacy(@CurrentUser('userId') userId: string, @Body() dto: UpdatePrivacyDto) {
+    return this.userService.updatePrivacy(userId, dto.isPrivate)
   }
 
   @Throttle({ default: { limit: 3, ttl: seconds(60) } })

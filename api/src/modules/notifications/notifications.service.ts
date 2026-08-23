@@ -9,6 +9,7 @@ import {
 } from './types/notification.types'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
+import { Prisma } from '~/generated/prisma/client'
 import { NotificationType } from '~/generated/prisma/enums'
 import type { NotificationModel } from '~/generated/prisma/models'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
@@ -21,16 +22,16 @@ export class NotificationsService {
     private readonly payloadResolver: NotificationPayloadResolverService,
   ) {}
 
-  async create(
+  async create<K extends NotificationType>(
     recipientId: string,
-    type: NotificationType,
-    payload: NotificationPayload<typeof type>,
+    type: K,
+    payload?: NotificationPayload<K>,
   ): Promise<void> {
     const notification = await this.prisma.notification.create({
       data: {
         userId: recipientId,
         type,
-        payload,
+        payload: payload ?? Prisma.DbNull,
       },
     })
 

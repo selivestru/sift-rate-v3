@@ -19,6 +19,7 @@ interface AuthActions {
   setUsername: (username: string) => void
   setDisplayName: (displayName: string) => void
   setTwoFactor: (twoFactorEnabled: boolean) => void
+  setIsPrivate: (isPrivate: boolean) => void
 }
 
 type Store = AuthState & AuthActions
@@ -39,4 +40,5 @@ export const useAuthStore = create<Store>()((set, get) => ({
   setUsername: (username) => set({ user: { ...get().user!, username } }),
   setDisplayName: (displayName) => set({ user: { ...get().user!, displayName } }),
   setTwoFactor: (twoFactorEnabled) => set({ user: { ...get().user!, twoFactorEnabled } }),
+  setIsPrivate: (isPrivate) => set({ user: { ...get().user!, isPrivate } }),
 }))

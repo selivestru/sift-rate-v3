@@ -1,6 +1,8 @@
 import type { MediaType } from '~/common/constants/media-type'
 import type { Subscription } from '~/modules/auth'
 
+import type { FollowViewerStatus } from './follow.types'
+
 export interface ProfileUser {
   id: string
   username: string
@@ -8,7 +10,7 @@ export interface ProfileUser {
   avatarUrl: string | null
   bannerUrl: string | null
   subscription: Subscription
-  createdAt: string
+  isPrivate: boolean
 }
 
 export type RatingDistribution = Record<number, number>
@@ -25,6 +27,9 @@ export interface UserActivity {
 
 export interface Profile {
   user: ProfileUser
-  ratingDistribution: RatingDistribution
-  reviewStats: ReviewStats
+  followStatus: FollowViewerStatus
+  followersCount: number
+  followingCount: number
+  ratingDistribution: RatingDistribution | null
+  reviewStats: ReviewStats | null
 }

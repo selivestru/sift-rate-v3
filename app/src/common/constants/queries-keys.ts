@@ -11,6 +11,8 @@ export const QUERIES_KEYS = {
   rankedLists: ['ranked-lists'],
   notifications: ['notifications'],
   notificationsUnreadCount: ['notifications-unread-count'],
+  followRequests: ['follow-requests'],
+  followRequestsCount: ['follow-requests-count'],
   profile: (username: string) => ['profile', username],
   userActivity: (username: string) => ['user-activity', username],
   userFeed: (username: string) => ['user-feed', username],

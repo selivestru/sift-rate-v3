@@ -65,6 +65,7 @@ export const buttonVariants = cva(
 export type ButtonProps = Omit<ButtonPrimitive.Props, 'disabled'> &
   VariantProps<typeof buttonVariants> & {
     isLoading?: boolean
+    loadingVariant?: 'default' | 'icon'
     startIcon?: React.ReactNode
     endIcon?: React.ReactNode
     fullWidth?: boolean
@@ -79,6 +80,7 @@ export const Button = ({
   size = 'default',
   isIconOnly = false,
   isLoading = false,
+  loadingVariant = 'default',
   startIcon,
   endIcon,
   fullWidth = false,
@@ -89,6 +91,8 @@ export const Button = ({
   children,
   ...props
 }: ButtonProps) => {
+  const isIconOnlyLoading = isIconOnly || loadingVariant === 'icon'
+
   return (
     <ButtonPrimitive
       data-slot="button"
@@ -103,7 +107,7 @@ export const Button = ({
       aria-busy={isLoading || undefined}
       {...props}
     >
-      {isIconOnly && isLoading ? (
+      {isIconOnlyLoading && isLoading ? (
         <Spinner />
       ) : (
         <>

@@ -1,11 +1,11 @@
-export type SessionMetadata = {
+export interface SessionMetadata {
   browser: UAParser.IBrowser
   os: UAParser.IOS
   device: UAParser.IDevice
   ip: string | undefined
 }
 
-export type UserSession = SessionMetadata & {
+export interface UserSession extends SessionMetadata {
   sid: string
   isCurrent: boolean
 }

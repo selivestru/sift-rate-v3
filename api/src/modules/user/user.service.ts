@@ -12,6 +12,7 @@ import {
 
 import { FeedService } from '../feed/feed.service'
 import { FeedResponse } from '../feed/types/feed.types'
+import { FollowService } from '../follow/follow.service'
 import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
 import { DeleteAccountDto } from './dto/delete-account.dto'
@@ -24,7 +25,8 @@ import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
 import { omit } from '~/common/utils/omit'
 import { safeUser } from '~/common/utils/safeUser'
-import { AuthMethod, MediaType, Prisma, User } from '~/generated/prisma/client'
+import { AuthMethod, MediaType, NotificationType, Prisma, User } from '~/generated/prisma/client'
+import { FollowStatus } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import {
@@ -35,6 +37,7 @@ import {
   EMAIL_QUEUE,
   PASSWORD_CHANGED_JOB,
 } from '~/infrastructure/resend/constants/email-queue'
+import { NotificationsService } from '~/modules/notifications/notifications.service'
 import { SessionService } from '~/modules/session/session.service'
 
 @Injectable()
@@ -48,27 +51,59 @@ export class UserService {
     private readonly sessionService: SessionService,
     @Inject(forwardRef(() => FeedService))
     private readonly feedService: FeedService,
+    @Inject(forwardRef(() => FollowService))
+    private readonly followService: FollowService,
     private readonly redis: RedisService,
+    private readonly notificationsService: NotificationsService,
     @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
   ) {}
 
-  async getUserProfile(username: string): Promise<UserProfile> {
+  async getUserProfile(username: string, viewerId?: string): Promise<UserProfile> {
     const user = await this.findByUsername(username)
 
     if (!user) {
       throw new NotFoundException('User not found')
     }
 
-    const omitUser = omit(safeUser(user), ['isVerified', 'method', 'twoFactorEnabled'])
-    const [ratingDistribution, reviewStats] = await Promise.all([
-      this.getUserRatingDistribution(user.id),
-      this.getUserReviewStats(user.id),
+    const omitUser = omit(safeUser(user), [
+      'email',
+      'isVerified',
+      'method',
+      'twoFactorEnabled',
+      'createdAt',
     ])
+    const [followersCount, followingCount, followStatus] = await Promise.all([
+      this.prisma.follow.count({
+        where: { followingId: user.id, status: FollowStatus.ACCEPTED },
+      }),
+      this.prisma.follow.count({
+        where: { followerId: user.id, status: FollowStatus.ACCEPTED },
+      }),
+      viewerId
+        ? this.followService.getFollowStatus(viewerId, user.id)
+        : Promise.resolve({ followStatus: 'NONE' as const }),
+    ])
+
+    const canSeeContent =
+      !user.isPrivate ||
+      viewerId === user.id ||
+      followStatus.followStatus === 'FOLLOWING' ||
+      followStatus.followStatus === 'MUTUAL'
+
+    const [ratingDistribution, reviewStats] = canSeeContent
+      ? await Promise.all([
+          this.getUserRatingDistribution(user.id),
+          this.getUserReviewStats(user.id),
+        ])
+      : [null, null]
 
     const userProfile: UserProfile = {
       user: omitUser,
       ratingDistribution,
       reviewStats,
+      followersCount,
+      followingCount,
+      followStatus: followStatus.followStatus,
     }
 
     return userProfile
@@ -194,6 +229,21 @@ export class UserService {
     })
   }
 
+  async updatePrivacy(userId: string, isPrivate: boolean): Promise<Pick<User, 'isPrivate'>> {
+    if (!isPrivate) {
+      await this.prisma.follow.updateMany({
+        where: { followingId: userId, status: FollowStatus.PENDING },
+        data: { status: FollowStatus.ACCEPTED },
+      })
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { isPrivate },
+      select: { isPrivate: true },
+    })
+  }
+
   async changePassword(
     userId: string,
     currentSid: string,
@@ -214,6 +264,7 @@ export class UserService {
     const passwordHash = await hash(dto.newPassword, { type: argon2id })
 
     await this.updatePasswordHash(userId, passwordHash)
+    await this.notificationsService.create(userId, NotificationType.PASSWORD_CHANGED)
     await this.sessionService.destroyAllForUser(userId, currentSid)
 
     try {

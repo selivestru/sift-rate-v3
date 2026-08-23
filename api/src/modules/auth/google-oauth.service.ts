@@ -6,7 +6,7 @@ import { randomBytes } from 'node:crypto'
 import { EnvConfig } from '~/app/config/env.config'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 
-export type GoogleProfile = {
+export interface GoogleProfile {
   email: string
   displayName: string | null
   avatarUrl: string | null

@@ -68,6 +68,10 @@ export const NotificationsProvider = ({ children }: React.PropsWithChildren) => 
             return { count: prev.count + 1 }
           },
         )
+
+        if (notification.type === 'FOLLOW' || notification.type === 'FOLLOW_REQUEST') {
+          queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.followRequestsCount })
+        }
       } catch (error) {
         console.warn('Failed to parse notification event', error)
       }

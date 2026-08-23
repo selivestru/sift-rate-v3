@@ -14,6 +14,7 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as CompleteProfileRouteImport } from './routes/complete-profile'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
+import { Route as AppFollowRequestsRouteImport } from './routes/_app/follow-requests'
 import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
@@ -70,6 +71,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppUsernameRoute = AppUsernameRouteImport.update({
   id: '/$username',
   path: '/$username',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFollowRequestsRoute = AppFollowRequestsRouteImport.update({
+  id: '/follow-requests',
+  path: '/follow-requests',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/library': typeof AppLibraryRouteRouteWithChildren
   '/settings': typeof AppSettingsRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
+  '/follow-requests': typeof AppFollowRequestsRoute
   '/notifications': typeof AppNotificationsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -286,6 +293,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/complete-profile': typeof CompleteProfileRoute
   '/$username': typeof AppUsernameRoute
+  '/follow-requests': typeof AppFollowRequestsRoute
   '/notifications': typeof AppNotificationsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -327,6 +335,7 @@ export interface FileRoutesById {
   '/_app/library': typeof AppLibraryRouteRouteWithChildren
   '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
+  '/_app/follow-requests': typeof AppFollowRequestsRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -369,6 +378,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/settings'
     | '/$username'
+    | '/follow-requests'
     | '/notifications'
     | '/auth/callback'
     | '/auth/forgot-password'
@@ -404,6 +414,7 @@ export interface FileRouteTypes {
   to:
     | '/complete-profile'
     | '/$username'
+    | '/follow-requests'
     | '/notifications'
     | '/auth/callback'
     | '/auth/forgot-password'
@@ -444,6 +455,7 @@ export interface FileRouteTypes {
     | '/_app/library'
     | '/_app/settings'
     | '/_app/$username'
+    | '/_app/follow-requests'
     | '/_app/notifications'
     | '/auth/callback'
     | '/auth/forgot-password'
@@ -519,6 +531,13 @@ declare module '@tanstack/react-router' {
       path: '/$username'
       fullPath: '/$username'
       preLoaderRoute: typeof AppUsernameRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/follow-requests': {
+      id: '/_app/follow-requests'
+      path: '/follow-requests'
+      fullPath: '/follow-requests'
+      preLoaderRoute: typeof AppFollowRequestsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/library': {
@@ -820,6 +839,7 @@ interface AppRouteChildren {
   AppLibraryRouteRoute: typeof AppLibraryRouteRouteWithChildren
   AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
+  AppFollowRequestsRoute: typeof AppFollowRequestsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppPostPostIdRoute: typeof AppPostPostIdRoute
@@ -842,6 +862,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLibraryRouteRoute: AppLibraryRouteRouteWithChildren,
   AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
+  AppFollowRequestsRoute: AppFollowRequestsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppIndexRoute: AppIndexRoute,
   AppPostPostIdRoute: AppPostPostIdRoute,

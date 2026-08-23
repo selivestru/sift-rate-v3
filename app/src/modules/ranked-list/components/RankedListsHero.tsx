@@ -33,7 +33,7 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
       />
 
       <div className="relative flex flex-col gap-8 sm:flex-row sm:justify-between sm:gap-10">
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-1 flex-col gap-3">
           <p className="text-muted-foreground text-[11px] font-medium tracking-[0.18em] uppercase">
             Library
           </p>

@@ -16,14 +16,14 @@ export interface ImdbRating {
   votes: number
 }
 
-type OmdbResponse = {
+interface OmdbResponse {
   Response: string
   imdbRating?: string
   imdbVotes?: string
   Error?: string
 }
 
-type AggregateRating = {
+interface AggregateRating {
   ratingValue?: number | string
   ratingCount?: number | string
 }

@@ -24,7 +24,7 @@ import { EnvConfig } from '~/app/config/env.config'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
 import { safeUser } from '~/common/utils/safeUser'
-import { AuthMethod } from '~/generated/prisma/client'
+import { AuthMethod, NotificationType } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import {
@@ -33,6 +33,7 @@ import {
   WELCOME_GOOGLE_JOB,
   WELCOME_JOB,
 } from '~/infrastructure/resend/constants/email-queue'
+import { NotificationsService } from '~/modules/notifications/notifications.service'
 import { UserService } from '~/modules/user/user.service'
 
 @Injectable()
@@ -54,6 +55,7 @@ export class AuthService {
     private readonly twoFactorService: TwoFactorService,
     private readonly redis: RedisService,
     private readonly sessionService: SessionService,
+    private readonly notificationsService: NotificationsService,
     @InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue,
   ) {}
 
@@ -224,6 +226,7 @@ export class AuthService {
 
     await this.userService.updateEmail(userId, newEmail)
     await this.invalidateEmailChange(userId)
+    await this.notificationsService.create(userId, NotificationType.EMAIL_CHANGED)
     await this.sessionService.destroyAllForUser(userId)
 
     this.logger.log({ userId }, 'Email change confirmed; sessions revoked')

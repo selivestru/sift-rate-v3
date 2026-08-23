@@ -6,7 +6,7 @@ import ky, { HTTPError } from 'ky'
 const DEEZER_API_URL = 'https://api.deezer.com'
 const SIZE_TOKEN = /(\d{2,4})x(\d{2,4})/
 
-type DeezerErrorBody = {
+interface DeezerErrorBody {
   error: {
     type: string
     message: string

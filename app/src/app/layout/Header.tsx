@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Button } from '~/common/ui/Button'
 import { useAuthStore } from '~/modules/auth'
 import { NotificationsBell } from '~/modules/notifications'
+import { FollowRequestsBell } from '~/modules/profile'
 
 import { NavDrawer } from './NavDrawer'
 import { Profile } from './Profile'
@@ -23,6 +24,7 @@ export const Header = () => {
         {user ? (
           <div className="flex items-center gap-3">
             <NotificationsBell />
+            <FollowRequestsBell />
             <Profile />
           </div>
         ) : (

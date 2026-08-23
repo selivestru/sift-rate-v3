@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service'
 import { FeedResponse } from './types/feed.types'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { Prisma } from '~/generated/prisma/client'
+import { FollowStatus } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { buildPostInclude, mapPost } from '~/modules/post/post.query'
 
@@ -16,7 +17,16 @@ export class FeedService {
   ) {}
 
   async getFeed(userId?: string, cursor?: string): Promise<FeedResponse> {
-    return this.fetchPosts(userId, cursor)
+    return this.fetchPosts(userId, cursor, {
+      user: {
+        OR: [
+          { isPrivate: false },
+          ...(userId
+            ? [{ followers: { some: { followerId: userId, status: FollowStatus.ACCEPTED } } }]
+            : []),
+        ],
+      },
+    })
   }
 
   async getFollowingFeed(userId: string, cursor?: string): Promise<FeedResponse> {
@@ -25,6 +35,7 @@ export class FeedService {
         followers: {
           some: {
             followerId: userId,
+            status: FollowStatus.ACCEPTED,
           },
         },
       },

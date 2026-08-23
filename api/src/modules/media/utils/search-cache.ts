@@ -5,7 +5,7 @@ export const SEARCH_CACHE_TTL_SECONDS = 24 * 3600
 
 export type SearchCacheKind = 'movie' | 'tv' | 'game' | 'book' | 'track' | 'album'
 
-type SearchCacheEnvelope<T> = {
+interface SearchCacheEnvelope<T> {
   cachedAt: number
   data: T
 }

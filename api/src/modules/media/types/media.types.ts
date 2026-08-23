@@ -52,12 +52,12 @@ export interface EnsureMediaResult {
   inserted: boolean
 }
 
-export type MediaStateResponse = {
+export interface MediaStateResponse {
   review: Review | null
   plannedItem: PlannedItem | null
 }
 
-type MediaReview = Review & {
+interface MediaReview extends Review {
   user: Author
 }
 

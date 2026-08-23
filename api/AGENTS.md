@@ -17,6 +17,8 @@ NestJS 11 backend for SiftRate (personal media-life archive). Frontend SPA is `.
 
 No tests exist (`*.spec.ts` absent; jest/supertest deps are starter leftovers).
 
+- Always respond in Russian.
+
 ## Env & config
 
 - Every var is required and zod-validated at boot in `src/app/config/env.config.ts` — missing vars crash startup. No `.env.example`; add new vars to `envSchema`. Keys: `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `ORIGIN`, `BACKEND_URL`, `S3_*`, `RESEND_*`, TMDB/OMDB/IGDB/Google Books keys, Google OAuth, `DUMMY_HASH`.
@@ -45,3 +47,4 @@ No tests exist (`*.spec.ts` absent; jest/supertest deps are starter leftovers).
 - Prisma 7 (`prisma-client` generator, `@prisma/adapter-pg`), Postgres, `uuid(7)` ids; `PrismaModule` is `@Global()`. Schema has no migrations dir yet — `db:migrate` creates the first one. Prisma errors → `PrismaClientExceptionFilter` (e.g. `P2002` → 409).
 - Use `~/` alias over relative imports; `import type` for type-only imports; no code comments unless asked.
 - ESLint: `no-explicit-any` off; `prettier/prettier` disabled — formatting only via `format:fix` (don't hand-sort imports; the @trivago plugin enforces order).
+- Do not write code comments.

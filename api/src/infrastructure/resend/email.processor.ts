@@ -15,7 +15,11 @@ import {
 import { ResendService } from './resend.service'
 import { Job } from 'bullmq'
 
-type EmailJobData = { to: string; token?: string; newEmail?: string }
+interface EmailJobData {
+  to: string
+  token?: string
+  newEmail?: string
+}
 
 @Processor(EMAIL_QUEUE)
 export class EmailProcessor extends WorkerHost {

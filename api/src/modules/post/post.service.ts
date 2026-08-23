@@ -6,11 +6,16 @@ import { UpdatePostDto } from './dto/update-post.dto'
 import { buildPostInclude, mapPost } from './post.query'
 import { LikeResponse, PostItem, PostListResponse } from './types/post.types'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
+import { NotificationType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
+import { NotificationsService } from '~/modules/notifications/notifications.service'
 
 @Injectable()
 export class PostService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   async getPostById(postId: string, userId?: string): Promise<PostItem> {
     const post = await this.prisma.post.findUnique({
@@ -76,7 +81,7 @@ export class PostService {
   async createReply(postId: string, userId: string, dto: CreatePostDto): Promise<PostItem> {
     const parent = await this.prisma.post.findUnique({
       where: { id: postId },
-      select: { id: true, parentId: true, rootId: true, deletedAt: true },
+      select: { id: true, userId: true, parentId: true, rootId: true, deletedAt: true },
     })
 
     if (!parent || parent.deletedAt) {
@@ -92,6 +97,13 @@ export class PostService {
       },
       include: buildPostInclude(userId),
     })
+
+    if (parent.userId !== userId) {
+      await this.notificationsService.create(parent.userId, NotificationType.POST_COMMENT, {
+        postId: reply.id,
+        userId,
+      })
+    }
 
     return mapPost(reply)
   }
@@ -152,12 +164,26 @@ export class PostService {
   }
 
   async likePost(postId: string, userId: string): Promise<LikeResponse> {
-    await this.ensurePostExists(postId)
+    const post = await this.prisma.post.findUnique({
+      where: { id: postId },
+      select: { id: true, userId: true },
+    })
 
-    await this.prisma.postLike.createMany({
+    if (!post) {
+      throw new NotFoundException('Post not found')
+    }
+
+    const result = await this.prisma.postLike.createMany({
       data: [{ postId, userId }],
       skipDuplicates: true,
     })
+
+    if (result.count > 0 && post.userId !== userId) {
+      await this.notificationsService.create(post.userId, NotificationType.POST_LIKE, {
+        postId,
+        userId,
+      })
+    }
 
     return { success: true }
   }

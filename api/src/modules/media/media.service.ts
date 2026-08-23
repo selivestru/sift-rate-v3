@@ -21,6 +21,7 @@ import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
 import { Queue } from 'bullmq'
+import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { Media } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
@@ -159,12 +160,7 @@ export class MediaService {
       take: DEFAULT_PAGE_SIZE + 1,
       include: {
         user: {
-          select: {
-            id: true,
-            username: true,
-            displayName: true,
-            avatarUrl: true,
-          },
+          select: AUTHOR_SELECT,
         },
       },
     })

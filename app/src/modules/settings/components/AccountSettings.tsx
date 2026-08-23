@@ -2,6 +2,7 @@ import { PageHeader } from '~/common/ui/PageHeader'
 import { AUTH_METHOD, useAuthStore } from '~/modules/auth'
 
 import { accountNavItem } from '../constants/settings-nav'
+import { AccountPrivacySection } from './AccountPrivacySection'
 import { ChangeDisplayNameForm } from './ChangeDisplayNameForm'
 import { ChangeEmailForm } from './ChangeEmailForm'
 import { ChangePasswordForm } from './ChangePasswordForm'
@@ -28,6 +29,7 @@ export const AccountSettings = () => {
             <ChangePasswordForm />
           </>
         )}
+        <AccountPrivacySection />
       </div>
     </div>
   )

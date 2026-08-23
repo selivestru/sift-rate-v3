@@ -2,7 +2,7 @@ import { JsonValue } from '@prisma/client/runtime/client'
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
 import { MediaType } from '~/generated/prisma/enums'
 
-export type ReviewMediaCard = {
+export interface ReviewMediaCard {
   id: string
   externalId: string
   mediaType: MediaType
@@ -11,7 +11,7 @@ export type ReviewMediaCard = {
   metadata: JsonValue | null
 }
 
-export type ReviewItem = {
+export interface ReviewItem {
   id: string
   rating: number
   content: string | null
@@ -22,7 +22,7 @@ export type ReviewItem = {
 
 export type ReviewsResponse = PaginationCursorResponse<ReviewItem>
 
-export type ReviewStatsResponse = {
+export interface ReviewStatsResponse {
   total: number
   byMediaType: Partial<Record<MediaType, number>>
   byRating: Partial<Record<number, number>>

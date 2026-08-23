@@ -1,9 +1,7 @@
 import { BadRequestException } from '@nestjs/common'
 
-export type ReviewCursorPayload = {
-  /** ISO timestamp of `updatedAt` */
+export interface ReviewCursorPayload {
   u: string
-  /** Review id */
   i: string
 }
 

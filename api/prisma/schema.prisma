@@ -20,6 +20,11 @@ enum Subscription {
   LIFETIME
 }
 
+enum FollowStatus {
+  PENDING
+  ACCEPTED
+}
+
 enum MediaType {
   MOVIE
   TV_SHOW
@@ -30,7 +35,13 @@ enum MediaType {
 }
 
 enum NotificationType {
+  PASSWORD_CHANGED
+  EMAIL_CHANGED
   FOLLOW
+  FOLLOW_REQUEST
+  FOLLOW_REQUEST_ACCEPTED
+  POST_LIKE
+  POST_COMMENT
 }
 
 model User {
@@ -43,6 +54,7 @@ model User {
   method           AuthMethod   @default(CREDENTIALS)
   subscription     Subscription @default(FREE)
   isVerified       Boolean      @default(false)
+  isPrivate        Boolean      @default(false)
   twoFactorEnabled Boolean      @default(false)
   twoFactorSecret  String?
   createdAt        DateTime     @default(now())
@@ -63,8 +75,9 @@ model User {
 }
 
 model Follow {
-  id        String   @id @default(uuid(7))
-  createdAt DateTime @default(now())
+  id        String       @id @default(uuid(7))
+  status    FollowStatus @default(PENDING)
+  createdAt DateTime     @default(now())
 
   followerId String
   follower   User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
@@ -73,7 +86,7 @@ model Follow {
   following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
-  @@index([followingId])
+  @@index([followingId, status])
 }
 
 model Media {

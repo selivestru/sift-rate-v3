@@ -4,15 +4,27 @@ import { subscriptionMeta } from '~/common/constants/subscriptions-meta'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Badge } from '~/common/ui/Badge'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
-import { SUBSCRIPTIONS } from '~/modules/auth'
+import { SUBSCRIPTIONS, useAuthStore } from '~/modules/auth'
 
+import type { FollowViewerStatus } from '../types/follow.types'
 import type { ProfileUser } from '../types/profile.types'
+import { FollowButton } from './FollowButton'
 
 interface ProfileHeroProps {
   user: ProfileUser
+  followStatus: FollowViewerStatus
+  followersCount: number
+  followingCount: number
 }
 
-export const ProfileHero = ({ user }: ProfileHeroProps) => {
+export const ProfileHero = ({
+  user,
+  followStatus,
+  followersCount,
+  followingCount,
+}: ProfileHeroProps) => {
+  const currentUser = useAuthStore((state) => state.user)
+  const isOwnProfile = currentUser?.id === user.id
   const sub = subscriptionMeta[user.subscription]
 
   return (
@@ -54,7 +66,14 @@ export const ProfileHero = ({ user }: ProfileHeroProps) => {
                   </Badge>
                 )}
               </div>
+              <p className="text-muted-foreground mt-2 text-sm tabular-nums">
+                {followersCount} followers · {followingCount} following
+              </p>
             </div>
+
+            {currentUser && !isOwnProfile && (
+              <FollowButton userId={user.id} username={user.username} followStatus={followStatus} />
+            )}
           </div>
         </div>
       </div>

@@ -12,10 +12,14 @@ export const ProfileSkeleton = () => {
           <div className="-mt-16 flex items-end gap-5 max-md:-mt-12 max-md:gap-4">
             <Skeleton className="ring-card size-32 rounded-full ring-4 max-md:size-24" />
 
-            <div className="flex flex-1 flex-col gap-2 pb-1">
-              <Skeleton className="h-7 w-48 max-w-full" />
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-5 w-20 rounded-full" />
+            <div className="flex flex-1 items-end justify-between gap-4 pb-1">
+              <div className="flex flex-1 flex-col gap-2">
+                <Skeleton className="h-7 w-48 max-w-full" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-5 w-20 rounded-full" />
+                <Skeleton className="h-4 w-36" />
+              </div>
+              <Skeleton className="h-10 w-[150px] rounded-md" />
             </div>
           </div>
         </div>

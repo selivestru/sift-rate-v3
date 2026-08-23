@@ -20,7 +20,6 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     if (isUnread) {
       e.preventDefault()
-
       markRead([notification.id])
     }
   }
@@ -34,7 +33,7 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
   const content = (
     <>
       {meta.icon}
-      <span className="min-w-0 flex-1">
+      <span className="flex-1">
         <span
           className={cn(
             'block truncate text-sm tracking-tight',
