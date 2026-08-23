@@ -8,7 +8,7 @@ import { useAuthStore } from '../store/auth.store'
 
 export const useLogout = () => {
   const navigate = useNavigate()
-  const location = useLocation()
+  const { pathname } = useLocation()
   const setUser = useAuthStore((state) => state.setUser)
 
   const queryClient = useQueryClient()
@@ -17,7 +17,12 @@ export const useLogout = () => {
     mutationKey: ['logout'],
     mutationFn: authApi.logout,
     onMutate: () => {
-      if (location.pathname.startsWith('/library') || location.pathname.startsWith('/settings')) {
+      if (
+        pathname.startsWith('/library') ||
+        pathname.startsWith('/settings') ||
+        pathname === '/notifications' ||
+        pathname === '/follow-requests'
+      ) {
         navigate({ to: '/' })
       }
 

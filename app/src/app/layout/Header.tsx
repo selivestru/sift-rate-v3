@@ -24,7 +24,7 @@ export const Header = () => {
         {user ? (
           <div className="flex items-center gap-3">
             <NotificationsBell />
-            <FollowRequestsBell />
+            {user.isPrivate && <FollowRequestsBell />}
             <Profile />
           </div>
         ) : (
