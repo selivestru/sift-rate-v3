@@ -1,3 +1,7 @@
+import type { QueryClient } from '@tanstack/react-query'
+
+import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+
 import type {
   RankedListEntry,
   RankedListItem,
@@ -219,5 +223,124 @@ export const optimisticReorderItem = (
         updatedAt: new Date().toISOString(),
       }
     }),
+  )
+}
+
+export const getRankedListsCache = (client: QueryClient) => {
+  return client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
+}
+
+export const restoreRankedListsCache = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+) => {
+  if (!previous) return
+
+  client.setQueryData(QUERIES_KEYS.rankedLists, previous)
+}
+
+export const applyOptimisticCreateList = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+  input: {
+    tempId: string
+    userId: string
+    title: string
+  },
+) => {
+  client.setQueryData<RankedListResponse>(
+    QUERIES_KEYS.rankedLists,
+    optimisticCreateList(previous, input),
+  )
+}
+
+export const applyReconcileCreateList = (
+  client: QueryClient,
+  tempId: string,
+  server: RankedListServer,
+) => {
+  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
+    reconcileCreateList(prev, tempId, server),
+  )
+}
+
+export const applyOptimisticUpdateList = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+  listId: string,
+  patch: Pick<RankedListItem, 'title'>,
+) => {
+  client.setQueryData<RankedListResponse>(
+    QUERIES_KEYS.rankedLists,
+    optimisticUpdateList(previous, listId, patch),
+  )
+}
+
+export const applyReconcileUpdateList = (client: QueryClient, server: RankedListServer) => {
+  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
+    reconcileUpdateList(prev, server),
+  )
+}
+
+export const applyOptimisticDeleteList = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+  listId: string,
+) => {
+  client.setQueryData<RankedListResponse>(
+    QUERIES_KEYS.rankedLists,
+    optimisticDeleteList(previous, listId),
+  )
+}
+
+export const applyOptimisticAddItem = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+  input: {
+    tempId: string
+    listId: string
+    mediaId: string
+    media: RankedMedia
+  },
+) => {
+  client.setQueryData<RankedListResponse>(
+    QUERIES_KEYS.rankedLists,
+    optimisticAddItem(previous, input),
+  )
+}
+
+export const applyReconcileAddItem = (
+  client: QueryClient,
+  listId: string,
+  tempId: string,
+  server: RankedListEntry,
+) => {
+  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
+    reconcileAddItem(prev, listId, tempId, server),
+  )
+}
+
+export const applyOptimisticDeleteItem = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+  listId: string,
+  itemId: string,
+) => {
+  client.setQueryData<RankedListResponse>(
+    QUERIES_KEYS.rankedLists,
+    optimisticDeleteItem(previous, listId, itemId),
+  )
+}
+
+export const applyOptimisticReorderItem = (
+  client: QueryClient,
+  previous: RankedListResponse | undefined,
+  listId: string,
+  itemId: string,
+  position: number,
+) => {
+  client.setQueryData<RankedListResponse>(
+    QUERIES_KEYS.rankedLists,
+    optimisticReorderItem(previous, listId, itemId, position),
   )
 }

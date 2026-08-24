@@ -1,8 +1,9 @@
 import type { QueryClient } from '@tanstack/react-query'
 
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+import type { MediaStateResponse } from '~/modules/discover'
 
-import type { ReviewStats } from '../types/review.types'
+import type { Review, ReviewStats } from '../types/review.types'
 
 export const patchMyReviewStats = (
   client: QueryClient,
@@ -12,4 +13,46 @@ export const patchMyReviewStats = (
     if (!prev) return prev
     return recipe(prev)
   })
+}
+
+export const restoreMyReviewStats = (
+  client: QueryClient,
+  previousStats: ReviewStats | undefined,
+) => {
+  if (!previousStats) return
+
+  client.setQueryData(QUERIES_KEYS.myReviewStats, previousStats)
+}
+
+export const setMediaStateReview = (client: QueryClient, review: Review) => {
+  const { media } = review
+
+  client.setQueryData<MediaStateResponse>(
+    QUERIES_KEYS.mediaState({ externalId: media.externalId, mediaType: media.mediaType }),
+    (prev) => {
+      if (!prev) return prev
+
+      return {
+        review,
+        plannedItem: null,
+      }
+    },
+  )
+}
+
+export const clearMediaStateReview = (
+  client: QueryClient,
+  media: Pick<Review['media'], 'externalId' | 'mediaType'>,
+) => {
+  client.setQueryData<MediaStateResponse>(
+    QUERIES_KEYS.mediaState({ externalId: media.externalId, mediaType: media.mediaType }),
+    (prev) => {
+      if (!prev) return prev
+
+      return {
+        review: null,
+        plannedItem: null,
+      }
+    },
+  )
 }

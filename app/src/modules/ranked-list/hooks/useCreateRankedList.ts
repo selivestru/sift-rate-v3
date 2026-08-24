@@ -4,8 +4,14 @@ import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import { useAuthStore } from '~/modules/auth'
 
 import { rankedListApi } from '../api/ranked-list.api'
-import type { RankedListResponse, UpsertRankedListBody } from '../types/ranked-list.types'
-import { createTempId, optimisticCreateList, reconcileCreateList } from '../utils/ranked-list-cache'
+import type { UpsertRankedListBody } from '../types/ranked-list.types'
+import {
+  applyOptimisticCreateList,
+  applyReconcileCreateList,
+  createTempId,
+  getRankedListsCache,
+  restoreRankedListsCache,
+} from '../utils/ranked-list-cache'
 
 export const useCreateRankedList = (onSuccess: () => void) => {
   const userId = useAuthStore((state) => state.user?.id)
@@ -16,33 +22,26 @@ export const useCreateRankedList = (onSuccess: () => void) => {
     onMutate: async (body, context) => {
       await context.client.cancelQueries({ queryKey: QUERIES_KEYS.rankedLists })
 
-      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
+      const previous = getRankedListsCache(context.client)
       const tempId = createTempId()
 
-      context.client.setQueryData<RankedListResponse>(
-        QUERIES_KEYS.rankedLists,
-        optimisticCreateList(previous, {
-          tempId,
-          userId: userId!,
-          title: body.title,
-        }),
-      )
+      applyOptimisticCreateList(context.client, previous, {
+        tempId,
+        userId: userId!,
+        title: body.title,
+      })
 
       onSuccess()
 
       return { previous, tempId }
     },
     onError: (_error, _body, onMutateResult, context) => {
-      if (onMutateResult?.previous) {
-        context.client.setQueryData(QUERIES_KEYS.rankedLists, onMutateResult.previous)
-      }
+      restoreRankedListsCache(context.client, onMutateResult?.previous)
     },
     onSuccess: (server, _body, onMutateResult, context) => {
       if (!onMutateResult?.tempId) return
 
-      context.client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
-        reconcileCreateList(prev, onMutateResult.tempId, server),
-      )
+      applyReconcileCreateList(context.client, onMutateResult.tempId, server)
     },
   })
 }

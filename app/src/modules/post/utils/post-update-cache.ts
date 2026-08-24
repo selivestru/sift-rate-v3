@@ -6,6 +6,19 @@ import type { FeedResponse } from '~/modules/feed'
 import type { Post, PostListResponse } from '../types/post.types'
 import { getCachedPost, POST_FEED_KEYS } from './post-like-cache'
 
+export const prependPostToFeedCache = (client: QueryClient, post: Post) => {
+  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.feed('ALL'), (prev) => {
+    if (!prev) return prev
+
+    return {
+      ...prev,
+      pages: prev.pages.map((page, index) =>
+        index === 0 ? { ...page, data: [post, ...page.data] } : page,
+      ),
+    }
+  })
+}
+
 const updateFeedPost = (
   prev: InfiniteData<FeedResponse> | undefined,
   postId: string,

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { removeNotificationFromCache } from '~/modules/notifications/utils/remove-notification-from-cache'
+import { removeNotificationFromCache } from '~/modules/notifications'
 
 import { followApi } from '../api/follow.api'
 import { removeFollowRequestFromCache } from '../utils/update-follow-requests-cache'

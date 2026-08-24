@@ -6,7 +6,11 @@ import type { MediaStateResponse } from '~/modules/discover'
 import { reviewApi } from '../api/review.api'
 import type { ReviewStats, UpsertReviewVariables } from '../types/review.types'
 import { applyReviewCreated, applyReviewRatingChanged } from '../utils/review-stats'
-import { patchMyReviewStats } from '../utils/review-stats-cache'
+import {
+  patchMyReviewStats,
+  restoreMyReviewStats,
+  setMediaStateReview,
+} from '../utils/review-stats-cache'
 
 export const useUpsertReviewMutation = () => {
   return useMutation({
@@ -53,9 +57,7 @@ export const useUpsertReviewMutation = () => {
       return { previousStats, previousReview }
     },
     onError: (_error, _variables, onMutateResult, context) => {
-      if (onMutateResult?.previousStats) {
-        context.client.setQueryData(QUERIES_KEYS.myReviewStats, onMutateResult.previousStats)
-      }
+      restoreMyReviewStats(context.client, onMutateResult?.previousStats)
     },
     onSuccess: (data, _variables, onMutateResult, context) => {
       const { media } = data
@@ -76,17 +78,7 @@ export const useUpsertReviewMutation = () => {
         }),
       })
 
-      context.client.setQueryData<MediaStateResponse>(
-        QUERIES_KEYS.mediaState({ externalId: media.externalId, mediaType: media.mediaType }),
-        (prev) => {
-          if (!prev) return prev
-
-          return {
-            review: data,
-            plannedItem: null,
-          }
-        },
-      )
+      setMediaStateReview(context.client, data)
     },
   })
 }

@@ -1,12 +1,15 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
-import type { MediaStateResponse } from '~/modules/discover'
 
 import { reviewApi } from '../api/review.api'
 import type { DeleteReviewVariables, ReviewStats } from '../types/review.types'
 import { applyReviewDeleted } from '../utils/review-stats'
-import { patchMyReviewStats } from '../utils/review-stats-cache'
+import {
+  clearMediaStateReview,
+  patchMyReviewStats,
+  restoreMyReviewStats,
+} from '../utils/review-stats-cache'
 
 export const useDeleteReviewMutation = () => {
   return useMutation({
@@ -31,9 +34,7 @@ export const useDeleteReviewMutation = () => {
       return { previousStats }
     },
     onError: (_error, _variables, onMutateResult, context) => {
-      if (onMutateResult?.previousStats) {
-        context.client.setQueryData(QUERIES_KEYS.myReviewStats, onMutateResult.previousStats)
-      }
+      restoreMyReviewStats(context.client, onMutateResult?.previousStats)
     },
     onSuccess: (data, _variables, onMutateResult, context) => {
       const { media } = data
@@ -54,17 +55,7 @@ export const useDeleteReviewMutation = () => {
         }),
       })
 
-      context.client.setQueryData<MediaStateResponse>(
-        QUERIES_KEYS.mediaState({ externalId: media.externalId, mediaType: media.mediaType }),
-        (prev) => {
-          if (!prev) return prev
-
-          return {
-            review: null,
-            plannedItem: null,
-          }
-        },
-      )
+      clearMediaStateReview(context.client, media)
     },
   })
 }

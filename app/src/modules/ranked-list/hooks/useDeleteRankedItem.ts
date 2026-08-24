@@ -3,8 +3,12 @@ import { useMutation } from '@tanstack/react-query'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
 import { rankedListApi } from '../api/ranked-list.api'
-import type { DeleteRankedItemVariables, RankedListResponse } from '../types/ranked-list.types'
-import { optimisticDeleteItem } from '../utils/ranked-list-cache'
+import type { DeleteRankedItemVariables } from '../types/ranked-list.types'
+import {
+  applyOptimisticDeleteItem,
+  getRankedListsCache,
+  restoreRankedListsCache,
+} from '../utils/ranked-list-cache'
 
 export const useDeleteRankedItem = () => {
   return useMutation({
@@ -14,19 +18,14 @@ export const useDeleteRankedItem = () => {
     onMutate: async (variables, context) => {
       await context.client.cancelQueries({ queryKey: QUERIES_KEYS.rankedLists })
 
-      const previous = context.client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
+      const previous = getRankedListsCache(context.client)
 
-      context.client.setQueryData<RankedListResponse>(
-        QUERIES_KEYS.rankedLists,
-        optimisticDeleteItem(previous, variables.listId, variables.itemId),
-      )
+      applyOptimisticDeleteItem(context.client, previous, variables.listId, variables.itemId)
 
       return { previous }
     },
     onError: (_error, _variables, onMutateResult, context) => {
-      if (onMutateResult?.previous) {
-        context.client.setQueryData(QUERIES_KEYS.rankedLists, onMutateResult.previous)
-      }
+      restoreRankedListsCache(context.client, onMutateResult?.previous)
     },
   })
 }
