@@ -30,6 +30,27 @@ export const addPlannedItemToCache = (client: QueryClient, item: PlannedListItem
   )
 }
 
+export const removePlannedItemByMediaFromCache = (
+  client: QueryClient,
+  media: PlannedListItem['media'],
+) => {
+  client.setQueryData<PlannedListResponse>(QUERIES_KEYS.plannedList, (prev) => {
+    if (!prev) return prev
+
+    const data = prev.data.filter(
+      (item) =>
+        item.media.externalId !== media.externalId || item.media.mediaType !== media.mediaType,
+    )
+
+    if (data.length === prev.data.length) return prev
+
+    return {
+      data,
+      totalResults: Math.max(0, prev.totalResults - (prev.data.length - data.length)),
+    }
+  })
+}
+
 export const removePlannedItemFromCache = (client: QueryClient, item: PlannedListItem) => {
   client.setQueryData<PlannedListResponse>(QUERIES_KEYS.plannedList, (prev) => {
     if (!prev) return prev

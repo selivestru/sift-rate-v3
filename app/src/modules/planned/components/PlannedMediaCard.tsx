@@ -33,8 +33,8 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
   return (
     <div
       className={cn(
-        'bg-card border-border group relative flex flex-col overflow-hidden rounded-xl border transition-colors duration-200',
-        'hover:bg-accent',
+        'bg-card ring ring-border relative flex flex-col overflow-hidden rounded-xl transition-all duration-200',
+        'hover:ring-2 hover:cursor-pointer',
         deleteMutation.isPending && 'pointer-events-none animate-pulse',
       )}
     >

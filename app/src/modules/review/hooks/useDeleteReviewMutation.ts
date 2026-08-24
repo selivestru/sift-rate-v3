@@ -4,6 +4,7 @@ import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
 import { reviewApi } from '../api/review.api'
 import type { DeleteReviewVariables, ReviewStats } from '../types/review.types'
+import { removeReviewFromListCaches } from '../utils/review-list-cache'
 import { applyReviewDeleted } from '../utils/review-stats'
 import {
   clearMediaStateReview,
@@ -36,26 +37,9 @@ export const useDeleteReviewMutation = () => {
     onError: (_error, _variables, onMutateResult, context) => {
       restoreMyReviewStats(context.client, onMutateResult?.previousStats)
     },
-    onSuccess: (data, _variables, onMutateResult, context) => {
-      const { media } = data
-
-      if (!onMutateResult?.previousStats) {
-        context.client.invalidateQueries({
-          queryKey: QUERIES_KEYS.myReviewStats,
-        })
-      }
-
-      context.client.invalidateQueries({
-        queryKey: QUERIES_KEYS.myReviews,
-      })
-      context.client.invalidateQueries({
-        queryKey: QUERIES_KEYS.mediaReviews({
-          mediaType: media.mediaType,
-          externalId: media.externalId,
-        }),
-      })
-
-      clearMediaStateReview(context.client, media)
+    onSuccess: (data, _variables, _onMutateResult, context) => {
+      clearMediaStateReview(context.client, data.media)
+      removeReviewFromListCaches(context.client, data)
     },
   })
 }

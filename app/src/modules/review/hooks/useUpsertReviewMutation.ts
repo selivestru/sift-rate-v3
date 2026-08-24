@@ -1,10 +1,13 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+import { useAuthStore } from '~/modules/auth'
 import type { MediaStateResponse } from '~/modules/discover'
+import { removePlannedItemByMediaFromCache } from '~/modules/planned'
 
 import { reviewApi } from '../api/review.api'
 import type { ReviewStats, UpsertReviewVariables } from '../types/review.types'
+import { upsertReviewInListCaches } from '../utils/review-list-cache'
 import { applyReviewCreated, applyReviewRatingChanged } from '../utils/review-stats'
 import {
   patchMyReviewStats,
@@ -13,6 +16,8 @@ import {
 } from '../utils/review-stats-cache'
 
 export const useUpsertReviewMutation = () => {
+  const user = useAuthStore((state) => state.user)
+
   return useMutation({
     mutationKey: ['upsert-review'],
     mutationFn: ({ previousReview: _, ...body }: UpsertReviewVariables) =>
@@ -59,26 +64,20 @@ export const useUpsertReviewMutation = () => {
     onError: (_error, _variables, onMutateResult, context) => {
       restoreMyReviewStats(context.client, onMutateResult?.previousStats)
     },
-    onSuccess: (data, _variables, onMutateResult, context) => {
-      const { media } = data
-
-      if (!onMutateResult?.previousStats) {
-        context.client.invalidateQueries({
-          queryKey: QUERIES_KEYS.myReviewStats,
-        })
-      }
-
-      context.client.invalidateQueries({
-        queryKey: QUERIES_KEYS.myReviews,
-      })
-      context.client.invalidateQueries({
-        queryKey: QUERIES_KEYS.mediaReviews({
-          mediaType: media.mediaType,
-          externalId: media.externalId,
-        }),
-      })
-
+    onSuccess: (data, _variables, _onMutateResult, context) => {
       setMediaStateReview(context.client, data)
+      removePlannedItemByMediaFromCache(context.client, data.media)
+      upsertReviewInListCaches(
+        context.client,
+        data,
+        user
+          ? {
+              id: user.id,
+              username: user.username,
+              avatarUrl: user.avatarUrl,
+            }
+          : null,
+      )
     },
   })
 }
