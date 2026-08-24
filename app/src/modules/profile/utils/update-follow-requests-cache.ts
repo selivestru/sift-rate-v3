@@ -1,4 +1,4 @@
-import type { QueryClient, InfiniteData } from '@tanstack/react-query'
+import type { InfiniteData, QueryClient } from '@tanstack/react-query'
 
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
@@ -24,6 +24,24 @@ export const updateProfileFollowInCache = (
       followStatus,
       followersCount:
         followersDelta === 1 ? prev.followersCount + 1 : Math.max(0, prev.followersCount - 1),
+    }
+  })
+}
+
+export const updateProfileFollowingInCache = (
+  queryClient: QueryClient,
+  username: string,
+  followStatus: FollowViewerStatus,
+  followingDelta: 1 | -1,
+) => {
+  queryClient.setQueryData<Profile>(QUERIES_KEYS.profile(username), (prev) => {
+    if (!prev) return prev
+
+    return {
+      ...prev,
+      followStatus,
+      followingCount:
+        followingDelta === 1 ? prev.followingCount + 1 : Math.max(0, prev.followingCount - 1),
     }
   })
 }
