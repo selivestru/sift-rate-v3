@@ -18,7 +18,7 @@ const EMPTY_AUTHOR: Author = {
   avatarUrl: null,
 } as unknown as Author
 
-const EMPTY_POST: PostRef = { id: null, content: null }
+const EMPTY_POST: PostRef = { id: null, content: null, review: null }
 
 @Injectable()
 export class NotificationPayloadResolverService {
@@ -143,20 +143,50 @@ export class NotificationPayloadResolverService {
   private async fetchPosts(ids: string[]): Promise<Map<string, PostRef>> {
     const posts = await this.prisma.post.findMany({
       where: { id: { in: ids } },
-      select: { id: true, content: true },
+      select: {
+        id: true,
+        content: true,
+        review: {
+          select: {
+            content: true,
+            rating: true,
+            media: { select: { title: true } },
+          },
+        },
+      },
     })
 
-    return new Map(posts.map((post) => [post.id, post]))
+    return new Map(posts.map((post) => [post.id, this.mapPostRef(post)]))
   }
 
   private async fetchComments(
     ids: string[],
-  ): Promise<Map<string, { id: string; content: string | null; parentId: string | null }>> {
+  ): Promise<
+    Map<string, { id: string; content: string | null; parentId: string | null; review: null }>
+  > {
     const comments = await this.prisma.post.findMany({
       where: { id: { in: ids } },
       select: { id: true, content: true, parentId: true },
     })
 
-    return new Map(comments.map((comment) => [comment.id, comment]))
+    return new Map(comments.map((comment) => [comment.id, { ...comment, review: null }]))
+  }
+
+  private mapPostRef(post: {
+    id: string
+    content: string | null
+    review: { content: string | null; rating: number; media: { title: string } } | null
+  }): PostRef {
+    return {
+      id: post.id,
+      content: post.content,
+      review: post.review
+        ? {
+            content: post.review.content,
+            rating: post.review.rating,
+            mediaTitle: post.review.media.title,
+          }
+        : null,
+    }
   }
 }

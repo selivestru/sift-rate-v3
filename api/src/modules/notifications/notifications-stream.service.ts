@@ -2,8 +2,10 @@ import { Injectable, MessageEvent } from '@nestjs/common'
 
 import { NotificationDto } from './types/notification.types'
 import { finalize, Observable, Subject } from 'rxjs'
+import { NotificationType } from '~/generated/prisma/enums'
 
 export const SSE_EVENT_NAME = 'notification'
+export const SSE_DELETE_EVENT_NAME = 'notification-deleted'
 export const SSE_HEARTBEAT_INTERVAL_MS = 30_000
 
 @Injectable()
@@ -52,6 +54,26 @@ export class NotificationsStreamService {
     const message: MessageEvent = {
       type: SSE_EVENT_NAME,
       data: JSON.stringify(notification),
+    }
+
+    for (const subject of userStreams.values()) {
+      subject.next(message)
+    }
+  }
+
+  emitDelete(
+    userId: string,
+    notificationIds: string[],
+    type: NotificationType,
+    payload: Record<string, string>,
+  ): void {
+    const userStreams = this.streams.get(userId)
+
+    if (!userStreams) return
+
+    const message: MessageEvent = {
+      type: SSE_DELETE_EVENT_NAME,
+      data: JSON.stringify({ ids: notificationIds, type, payload }),
     }
 
     for (const subject of userStreams.values()) {

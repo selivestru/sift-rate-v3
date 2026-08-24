@@ -40,6 +40,38 @@ export class NotificationsService {
     this.stream.emit(recipientId, this.toDto(notification, resolvedPayload))
   }
 
+  async delete(
+    recipientId: string,
+    type: NotificationType,
+    payload: Record<string, string>,
+  ): Promise<void> {
+    const conditions = Object.entries(payload).map(([key, value]) => ({
+      payload: { path: [key], equals: value },
+    }))
+
+    const where: Prisma.NotificationWhereInput = {
+      userId: recipientId,
+      type,
+      AND: conditions,
+    }
+
+    const notifications = await this.prisma.notification.findMany({
+      where,
+      select: { id: true },
+    })
+
+    if (notifications.length === 0) return
+
+    await this.prisma.notification.deleteMany({ where })
+
+    this.stream.emitDelete(
+      recipientId,
+      notifications.map((n) => n.id),
+      type,
+      payload,
+    )
+  }
+
   async getNotifications(
     userId: string,
     cursor?: string,

@@ -21,27 +21,29 @@ interface PostItemProps {
 
 export const PostItem = ({ data, isDetailView = false }: PostItemProps) => {
   const avatar = (
-    <Avatar size="lg">
-      <AvatarImage src={data.user.avatarUrl ?? undefined} alt={data.user.displayName} />
-      <AvatarFallback className="text-base sm:text-lg">
-        {getFirstLetter(data.user.displayName)}
-      </AvatarFallback>
-    </Avatar>
+    <Link
+      to="/$username"
+      params={{ username: data.user.username }}
+      className="z-px relative h-fit shrink-0"
+    >
+      <Avatar size="lg">
+        <AvatarImage src={data.user.avatarUrl ?? undefined} alt={data.user.displayName} />
+        <AvatarFallback className="text-base sm:text-lg">
+          {getFirstLetter(data.user.displayName)}
+        </AvatarFallback>
+      </Avatar>
+    </Link>
   )
 
   const userInfo = (
     <div className="z-px relative flex items-center gap-x-1.5 overflow-hidden max-sm:flex-col max-sm:items-start">
-      {isDetailView ? (
-        data.user.displayName
-      ) : (
-        <Link
-          to="/$username"
-          params={{ username: data.user.username }}
-          className="hover:text-primary focus-visible:text-primary z-px relative truncate font-semibold outline-none sm:text-base"
-        >
-          {data.user.displayName}
-        </Link>
-      )}
+      <Link
+        to="/$username"
+        params={{ username: data.user.username }}
+        className="hover:text-primary focus-visible:text-primary z-px relative truncate font-semibold outline-none sm:text-base"
+      >
+        {data.user.displayName}
+      </Link>
       <div className="flex items-center gap-1.5">
         <span className="text-muted-foreground truncate text-sm">@{data.user.username}</span>
         <span className="text-muted-foreground shrink-0 text-sm" aria-hidden>
@@ -109,13 +111,7 @@ export const PostItem = ({ data, isDetailView = false }: PostItemProps) => {
   return (
     <article className="hover:bg-muted/35 relative grid grid-cols-[auto_1fr] gap-2 p-3 pb-2! transition-colors duration-300 sm:gap-3 sm:p-4">
       {overlay}
-      <Link
-        to="/$username"
-        params={{ username: data.user.username }}
-        className="z-px relative h-fit shrink-0"
-      >
-        {avatar}
-      </Link>
+      {avatar}
       <div>
         <div className={cn('flex items-center justify-between gap-2', data.review && 'mb-1.5')}>
           {userInfo}

@@ -1,7 +1,7 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common'
 
 import { UserService } from '../user/user.service'
-import { FollowStatusResponse } from './types/follow.types'
+import { FollowRequest, FollowStatusResponse } from './types/follow.types'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
@@ -54,6 +54,12 @@ export class FollowService {
       })
     }
 
+    if (followStatus === 'PENDING') {
+      await this.notificationsService.create(followingId, NotificationType.FOLLOW_REQUEST, {
+        userId: followerId,
+      })
+    }
+
     return { followStatus }
   }
 
@@ -78,13 +84,23 @@ export class FollowService {
       where: { followerId, followingId },
     })
 
+    if (isFollowing) {
+      await this.notificationsService.delete(followingId, NotificationType.FOLLOW, {
+        userId: followerId,
+      })
+    } else {
+      await this.notificationsService.delete(followingId, NotificationType.FOLLOW_REQUEST, {
+        userId: followerId,
+      })
+    }
+
     return this.getFollowStatus(followerId, followingId)
   }
 
   async getFollowRequests(
     userId: string,
     cursor?: string,
-  ): Promise<PaginationCursorResponse<Author>> {
+  ): Promise<PaginationCursorResponse<FollowRequest>> {
     const rows = await this.prisma.follow.findMany({
       where: { followingId: userId, status: FollowStatus.PENDING },
       ...(cursor && { cursor: { id: cursor }, skip: 1 }),
@@ -104,8 +120,26 @@ export class FollowService {
       rows.pop()
     }
 
+    const notifications = await this.prisma.notification.findMany({
+      where: { userId, type: NotificationType.FOLLOW_REQUEST },
+      select: { id: true, payload: true },
+    })
+
+    const notificationIdByFollower = new Map<string, string>()
+
+    for (const notification of notifications) {
+      const payload = notification.payload as { userId: string } | null
+
+      if (payload?.userId) {
+        notificationIdByFollower.set(payload.userId, notification.id)
+      }
+    }
+
     return {
-      data: rows.map((r) => r.follower),
+      data: rows.map((r) => ({
+        ...r.follower,
+        notificationId: notificationIdByFollower.get(r.follower.id) ?? null,
+      })),
       nextCursor: hasNextPage ? rows[rows.length - 1].id : null,
     }
   }
@@ -127,6 +161,14 @@ export class FollowService {
     if (result.count === 0) {
       throw new BadRequestException('Follow request not found')
     }
+
+    await this.notificationsService.create(followerId, NotificationType.FOLLOW_REQUEST_ACCEPTED, {
+      userId: targetId,
+    })
+
+    await this.notificationsService.delete(targetId, NotificationType.FOLLOW_REQUEST, {
+      userId: followerId,
+    })
   }
 
   async rejectFollowRequest(targetId: string, followerId: string): Promise<void> {
@@ -137,6 +179,10 @@ export class FollowService {
     if (result.count === 0) {
       throw new BadRequestException('Follow request not found')
     }
+
+    await this.notificationsService.delete(targetId, NotificationType.FOLLOW_REQUEST, {
+      userId: followerId,
+    })
   }
 
   async getFollowStatus(viewerId: string, targetId: string): Promise<FollowStatusResponse> {

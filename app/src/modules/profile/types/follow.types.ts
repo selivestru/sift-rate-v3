@@ -7,7 +7,11 @@ export interface FollowStatusResponse {
   followStatus: FollowViewerStatus
 }
 
-export type FollowRequestsResponse = ResponseWithCursor<Author>
+export interface FollowRequest extends Author {
+  notificationId: string | null
+}
+
+export type FollowRequestsResponse = ResponseWithCursor<FollowRequest>
 
 export interface FollowRequestsCount {
   count: number

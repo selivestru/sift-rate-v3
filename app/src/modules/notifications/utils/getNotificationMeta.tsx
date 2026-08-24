@@ -15,6 +15,7 @@ import type {
 export type NotificationTarget =
   | { to: '/$username'; params: { username: string } }
   | { to: '/post/$postId'; params: { postId: string } }
+  | { to: '/follow-requests'; params?: undefined }
 
 type ActorNotification =
   | FollowNotification
@@ -23,11 +24,19 @@ type ActorNotification =
 
 type NotificationActor = ActorNotification['payload']
 
+export interface NotificationQuote {
+  content: string | null
+  review: { content: string | null; rating: number; mediaTitle: string } | null
+  unavailableLabel: string
+}
+
 interface NotificationMetaBase {
   icon: React.ReactNode
   title: string
   description: string
   target?: NotificationTarget
+  quote?: NotificationQuote
+  context?: NotificationQuote
 }
 
 export type NotificationMeta = NotificationMetaBase
@@ -66,6 +75,20 @@ const actorNotificationMeta = (
   }
 }
 
+const followRequestNotificationMeta = (
+  notification: FollowRequestNotification,
+): NotificationMeta => {
+  const { payload } = notification
+  const name = actorName(payload)
+
+  return {
+    icon: actorAvatar(payload),
+    title: `@${name}`,
+    description: 'sent you a follow request',
+    target: { to: '/follow-requests' },
+  }
+}
+
 const postLikeNotificationMeta = (notification: PostLikeNotification): NotificationMeta => {
   const { payload } = notification
   const name = actorName(payload.user)
@@ -75,6 +98,11 @@ const postLikeNotificationMeta = (notification: PostLikeNotification): Notificat
     title: `@${name}`,
     description: 'liked your post',
     target: postTarget(payload.post.id),
+    quote: {
+      content: payload.post.content,
+      review: payload.post.review,
+      unavailableLabel: 'Post unavailable',
+    },
   }
 }
 
@@ -87,6 +115,16 @@ const postCommentNotificationMeta = (notification: PostCommentNotification): Not
     title: `@${name}`,
     description: 'commented on your post',
     target: postTarget(payload.comment.id),
+    context: {
+      content: payload.post.content,
+      review: payload.post.review,
+      unavailableLabel: 'Post unavailable',
+    },
+    quote: {
+      content: payload.comment.content,
+      review: null,
+      unavailableLabel: 'Comment unavailable',
+    },
   }
 }
 
@@ -121,7 +159,7 @@ export const getNotificationMeta = (notification: Notification): NotificationMet
     case 'FOLLOW':
       return actorNotificationMeta(notification, 'started following you')
     case 'FOLLOW_REQUEST':
-      return actorNotificationMeta(notification, 'sent you a follow request')
+      return followRequestNotificationMeta(notification)
     case 'FOLLOW_REQUEST_ACCEPTED':
       return actorNotificationMeta(notification, 'accepted your follow request')
     case 'POST_LIKE':

@@ -17,6 +17,7 @@ export type NotificationPayload<K extends NotificationType = NotificationType> =
 export interface PostRef {
   id: string | null
   content: string | null
+  review: { content: string | null; rating: number; mediaTitle: string } | null
 }
 
 export interface NotificationResponsePayloadMap {

@@ -1,6 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 import { toastApiError } from '~/common/api'
+import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import { Spinner } from '~/common/ui/Spinner'
 import { Switch } from '~/common/ui/Switch'
 import { useAuthStore } from '~/modules/auth'
@@ -12,6 +14,7 @@ export const AccountPrivacySection = () => {
   const isPrivate = useAuthStore((state) => state.user?.isPrivate)
   const setIsPrivate = useAuthStore((state) => state.setIsPrivate)
   const mutation = useUpdatePrivacyMutation()
+  const queryClient = useQueryClient()
 
   const handleChange = async (checked: boolean) => {
     if (mutation.isPending) return
@@ -19,6 +22,12 @@ export const AccountPrivacySection = () => {
     try {
       const response = await mutation.mutateAsync(checked)
       setIsPrivate(response.isPrivate)
+
+      if (!response.isPrivate) {
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.followRequests })
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.followRequestsCount })
+      }
+
       toast.success(response.isPrivate ? 'Profile is now private' : 'Profile is now public')
     } catch (error) {
       await toastApiError(error)

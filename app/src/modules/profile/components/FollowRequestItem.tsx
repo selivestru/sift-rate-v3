@@ -4,13 +4,13 @@ import { toastApiError } from '~/common/api'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Button } from '~/common/ui/Button'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
-import type { Author } from '~/modules/post'
 
 import { useAcceptFollowRequestMutation } from '../hooks/useAcceptFollowRequestMutation'
 import { useRejectFollowRequestMutation } from '../hooks/useRejectFollowRequestMutation'
+import type { FollowRequest } from '../types/follow.types'
 
 interface FollowRequestItemProps {
-  request: Author
+  request: FollowRequest
 }
 
 export const FollowRequestItem = ({ request }: FollowRequestItemProps) => {
@@ -23,7 +23,10 @@ export const FollowRequestItem = ({ request }: FollowRequestItemProps) => {
     if (isPending) return
 
     try {
-      await acceptMutation.mutateAsync(request.id)
+      await acceptMutation.mutateAsync({
+        followerId: request.id,
+        notificationId: request.notificationId,
+      })
     } catch (error) {
       await toastApiError(error)
     }
@@ -33,7 +36,10 @@ export const FollowRequestItem = ({ request }: FollowRequestItemProps) => {
     if (isPending) return
 
     try {
-      await rejectMutation.mutateAsync(request.id)
+      await rejectMutation.mutateAsync({
+        followerId: request.id,
+        notificationId: request.notificationId,
+      })
     } catch (error) {
       await toastApiError(error)
     }

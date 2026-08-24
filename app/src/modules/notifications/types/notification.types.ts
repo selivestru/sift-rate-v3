@@ -1,5 +1,4 @@
 import type { ResponseWithCursor } from '~/common/types/response-with-cursor.types'
-import type { Author } from '~/modules/post'
 
 export const NOTIFICATION_TYPE = {
   PASSWORD_CHANGED: 'PASSWORD_CHANGED',
@@ -16,16 +15,24 @@ export type NotificationType = (typeof NOTIFICATION_TYPE)[keyof typeof NOTIFICAT
 export interface PostRef {
   id: string | null
   content: string | null
+  review: { content: string | null; rating: number; mediaTitle: string } | null
+}
+
+export interface NotificationActor {
+  id: string | null
+  username: string | null
+  displayName: string | null
+  avatarUrl: string | null
 }
 
 export type NotificationPayloadMap = {
   [NOTIFICATION_TYPE.PASSWORD_CHANGED]: null
   [NOTIFICATION_TYPE.EMAIL_CHANGED]: null
-  [NOTIFICATION_TYPE.FOLLOW]: Author
-  [NOTIFICATION_TYPE.FOLLOW_REQUEST]: Author
-  [NOTIFICATION_TYPE.FOLLOW_REQUEST_ACCEPTED]: Author
-  [NOTIFICATION_TYPE.POST_LIKE]: { user: Author; post: PostRef }
-  [NOTIFICATION_TYPE.POST_COMMENT]: { user: Author; post: PostRef; comment: PostRef }
+  [NOTIFICATION_TYPE.FOLLOW]: NotificationActor
+  [NOTIFICATION_TYPE.FOLLOW_REQUEST]: NotificationActor
+  [NOTIFICATION_TYPE.FOLLOW_REQUEST_ACCEPTED]: NotificationActor
+  [NOTIFICATION_TYPE.POST_LIKE]: { user: NotificationActor; post: PostRef }
+  [NOTIFICATION_TYPE.POST_COMMENT]: { user: NotificationActor; post: PostRef; comment: PostRef }
 }
 
 export type NotificationPayload<K extends NotificationType = NotificationType> =

@@ -134,7 +134,12 @@ export class PostService {
   async deletePost(postId: string, userId: string): Promise<PostItem> {
     const existing = await this.prisma.post.findFirst({
       where: { id: postId, userId },
-      select: { id: true, deletedAt: true },
+      select: {
+        id: true,
+        deletedAt: true,
+        parentId: true,
+        parent: { select: { userId: true } },
+      },
     })
 
     if (!existing) {
@@ -159,6 +164,17 @@ export class PostService {
       data: { deletedAt: new Date() },
       include: buildPostInclude(userId),
     })
+
+    if (existing.parentId && existing.parent) {
+      await this.notificationsService.delete(
+        existing.parent.userId,
+        NotificationType.POST_COMMENT,
+        {
+          postId,
+          userId,
+        },
+      )
+    }
 
     return mapPost(post)
   }
@@ -189,11 +205,25 @@ export class PostService {
   }
 
   async unlikePost(postId: string, userId: string): Promise<LikeResponse> {
-    await this.ensurePostExists(postId)
+    const post = await this.prisma.post.findUnique({
+      where: { id: postId },
+      select: { id: true, userId: true },
+    })
+
+    if (!post) {
+      throw new NotFoundException('Post not found')
+    }
 
     await this.prisma.postLike.deleteMany({
       where: { postId, userId },
     })
+
+    if (post.userId !== userId) {
+      await this.notificationsService.delete(post.userId, NotificationType.POST_LIKE, {
+        postId,
+        userId,
+      })
+    }
 
     return { success: true }
   }

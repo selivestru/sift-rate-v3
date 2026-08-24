@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { NOTIFICATION_TYPE } from '../types/notification.types'
 
 const notificationActorSchema = z.object({
-  id: z.string(),
+  id: z.string().nullable(),
   username: z.string().nullable(),
   displayName: z.string().nullable(),
   avatarUrl: z.string().nullable(),
@@ -12,6 +12,13 @@ const notificationActorSchema = z.object({
 const postRefSchema = z.object({
   id: z.string().nullable(),
   content: z.string().nullable(),
+  review: z
+    .object({
+      content: z.string().nullable(),
+      rating: z.number(),
+      mediaTitle: z.string(),
+    })
+    .nullable(),
 })
 
 const notificationDtoBaseSchema = z.object({
