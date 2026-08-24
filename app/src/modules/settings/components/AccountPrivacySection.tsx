@@ -23,7 +23,7 @@ export const AccountPrivacySection = () => {
       const response = await mutation.mutateAsync(checked)
       setIsPrivate(response.isPrivate)
 
-      if (!response.isPrivate) {
+      if (response.isPrivate) {
         queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.followRequests })
         queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.followRequestsCount })
       }
