@@ -39,14 +39,4 @@ export class FollowController {
   rejectFollowRequest(@CurrentUser('userId') userId: string, @Param('userId') followerId: string) {
     return this.followService.rejectFollowRequest(userId, followerId)
   }
-
-  @Get('following')
-  getFollowing(@CurrentUser('userId') userId: string) {
-    return this.followService.getFollowing(userId)
-  }
-
-  @Get('followers')
-  getFollowers(@CurrentUser('userId') userId: string) {
-    return this.followService.getFollowers(userId)
-  }
 }

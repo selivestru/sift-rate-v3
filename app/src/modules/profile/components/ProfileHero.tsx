@@ -9,6 +9,7 @@ import { SUBSCRIPTIONS, useAuthStore } from '~/modules/auth'
 import type { FollowViewerStatus } from '../types/follow.types'
 import type { ProfileUser } from '../types/profile.types'
 import { FollowButton } from './FollowButton'
+import { FollowsDialog } from './FollowsDialog'
 
 interface ProfileHeroProps {
   user: ProfileUser
@@ -66,9 +67,31 @@ export const ProfileHero = ({
                   </Badge>
                 )}
               </div>
-              <p className="text-muted-foreground mt-2 text-sm tabular-nums">
-                {followersCount} followers · {followingCount} following
-              </p>
+              <div className="text-muted-foreground mt-2 flex flex-wrap items-center gap-1 text-sm tabular-nums">
+                <FollowsDialog username={user.username} type="followers">
+                  {({ open }) => (
+                    <button
+                      type="button"
+                      onClick={open}
+                      className="hover:text-foreground underline-offset-2 transition-colors hover:underline"
+                    >
+                      {followersCount} followers
+                    </button>
+                  )}
+                </FollowsDialog>
+                <span aria-hidden>·</span>
+                <FollowsDialog username={user.username} type="following">
+                  {({ open }) => (
+                    <button
+                      type="button"
+                      onClick={open}
+                      className="hover:text-foreground underline-offset-2 transition-colors hover:underline"
+                    >
+                      {followingCount} following
+                    </button>
+                  )}
+                </FollowsDialog>
+              </div>
             </div>
 
             {currentUser && !isOwnProfile && (

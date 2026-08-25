@@ -38,7 +38,7 @@ export const FollowButton = ({ userId, username, followStatus }: FollowButtonPro
       <Button
         aria-label={`Cancel follow request for @${username}`}
         variant="outline"
-        className="w-37.5"
+        className="w-35"
         isLoading={isLoading}
         onClick={handleClick}
       >
@@ -53,7 +53,7 @@ export const FollowButton = ({ userId, username, followStatus }: FollowButtonPro
       <Button
         aria-label={`Unfollow @${username}`}
         variant="secondary"
-        className="w-37.5"
+        className="w-35"
         isLoading={isLoading}
         onClick={handleClick}
       >
@@ -65,7 +65,7 @@ export const FollowButton = ({ userId, username, followStatus }: FollowButtonPro
 
   return (
     <Button
-      className="w-37.5"
+      className="w-35"
       isLoading={isLoading}
       onClick={handleClick}
       aria-label={`Follow @${username}`}

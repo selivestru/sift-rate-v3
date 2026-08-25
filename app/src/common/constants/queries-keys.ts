@@ -2,6 +2,8 @@ import type { MediaRef } from '../types/media-ref.types'
 
 export type FeedTabKey = 'ALL' | 'FOLLOWING'
 
+export type FollowListType = 'followers' | 'following'
+
 export const QUERIES_KEYS = {
   plannedList: ['planned-list'],
   mediaState: (data: MediaRef) => ['media-state', data.mediaType, data.externalId],
@@ -19,4 +21,5 @@ export const QUERIES_KEYS = {
   feed: (tab: FeedTabKey) => ['feed', tab],
   post: (postId: string) => ['post', postId],
   postReplies: (postId: string) => ['post', postId, 'replies'],
+  userFollows: (username: string, type: FollowListType) => ['user-follows', username, type],
 } as const

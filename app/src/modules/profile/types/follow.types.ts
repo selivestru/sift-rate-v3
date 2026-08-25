@@ -16,3 +16,9 @@ export type FollowRequestsResponse = ResponseWithCursor<FollowRequest>
 export interface FollowRequestsCount {
   count: number
 }
+
+export interface FollowUser extends Author {
+  followStatus: FollowViewerStatus
+}
+
+export type FollowUserListResponse = ResponseWithCursor<FollowUser>

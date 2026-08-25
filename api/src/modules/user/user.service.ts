@@ -13,6 +13,7 @@ import {
 import { FeedService } from '../feed/feed.service'
 import { FeedResponse } from '../feed/types/feed.types'
 import { FollowService } from '../follow/follow.service'
+import { FollowUserListResponse } from '../follow/types/follow.types'
 import { ChangeEmailDto } from './dto/change-email.dto'
 import { ChangePasswordDto } from './dto/change-password.dto'
 import { DeleteAccountDto } from './dto/delete-account.dto'
@@ -121,6 +122,34 @@ export class UserService {
 
   getUserFeed(username: string, userId?: string, cursor?: string): Promise<FeedResponse> {
     return this.feedService.getUserFeed(username, userId, cursor)
+  }
+
+  async getFollowing(
+    username: string,
+    viewerId?: string,
+    cursor?: string,
+  ): Promise<FollowUserListResponse> {
+    const user = await this.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    return this.followService.getFollowUsers(user.id, viewerId, 'following', cursor)
+  }
+
+  async getFollowers(
+    username: string,
+    viewerId?: string,
+    cursor?: string,
+  ): Promise<FollowUserListResponse> {
+    const user = await this.findByUsername(username)
+
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    return this.followService.getFollowUsers(user.id, viewerId, 'followers', cursor)
   }
 
   async findById(id: string): Promise<User> {

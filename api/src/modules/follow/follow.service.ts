@@ -1,11 +1,15 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common'
 
 import { UserService } from '../user/user.service'
-import { FollowRequest, FollowStatusResponse } from './types/follow.types'
+import {
+  FollowRequest,
+  FollowStatusResponse,
+  FollowUserListResponse,
+  FollowViewerStatus,
+} from './types/follow.types'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
-import { Author } from '~/common/types/user.types'
 import { FollowStatus, NotificationType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { NotificationsService } from '~/modules/notifications/notifications.service'
@@ -226,29 +230,101 @@ export class FollowService {
     return follow?.status === FollowStatus.PENDING
   }
 
-  async getFollowing(userId: string): Promise<Author[]> {
+  async getFollowUsers(
+    userId: string,
+    viewerId: string | undefined,
+    direction: 'following' | 'followers',
+    cursor?: string,
+  ): Promise<FollowUserListResponse> {
+    const isFollowing = direction === 'following'
+
     const rows = await this.prisma.follow.findMany({
-      where: { followerId: userId, status: FollowStatus.ACCEPTED },
+      where: isFollowing
+        ? { followerId: userId, status: FollowStatus.ACCEPTED }
+        : { followingId: userId, status: FollowStatus.ACCEPTED },
+      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: DEFAULT_PAGE_SIZE + 1,
       select: {
+        id: true,
         following: {
           select: AUTHOR_SELECT,
         },
-      },
-    })
-
-    return rows.map((r) => r.following)
-  }
-
-  async getFollowers(userId: string): Promise<Author[]> {
-    const rows = await this.prisma.follow.findMany({
-      where: { followingId: userId, status: FollowStatus.ACCEPTED },
-      select: {
         follower: {
           select: AUTHOR_SELECT,
         },
       },
     })
 
-    return rows.map((r) => r.follower)
+    const hasNextPage = rows.length > DEFAULT_PAGE_SIZE
+
+    if (hasNextPage) {
+      rows.pop()
+    }
+
+    const users = rows.map((row) => (isFollowing ? row.following : row.follower))
+
+    const statuses = await this.getFollowStatusMap(
+      viewerId,
+      users.map((user) => user.id),
+    )
+
+    return {
+      data: users.map((user) => ({
+        ...user,
+        followStatus: statuses.get(user.id) ?? 'NONE',
+      })),
+      nextCursor: hasNextPage ? rows[rows.length - 1].id : null,
+    }
+  }
+
+  private async getFollowStatusMap(
+    viewerId: string | undefined,
+    targetIds: string[],
+  ): Promise<Map<string, FollowViewerStatus>> {
+    const map = new Map<string, FollowViewerStatus>()
+
+    if (!viewerId || targetIds.length === 0) {
+      return map
+    }
+
+    const [viewerFollows, followsViewer] = await Promise.all([
+      this.prisma.follow.findMany({
+        where: { followerId: viewerId, followingId: { in: targetIds } },
+        select: { followingId: true, status: true },
+      }),
+      this.prisma.follow.findMany({
+        where: {
+          followingId: viewerId,
+          followerId: { in: targetIds },
+          status: FollowStatus.ACCEPTED,
+        },
+        select: { followerId: true },
+      }),
+    ])
+
+    const viewerFollowStatus = new Map(
+      viewerFollows.map((follow) => [follow.followingId, follow.status]),
+    )
+    const followsViewerIds = new Set(followsViewer.map((follow) => follow.followerId))
+
+    for (const targetId of targetIds) {
+      if (targetId === viewerId) {
+        map.set(targetId, 'NONE')
+        continue
+      }
+
+      const viewerToTarget = viewerFollowStatus.get(targetId)
+
+      if (viewerToTarget === FollowStatus.ACCEPTED) {
+        map.set(targetId, followsViewerIds.has(targetId) ? 'MUTUAL' : 'FOLLOWING')
+      } else if (viewerToTarget === FollowStatus.PENDING) {
+        map.set(targetId, 'PENDING')
+      } else {
+        map.set(targetId, followsViewerIds.has(targetId) ? 'FOLLOWED_BY' : 'NONE')
+      }
+    }
+
+    return map
   }
 }

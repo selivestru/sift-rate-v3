@@ -59,6 +59,26 @@ export class UserController {
     return this.userService.getUserFeed(username, userId, query?.cursor)
   }
 
+  @OptionalAuth()
+  @Get(':username/following')
+  getFollowing(
+    @Param('username') username: string,
+    @Query() query: PaginationCursor,
+    @OptionalCurrentUser('userId') viewerId?: string,
+  ) {
+    return this.userService.getFollowing(username, viewerId, query.cursor)
+  }
+
+  @OptionalAuth()
+  @Get(':username/followers')
+  getFollowers(
+    @Param('username') username: string,
+    @Query() query: PaginationCursor,
+    @OptionalCurrentUser('userId') viewerId?: string,
+  ) {
+    return this.userService.getFollowers(username, viewerId, query.cursor)
+  }
+
   @Patch('display-name')
   updateDisplayName(@CurrentUser('userId') userId: string, @Body() dto: UpdateDisplayNameDto) {
     return this.userService.updateDisplayName(userId, dto.displayName)

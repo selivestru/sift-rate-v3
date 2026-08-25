@@ -26,7 +26,7 @@ export class NotificationsController {
   ): Observable<MessageEvent> {
     return merge(
       this.stream.subscribe(userId, sessionId),
-      interval(SSE_HEARTBEAT_INTERVAL_MS).pipe(map(() => ({ type: 'ping', data: '' }))),
+      interval(SSE_HEARTBEAT_INTERVAL_MS).pipe(map(() => ({ type: 'ping' }))),
     )
   }
 
