@@ -404,26 +404,6 @@ button:not(:disabled),
   }
 }
 
-html.composer-vt::view-transition-group(root) {
-  animation: none;
-}
-
-html.composer-vt::view-transition-old(root),
-html.composer-vt::view-transition-new(root) {
-  animation: none;
-  mask: none;
-  -webkit-mask: none;
-}
-
-::view-transition-group(post-composer) {
-  animation-duration: 0.4s;
-  animation-timing-function: var(--expo-out);
-}
-
-::view-transition-group(post-composer-backdrop) {
-  animation-duration: 0.25s;
-}
-
 .app-container {
   @apply mx-auto w-full max-w-237.5;
 }

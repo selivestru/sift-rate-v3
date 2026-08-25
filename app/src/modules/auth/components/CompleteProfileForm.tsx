@@ -34,7 +34,7 @@ export const CompleteProfileForm = () => {
         )}
 
         <Field isInvalid={!!errors.displayName}>
-          <FieldLabel htmlFor="displayName">Username</FieldLabel>
+          <FieldLabel htmlFor="displayName">Display name</FieldLabel>
           <Input
             id="displayName"
             autoComplete="nickname"

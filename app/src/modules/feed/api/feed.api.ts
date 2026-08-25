@@ -12,13 +12,4 @@ export const feedApi = {
 
     return api.get<FeedResponse>('/feed', { searchParams }).json()
   },
-  getFollowingFeed: (cursor?: string) => {
-    const searchParams = new URLSearchParams()
-
-    if (cursor) {
-      searchParams.set('cursor', cursor)
-    }
-
-    return api.get<FeedResponse>('/feed/following', { searchParams }).json()
-  },
 }

@@ -17,12 +17,7 @@ export const useLogout = () => {
     mutationKey: ['logout'],
     mutationFn: authApi.logout,
     onMutate: () => {
-      if (
-        pathname.startsWith('/library') ||
-        pathname.startsWith('/settings') ||
-        pathname === '/notifications' ||
-        pathname === '/follow-requests'
-      ) {
+      if (pathname.startsWith('/library') || pathname.startsWith('/settings')) {
         navigate({ to: '/' })
       }
 

@@ -5,7 +5,7 @@ export const Route = createFileRoute('/_app/library')({
     const { user } = context.auth
 
     if (!user) {
-      throw redirect({ to: '/' })
+      throw redirect({ to: '/auth' })
     }
   },
 

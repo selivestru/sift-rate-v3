@@ -1,6 +1,7 @@
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
-import { PostItem } from '~/modules/post/types/post.types'
+import { Author } from '~/common/types/user.types'
+import { Media, Review } from '~/generated/prisma/client'
 
-export type FeedItem = PostItem
+export type FeedItem = Review & { user: Author; media: Media }
 
 export type FeedResponse = PaginationCursorResponse<FeedItem>

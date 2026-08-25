@@ -44,9 +44,10 @@ export class ReviewService {
         cursor: { id: query.cursor },
         skip: 1,
       }),
-      orderBy: {
-        createdAt: query.sort === REVIEW_SORT.OLDEST ? 'asc' : 'desc',
-      },
+      orderBy:
+        query.sort === REVIEW_SORT.OLDEST
+          ? [{ createdAt: 'asc' }, { id: 'asc' }]
+          : [{ createdAt: 'desc' }, { id: 'desc' }],
       take: DEFAULT_PAGE_SIZE + 1,
       include: { media: true },
     })
@@ -194,13 +195,6 @@ export class ReviewService {
             content: dto.content ?? null,
           },
           include: { media: true },
-        })
-
-        await tx.post.create({
-          data: {
-            reviewId: review.id,
-            userId,
-          },
         })
       } else {
         review = await tx.review.update({

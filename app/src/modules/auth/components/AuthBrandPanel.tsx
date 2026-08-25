@@ -1,4 +1,4 @@
-import { Compass, Layers, Messages2, Star, type IconComponent } from 'reicon-react'
+import { Archive, Compass, Layers, Star, type IconComponent } from 'reicon-react'
 
 import { Badge } from '~/common/ui/Badge'
 
@@ -20,14 +20,14 @@ const capabilities: {
     description: 'Organize taste into lists you actually revisit',
   },
   {
-    icon: Messages2,
-    title: 'Reviews and comments',
-    description: 'Read other voices and leave your own',
-  },
-  {
     icon: Compass,
     title: 'Discover',
-    description: 'Find the next thing through people, not algorithms alone',
+    description: 'Find the next thing worth your time',
+  },
+  {
+    icon: Archive,
+    title: 'Personal archive',
+    description: 'A quiet record of your media life, kept in one place',
   },
 ]
 
@@ -49,11 +49,11 @@ export const AuthBrandPanel = () => {
             Media is part of your life
           </h1>
           <p className="text-muted-foreground text-base leading-relaxed text-pretty lg:text-[1.05rem]">
-            SiftRate is a social media tracking platform. Build a personal history through the
-            films, shows, games, books, and music that shaped you.
+            SiftRate is a personal media archive. Build a lasting record of the films, shows, games,
+            books, and music that shaped you.
           </p>
           <p className="text-muted-foreground text-sm leading-relaxed text-pretty lg:text-base">
-            Rate and review, then explore what others wrote and join the conversation with comments.
+            Rate what you finish, write what you think, and browse what others rated along the way.
           </p>
         </div>
 
@@ -80,9 +80,7 @@ export const AuthBrandPanel = () => {
         </ul>
       </div>
 
-      <p className="text-muted-foreground z-px relative text-xs">
-        Your archive. Their reviews. Shared moments.
-      </p>
+      <p className="text-muted-foreground z-px relative text-xs">Your media life, archived.</p>
     </div>
   )
 }

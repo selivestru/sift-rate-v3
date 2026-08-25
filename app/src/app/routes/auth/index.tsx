@@ -1,12 +1,11 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+
+import { GoogleAuthButton } from '~/modules/auth'
 
 export const Route = createFileRoute('/auth/')({
-  beforeLoad: () => {
-    throw redirect({ to: '/auth/login' })
-  },
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div />
+  return <GoogleAuthButton />
 }

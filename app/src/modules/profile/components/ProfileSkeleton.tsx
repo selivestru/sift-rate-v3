@@ -3,24 +3,18 @@ import { Skeleton } from '~/common/ui/Skeleton'
 export const ProfileSkeleton = () => {
   return (
     <div className="divide-border flex flex-col divide-y" aria-hidden>
-      <div>
-        <div className="h-70 max-md:h-50 md:overflow-hidden md:rounded-t-2xl">
-          <Skeleton className="size-full rounded-none" />
-        </div>
+      <div className="relative p-6 max-md:px-4">
+        <div className="flex items-end gap-5 max-md:gap-4">
+          <Skeleton className="ring-card size-32 rounded-full ring-4 max-md:size-24" />
 
-        <div className="relative px-6 pt-0 pb-6 max-md:px-4">
-          <div className="-mt-16 flex items-end gap-5 max-md:-mt-12 max-md:gap-4">
-            <Skeleton className="ring-card size-32 rounded-full ring-4 max-md:size-24" />
-
-            <div className="flex flex-1 items-end justify-between gap-4 pb-1">
-              <div className="flex flex-1 flex-col gap-2">
-                <Skeleton className="h-7 w-48 max-w-full" />
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-5 w-20 rounded-full" />
-                <Skeleton className="h-4 w-36" />
-              </div>
-              <Skeleton className="h-10 w-[150px] rounded-md" />
+          <div className="flex flex-1 items-end justify-between gap-4 pb-1">
+            <div className="flex flex-1 flex-col gap-2">
+              <Skeleton className="h-7 w-48 max-w-full" />
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-5 w-20 rounded-full" />
+              <Skeleton className="h-4 w-36" />
             </div>
+            <Skeleton className="h-10 w-37.5 rounded-md" />
           </div>
         </div>
       </div>

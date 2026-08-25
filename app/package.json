@@ -28,7 +28,6 @@
     "embla-carousel-react": "^8.6.0",
     "ky": "^2.0.2",
     "motion": "^12.42.2",
-    "qrcode.react": "^4.2.0",
     "react": "^19.2.7",
     "react-activity-calendar": "^3.2.1",
     "react-dom": "^19.2.7",

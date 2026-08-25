@@ -14,24 +14,15 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as CompleteProfileRouteImport } from './routes/complete-profile'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppUsernameRouteImport } from './routes/_app/$username'
-import { Route as AppFollowRequestsRouteImport } from './routes/_app/follow-requests'
 import { Route as AppLibraryRouteRouteImport } from './routes/_app/library/route'
-import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
-import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
-import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthRegisterRouteImport } from './routes/auth/register'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AppDiscoverIndexRouteImport } from './routes/_app/discover/index'
 import { Route as AppLibraryIndexRouteImport } from './routes/_app/library/index'
 import { Route as AppLibraryPlannedRouteImport } from './routes/_app/library/planned'
 import { Route as AppLibraryRankedListRouteImport } from './routes/_app/library/ranked-list'
 import { Route as AppLibraryReviewsRouteImport } from './routes/_app/library/reviews'
-import { Route as AppPostPostIdRouteImport } from './routes/_app/post.$postId'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
-import { Route as AppSettings2faRouteImport } from './routes/_app/settings/2fa'
 import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
 import { Route as AppSettingsAppearanceRouteImport } from './routes/_app/settings/appearance'
 import { Route as AppSettingsDangerZoneRouteImport } from './routes/_app/settings/danger-zone'
@@ -73,19 +64,9 @@ const AppUsernameRoute = AppUsernameRouteImport.update({
   path: '/$username',
   getParentRoute: () => AppRoute,
 } as any)
-const AppFollowRequestsRoute = AppFollowRequestsRouteImport.update({
-  id: '/follow-requests',
-  path: '/follow-requests',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
   id: '/library',
   path: '/library',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppNotificationsRoute = AppNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
@@ -96,31 +77,6 @@ const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/callback',
-  path: '/callback',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AppDiscoverIndexRoute = AppDiscoverIndexRouteImport.update({
@@ -148,19 +104,9 @@ const AppLibraryReviewsRoute = AppLibraryReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => AppLibraryRouteRoute,
 } as any)
-const AppPostPostIdRoute = AppPostPostIdRouteImport.update({
-  id: '/post/$postId',
-  path: '/post/$postId',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppSettingsRouteRoute,
-} as any)
-const AppSettings2faRoute = AppSettings2faRouteImport.update({
-  id: '/2fa',
-  path: '/2fa',
   getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
@@ -257,19 +203,10 @@ export interface FileRoutesByFullPath {
   '/library': typeof AppLibraryRouteRouteWithChildren
   '/settings': typeof AppSettingsRouteRouteWithChildren
   '/$username': typeof AppUsernameRoute
-  '/follow-requests': typeof AppFollowRequestsRoute
-  '/notifications': typeof AppNotificationsRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/register': typeof AuthRegisterRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/': typeof AuthIndexRoute
   '/library/planned': typeof AppLibraryPlannedRoute
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
-  '/post/$postId': typeof AppPostPostIdRoute
-  '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
@@ -293,20 +230,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/complete-profile': typeof CompleteProfileRoute
   '/$username': typeof AppUsernameRoute
-  '/follow-requests': typeof AppFollowRequestsRoute
-  '/notifications': typeof AppNotificationsRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/register': typeof AuthRegisterRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/': typeof AppIndexRoute
   '/auth': typeof AuthIndexRoute
   '/library/planned': typeof AppLibraryPlannedRoute
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
-  '/post/$postId': typeof AppPostPostIdRoute
-  '/settings/2fa': typeof AppSettings2faRoute
   '/settings/account': typeof AppSettingsAccountRoute
   '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
@@ -335,20 +263,11 @@ export interface FileRoutesById {
   '/_app/library': typeof AppLibraryRouteRouteWithChildren
   '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/_app/$username': typeof AppUsernameRoute
-  '/_app/follow-requests': typeof AppFollowRequestsRoute
-  '/_app/notifications': typeof AppNotificationsRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/auth/login': typeof AuthLoginRoute
-  '/auth/register': typeof AuthRegisterRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/_app/': typeof AppIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/_app/library/planned': typeof AppLibraryPlannedRoute
   '/_app/library/ranked-list': typeof AppLibraryRankedListRoute
   '/_app/library/reviews': typeof AppLibraryReviewsRoute
-  '/_app/post/$postId': typeof AppPostPostIdRoute
-  '/_app/settings/2fa': typeof AppSettings2faRoute
   '/_app/settings/account': typeof AppSettingsAccountRoute
   '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
   '/_app/settings/danger-zone': typeof AppSettingsDangerZoneRoute
@@ -378,19 +297,10 @@ export interface FileRouteTypes {
     | '/library'
     | '/settings'
     | '/$username'
-    | '/follow-requests'
-    | '/notifications'
-    | '/auth/callback'
-    | '/auth/forgot-password'
-    | '/auth/login'
-    | '/auth/register'
-    | '/auth/reset-password'
     | '/auth/'
     | '/library/planned'
     | '/library/ranked-list'
     | '/library/reviews'
-    | '/post/$postId'
-    | '/settings/2fa'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/danger-zone'
@@ -414,20 +324,11 @@ export interface FileRouteTypes {
   to:
     | '/complete-profile'
     | '/$username'
-    | '/follow-requests'
-    | '/notifications'
-    | '/auth/callback'
-    | '/auth/forgot-password'
-    | '/auth/login'
-    | '/auth/register'
-    | '/auth/reset-password'
     | '/'
     | '/auth'
     | '/library/planned'
     | '/library/ranked-list'
     | '/library/reviews'
-    | '/post/$postId'
-    | '/settings/2fa'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/danger-zone'
@@ -455,20 +356,11 @@ export interface FileRouteTypes {
     | '/_app/library'
     | '/_app/settings'
     | '/_app/$username'
-    | '/_app/follow-requests'
-    | '/_app/notifications'
-    | '/auth/callback'
-    | '/auth/forgot-password'
-    | '/auth/login'
-    | '/auth/register'
-    | '/auth/reset-password'
     | '/_app/'
     | '/auth/'
     | '/_app/library/planned'
     | '/_app/library/ranked-list'
     | '/_app/library/reviews'
-    | '/_app/post/$postId'
-    | '/_app/settings/2fa'
     | '/_app/settings/account'
     | '/_app/settings/appearance'
     | '/_app/settings/danger-zone'
@@ -533,25 +425,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppUsernameRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/follow-requests': {
-      id: '/_app/follow-requests'
-      path: '/follow-requests'
-      fullPath: '/follow-requests'
-      preLoaderRoute: typeof AppFollowRequestsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/library': {
       id: '/_app/library'
       path: '/library'
       fullPath: '/library'
       preLoaderRoute: typeof AppLibraryRouteRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/notifications': {
-      id: '/_app/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings': {
@@ -566,41 +444,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/auth/'
       preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/forgot-password': {
-      id: '/auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/register': {
-      id: '/auth/register'
-      path: '/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_app/discover/': {
@@ -638,25 +481,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLibraryReviewsRouteImport
       parentRoute: typeof AppLibraryRouteRoute
     }
-    '/_app/post/$postId': {
-      id: '/_app/post/$postId'
-      path: '/post/$postId'
-      fullPath: '/post/$postId'
-      preLoaderRoute: typeof AppPostPostIdRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/settings/': {
       id: '/_app/settings/'
       path: '/'
       fullPath: '/settings/'
       preLoaderRoute: typeof AppSettingsIndexRouteImport
-      parentRoute: typeof AppSettingsRouteRoute
-    }
-    '/_app/settings/2fa': {
-      id: '/_app/settings/2fa'
-      path: '/2fa'
-      fullPath: '/settings/2fa'
-      preLoaderRoute: typeof AppSettings2faRouteImport
       parentRoute: typeof AppSettingsRouteRoute
     }
     '/_app/settings/account': {
@@ -775,21 +604,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteRouteChildren {
-  AuthCallbackRoute: typeof AuthCallbackRoute
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
-  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   AuthIndexRoute: typeof AuthIndexRoute
   AuthGoogleCallbackRoute: typeof AuthGoogleCallbackRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthCallbackRoute: AuthCallbackRoute,
-  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthRegisterRoute: AuthRegisterRoute,
-  AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthIndexRoute: AuthIndexRoute,
   AuthGoogleCallbackRoute: AuthGoogleCallbackRoute,
 }
@@ -817,7 +636,6 @@ const AppLibraryRouteRouteWithChildren = AppLibraryRouteRoute._addFileChildren(
 )
 
 interface AppSettingsRouteRouteChildren {
-  AppSettings2faRoute: typeof AppSettings2faRoute
   AppSettingsAccountRoute: typeof AppSettingsAccountRoute
   AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
   AppSettingsDangerZoneRoute: typeof AppSettingsDangerZoneRoute
@@ -825,7 +643,6 @@ interface AppSettingsRouteRouteChildren {
 }
 
 const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
-  AppSettings2faRoute: AppSettings2faRoute,
   AppSettingsAccountRoute: AppSettingsAccountRoute,
   AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
   AppSettingsDangerZoneRoute: AppSettingsDangerZoneRoute,
@@ -839,10 +656,7 @@ interface AppRouteChildren {
   AppLibraryRouteRoute: typeof AppLibraryRouteRouteWithChildren
   AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppUsernameRoute: typeof AppUsernameRoute
-  AppFollowRequestsRoute: typeof AppFollowRequestsRoute
-  AppNotificationsRoute: typeof AppNotificationsRoute
   AppIndexRoute: typeof AppIndexRoute
-  AppPostPostIdRoute: typeof AppPostPostIdRoute
   AppDiscoverIndexRoute: typeof AppDiscoverIndexRoute
   AppDiscoverAlbumExternalIdRoute: typeof AppDiscoverAlbumExternalIdRoute
   AppDiscoverBookExternalIdRoute: typeof AppDiscoverBookExternalIdRoute
@@ -862,10 +676,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLibraryRouteRoute: AppLibraryRouteRouteWithChildren,
   AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppUsernameRoute: AppUsernameRoute,
-  AppFollowRequestsRoute: AppFollowRequestsRoute,
-  AppNotificationsRoute: AppNotificationsRoute,
   AppIndexRoute: AppIndexRoute,
-  AppPostPostIdRoute: AppPostPostIdRoute,
   AppDiscoverIndexRoute: AppDiscoverIndexRoute,
   AppDiscoverAlbumExternalIdRoute: AppDiscoverAlbumExternalIdRoute,
   AppDiscoverBookExternalIdRoute: AppDiscoverBookExternalIdRoute,

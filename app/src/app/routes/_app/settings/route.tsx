@@ -5,7 +5,7 @@ export const Route = createFileRoute('/_app/settings')({
     const { user } = context.auth
 
     if (!user) {
-      throw redirect({ to: '/auth/login' })
+      throw redirect({ to: '/auth' })
     }
   },
   component: RouteComponent,

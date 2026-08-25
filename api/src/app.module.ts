@@ -8,19 +8,14 @@ import { EnvConfig, validateEnv } from './app/config/env.config'
 import { AuthGuard } from './common/guards/auth.guard'
 import { PrismaModule } from './infrastructure/prisma/prisma.module'
 import { RedisModule } from './infrastructure/redis/redis.module'
-import { ResendModule } from './infrastructure/resend/resend.module'
 import { S3Module } from './infrastructure/s3/s3.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { FeedModule } from './modules/feed/feed.module'
-import { FollowModule } from './modules/follow/follow.module'
 import { MediaModule } from './modules/media/media.module'
-import { NotificationsModule } from './modules/notifications/notifications.module'
 import { PlannedModule } from './modules/planned/planned.module'
-import { PostModule } from './modules/post/post.module'
 import { RankedListModule } from './modules/ranked-list/ranked-list.module'
 import { ReviewModule } from './modules/review/review.module'
 import { SessionModule } from './modules/session/session.module'
-import { TwoFactorModule } from './modules/two-factor/two-factor.module'
 import { UserModule } from './modules/user/user.module'
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 import Redis from 'ioredis'
@@ -61,16 +56,11 @@ import Redis from 'ioredis'
     AuthModule,
     MediaModule,
     UserModule,
-    NotificationsModule,
     ReviewModule,
     PlannedModule,
-    PostModule,
     RankedListModule,
-    ResendModule,
-    TwoFactorModule,
     SessionModule,
     FeedModule,
-    FollowModule,
   ],
   controllers: [],
   providers: [

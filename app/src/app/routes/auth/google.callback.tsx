@@ -12,7 +12,7 @@ export const Route = createFileRoute('/auth/google/callback')({
   },
   beforeLoad: ({ search }) => {
     if (!search.status) {
-      throw redirect({ to: '/auth/login' })
+      throw redirect({ to: '/auth' })
     }
 
     return search

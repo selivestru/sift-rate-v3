@@ -2,11 +2,9 @@ import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/commo
 
 import { UserService } from '../user/user.service'
 import { FeedResponse } from './types/feed.types'
+import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
-import { Prisma } from '~/generated/prisma/client'
-import { FollowStatus } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
-import { buildPostInclude, mapPost } from '~/modules/post/post.query'
 
 @Injectable()
 export class FeedService {
@@ -16,75 +14,41 @@ export class FeedService {
     private readonly userService: UserService,
   ) {}
 
-  async getFeed(userId?: string, cursor?: string): Promise<FeedResponse> {
-    return this.fetchPosts(userId, cursor, {
-      user: {
-        OR: [
-          { isPrivate: false },
-          ...(userId
-            ? [{ followers: { some: { followerId: userId, status: FollowStatus.ACCEPTED } } }]
-            : []),
-        ],
-      },
-    })
+  async getFeed(cursor?: string): Promise<FeedResponse> {
+    return this.fetchReviews(cursor)
   }
 
-  async getFollowingFeed(userId: string, cursor?: string): Promise<FeedResponse> {
-    return this.fetchPosts(userId, cursor, {
-      user: {
-        followers: {
-          some: {
-            followerId: userId,
-            status: FollowStatus.ACCEPTED,
-          },
-        },
-      },
-    })
-  }
-
-  async getUserFeed(username: string, userId?: string, cursor?: string): Promise<FeedResponse> {
+  async getUserFeed(username: string, cursor?: string): Promise<FeedResponse> {
     const user = await this.userService.findByUsername(username)
 
     if (!user) {
       throw new NotFoundException('User not found')
     }
 
-    return this.fetchPosts(userId, cursor, {
-      userId: user.id,
-    })
+    return this.fetchReviews(cursor, user.id)
   }
 
-  private async fetchPosts(
-    userId?: string,
-    cursor?: string,
-    where?: Prisma.PostWhereInput,
-  ): Promise<FeedResponse> {
-    const posts = await this.prisma.post.findMany({
-      where: {
-        ...where,
-        deletedAt: null,
-        parentId: null,
-      },
+  private async fetchReviews(cursor?: string, userId?: string): Promise<FeedResponse> {
+    const reviews = await this.prisma.review.findMany({
+      where: userId ? { userId } : undefined,
       ...(cursor && {
         cursor: { id: cursor },
         skip: 1,
       }),
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: DEFAULT_PAGE_SIZE + 1,
-      include: buildPostInclude(userId),
+      include: { user: { select: AUTHOR_SELECT }, media: true },
     })
 
-    const hasNextPage = posts.length > DEFAULT_PAGE_SIZE
+    const hasNextPage = reviews.length > DEFAULT_PAGE_SIZE
 
     if (hasNextPage) {
-      posts.pop()
+      reviews.pop()
     }
 
     return {
-      data: posts.map(mapPost),
-      nextCursor: hasNextPage ? posts[posts.length - 1].id : null,
+      data: reviews,
+      nextCursor: hasNextPage ? reviews[reviews.length - 1].id : null,
     }
   }
 }

@@ -8,23 +8,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum AuthMethod {
-  CREDENTIALS
-  GOOGLE
-}
-
-enum Subscription {
-  FREE
-  MONTHLY
-  YEARLY
-  LIFETIME
-}
-
-enum FollowStatus {
-  PENDING
-  ACCEPTED
-}
-
 enum MediaType {
   MOVIE
   TV_SHOW
@@ -34,60 +17,21 @@ enum MediaType {
   TRACK
 }
 
-enum NotificationType {
-  PASSWORD_CHANGED
-  EMAIL_CHANGED
-  FOLLOW
-  FOLLOW_REQUEST
-  FOLLOW_REQUEST_ACCEPTED
-  POST_LIKE
-  POST_COMMENT
-}
-
 model User {
-  id               String       @id @default(uuid(7))
-  email            String
-  displayName      String?
-  username         String?
-  passwordHash     String?
-  avatarUrl        String?
-  method           AuthMethod   @default(CREDENTIALS)
-  subscription     Subscription @default(FREE)
-  isVerified       Boolean      @default(false)
-  isPrivate        Boolean      @default(false)
-  twoFactorEnabled Boolean      @default(false)
-  twoFactorSecret  String?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  id          String   @id @default(uuid(7))
+  email       String
+  displayName String?
+  username    String?
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  following Follow[] @relation("Follower")
-  followers Follow[] @relation("Following")
-
-  reviews       Review[]
-  plannedItems  PlannedItem[]
-  rankedLists   RankedList[]
-  posts         Post[]
-  postLikes     PostLike[]
-  notifications Notification[]
+  reviews      Review[]
+  plannedItems PlannedItem[]
+  rankedLists  RankedList[]
 
   @@unique([email])
   @@unique([username])
-}
-
-model Follow {
-  id        String       @id @default(uuid(7))
-  status    FollowStatus @default(PENDING)
-  createdAt DateTime     @default(now())
-
-  followerId String
-  follower   User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-
-  followingId String
-  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
-
-  @@unique([followerId, followingId])
-  @@index([followingId, status])
-  @@index([followerId, status])
 }
 
 model Media {
@@ -117,7 +61,6 @@ model Review {
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
-  post  Post?
 
   @@unique([userId, mediaId])
   @@index([userId, createdAt])
@@ -159,54 +102,4 @@ model RankedItem {
 
   @@unique([listId, mediaId])
   @@index([listId, position])
-}
-
-model Post {
-  id        String    @id @default(uuid(7))
-  content   String?
-  userId    String
-  reviewId  String?   @unique
-  parentId  String?
-  rootId    String?
-  deletedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  user    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  review  Review?    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  parent  Post?      @relation("PostReplies", fields: [parentId], references: [id], onDelete: NoAction)
-  replies Post[]     @relation("PostReplies")
-  likes   PostLike[]
-
-  @@index([createdAt(sort: Desc), id(sort: Desc)])
-  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
-  @@index([parentId, createdAt(sort: Desc), id(sort: Desc)])
-  @@index([rootId, createdAt, id])
-}
-
-model PostLike {
-  id        String   @id @default(uuid(7))
-  postId    String
-  userId    String
-  createdAt DateTime @default(now())
-
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([postId, userId])
-  @@index([userId])
-}
-
-model Notification {
-  id        String           @id @default(uuid(7))
-  userId    String
-  type      NotificationType
-  payload   Json?
-  readAt    DateTime?
-  createdAt DateTime         @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
-  @@index([userId, readAt])
 }

@@ -10,3 +10,4 @@ coverage
 .env.local
 docker/minio.license
 backups/
+.slim/deepwork/

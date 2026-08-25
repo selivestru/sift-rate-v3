@@ -154,9 +154,7 @@ export class MediaService {
         cursor: { id: cursor },
         skip: 1,
       }),
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       take: DEFAULT_PAGE_SIZE + 1,
       include: {
         user: {

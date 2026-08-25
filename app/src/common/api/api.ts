@@ -6,17 +6,4 @@ export const api = ky.create({
   prefix: env.VITE_BASE_URL,
   credentials: 'include',
   retry: 0,
-  hooks: {
-    afterResponse: [
-      ({ response }) => {
-        if (response.status === 403) {
-          console.debug('ERROR', response)
-
-          if (!location.pathname.includes('/auth/callback')) {
-            // window.location.href = '/' // TODO: FIX
-          }
-        }
-      },
-    ],
-  },
 })

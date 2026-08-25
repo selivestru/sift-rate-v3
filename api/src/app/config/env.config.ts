@@ -4,7 +4,6 @@ export const envSchema = z.object({
   PORT: z.coerce.number(),
   NODE_ENV: z.enum(['development', 'production', 'test']),
   ORIGIN: z.url(),
-  BACKEND_URL: z.url(),
 
   DATABASE_URL: z.string(),
   REDIS_URL: z.string(),
@@ -29,11 +28,6 @@ export const envSchema = z.object({
   S3_SECRET_ACCESS_KEY: z.string().min(1),
 
   S3_PUBLIC_BASE_URL: z.url(),
-
-  RESEND_API_KEY: z.string(),
-  RESEND_DOMAIN: z.string(),
-
-  DUMMY_HASH: z.string(),
 })
 
 export type EnvConfig = z.infer<typeof envSchema>

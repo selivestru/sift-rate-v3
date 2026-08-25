@@ -6,9 +6,9 @@ import { EmptyState } from '~/common/ui/EmptyState'
 import { ErrorState } from '~/common/ui/ErrorState'
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
-import { PostItem, PostListSkeleton } from '~/modules/post'
+import { FeedListSkeleton, FeedReviewCard } from '~/modules/feed'
 
-import { useGetFeedQuery } from '../hooks/useGetUserFeedQuery'
+import { useGetUserFeedQuery } from '../hooks/useGetUserFeedQuery'
 
 interface UserFeedProps {
   username: string
@@ -20,11 +20,11 @@ export const UserFeed = ({ username }: UserFeedProps) => {
       fallback={
         <ErrorState
           title="Unable to load feed"
-          description="We couldn't load this user's feed. Please try again later."
+          description="We couldn't load this user's reviews. Please try again later."
         />
       }
     >
-      <Suspense fallback={<PostListSkeleton />}>
+      <Suspense fallback={<FeedListSkeleton />}>
         <UserFeedList username={username} />
       </Suspense>
     </ErrorBoundary>
@@ -33,7 +33,7 @@ export const UserFeed = ({ username }: UserFeedProps) => {
 
 const UserFeedList = ({ username }: UserFeedProps) => {
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useGetFeedQuery(username)
+    useGetUserFeedQuery(username)
 
   const items = data.pages.flatMap((page) => page.data)
   const isEmpty = !isFetching && items.length === 0
@@ -47,11 +47,13 @@ const UserFeedList = ({ username }: UserFeedProps) => {
     <section className="flex flex-col">
       <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">Feed</h2>
 
-      {isEmpty && <EmptyState title="No activity yet" />}
+      {isEmpty && (
+        <EmptyState title="No reviews yet" description="Nothing rated or reviewed so far." />
+      )}
 
       <div className="divide-border divide-y">
         {items.map((item) => (
-          <PostItem key={item.id} data={item} />
+          <FeedReviewCard key={item.id} item={item} />
         ))}
       </div>
 

@@ -13,10 +13,7 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from '~/common/ui/AlertDialog'
-import { PasswordField } from '~/common/ui/PasswordField'
-import { TwoFactorDialog } from '~/common/ui/TwoFactorDialog'
 import { cn } from '~/common/utils/cn'
-import { AUTH_METHOD, useAuthStore } from '~/modules/auth'
 
 import { useDeleteAccountForm } from '../../hooks/useDeleteAccountForm'
 
@@ -26,14 +23,10 @@ interface DeleteAccountDialogProps {
 
 export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
   const { opened, open, close } = useDisclosure()
-  const user = useAuthStore((state) => state.user)
-  const isCredentials = user?.method === AUTH_METHOD.CREDENTIALS
 
-  const { register, errors, onSubmit, isLoading, serverError, twoFactorState } =
-    useDeleteAccountForm({
-      requirePassword: isCredentials,
-      onSuccess: close,
-    })
+  const { onSubmit, isLoading, serverError } = useDeleteAccountForm({
+    onSuccess: close,
+  })
 
   return (
     <>
@@ -51,9 +44,8 @@ export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
             </AlertDialogMedia>
             <AlertDialogTitle>Delete your account?</AlertDialogTitle>
             <AlertDialogDescription>
-              This would permanently remove your profile, reviews, lists, and media archive.
-              We&apos;ll send a confirmation link to your email first — your account is only deleted
-              after you confirm it.
+              This permanently removes your profile, reviews, lists, and media archive. This cannot
+              be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -62,16 +54,6 @@ export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
               <XCircle />
               <AlertTitle>{serverError}</AlertTitle>
             </Alert>
-          )}
-
-          {isCredentials && (
-            <PasswordField
-              label="Password"
-              autoComplete="current-password"
-              placeholder="Enter your password"
-              error={errors.password}
-              {...register('password')}
-            />
           )}
 
           <AlertDialogFooter>
@@ -86,14 +68,6 @@ export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <TwoFactorDialog
-        isOpen={twoFactorState.isOpen}
-        onClose={twoFactorState.onClose}
-        onSubmit={twoFactorState.onSubmit}
-        isLoading={twoFactorState.isLoading}
-        error={twoFactorState.error}
-      />
     </>
   )
 }

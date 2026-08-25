@@ -1,20 +1,14 @@
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 
-import { QUERIES_KEYS, type FeedTabKey } from '~/common/constants/queries-keys'
+import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
 import { feedApi } from '../api/feed.api'
-import type { FeedResponse } from '../types/feed.types'
 
-const fetchers: Record<FeedTabKey, (cursor?: string) => Promise<FeedResponse>> = {
-  ALL: feedApi.getFeed,
-  FOLLOWING: feedApi.getFollowingFeed,
-}
-
-export const useGetFeedQuery = (tab: FeedTabKey) => {
+export const useGetFeedQuery = () => {
   return useSuspenseInfiniteQuery({
-    queryKey: QUERIES_KEYS.feed(tab),
+    queryKey: QUERIES_KEYS.feed,
     initialPageParam: undefined as string | undefined,
-    queryFn: ({ pageParam }) => fetchers[tab](pageParam),
+    queryFn: ({ pageParam }) => feedApi.getFeed(pageParam),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   })
 }

@@ -1,50 +1,49 @@
 # SiftRate API — agent guide
 
-NestJS 11 backend for SiftRate (personal media-life archive). Frontend SPA is `../app` (see `app/AGENTS.md`); root `package.json` runs Husky + lint-staged, which auto-runs `lint:fix` + `format:fix` on staged `api/**` files at commit.
+NestJS 11 backend for SiftRate (personal media-life archive). Frontend SPA is `../app` (see `app/AGENTS.md`). Repo-root `lefthook.yml` runs a pre-commit hook that auto-runs `lint:fix` + `format:fix` on staged `api/**/*.{js,ts}` (and `app/**`) with `stage_fixed: true`.
 
 ## Commands (run from `api/`)
 
-| Command | Action |
-|---|---|
-| `bun run dev` | Dev server (`nest start --watch`), port from `PORT` |
-| `bun run build` | `nest build` (rewrites `~/` alias in output) |
-| `bun run lint:check` / `lint:fix` | ESLint (`recommendedTypeChecked`) |
-| `bun run format:check` / `format:fix` | Prettier (no `;`, single quotes, width 100, @trivago import sort) |
-| `bun run db:generate` | Regenerate Prisma client → `src/generated/prisma` (gitignored) |
-| `bun run db:migrate` / `db:deploy` / `db:push` / `db:reset` | Prisma migrate dev / deploy / push / `push --force-reset` |
-| `bun run db:seed` | **Broken** — `prisma/seed.ts` doesn't exist yet |
-| `bun run db:studio` / `email:dev` | Prisma Studio / react-email preview (port 5001) |
+| Command                                                     | Action                                                                                                         |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `bun run dev`                                               | Dev server (`nest start --watch`), port from `PORT`                                                            |
+| `bun run build`                                             | `nest build` → `dist/` (rewrites `~/` alias to relative paths); `bun run start` = build + `node dist/src/main` |
+| `bun run lint:check` / `lint:fix`                           | ESLint (`recommendedTypeChecked`)                                                                              |
+| `bun run format:check` / `format:fix`                       | Prettier (no `;`, single quotes, width 100, @trivago import sort)                                              |
+| `bun run db:generate`                                       | Regenerate Prisma client → `src/generated/prisma` (gitignored)                                                 |
+| `bun run db:migrate` / `db:deploy` / `db:push` / `db:reset` | Prisma migrate dev / deploy / push / `push --force-reset`                                                      |
+| `bun run db:studio`                                         | Prisma Studio                                                                                                  |
 
-No tests exist (`*.spec.ts` absent; jest/supertest deps are starter leftovers).
-
-- Always respond in Russian.
+No tests exist.
 
 ## Env & config
 
-- Every var is required and zod-validated at boot in `src/app/config/env.config.ts` — missing vars crash startup. No `.env.example`; add new vars to `envSchema`. Keys: `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `ORIGIN`, `BACKEND_URL`, `S3_*`, `RESEND_*`, TMDB/OMDB/IGDB/Google Books keys, Google OAuth, `DUMMY_HASH`.
+- `envSchema` in `src/app/config/env.config.ts` zod-validates env at boot — missing/invalid vars crash startup. Only schema keys are readable via `ConfigService`, so add new vars to `envSchema` first. Required: `PORT`, `NODE_ENV`, `ORIGIN`, `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`/`GOOGLE_REDIRECT_URI`, `TMDB_API_KEY`, `OMDB_API_KEY`, `IGDB_CLIENT_ID`/`IGDB_CLIENT_SECRET`, `GOOGLE_BOOKS_API_KEY`, `S3_*` + `S3_PUBLIC_BASE_URL`. `SESSION_PREFIX` defaults to `sessions:`.
+- `api/.env` also holds dead extras NOT in the schema or code (`BACKEND_URL`, `TOTP_*`, `RESEND_*`, `DUMMY_HASH`) — ignore them.
+- No `api/.env.example`; root `.env.example` only covers docker-compose vars (`POSTGRES_*`, `MINIO_*`).
 - Typed config convention: inject `ConfigService<EnvConfig, true>` and read via `config.get('KEY', { infer: true })`.
-- Global prefix `api`; ValidationPipe `transform/whitelist/forbidNonWhitelisted`; CORS `credentials: true` for `ORIGIN`.
+- Global prefix `api`; ValidationPipe `transform/whitelist/forbidNonWhitelisted`; CORS `credentials: true` for `ORIGIN`; global `ThrottlerGuard` (Redis-backed, 10 req/min default).
 
 ## Auth
 
-- Cookie sessions (express-session + Redis via `SessionMiddlewareService`), **not** JWT.
-- Global `AuthGuard` protects all routes by default — opt out with `@Public()`. Unverified users get `EMAIL_NOT_VERIFIED`; deleted users' sessions are revoked.
-- `@CurrentUser('userId')` reads `req.user` (`sessionId`, `userId`, `email`, `username`, `subscription`); `@TwoFactor()` + `TwoFactorGuard` for 2FA-sensitive routes.
-- Global `ThrottlerGuard` (10 req/min, Redis-backed); tighten with `@Throttle(...)`; SSE endpoint `GET /api/notifications/stream` is `@SkipThrottle()`.
-- SSE: `NotificationsStreamService` (in `notifications` module, exported) — in-process RxJS bus keyed by `userId → sessionId`; `emit(userId, NotificationDto)` pushes `event: notification`; `closeSession(sid)` closes streams on logout/revoke (hooked in `SessionService`); heartbeat = wire-level `event: ping` every 30s (invisible to the client); live-only, no catch-up on connect.
-- Notifications: persisted in Postgres (`Notification` model, `NotificationType` enum, `payload Json`); `NotificationsService.create(recipientId, type, payload)` writes a row and emits SSE; stored payload per type defined in `notifications/types/notification.types.ts` (`NotificationPayloadMap`, currently `FOLLOW: { userId }`); responses (list + SSE) carry an enriched `payload` (`NotificationResponsePayloadMap` — user fields resolved from `payload.userId`, dangling user → null fields, no explicit marker). Per-type resolution lives in `NotificationPayloadResolverService` (`notification-payload.resolver.ts`): `resolve(rows)` groups by type and delegates to one method per type, which decides its own queries (FOLLOW batch-resolves users; types without a user ref issue no query); list (`GET /api/notifications`, cursor, 20/page); `GET /unread-count`, `POST /read` (`{ notificationIds }`), `POST /read-all` → 204; `FOLLOW` published from `FollowService`.
+- Google-only OAuth with cookie sessions (`express-session` + Redis via `SessionMiddlewareService`), not JWT or credentials auth.
+- Global `AuthGuard` protects all routes by default — opt out with `@Public()`. Currently public: Google login/callback, profile GETs (`/user/:username…`), media search/details/reviews (`/media/…`), and `/feed`.
+- `@CurrentUser('userId')` reads `req.user` (`sessionId`, `userId`, `email`, `username`). Deleted users' sessions are revoked (guard + `user.service.deleteAccount`).
+- Account deletion is immediate (`POST /user/delete`).
+- There is no 2FA, SSE, notifications, following, or paid subscription system.
 
 ## Architecture
 
-- `src/app/` — bootstrap + env config; `src/common/` — cross-cutting (decorators `Public`/`CurrentUser`/`Trim`/`LowerCase`/`Normalize`/`StrongPassword`/`TwoFactor`, guards, `PrismaClientExceptionFilter`, types, constants)
-- `src/infrastructure/` — `prisma/`, `redis/`, `s3/`, `resend/` (react-email `.tsx` templates + BullMQ email processor)
-- `src/modules/` — features: `auth`, `feed`, `follow`, `media`, `notifications`, `planned`, `ranked-list`, `review`, `session`, `two-factor`, `user`
+- `src/app/` — bootstrap + env config; `src/common/` — cross-cutting (decorators `Public`/`CurrentUser`/`Trim`/`LowerCase`/`Normalize`, guards, `PrismaClientExceptionFilter`, types, constants)
+- `src/infrastructure/` — `prisma/` (`@Global()` module), `redis/`, `s3/`
+- `src/modules/` — features: `auth`, `feed`, `media`, `planned`, `ranked-list`, `review`, `session`, `user`
 - `src/generated/prisma/` — generated, gitignored: after editing `prisma/schema.prisma` run `db:generate`; fresh clones fail to compile until generated. Import as `~/generated/prisma/client`.
-- Module shape: `*.module/controller/service.ts` + `dto/` (class-validator — no zod server-side) + `constants/` + `types/`; external providers (TMDB, IGDB, …) and slow work live in `media` under `services/` + `processors/` (BullMQ).
+- Media providers are per-type services under `media/services/` (TMDB/OMDB/IGDB/Google Books/Deezer). Slow work queues on Redis via BullMQ: poster ingest (`media/processors/poster-ingest.processor.ts`).
+- Feed (`feed.service`) returns reviews with author and media data.
 
 ## Data & conventions
 
-- Prisma 7 (`prisma-client` generator, `@prisma/adapter-pg`), Postgres, `uuid(7)` ids; `PrismaModule` is `@Global()`. Schema has no migrations dir yet — `db:migrate` creates the first one. Prisma errors → `PrismaClientExceptionFilter` (e.g. `P2002` → 409).
-- Use `~/` alias over relative imports; `import type` for type-only imports; no code comments unless asked.
-- ESLint: `no-explicit-any` off; `prettier/prettier` disabled — formatting only via `format:fix` (don't hand-sort imports; the @trivago plugin enforces order).
+- Prisma 7 (`prisma-client` generator, `@prisma/adapter-pg`), Postgres, `uuid(7)` ids. Prisma errors → `PrismaClientExceptionFilter` (`P2002` → 409, `P2025` → 404).
+- Use `~/` alias over relative imports; `import type` for type-only imports.
+- ESLint: `no-explicit-any` off; `prettier/prettier` disabled — formatting only via `format:fix` (don't hand-sort imports; the @trivago plugin enforces order). The pre-commit hook re-formats and restages files.
 - Do not write code comments.

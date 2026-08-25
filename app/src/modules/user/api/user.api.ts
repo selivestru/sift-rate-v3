@@ -11,20 +11,7 @@ export const userApi = {
   changeUsername: (username: string) => {
     return api.patch<{ username: string }>('/user/username', { json: { username } }).json()
   },
-  updatePrivacy: (isPrivate: boolean) => {
-    return api.patch<{ isPrivate: boolean }>('/user/privacy', { json: { isPrivate } }).json()
-  },
-  changePassword: (data: {
-    currentPassword: string
-    newPassword: string
-    twoFactorCode?: string
-  }) => {
-    return api.patch<{ message: string }>('/user/password', { json: data }).json()
-  },
-  changeEmail: (data: { newEmail: string; currentPassword: string; twoFactorCode?: string }) => {
-    return api.patch<{ message: string }>('/user/email', { json: data }).json()
-  },
-  deleteAccount: (data: { password?: string; twoFactorCode?: string }) => {
-    return api.post<{ message: string }>('/user/delete', { json: data }).json()
+  deleteAccount: () => {
+    return api.post('/user/delete', { json: {} })
   },
 }

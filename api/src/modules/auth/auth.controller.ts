@@ -15,14 +15,6 @@ import { seconds, Throttle } from '@nestjs/throttler'
 
 import { AuthService } from './auth.service'
 import { CompleteProfileDto } from './dto/complete-profile.dto'
-import {
-  ForgotPasswordDto,
-  ResetPasswordDto,
-  ResetPasswordVerifyDto,
-} from './dto/forgot-password.dto'
-import { LoginDto } from './dto/login.dto'
-import { RegisterDto } from './dto/register.dto'
-import { ResendVerificationDto } from './dto/resend-verification.dto'
 import type { Request, Response } from 'express'
 import { EnvConfig } from '~/app/config/env.config'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
@@ -34,20 +26,6 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly config: ConfigService<EnvConfig, true>,
   ) {}
-
-  @Public()
-  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
-  @Post('register')
-  register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto)
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
-  @Post('login')
-  login(@Req() req: Request, @Res({ passthrough: true }) res: Response, @Body() dto: LoginDto) {
-    return this.authService.login(req, res, dto)
-  }
 
   @Put('/complete-profile')
   completeProfile(@CurrentUser('userId') userId: string, @Body() dto: CompleteProfileDto) {
@@ -99,73 +77,5 @@ export class AuthController {
   @HttpCode(204)
   logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.authService.logout(req, res)
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
-  @Get('confirm-email-change')
-  async confirmEmailChange(@Res() res: Response, @Query('token') token?: string) {
-    const origin = this.config.get('ORIGIN', { infer: true })
-
-    if (!token) {
-      return res.redirect(`${origin}/auth/callback?status=email_change_failed`)
-    }
-
-    try {
-      await this.authService.confirmEmailChange(token)
-      return res.redirect(`${origin}/auth/callback?status=email_changed`)
-    } catch {
-      return res.redirect(`${origin}/auth/callback?status=email_change_failed`)
-    }
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
-  @Get('verify')
-  async verifyEmail(@Res() res: Response, @Query('token') token?: string) {
-    const origin = this.config.get('ORIGIN', { infer: true })
-
-    if (!token) {
-      return res.redirect(`${origin}/auth/callback?status=invalid_or_expired`)
-    }
-
-    try {
-      await this.authService.verifyEmail(token)
-      return res.redirect(`${origin}/auth/callback?status=verified`)
-    } catch {
-      return res.redirect(`${origin}/auth/callback?status=invalid_or_expired`)
-    }
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
-  @Post('resend-verification')
-  @HttpCode(200)
-  resendVerification(@Body() dto: ResendVerificationDto) {
-    return this.authService.resendVerification(dto.email)
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
-  @Post('forgot-password')
-  @HttpCode(200)
-  forgotPassword(@Body() dto: ForgotPasswordDto) {
-    return this.authService.forgotPassword(dto.email)
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
-  @Post('reset-password/verify')
-  @HttpCode(200)
-  resetPasswordVerify(@Body() dto: ResetPasswordVerifyDto) {
-    return this.authService.resetPasswordVerify(dto.token)
-  }
-
-  @Public()
-  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
-  @Post('reset-password')
-  @HttpCode(200)
-  resetPassword(@Body() dto: ResetPasswordDto) {
-    return this.authService.resetPassword(dto)
   }
 }

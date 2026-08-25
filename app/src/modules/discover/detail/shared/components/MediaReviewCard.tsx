@@ -3,7 +3,6 @@ import { Pen, Star, Trash6 } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
-import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
@@ -25,36 +24,32 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
   const currentUserId = useAuthStore((state) => state.user?.id)
   const isOwner = currentUserId === user.id
 
-  const isPerfect = review.rating === 10
-
   return (
-    <article
-      className={cn(
-        'bg-card text-card-foreground border-border flex gap-3 rounded-xl border p-4',
-        isPerfect && 'border-rating',
-      )}
-    >
+    <article className="bg-card text-card-foreground border-border flex gap-3 rounded-xl border p-4">
       <Avatar size="lg">
-        <AvatarImage src={user.avatarUrl ?? undefined} alt={user.username ?? undefined} />
-        <AvatarFallback>{getFirstLetter(user.username)}</AvatarFallback>
+        <AvatarImage
+          src={user.avatarUrl ?? undefined}
+          alt={user.displayName ?? user.username ?? undefined}
+        />
+        <AvatarFallback>{getFirstLetter(user.displayName ?? user.username)}</AvatarFallback>
       </Avatar>
 
       <div className="flex flex-1 flex-col gap-2.5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">
-              <Link
-                to="/$username"
-                params={{ username: user.username! }}
-                className="text-foreground truncate text-sm font-semibold hover:underline"
-              >
-                {user.username}
-              </Link>
-
-              {isPerfect && (
-                <Badge variant="rating" size="sm">
-                  Perfect
-                </Badge>
+              {user.username ? (
+                <Link
+                  to="/$username"
+                  params={{ username: user.username }}
+                  className="text-foreground truncate text-sm font-semibold hover:underline"
+                >
+                  {user.displayName ?? user.username}
+                </Link>
+              ) : (
+                <span className="text-foreground truncate text-sm font-semibold">
+                  {user.displayName ?? 'Unknown'}
+                </span>
               )}
 
               <time dateTime={review.createdAt} className="text-muted-foreground text-xs">
@@ -64,9 +59,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
 
             <div
               className="flex items-center gap-0.5"
-              aria-label={
-                isPerfect ? 'Perfect score 10 out of 10' : `Rated ${review.rating} out of 10`
-              }
+              aria-label={`Rated ${review.rating} out of 10`}
             >
               {Array.from({ length: 10 }, (_, index) => {
                 const filled = index < review.rating

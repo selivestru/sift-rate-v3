@@ -12,7 +12,8 @@ import type { AuthGoogleCallbackSearch } from '../schema/auth-callback.schema'
 import { useAuthStore } from '../store/auth.store'
 
 const ERROR_MESSAGES: Record<AuthGoogleCallbackSearch['status'], string> = {
-  email_taken: 'This email is already registered. Sign in with your password instead.',
+  email_taken:
+    'This email is already linked to an account. Try signing in again, or contact us if that wasn’t you.',
   google_auth_failed: 'Google sign-in failed. Please try again.',
   success: 'Google sign-in successful.',
 }
@@ -41,7 +42,7 @@ export const AuthGoogleCallback = ({ status }: AuthGoogleCallbackProps) => {
         setStorageItem('has_session', true)
         navigate({ to: '/' })
       } catch {
-        navigate({ to: '/auth/login' })
+        navigate({ to: '/auth' })
       }
     }
 
@@ -57,7 +58,7 @@ export const AuthGoogleCallback = ({ status }: AuthGoogleCallbackProps) => {
           <AlertTitle>{isSuccess ? 'Success' : 'Failed'}</AlertTitle>
           <AlertDescription>{message}</AlertDescription>
         </Alert>
-        <Button fullWidth variant="secondary" render={<Link to="/auth/login" />}>
+        <Button fullWidth variant="secondary" render={<Link to="/auth" />}>
           Back to sign in
         </Button>
       </div>

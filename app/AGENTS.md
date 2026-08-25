@@ -1,6 +1,6 @@
 # SiftRate — agent guide
 
-SiftRate is a SPA web platform for a personal media-life archive: movies, TV shows, games, books, albums, and tracks. Users authenticate (email/password + Google), pick a unique username, then search media, rate it, and build a life timeline through media.
+SiftRate is a SPA web platform for a personal media-life archive: movies, TV shows, games, books, albums, and tracks. Users authenticate via Google only, then pick a unique username before searching media, rating it, and building a life timeline through media.
 
 Product filter: when decisions are ambiguous, prefer what serves a personal archive over a classic rating aggregator.
 
@@ -8,12 +8,15 @@ Product filter: when decisions are ambiguous, prefer what serves a personal arch
 
 Repository root: `siftrate/` (parent of this `app/` package).
 
-| Path                | Role                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| `app/`              | Frontend SPA (this package) — Vite + React                   |
-| `api/`              | Backend API — NestJS                                         |
-| `landing/`          | Marketing landing                                            |
-| root `package.json` | Repo tooling — Husky + lint-staged for `app/**` and `api/**` |
+| Path                      | Role                                                  |
+| ------------------------- | ----------------------------------------------------- |
+| `app/`                    | Frontend SPA (this package) — Vite + React            |
+| `api/`                    | Backend API — NestJS + Prisma (see `api/AGENTS.md`)   |
+| `scripts/`                | Backup/restore scripts for Postgres + MinIO           |
+| root `docker-compose.yml` | Local infra — Postgres, Redis, MinIO                  |
+| root `package.json`       | Workspaces (`api`, `app`) + Lefthook pre-commit hooks |
+
+Lefthook pre-commit auto-runs `lint:fix` + `format:fix` on staged files (per-package, `stage_fixed: true`) — expect staged files to be rewritten at commit.
 
 ## Tech stack
 
@@ -53,12 +56,13 @@ src/
     assets/            # static assets (icons, SVGs)
     constants/         # env, media-type, navigation, queries-keys
     hooks/             # e.g. useMediaQuery
+    schema/            # shared Zod schemas (e.g. content.schema)
     theme/             # ThemeProvider, useTheme, accent
     types/             # domain types (media-ref)
     ui/                # shared UI components
     utils/             # cn, storage, applyApiFormError, formatters
   modules/             # feature modules
-    auth/ | discover/ | library/ | planned/ | ranked-list/ | review/ | settings/ | user/
+    auth/ | discover/ | feed/ | library/ | planned/ | profile/ | ranked-list/ | review/ | settings/ | user/
 ```
 
 **Path aliases** (prefer `~/` over long relative imports):
@@ -95,31 +99,31 @@ modules/<name>/
 
 Rules:
 
-- **Barrel-first.** New public files (hooks, components, schemas, api, stores, types) must be re-exported from the module's `index.ts` (`export * from './file'`) before being imported by other modules. Cross-module imports go through the barrel — `import { useCreatePostForm } from '~/modules/post'` — never deep paths like `~/modules/post/hooks/useCreatePostForm`.
+- **Barrel-first.** New public files (hooks, components, schemas, api, stores, types) must be re-exported from the module's `index.ts` (`export * from './file'`) before being imported by other modules. Cross-module imports go through the barrel — `import { useGetFeedQuery } from '~/modules/feed'` — never deep paths like `~/modules/feed/hooks/useGetFeedQuery`.
 - Routes stay thin: load guards + render module/page components.
 - New domains should follow the same shape; do not invent a new folder taxonomy.
 
-Current modules: `auth`, `discover` (search + detail), `library`, `planned`, `ranked-list`, `review`, `settings`, `user`.
+Current modules: `auth`, `discover` (search + detail), `feed`, `library`, `planned`, `profile`, `ranked-list`, `review`, `settings`, `user`.
 
 ## Routes and product areas
 
 File routes: `src/app/routes/`.
 
-| Area             | Paths                                                                                              | Intent                                                 |
-| ---------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Auth             | `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/callback`                         | Sign-in, sign-up, reset, Google OAuth                  |
-| Complete Profile | `/complete-profile`                                                                                | Username onboarding when account has no username       |
-| Home             | `/`                                                                                                | Activity feed / home of the archive                    |
-| Discover         | `/discover`, `/discover/{movie,tv_show,game,book,album,track}`, `/$externalId`                     | Search by type, detail by external ID                  |
-| Library          | `/library`, `/library/reviews`, `/library/ranked-list`, `/library/planned`                         | Personal library, reviews, ranked lists, planned queue |
-| Settings         | `/settings`, `/settings/account`, `/settings/appearance`, `/settings/2fa`, `/settings/danger-zone` | Account settings, theme, 2FA, danger zone              |
-| Profile          | `/$username`                                                                                       | Public/personal profile by username                    |
+| Area             | Paths                                                                             | Intent                                                 |
+| ---------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Auth             | `/auth`, `/auth/google/callback`                                                  | Google sign-in and OAuth result                        |
+| Complete Profile | `/complete-profile`                                                               | Username onboarding when account has no username       |
+| Home             | `/`                                                                               | Activity feed / home of the archive                    |
+| Discover         | `/discover`, `/discover/{movie,tv_show,game,book,album,track}`, `/$externalId`    | Search by type, detail by external ID                  |
+| Library          | `/library`, `/library/reviews`, `/library/ranked-list`, `/library/planned`        | Personal library, reviews, ranked lists, planned queue |
+| Settings         | `/settings`, `/settings/account`, `/settings/appearance`, `/settings/danger-zone` | Account settings, theme, danger zone                   |
+| Profile          | `/$username`                                                                      | Public/personal profile by username                    |
 
 ## Data layer
 
 - HTTP client: `src/common/api/api.ts` (`ky.create` with `env.VITE_BASE_URL`, `credentials: 'include'`).
 - Error normalization: `getApiError` → `{ message, fieldErrors?, status? }`.
-- Module APIs: e.g. `authApi.login/register/forgotPassword`.
+- Module APIs: `authApi.me/logout/completeProfile/getGoogleUrl`.
 - Forms: Zod schema → `zodResolver` → mutation hook → `setUser` / navigation; map field errors with `applyApiFormError`.
 - Query defaults: `refetchOnWindowFocus: false`, `retry: false`, `staleTime: Infinity` (see `TanstackQueryProvider`).
 - Browser storage: `getStorageItem(key, zodSchema, fallback)`, `setStorageItem(key, value)`, `removeStorageItem(key)`. Do not read/write raw `localStorage` without schema validation.
@@ -167,7 +171,6 @@ Interactive control patterns (sizes, variants, props) — see [`DESIGN.md`](./DE
 
 ## Domain contracts
 
-- `Subscription`: `FREE | MONTHLY | YEARLY | LIFETIME` — `src/modules/auth/types/user.type.ts`
 - `MediaType`: `MOVIE | TV_SHOW | GAME | BOOK | ALBUM | TRACK` — `src/common/constants/media-type.ts`
 
 ## Agent best practices

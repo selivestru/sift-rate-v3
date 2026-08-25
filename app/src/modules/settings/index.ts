@@ -1,7 +1,5 @@
-export * from './components/AccountPrivacySection'
 export * from './components/AccountSettings'
 export * from './components/AppearanceSettings'
 export * from './components/danger-zone/DangerZoneSettings'
 export * from './components/SettingsBackLink'
 export * from './components/SettingsNav'
-export * from './components/two-factor/TwoFactorSettings'
