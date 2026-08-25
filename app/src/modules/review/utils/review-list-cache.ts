@@ -13,13 +13,15 @@ export type MyReviewsFilter = {
   mediaType?: MediaType
   rating?: number
   sort: ReviewSort
+  year?: number
+  month?: number
 }
 
 export type MediaReviewAuthor = MediaReviewItem['user']
 
 export const matchesMyReviewsFilter = (
   review: Review,
-  filters: Pick<MyReviewsFilter, 'q' | 'mediaType' | 'rating'>,
+  filters: Pick<MyReviewsFilter, 'q' | 'mediaType' | 'rating' | 'year' | 'month'>,
 ) => {
   if (filters.mediaType && review.media.mediaType !== filters.mediaType) {
     return false
@@ -27,6 +29,18 @@ export const matchesMyReviewsFilter = (
 
   if (filters.rating != null && review.rating !== filters.rating) {
     return false
+  }
+
+  if (filters.year != null) {
+    const createdAt = new Date(review.createdAt)
+
+    if (createdAt.getUTCFullYear() !== filters.year) {
+      return false
+    }
+
+    if (filters.month != null && createdAt.getUTCMonth() + 1 !== filters.month) {
+      return false
+    }
   }
 
   if (filters.q) {
@@ -42,8 +56,10 @@ export const parseMyReviewsQueryKey = (queryKey: readonly unknown[]): MyReviewsF
     typeof queryKey[2] === 'string' && queryKey[2] !== '' ? (queryKey[2] as MediaType) : undefined
   const rating = typeof queryKey[3] === 'number' ? queryKey[3] : undefined
   const sort = queryKey[4] === REVIEW_SORT.OLDEST ? REVIEW_SORT.OLDEST : REVIEW_SORT.NEWEST
+  const year = typeof queryKey[5] === 'number' ? queryKey[5] : undefined
+  const month = typeof queryKey[6] === 'number' ? queryKey[6] : undefined
 
-  return { q, mediaType, rating, sort }
+  return { q, mediaType, rating, sort, year, month }
 }
 
 const removeReviewFromPages = <T extends { id: string }>(

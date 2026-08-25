@@ -13,19 +13,28 @@ export const useReviewList = () => {
   const [mediaType, setMediaType] = useState<MediaType | undefined>()
   const [rating, setRating] = useState<number | undefined>()
   const [sort, setSort] = useState<ReviewSort>(DEFAULT_REVIEW_SORT)
+  const [date, setDate] = useState<{ year?: number; month?: number }>({})
   const debouncedQ = useDebouncedValue(query, 300)
 
   const { data, fetchNextPage, hasNextPage, isPending, isFetching, isFetchingNextPage, isError } =
-    useMyReviewsQuery({ q: debouncedQ, mediaType, rating, sort })
+    useMyReviewsQuery({
+      q: debouncedQ,
+      mediaType,
+      rating,
+      sort,
+      year: date.year,
+      month: date.month,
+    })
 
   const {
     data: stats,
     isPending: isStatsPending,
     isFetching: isStatsFetching,
-  } = useMyReviewStatsQuery()
+  } = useMyReviewStatsQuery(date.year, date.month)
 
   const reviews = data?.pages.flatMap((page) => page.data) ?? []
-  const hasActiveFilters = Boolean(debouncedQ.trim()) || Boolean(mediaType) || rating != null
+  const hasActiveFilters =
+    Boolean(debouncedQ.trim()) || Boolean(mediaType) || rating != null || date.year != null
   const isInitialLoading = isPending || (isFetching && !isFetchingNextPage && !data)
   const isListFetching = isFetching && !isFetchingNextPage
   const isStatsLoading = isStatsPending || (isStatsFetching && !stats)
@@ -44,6 +53,8 @@ export const useReviewList = () => {
     setRating,
     sort,
     setSort,
+    date,
+    setDate,
     reviews,
     stats,
     isStatsLoading,

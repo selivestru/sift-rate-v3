@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Put, Query } from '@nestjs/common'
 
-import { ReviewsQueryDto } from './dto/reviews.query'
+import { ReviewsQueryDto, ReviewsStatsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
 import { UpsertReviewDto } from './dto/upsert-review.dto'
 import { ReviewService } from './review.service'
@@ -11,8 +11,8 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Get('me/stats')
-  getMineStats(@CurrentUser('userId') userId: string) {
-    return this.reviewService.getMineStats(userId)
+  getMineStats(@CurrentUser('userId') userId: string, @Query() query: ReviewsStatsQueryDto) {
+    return this.reviewService.getMineStats(userId, query)
   }
 
   @Get('me')

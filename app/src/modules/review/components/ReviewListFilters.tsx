@@ -6,6 +6,7 @@ import { Input } from '~/common/ui/Input'
 
 import type { ReviewSort } from '../constants/sort'
 import type { ReviewStats } from '../types/review.types'
+import { ReviewDateSelect } from './ReviewDateSelect'
 import { ReviewMediaTypeSelect } from './ReviewMediaTypeSelect'
 import { ReviewRatingSelect } from './ReviewRatingSelect'
 import { ReviewSortSelect } from './ReviewSortSelect'
@@ -19,6 +20,9 @@ interface ReviewListFiltersProps {
   onRatingChange: (rating: number | undefined) => void
   sort: ReviewSort
   onSortChange: (sort: ReviewSort) => void
+  year?: number
+  month?: number
+  onDateChange: (date: { year?: number; month?: number }) => void
   stats?: ReviewStats
 }
 
@@ -31,6 +35,9 @@ export const ReviewListFilters = ({
   onRatingChange,
   sort,
   onSortChange,
+  year,
+  month,
+  onDateChange,
   stats,
 }: ReviewListFiltersProps) => {
   const handleClear = () => {
@@ -55,7 +62,7 @@ export const ReviewListFilters = ({
         className="pr-0"
       />
 
-      <div className="grid gap-2 max-sm:grid-rows-3 sm:grid-cols-3">
+      <div className="grid gap-2 max-sm:grid-rows-4 sm:grid-cols-2 lg:grid-cols-4">
         <ReviewMediaTypeSelect
           value={mediaType}
           onChange={onMediaTypeChange}
@@ -68,6 +75,7 @@ export const ReviewListFilters = ({
           total={stats?.total}
           counts={stats?.byRating}
         />
+        <ReviewDateSelect year={year} month={month} onChange={onDateChange} />
         <ReviewSortSelect value={sort} onChange={onSortChange} />
       </div>
     </div>

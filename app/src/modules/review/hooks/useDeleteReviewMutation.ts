@@ -21,7 +21,7 @@ export const useDeleteReviewMutation = () => {
     mutationKey: ['delete-review'],
     mutationFn: ({ id }: DeleteReviewVariables) => reviewApi.deleteReview({ id }),
     onSuccess: (data, _variables, _, context) => {
-      patchMyReviewStats(context.client, (stats) =>
+      patchMyReviewStats(context.client, data.createdAt, (stats) =>
         applyReviewDeleted(stats, {
           mediaType: data.media.mediaType,
           rating: data.rating,

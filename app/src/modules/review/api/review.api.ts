@@ -16,6 +16,8 @@ export const reviewApi = {
     mediaType?: string
     rating?: number
     sort?: ReviewSort
+    year?: number
+    month?: number
   }) => {
     const searchParams = new URLSearchParams()
 
@@ -40,10 +42,28 @@ export const reviewApi = {
       searchParams.set('sort', params.sort)
     }
 
+    if (params?.year != null) {
+      searchParams.set('year', String(params.year))
+
+      if (params.month != null) {
+        searchParams.set('month', String(params.month))
+      }
+    }
+
     return api.get<MyReviewsResponse>('/review/me', { searchParams }).json()
   },
-  getMyReviewStats: () => {
-    return api.get<ReviewStats>('/review/me/stats').json()
+  getMyReviewStats: (year?: number, month?: number) => {
+    const searchParams = new URLSearchParams()
+
+    if (year != null) {
+      searchParams.set('year', String(year))
+
+      if (month != null) {
+        searchParams.set('month', String(month))
+      }
+    }
+
+    return api.get<ReviewStats>('/review/me/stats', { searchParams }).json()
   },
   upsertReview: (body: RateMediaBody) => {
     return api.put<Review>('/review', { json: body }).json()

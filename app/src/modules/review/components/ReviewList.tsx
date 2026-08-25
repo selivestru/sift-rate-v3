@@ -18,6 +18,8 @@ export const ReviewList = () => {
     setRating,
     sort,
     setSort,
+    date,
+    setDate,
     reviews,
     stats,
     isStatsLoading,
@@ -42,6 +44,9 @@ export const ReviewList = () => {
         onRatingChange={setRating}
         sort={sort}
         onSortChange={setSort}
+        year={date.year}
+        month={date.month}
+        onDateChange={setDate}
         stats={stats}
       />
 

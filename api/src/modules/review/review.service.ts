@@ -5,10 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 
-import { REVIEW_SORT, ReviewsQueryDto } from './dto/reviews.query'
+import { REVIEW_SORT, ReviewsQueryDto, ReviewsStatsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
 import { UpsertReviewDto } from './dto/upsert-review.dto'
 import { ReviewItem, ReviewsResponse, ReviewStatsResponse } from './types/review.types'
+import { getCreatedAtFilter } from './utils/getCreatedAtFilter'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { Prisma } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
@@ -33,11 +34,13 @@ export class ReviewService {
       }),
     }
     const hasMediaFilter = Object.keys(mediaFilter).length > 0
+    const createdAtFilter = getCreatedAtFilter(query?.year, query?.month)
 
     const reviews = await this.prisma.review.findMany({
       where: {
         userId,
         ...(query.rating != null && { rating: query.rating }),
+        ...(createdAtFilter && { createdAt: createdAtFilter }),
         ...(hasMediaFilter && { media: mediaFilter }),
       },
       ...(query.cursor && {
@@ -64,19 +67,30 @@ export class ReviewService {
     }
   }
 
-  async getMineStats(userId: string): Promise<ReviewStatsResponse> {
+  async getMineStats(userId: string, query: ReviewsStatsQueryDto): Promise<ReviewStatsResponse> {
+    const createdAtFilter = getCreatedAtFilter(query?.year, query?.month)
+
     const [total, ratingGroups, mediaIdGroups] = await Promise.all([
       this.prisma.review.count({
-        where: { userId },
+        where: {
+          userId,
+          ...(createdAtFilter && { createdAt: createdAtFilter }),
+        },
       }),
       this.prisma.review.groupBy({
         by: ['rating'],
-        where: { userId },
+        where: {
+          userId,
+          ...(createdAtFilter && { createdAt: createdAtFilter }),
+        },
         _count: true,
       }),
       this.prisma.review.groupBy({
         by: ['mediaId'],
-        where: { userId },
+        where: {
+          userId,
+          ...(createdAtFilter && { createdAt: createdAtFilter }),
+        },
         _count: true,
       }),
     ])

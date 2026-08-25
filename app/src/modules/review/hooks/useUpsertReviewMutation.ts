@@ -38,14 +38,14 @@ export const useUpsertReviewMutation = () => {
           : (mediaState?.review ?? null)
 
       if (!previousReview) {
-        patchMyReviewStats(context.client, (stats) =>
+        patchMyReviewStats(context.client, data.createdAt, (stats) =>
           applyReviewCreated(stats, {
             mediaType: data.media.mediaType,
             rating: data.rating,
           }),
         )
       } else if (previousReview.rating !== data.rating) {
-        patchMyReviewStats(context.client, (stats) =>
+        patchMyReviewStats(context.client, data.createdAt, (stats) =>
           applyReviewRatingChanged(stats, {
             fromRating: previousReview.rating,
             toRating: data.rating,

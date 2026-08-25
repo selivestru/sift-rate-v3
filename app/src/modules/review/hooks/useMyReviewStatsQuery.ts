@@ -4,10 +4,9 @@ import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
 import { reviewApi } from '../api/review.api'
 
-export const useMyReviewStatsQuery = (options?: { enabled?: boolean }) => {
+export const useMyReviewStatsQuery = (year?: number, month?: number) => {
   return useQuery({
-    queryKey: QUERIES_KEYS.myReviewStats,
-    queryFn: reviewApi.getMyReviewStats,
-    enabled: options?.enabled ?? true,
+    queryKey: QUERIES_KEYS.myReviewStats(year, month),
+    queryFn: () => reviewApi.getMyReviewStats(year, month),
   })
 }

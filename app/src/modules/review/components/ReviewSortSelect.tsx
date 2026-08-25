@@ -46,7 +46,7 @@ export const ReviewSortSelect = ({ value, onChange }: ReviewSortSelectProps) => 
           }}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent alignItemWithTrigger={false} align="start">
+      <SelectContent alignItemWithTrigger={false} align="center">
         {reviewSortMeta.map((item) => {
           const Icon = item.icon
 

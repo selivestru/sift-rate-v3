@@ -11,6 +11,8 @@ interface UseMyReviewsQueryOptions {
   mediaType?: MediaType
   rating?: number
   sort?: ReviewSort
+  year?: number
+  month?: number
   enabled?: boolean
 }
 
@@ -19,9 +21,19 @@ export const useMyReviewsQuery = (options?: UseMyReviewsQueryOptions) => {
   const mediaType = options?.mediaType
   const rating = options?.rating
   const sort = options?.sort ?? DEFAULT_REVIEW_SORT
+  const year = options?.year
+  const month = options?.month
 
   return useInfiniteQuery({
-    queryKey: [...QUERIES_KEYS.myReviews, normalizedQ ?? '', mediaType ?? '', rating ?? '', sort],
+    queryKey: [
+      ...QUERIES_KEYS.myReviews,
+      normalizedQ ?? '',
+      mediaType ?? '',
+      rating ?? '',
+      sort,
+      year ?? '',
+      month ?? '',
+    ],
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) =>
       reviewApi.getMyReviews({
@@ -30,6 +42,8 @@ export const useMyReviewsQuery = (options?: UseMyReviewsQueryOptions) => {
         mediaType: mediaType?.toLowerCase(),
         rating,
         sort,
+        year,
+        month: year != null ? month : undefined,
       }),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     enabled: options?.enabled ?? true,

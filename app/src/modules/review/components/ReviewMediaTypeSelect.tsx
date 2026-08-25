@@ -54,7 +54,7 @@ export const ReviewMediaTypeSelect = ({
           }}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent alignItemWithTrigger={false} align="start">
+      <SelectContent alignItemWithTrigger={false} align="center" className="w-max">
         {items.map((item) => {
           if (item.value == null) {
             return (

@@ -52,7 +52,7 @@ export const ReviewRatingSelect = ({
           }}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent alignItemWithTrigger={false} align="start">
+      <SelectContent className="w-max" alignItemWithTrigger={false} align="center">
         <SelectItem value={null}>
           <span className="flex w-full items-center justify-between gap-3">
             <span className="text-rating inline-flex items-center gap-2">

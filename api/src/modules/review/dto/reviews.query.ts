@@ -1,5 +1,16 @@
 import { Transform, Type } from 'class-transformer'
-import { IsEnum, IsInt, IsOptional, Max, MaxLength, Min, MinLength } from 'class-validator'
+import {
+  IsDefined,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+  ValidateIf,
+} from 'class-validator'
+import { CURRENT_YEAR } from '~/common/constants/common'
 import { Trim } from '~/common/decorators/trim.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
 import { MediaType } from '~/generated/prisma/enums'
@@ -31,7 +42,45 @@ export class ReviewsQueryDto extends PaginationCursor {
   @Max(10)
   rating?: number
 
+  @Type(() => Number)
+  @ValidateIf(
+    (query: { year?: number; month?: number }) =>
+      query.year !== undefined || query.month !== undefined,
+  )
+  @IsDefined()
+  @IsInt()
+  @Min(2000)
+  @Max(CURRENT_YEAR)
+  year?: number
+
+  @Type(() => Number)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(12)
+  month?: number
+
   @IsOptional()
   @IsEnum(REVIEW_SORT)
   sort?: ReviewSort
+}
+
+export class ReviewsStatsQueryDto {
+  @Type(() => Number)
+  @ValidateIf(
+    (query: { year?: number; month?: number }) =>
+      query.year !== undefined || query.month !== undefined,
+  )
+  @IsDefined()
+  @IsInt()
+  @Min(2000)
+  @Max(CURRENT_YEAR)
+  year?: number
+
+  @Type(() => Number)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(12)
+  month?: number
 }
