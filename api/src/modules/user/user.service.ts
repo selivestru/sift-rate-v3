@@ -1,9 +1,17 @@
-import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
 
 import { FeedService } from '../feed/feed.service'
 import { FeedResponse } from '../feed/types/feed.types'
 import { ReviewActivity, ReviewStats, UserProfile } from './types/user-profile.types'
 import type { Request, Response } from 'express'
+import sharp from 'sharp'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
 import { omit } from '~/common/utils/omit'
@@ -11,6 +19,7 @@ import { safeUser } from '~/common/utils/safeUser'
 import { MediaType, Prisma, User } from '~/generated/prisma/client'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
+import { S3Service } from '~/infrastructure/s3/s3.service'
 import { SessionService } from '~/modules/session/session.service'
 
 @Injectable()
@@ -23,6 +32,7 @@ export class UserService {
     @Inject(forwardRef(() => FeedService))
     private readonly feedService: FeedService,
     private readonly redis: RedisService,
+    private readonly s3: S3Service,
   ) {}
 
   async getUserProfile(username: string): Promise<UserProfile> {
@@ -103,6 +113,54 @@ export class UserService {
       where: { id: userId },
       data: { username: normalize(username) },
       select: { username: true },
+    })
+  }
+
+  async updateAvatar(userId: string, file?: Express.Multer.File): Promise<Pick<User, 'avatarUrl'>> {
+    if (!file) {
+      throw new BadRequestException('File is required')
+    }
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.mimetype)) {
+      throw new BadRequestException('File must be a JPEG, PNG, or WebP image')
+    }
+
+    let optimized: Buffer
+
+    try {
+      const image = sharp(file.buffer)
+      const metadata = await image.metadata()
+
+      if (!['jpeg', 'png', 'webp'].includes(metadata.format ?? '')) {
+        throw new BadRequestException('File must be a JPEG, PNG, or WebP image')
+      }
+
+      optimized = await image
+        .rotate()
+        .resize({ width: 300, height: 300, fit: 'cover', position: 'centre' })
+        .webp({ quality: 100 })
+        .toBuffer()
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error
+      }
+
+      throw new BadRequestException('Invalid image')
+    }
+
+    const randomId = crypto.randomUUID().replace(/-/g, '')
+    const key = `avatars/${randomId}.webp`
+
+    await this.s3.putObject({
+      key,
+      body: optimized,
+      contentType: 'image/webp',
+    })
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { avatarUrl: this.s3.buildPublicUrl(key) },
+      select: { avatarUrl: true },
     })
   }
 

@@ -18,6 +18,7 @@ interface AuthActions {
   setIsLoading: (isLoading: boolean) => void
   setUsername: (username: string) => void
   setDisplayName: (displayName: string) => void
+  setAvatarUrl: (avatarUrl: string) => void
 }
 
 type Store = AuthState & AuthActions
@@ -37,4 +38,5 @@ export const useAuthStore = create<Store>()((set, get) => ({
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
   setUsername: (username) => set({ user: { ...get().user!, username } }),
   setDisplayName: (displayName) => set({ user: { ...get().user!, displayName } }),
+  setAvatarUrl: (avatarUrl) => set({ user: { ...get().user!, avatarUrl } }),
 }))

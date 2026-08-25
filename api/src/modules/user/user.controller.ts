@@ -9,7 +9,10 @@ import {
   Query,
   Req,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { seconds, Throttle } from '@nestjs/throttler'
 
 import { UpdateDisplayNameDto } from './dto/update-display-name.dto'
@@ -17,6 +20,7 @@ import { UpdateUsernameDto } from './dto/update-username.dto'
 import { UserActivityQuery } from './dto/user-activity-query.dto'
 import { UserService } from './user.service'
 import type { Request, Response } from 'express'
+import { memoryStorage } from 'multer'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
@@ -41,6 +45,18 @@ export class UserController {
   @Get(':username/feed')
   getUserFeed(@Param('username') username: string, @Query() query?: PaginationCursor) {
     return this.userService.getUserFeed(username, query?.cursor)
+  }
+
+  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
+  @Patch('avatar')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  updateAvatar(@CurrentUser('userId') userId: string, @UploadedFile() file?: Express.Multer.File) {
+    return this.userService.updateAvatar(userId, file)
   }
 
   @Patch('display-name')

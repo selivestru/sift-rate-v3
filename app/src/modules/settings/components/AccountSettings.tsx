@@ -1,6 +1,7 @@
 import { PageHeader } from '~/common/ui/PageHeader'
 
 import { accountNavItem } from '../constants/settings-nav'
+import { ChangeAvatarForm } from './ChangeAvatarForm'
 import { ChangeDisplayNameForm } from './ChangeDisplayNameForm'
 import { ChangeUsernameForm } from './ChangeUsernameForm'
 
@@ -15,6 +16,7 @@ export const AccountSettings = () => {
       />
 
       <div className="flex flex-col gap-4 sm:gap-5">
+        <ChangeAvatarForm />
         <ChangeDisplayNameForm />
         <ChangeUsernameForm />
       </div>

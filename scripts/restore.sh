@@ -63,10 +63,12 @@ podman run --rm \
   sh -c "tar xzf /backup/$(basename "$MINIO_TAR") -C /data"
 podman start "$MINIO_CONTAINER" > /dev/null
 
-echo "[2b] MinIO policy: media-covers -> download"
+echo "[2b] MinIO policy: media-covers, avatars -> download"
 until podman exec "$MINIO_CONTAINER" sh -c 'mc alias set local http://localhost:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null 2>&1'; do sleep 2; done
 podman exec "$MINIO_CONTAINER" sh -c 'mc anonymous set download local/siftrate/media-covers >/dev/null 2>&1' || true
+podman exec "$MINIO_CONTAINER" sh -c 'mc anonymous set download local/siftrate/avatars >/dev/null 2>&1' || true
 podman exec "$MINIO_CONTAINER" sh -c 'mc anonymous get local/siftrate/media-covers 2>&1' | head -1 || true
+podman exec "$MINIO_CONTAINER" sh -c 'mc anonymous get local/siftrate/avatars 2>&1' | head -1 || true
 
 echo
 echo "Restore complete. Waiting for health..."
