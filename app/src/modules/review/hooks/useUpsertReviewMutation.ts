@@ -6,14 +6,17 @@ import type { MediaStateResponse } from '~/modules/discover'
 import { removePlannedItemByMediaFromCache } from '~/modules/planned'
 
 import { reviewApi } from '../api/review.api'
-import type { ReviewStats, UpsertReviewVariables } from '../types/review.types'
-import { upsertReviewInListCaches } from '../utils/review-list-cache'
-import { applyReviewCreated, applyReviewRatingChanged } from '../utils/review-stats'
+import type { UpsertReviewVariables } from '../types/review.types'
+import { upsertReviewInFeedCaches, upsertReviewInListCaches } from '../utils/review-list-cache'
 import {
-  patchMyReviewStats,
-  restoreMyReviewStats,
-  setMediaStateReview,
-} from '../utils/review-stats-cache'
+  applyProfileRatingChanged,
+  applyProfileReviewCreated,
+  bumpUserActivity,
+  patchProfileReviewStats,
+  patchUserActivity,
+} from '../utils/review-profile-cache'
+import { applyReviewCreated, applyReviewRatingChanged } from '../utils/review-stats'
+import { patchMyReviewStats, setMediaStateReview } from '../utils/review-stats-cache'
 
 export const useUpsertReviewMutation = () => {
   const user = useAuthStore((state) => state.user)
@@ -22,63 +25,68 @@ export const useUpsertReviewMutation = () => {
     mutationKey: ['upsert-review'],
     mutationFn: ({ previousReview: _, ...body }: UpsertReviewVariables) =>
       reviewApi.upsertReview(body),
-    onMutate: async (variables, context) => {
-      const { client } = context
-
-      await client.cancelQueries({ queryKey: QUERIES_KEYS.myReviewStats })
-
-      const previousStats = client.getQueryData<ReviewStats>(QUERIES_KEYS.myReviewStats)
-
-      const mediaState = client.getQueryData<MediaStateResponse>(
+    onSuccess: (data, variables, _, context) => {
+      const mediaState = context.client.getQueryData<MediaStateResponse>(
         QUERIES_KEYS.mediaState({
-          mediaType: variables.mediaType,
-          externalId: variables.externalId,
+          mediaType: data.media.mediaType,
+          externalId: data.media.externalId,
         }),
       )
-
       const previousReview =
         variables.previousReview !== undefined
           ? variables.previousReview
           : (mediaState?.review ?? null)
 
-      if (previousStats) {
+      if (!previousReview) {
+        patchMyReviewStats(context.client, (stats) =>
+          applyReviewCreated(stats, {
+            mediaType: data.media.mediaType,
+            rating: data.rating,
+          }),
+        )
+      } else if (previousReview.rating !== data.rating) {
+        patchMyReviewStats(context.client, (stats) =>
+          applyReviewRatingChanged(stats, {
+            fromRating: previousReview.rating,
+            toRating: data.rating,
+          }),
+        )
+      }
+
+      const author = user
+        ? {
+            id: user.id,
+            username: user.username,
+            displayName: user.displayName,
+            avatarUrl: user.avatarUrl,
+          }
+        : null
+
+      setMediaStateReview(context.client, data)
+      removePlannedItemByMediaFromCache(context.client, data.media)
+      upsertReviewInListCaches(context.client, data, author)
+      upsertReviewInFeedCaches(context.client, data, author, user?.username, !previousReview)
+
+      if (user?.username) {
         if (!previousReview) {
-          patchMyReviewStats(client, (stats) =>
-            applyReviewCreated(stats, {
-              mediaType: variables.mediaType,
-              rating: variables.rating,
+          patchUserActivity(context.client, user.username, (activity) =>
+            bumpUserActivity(activity, data.createdAt, 1),
+          )
+          patchProfileReviewStats(context.client, user.username, (profile) =>
+            applyProfileReviewCreated(profile, {
+              mediaType: data.media.mediaType,
+              rating: data.rating,
             }),
           )
-        } else if (previousReview.rating !== variables.rating) {
-          patchMyReviewStats(client, (stats) =>
-            applyReviewRatingChanged(stats, {
+        } else if (previousReview.rating !== data.rating) {
+          patchProfileReviewStats(context.client, user.username, (profile) =>
+            applyProfileRatingChanged(profile, {
               fromRating: previousReview.rating,
-              toRating: variables.rating,
+              toRating: data.rating,
             }),
           )
         }
       }
-
-      return { previousStats, previousReview }
-    },
-    onError: (_error, _variables, onMutateResult, context) => {
-      restoreMyReviewStats(context.client, onMutateResult?.previousStats)
-    },
-    onSuccess: (data, _variables, _onMutateResult, context) => {
-      setMediaStateReview(context.client, data)
-      removePlannedItemByMediaFromCache(context.client, data.media)
-      upsertReviewInListCaches(
-        context.client,
-        data,
-        user
-          ? {
-              id: user.id,
-              username: user.username,
-              displayName: user.displayName,
-              avatarUrl: user.avatarUrl,
-            }
-          : null,
-      )
     },
   })
 }

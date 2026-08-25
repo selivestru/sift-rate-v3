@@ -20,8 +20,8 @@ interface UseUpsertRankedListFormOptions {
 }
 
 export const useUpsertRankedListForm = ({ list, onClose }: UseUpsertRankedListFormOptions) => {
-  const createMutation = useCreateRankedList(onClose)
-  const updateMutation = useUpdateRankedList(onClose)
+  const createMutation = useCreateRankedList()
+  const updateMutation = useUpdateRankedList()
 
   const [serverError, setServerError] = useState<string | null>(null)
 

@@ -15,15 +15,6 @@ export const patchMyReviewStats = (
   })
 }
 
-export const restoreMyReviewStats = (
-  client: QueryClient,
-  previousStats: ReviewStats | undefined,
-) => {
-  if (!previousStats) return
-
-  client.setQueryData(QUERIES_KEYS.myReviewStats, previousStats)
-}
-
 export const setMediaStateReview = (client: QueryClient, review: Review) => {
   const { media } = review
 

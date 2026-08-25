@@ -7,16 +7,9 @@ import type {
   RankedListItem,
   RankedListResponse,
   RankedListServer,
-  RankedMedia,
 } from '../types/ranked-list.types'
 
-export const createTempId = () => `temp-${crypto.randomUUID()}`
-
-export const isTempId = (id: string) => id.startsWith('temp-')
-
-export const emptyRankedLists = (): RankedListResponse => ({ data: [] })
-
-export const mapLists = (
+const mapLists = (
   prev: RankedListResponse | undefined,
   map: (lists: RankedListItem[]) => RankedListItem[],
 ): RankedListResponse | undefined => {
@@ -27,13 +20,13 @@ export const mapLists = (
   }
 }
 
-export const renumberPositions = (items: RankedListEntry[]): RankedListEntry[] => {
+const renumberPositions = (items: RankedListEntry[]): RankedListEntry[] => {
   return items
     .sort((a, b) => a.position - b.position)
     .map((item, index) => Object.assign(item, { position: index + 1 }))
 }
 
-export const reorderItems = (
+const reorderItems = (
   items: RankedListEntry[],
   itemId: string,
   newPosition: number,
@@ -56,291 +49,80 @@ export const reorderItems = (
   return updatedItems.map((item, index) => Object.assign(item, { position: index + 1 }))
 }
 
-export const optimisticCreateList = (
-  prev: RankedListResponse | undefined,
-  input: {
-    tempId: string
-    userId: string
-    title: string
-  },
-): RankedListResponse => {
-  const now = new Date().toISOString()
-  const list: RankedListItem = {
-    id: input.tempId,
-    userId: input.userId,
-    title: input.title,
-    items: [],
-    createdAt: now,
-    updatedAt: now,
-  }
-
-  return {
-    data: [list, ...(prev?.data ?? [])],
-  }
+const setRankedLists = (
+  client: QueryClient,
+  map: (lists: RankedListItem[]) => RankedListItem[],
+) => {
+  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) => mapLists(prev, map))
 }
 
-export const reconcileCreateList = (
-  prev: RankedListResponse | undefined,
-  tempId: string,
-  server: RankedListServer,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
+export const addRankedListToCache = (client: QueryClient, server: RankedListServer) => {
+  setRankedLists(client, (lists) => {
+    const existing = lists.find((list) => list.id === server.id)
+
+    if (existing) {
+      return lists.map((list) =>
+        list.id === server.id ? { ...list, ...server, items: list.items } : list,
+      )
+    }
+
+    return [{ ...server, items: [] }, ...lists]
+  })
+}
+
+export const updateRankedListInCache = (client: QueryClient, server: RankedListServer) => {
+  setRankedLists(client, (lists) =>
+    lists.map((list) =>
+      list.id === server.id ? { ...list, title: server.title, updatedAt: server.updatedAt } : list,
+    ),
+  )
+}
+
+export const removeRankedListFromCache = (client: QueryClient, server: RankedListServer) => {
+  setRankedLists(client, (lists) => lists.filter((list) => list.id !== server.id))
+}
+
+export const addRankedItemToCache = (client: QueryClient, server: RankedListEntry) => {
+  setRankedLists(client, (lists) =>
     lists.map((list) => {
-      if (list.id !== tempId) return list
+      if (list.id !== server.listId) return list
+
+      const hasItem = list.items.some((item) => item.id === server.id)
 
       return {
         ...list,
-        ...server,
-        items: list.items,
+        items: hasItem
+          ? list.items.map((item) => (item.id === server.id ? server : item))
+          : [...list.items, server],
       }
     }),
   )
 }
 
-export const optimisticUpdateList = (
-  prev: RankedListResponse | undefined,
-  listId: string,
-  patch: Pick<RankedListItem, 'title'>,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
+export const removeRankedItemFromCache = (client: QueryClient, server: RankedListEntry) => {
+  setRankedLists(client, (lists) =>
     lists.map((list) => {
-      if (list.id !== listId) return list
+      if (list.id !== server.listId) return list
 
       return {
         ...list,
-        title: patch.title,
-        updatedAt: new Date().toISOString(),
+        items: renumberPositions(list.items.filter((item) => item.id !== server.id)),
       }
     }),
   )
 }
 
-export const reconcileUpdateList = (
-  prev: RankedListResponse | undefined,
-  server: RankedListServer,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
+export const reorderRankedItemInCache = (client: QueryClient, server: RankedListEntry) => {
+  setRankedLists(client, (lists) =>
     lists.map((list) => {
-      if (list.id !== server.id) return list
+      if (list.id !== server.listId) return list
+
+      const items = reorderItems(list.items, server.id, server.position)
 
       return {
         ...list,
-        title: server.title,
-        updatedAt: server.updatedAt,
+        items: items.map((item) => (item.id === server.id ? Object.assign(item, server) : item)),
       }
     }),
-  )
-}
-
-export const optimisticDeleteList = (
-  prev: RankedListResponse | undefined,
-  listId: string,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) => lists.filter((list) => list.id !== listId))
-}
-
-export const optimisticAddItem = (
-  prev: RankedListResponse | undefined,
-  input: {
-    tempId: string
-    listId: string
-    mediaId: string
-    media: RankedMedia
-  },
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
-    lists.map((list) => {
-      if (list.id !== input.listId) return list
-
-      const maxPosition = list.items.reduce((max, item) => Math.max(max, item.position), 0)
-      const entry: RankedListEntry = {
-        id: input.tempId,
-        listId: input.listId,
-        mediaId: input.mediaId,
-        position: maxPosition + 1,
-        createdAt: new Date().toISOString(),
-        media: input.media,
-      }
-
-      return {
-        ...list,
-        items: [...list.items, entry],
-        updatedAt: new Date().toISOString(),
-      }
-    }),
-  )
-}
-
-export const reconcileAddItem = (
-  prev: RankedListResponse | undefined,
-  listId: string,
-  tempId: string,
-  server: RankedListEntry,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
-    lists.map((list) => {
-      if (list.id !== listId) return list
-
-      return {
-        ...list,
-        items: list.items.map((item) => (item.id === tempId ? server : item)),
-      }
-    }),
-  )
-}
-
-export const optimisticDeleteItem = (
-  prev: RankedListResponse | undefined,
-  listId: string,
-  itemId: string,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
-    lists.map((list) => {
-      if (list.id !== listId) return list
-
-      return {
-        ...list,
-        items: renumberPositions(list.items.filter((item) => item.id !== itemId)),
-        updatedAt: new Date().toISOString(),
-      }
-    }),
-  )
-}
-
-export const optimisticReorderItem = (
-  prev: RankedListResponse | undefined,
-  listId: string,
-  itemId: string,
-  position: number,
-): RankedListResponse | undefined => {
-  return mapLists(prev, (lists) =>
-    lists.map((list) => {
-      if (list.id !== listId) return list
-
-      return {
-        ...list,
-        items: reorderItems(list.items, itemId, position),
-        updatedAt: new Date().toISOString(),
-      }
-    }),
-  )
-}
-
-export const getRankedListsCache = (client: QueryClient) => {
-  return client.getQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists)
-}
-
-export const restoreRankedListsCache = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-) => {
-  if (!previous) return
-
-  client.setQueryData(QUERIES_KEYS.rankedLists, previous)
-}
-
-export const applyOptimisticCreateList = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-  input: {
-    tempId: string
-    userId: string
-    title: string
-  },
-) => {
-  client.setQueryData<RankedListResponse>(
-    QUERIES_KEYS.rankedLists,
-    optimisticCreateList(previous, input),
-  )
-}
-
-export const applyReconcileCreateList = (
-  client: QueryClient,
-  tempId: string,
-  server: RankedListServer,
-) => {
-  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
-    reconcileCreateList(prev, tempId, server),
-  )
-}
-
-export const applyOptimisticUpdateList = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-  listId: string,
-  patch: Pick<RankedListItem, 'title'>,
-) => {
-  client.setQueryData<RankedListResponse>(
-    QUERIES_KEYS.rankedLists,
-    optimisticUpdateList(previous, listId, patch),
-  )
-}
-
-export const applyReconcileUpdateList = (client: QueryClient, server: RankedListServer) => {
-  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
-    reconcileUpdateList(prev, server),
-  )
-}
-
-export const applyOptimisticDeleteList = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-  listId: string,
-) => {
-  client.setQueryData<RankedListResponse>(
-    QUERIES_KEYS.rankedLists,
-    optimisticDeleteList(previous, listId),
-  )
-}
-
-export const applyOptimisticAddItem = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-  input: {
-    tempId: string
-    listId: string
-    mediaId: string
-    media: RankedMedia
-  },
-) => {
-  client.setQueryData<RankedListResponse>(
-    QUERIES_KEYS.rankedLists,
-    optimisticAddItem(previous, input),
-  )
-}
-
-export const applyReconcileAddItem = (
-  client: QueryClient,
-  listId: string,
-  tempId: string,
-  server: RankedListEntry,
-) => {
-  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) =>
-    reconcileAddItem(prev, listId, tempId, server),
-  )
-}
-
-export const applyOptimisticDeleteItem = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-  listId: string,
-  itemId: string,
-) => {
-  client.setQueryData<RankedListResponse>(
-    QUERIES_KEYS.rankedLists,
-    optimisticDeleteItem(previous, listId, itemId),
-  )
-}
-
-export const applyOptimisticReorderItem = (
-  client: QueryClient,
-  previous: RankedListResponse | undefined,
-  listId: string,
-  itemId: string,
-  position: number,
-) => {
-  client.setQueryData<RankedListResponse>(
-    QUERIES_KEYS.rankedLists,
-    optimisticReorderItem(previous, listId, itemId, position),
   )
 }

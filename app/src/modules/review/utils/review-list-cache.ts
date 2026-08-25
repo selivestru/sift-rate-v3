@@ -3,6 +3,7 @@ import type { InfiniteData, QueryClient } from '@tanstack/react-query'
 import type { MediaType } from '~/common/constants/media-type'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import type { MediaReviewItem, MediaReviewResponse } from '~/modules/discover'
+import type { FeedAuthor, FeedResponse } from '~/modules/feed'
 
 import { REVIEW_SORT, type ReviewSort } from '../constants/sort'
 import type { MyReviewsResponse, Review } from '../types/review.types'
@@ -114,11 +115,15 @@ export const removeReviewFromMyReviewsData = (
   return removeReviewFromPages(prev, reviewId)
 }
 
-export const upsertReviewInMediaReviewsData = (
-  prev: InfiniteData<MediaReviewResponse> | undefined,
+type ReviewListItem = Review & { user: MediaReviewAuthor }
+type ReviewListResponse = { data: ReviewListItem[]; nextCursor: string | null }
+
+const upsertReviewInReviewListData = (
+  prev: InfiniteData<ReviewListResponse> | undefined,
   review: Review,
   user: MediaReviewAuthor | null,
-): InfiniteData<MediaReviewResponse> | undefined => {
+  insertIfMissing = true,
+): InfiniteData<ReviewListResponse> | undefined => {
   if (!prev) return prev
 
   const exists = prev.pages.some((page) => page.data.some((item) => item.id === review.id))
@@ -135,9 +140,9 @@ export const upsertReviewInMediaReviewsData = (
     }
   }
 
-  if (!user) return prev
+  if (!insertIfMissing || !user) return prev
 
-  const item: MediaReviewItem = { ...review, user }
+  const item: ReviewListItem = { ...review, user }
 
   return {
     ...prev,
@@ -147,10 +152,33 @@ export const upsertReviewInMediaReviewsData = (
   }
 }
 
+export const upsertReviewInMediaReviewsData = (
+  prev: InfiniteData<MediaReviewResponse> | undefined,
+  review: Review,
+  user: MediaReviewAuthor | null,
+): InfiniteData<MediaReviewResponse> | undefined => upsertReviewInReviewListData(prev, review, user)
+
 export const removeReviewFromMediaReviewsData = (
   prev: InfiniteData<MediaReviewResponse> | undefined,
   reviewId: string,
 ): InfiniteData<MediaReviewResponse> | undefined => {
+  if (!prev) return prev
+
+  return removeReviewFromPages(prev, reviewId)
+}
+
+export const upsertReviewInFeedData = (
+  prev: InfiniteData<FeedResponse> | undefined,
+  review: Review,
+  user: FeedAuthor | null,
+  insertIfMissing = true,
+): InfiniteData<FeedResponse> | undefined =>
+  upsertReviewInReviewListData(prev, review, user, insertIfMissing)
+
+export const removeReviewFromFeedData = (
+  prev: InfiniteData<FeedResponse> | undefined,
+  reviewId: string,
+): InfiniteData<FeedResponse> | undefined => {
   if (!prev) return prev
 
   return removeReviewFromPages(prev, reviewId)
@@ -212,4 +240,38 @@ export const upsertReviewInListCaches = (
 export const removeReviewFromListCaches = (client: QueryClient, review: Review) => {
   removeReviewFromMyReviewsCache(client, review.id)
   removeReviewFromMediaReviewsCache(client, review)
+}
+
+export const upsertReviewInFeedCaches = (
+  client: QueryClient,
+  review: Review,
+  user: FeedAuthor | null,
+  username?: string | null,
+  insertIfMissing = true,
+) => {
+  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.feed, (prev) =>
+    upsertReviewInFeedData(prev, review, user, insertIfMissing),
+  )
+
+  if (!username) return
+
+  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.userFeed(username), (prev) =>
+    upsertReviewInFeedData(prev, review, user, insertIfMissing),
+  )
+}
+
+export const removeReviewFromFeedCaches = (
+  client: QueryClient,
+  review: Review,
+  username?: string | null,
+) => {
+  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.feed, (prev) =>
+    removeReviewFromFeedData(prev, review.id),
+  )
+
+  if (!username) return
+
+  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.userFeed(username), (prev) =>
+    removeReviewFromFeedData(prev, review.id),
+  )
 }
