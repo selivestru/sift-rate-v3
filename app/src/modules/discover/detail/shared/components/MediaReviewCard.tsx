@@ -56,6 +56,10 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                   Perfect
                 </Badge>
               )}
+
+              <time dateTime={review.createdAt} className="text-muted-foreground text-xs">
+                {formatRelativeTime(review.createdAt)}
+              </time>
             </div>
 
             <div
@@ -77,10 +81,6 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                 )
               })}
             </div>
-
-            <time dateTime={review.createdAt} className="text-muted-foreground text-xs">
-              {formatRelativeTime(review.createdAt)}
-            </time>
           </div>
 
           {isOwner && (
@@ -93,7 +93,13 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                 }}
               >
                 {({ open }) => (
-                  <Button isIconOnly variant="secondary" onClick={open} aria-label="Edit review">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="secondary"
+                    onClick={open}
+                    aria-label="Edit review"
+                  >
                     <Pen weight="Filled" />
                   </Button>
                 )}
@@ -102,6 +108,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                 {({ open }) => (
                   <Button
                     isIconOnly
+                    size="sm"
                     variant="destructive-soft"
                     onClick={open}
                     aria-label="Delete review"

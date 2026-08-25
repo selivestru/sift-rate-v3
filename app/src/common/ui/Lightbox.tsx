@@ -1,5 +1,5 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight, X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -48,18 +48,14 @@ export const Lightbox = ({
   const [trackedSrc, setTrackedSrc] = useState(currentSrc)
   const [imageLoaded, setImageLoaded] = useState(false)
 
-  if (currentSrc !== trackedSrc) {
-    setTrackedSrc(currentSrc)
-    setImageLoaded(false)
-  }
-
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.removeAttribute('style')
+  useLayoutEffect(() => {
+    if (currentSrc !== trackedSrc) {
+      // oxlint-disable-next-line react/set-state-in-effect
+      setTrackedSrc(currentSrc)
+      // oxlint-disable-next-line react/set-state-in-effect
+      setImageLoaded(false)
     }
-  }, [open])
+  }, [currentSrc, trackedSrc])
 
   useEffect(() => {
     if (!open || currentSrc == null) return
@@ -105,9 +101,9 @@ export const Lightbox = ({
   }, [open, hasMultiple, safeIndex, images.length, onIndexChange])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal="trap-focus">
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
-        <DialogOverlay className="fixed inset-0 h-dvh w-screen bg-black/92 backdrop-blur-md" />
+        <DialogOverlay className="fixed inset-0 h-dvh w-screen bg-black/92 backdrop-blur-md duration-300" />
         <DialogPrimitive.Popup
           data-slot="lightbox"
           className={cn(
@@ -147,7 +143,7 @@ export const Lightbox = ({
             </div>
 
             <div className="relative flex min-h-0 flex-1 items-center justify-center px-12 py-14 sm:px-16 sm:py-16">
-              {!imageLoaded && (
+              {open && !imageLoaded && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center">
                   <Spinner className="size-8 text-white/70" />
                 </div>
@@ -159,7 +155,8 @@ export const Lightbox = ({
                     src={current.src}
                     alt={current.alt ?? label}
                     className={cn(
-                      'size-full object-contain transition-opacity duration-300',
+                      'size-full object-contain',
+                      open && 'transition-opacity duration-300',
                       imageLoaded ? 'opacity-100' : 'opacity-0',
                     )}
                     onLoad={() => setImageLoaded(true)}
