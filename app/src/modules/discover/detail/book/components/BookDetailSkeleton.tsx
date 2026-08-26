@@ -3,7 +3,7 @@ import { Skeleton } from '~/common/ui/Skeleton'
 export const BookDetailSkeleton = () => {
   return (
     <div className="flex max-w-full flex-col overflow-x-clip">
-      <div className="relative overflow-hidden rounded-t-2xl">
+      <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
         <div className="relative z-10 flex flex-col items-center px-5 pt-10 pb-7 sm:px-8 sm:pt-12 sm:pb-9">
           <Skeleton className="mb-7 aspect-2/3 w-38 rounded-sm sm:mb-8 sm:w-48" />
 

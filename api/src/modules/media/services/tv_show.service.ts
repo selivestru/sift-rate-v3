@@ -24,29 +24,34 @@ import {
   TvShowSearchResult,
 } from '../types/tv-show.types'
 import { getImdbRating } from '../utils/imdb'
-import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
+import { getKinopoiskId } from '../utils/kinopoisk'
+import {
+  buildDetailCacheKey,
+  buildSearchCacheKey,
+  resolveDetailTtlSeconds,
+  SEARCH_CACHE_TTL_SECONDS,
+} from '../utils/media-cache-policy'
+import { MediaCacheService } from './media-cache.service'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
-import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
 export class TvShowService {
   private readonly TMDB_API_URL = 'https://api.themoviedb.org/3'
   private readonly TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p'
-  private readonly TV_CACHE_TTL_SECONDS = 7 * 24 * 3600
   private readonly CAST_LIMIT = 16
   private readonly IMAGE_LIMIT = 12
   private readonly SIMILAR_LIMIT = 12
 
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
-    private readonly redis: RedisService,
+    private readonly cache: MediaCacheService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<TvShowSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('tv', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<TvShowSearchItem>>(this.redis, cacheKey)
+    const cached = await this.cache.get<MediaSearchResponse<TvShowSearchItem>>(cacheKey)
     if (cached) return cached
 
     const url = new URL(this.TMDB_API_URL + '/search/tv')
@@ -76,7 +81,7 @@ export class TvShowService {
       totalPages: Math.min(response.total_pages, 10),
     }
 
-    await setSearchCache(this.redis, cacheKey, result)
+    await this.cache.set(cacheKey, result, SEARCH_CACHE_TTL_SECONDS)
     return result
   }
 
@@ -94,63 +99,61 @@ export class TvShowService {
 
     if (!external.imdb_id) return null
 
-    const imdb = await getImdbRating(this.config, this.redis, external.imdb_id)
+    const imdb = await getImdbRating(this.config, this.cache, external.imdb_id)
     return imdb?.rating ?? null
   }
 
   async getById(id: string): Promise<TvShowDetail> {
-    const cacheKey = `tv:${id}`
+    const cacheKey = buildDetailCacheKey('tv', id)
 
-    let result: TvShowDetail | null = null
+    const cached = await this.cache.get<TvShowDetail>(cacheKey)
+    if (cached) return cached
+
+    const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+    url.searchParams.set('language', 'en-US')
+    url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
+    url.searchParams.set('include_image_language', 'en,null')
+
+    let raw: TmdbTvShowRaw
 
     try {
-      const cached = await this.redis.get(cacheKey)
-      if (cached) {
-        result = JSON.parse(cached) as TvShowDetail
+      raw = await ky.get(url.toString()).json<TmdbTvShowRaw>()
+    } catch (error) {
+      if (error instanceof HTTPError && error.response.status === 404) {
+        throw new NotFoundException('TV show not found')
       }
-    } catch {
-      // ignore
-    }
-
-    if (!result) {
-      const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
-      url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
-      url.searchParams.set('language', 'en-US')
-      url.searchParams.set(
-        'append_to_response',
-        'credits,videos,images,recommendations,external_ids',
+      throw new InternalServerErrorException(
+        `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
-      url.searchParams.set('include_image_language', 'en,null')
-
-      let raw: TmdbTvShowRaw
-
-      try {
-        raw = await ky.get(url.toString()).json<TmdbTvShowRaw>()
-      } catch (error) {
-        if (error instanceof HTTPError && error.response.status === 404) {
-          throw new NotFoundException('TV show not found')
-        }
-        throw new InternalServerErrorException(
-          `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        )
-      }
-
-      result = this.mapTvShowDetail(raw)
-
-      const imdbId = raw.external_ids?.imdb_id
-
-      if (imdbId) {
-        const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
-        result.imdbRating = imdbRating?.rating ?? null
-        result.imdbVoteCount = imdbRating?.votes ?? null
-      }
-
-      try {
-        await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.TV_CACHE_TTL_SECONDS)
-      } catch {
-        // ignore
-      }
     }
+
+    const result = this.mapTvShowDetail(raw)
+
+    const imdbId = raw.external_ids?.imdb_id
+
+    if (imdbId) {
+      const imdbRating = await getImdbRating(this.config, this.cache, imdbId)
+      result.imdbRating = imdbRating?.rating ?? null
+      result.imdbVoteCount = imdbRating?.votes ?? null
+    }
+
+    result.kinopoiskId = await getKinopoiskId(
+      this.config,
+      result.originalTitle,
+      result.yearEnd ? `${result.yearStart}-${result.yearEnd}` : result.yearStart,
+    )
+
+    await this.cache.set(
+      cacheKey,
+      result,
+      resolveDetailTtlSeconds({
+        kind: 'tv',
+        releaseDate: result.lastAirDate || result.firstAirDate,
+        status: result.status,
+        inProduction: result.inProduction,
+      }),
+    )
 
     return result
   }
@@ -276,6 +279,8 @@ export class TvShowService {
       seasonCount: raw.number_of_seasons,
       episodeCount: raw.number_of_episodes,
       genres: raw.genres.map((g) => g.name),
+      imdbId: raw.external_ids?.imdb_id ?? null,
+      kinopoiskId: null,
       imdbRating: null,
       imdbVoteCount: null,
       posterUrl: this.buildImageUrl(raw.poster_path, 'w780'),

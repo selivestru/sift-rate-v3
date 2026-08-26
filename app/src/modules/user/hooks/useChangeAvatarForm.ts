@@ -96,6 +96,7 @@ export const useChangeAvatarForm = () => {
         queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.profile(username) })
         queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.userFeed(username) })
       }
+
       queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.feed })
       queryClient.invalidateQueries({ queryKey: ['media-reviews'] })
     } catch (submitError) {

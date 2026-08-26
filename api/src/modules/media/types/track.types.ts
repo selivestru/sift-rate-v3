@@ -1,23 +1,32 @@
-import type {
-  DeezerContributorRaw,
-  DeezerCoverFields,
-  MusicAlbumRailItem,
-  MusicContributor,
-  MusicTrackRailItem,
-} from './music.types'
+import type { SpotifyImage } from '../services/spotify-client.service'
+import type { MusicAlbumRailItem, MusicContributor, MusicTrackRailItem } from './music.types'
 
 export interface TrackSearchResult {
-  data: TrackSearchRaw[]
-  total?: number
+  tracks?: {
+    items?: SpotifyTrackRaw[]
+    total?: number
+  }
 }
 
-export interface TrackSearchRaw {
-  id: number
-  title: string
-  duration: number
-  rank?: number | null
-  artist?: { name?: string }
-  album?: { title?: string; cover_medium?: string | null }
+export interface SpotifyArtistRef {
+  id: string
+  name: string
+}
+
+export interface SpotifyTrackRaw {
+  id: string
+  name: string
+  duration_ms: number
+  explicit: boolean
+  popularity: number
+  preview_url: string | null
+  artists?: SpotifyArtistRef[]
+  album?: {
+    id: string
+    name: string
+    images?: SpotifyImage[]
+    release_date?: string
+  }
 }
 
 export interface TrackSearchItem {
@@ -27,7 +36,6 @@ export interface TrackSearchItem {
   albumTitle: string
   coverUrl: string | null
   duration: number
-  rank: number | null
 }
 
 export interface TrackDetail {
@@ -45,18 +53,4 @@ export interface TrackDetail {
   contributors: MusicContributor[]
   topTracks: MusicTrackRailItem[]
   artistAlbums: MusicAlbumRailItem[]
-}
-
-export interface DeezerTrackRaw {
-  id: number
-  title: string
-  duration: number
-  release_date: string
-  explicit_lyrics: boolean
-  contributors: DeezerContributorRaw[]
-  artist: { id: number; name: string }
-  album: {
-    id: number
-    title: string
-  } & DeezerCoverFields
 }

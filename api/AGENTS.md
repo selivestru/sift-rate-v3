@@ -18,7 +18,7 @@ No tests exist.
 
 ## Env & config
 
-- `envSchema` in `src/app/config/env.config.ts` zod-validates env at boot — missing/invalid vars crash startup. Only schema keys are readable via `ConfigService`, so add new vars to `envSchema` first. Required: `PORT`, `NODE_ENV`, `ORIGIN`, `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`/`GOOGLE_REDIRECT_URI`, `TMDB_API_KEY`, `OMDB_API_KEY`, `IGDB_CLIENT_ID`/`IGDB_CLIENT_SECRET`, `GOOGLE_BOOKS_API_KEY`, `S3_*` + `S3_PUBLIC_BASE_URL`. `SESSION_PREFIX` defaults to `sessions:`.
+- `envSchema` in `src/app/config/env.config.ts` zod-validates env at boot — missing/invalid vars crash startup. Only schema keys are readable via `ConfigService`, so add new vars to `envSchema` first. Required: `PORT`, `NODE_ENV`, `ORIGIN`, `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`/`GOOGLE_REDIRECT_URI`, `TMDB_API_KEY`, `OMDB_API_KEY`, `IGDB_CLIENT_ID`/`IGDB_CLIENT_SECRET`, `GOOGLE_BOOKS_API_KEY`, `SPOTIFY_CLIENT_ID`/`SPOTIFY_CLIENT_SECRET`, `S3_*` + `S3_PUBLIC_BASE_URL`. `SESSION_PREFIX` defaults to `sessions:`.
 - `api/.env` also holds dead extras NOT in the schema or code (`BACKEND_URL`, `TOTP_*`, `RESEND_*`, `DUMMY_HASH`) — ignore them.
 - No `api/.env.example`; root `.env.example` only covers docker-compose vars (`POSTGRES_*`, `MINIO_*`).
 - Typed config convention: inject `ConfigService<EnvConfig, true>` and read via `config.get('KEY', { infer: true })`.
@@ -38,7 +38,7 @@ No tests exist.
 - `src/infrastructure/` — `prisma/` (`@Global()` module), `redis/`, `s3/`
 - `src/modules/` — features: `auth`, `feed`, `media`, `planned`, `ranked-list`, `review`, `session`, `user`
 - `src/generated/prisma/` — generated, gitignored: after editing `prisma/schema.prisma` run `db:generate`; fresh clones fail to compile until generated. Import as `~/generated/prisma/client`.
-- Media providers are per-type services under `media/services/` (TMDB/OMDB/IGDB/Google Books/Deezer). Slow work queues on Redis via BullMQ: poster ingest (`media/processors/poster-ingest.processor.ts`).
+- Media providers are per-type services under `media/services/` (TMDB/OMDB/IGDB/Google Books/Spotify). Slow work queues on Redis via BullMQ: poster ingest (`media/processors/poster-ingest.processor.ts`).
 - Feed (`feed.service`) returns reviews with author and media data.
 
 ## Data & conventions

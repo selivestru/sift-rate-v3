@@ -39,6 +39,8 @@ import { Route as AppDiscoverTrackIndexRouteImport } from './routes/_app/discove
 import { Route as AppDiscoverTrackExternalIdRouteImport } from './routes/_app/discover/track/$externalId'
 import { Route as AppDiscoverTv_showIndexRouteImport } from './routes/_app/discover/tv_show/index'
 import { Route as AppDiscoverTv_showExternalIdRouteImport } from './routes/_app/discover/tv_show/$externalId'
+import { Route as AppSettingsImportsIndexRouteImport } from './routes/_app/settings/imports/index'
+import { Route as AppSettingsImportsImdbRouteImport } from './routes/_app/settings/imports/imdb'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -195,6 +197,16 @@ const AppDiscoverTv_showExternalIdRoute =
     path: '/discover/tv_show/$externalId',
     getParentRoute: () => AppRoute,
   } as any)
+const AppSettingsImportsIndexRoute = AppSettingsImportsIndexRouteImport.update({
+  id: '/imports/',
+  path: '/imports/',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsImportsImdbRoute = AppSettingsImportsImdbRouteImport.update({
+  id: '/imports/imdb',
+  path: '/imports/imdb',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -220,12 +232,14 @@ export interface FileRoutesByFullPath {
   '/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
   '/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
   '/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
+  '/settings/imports/imdb': typeof AppSettingsImportsImdbRoute
   '/discover/album/': typeof AppDiscoverAlbumIndexRoute
   '/discover/book/': typeof AppDiscoverBookIndexRoute
   '/discover/game/': typeof AppDiscoverGameIndexRoute
   '/discover/movie/': typeof AppDiscoverMovieIndexRoute
   '/discover/track/': typeof AppDiscoverTrackIndexRoute
   '/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
+  '/settings/imports/': typeof AppSettingsImportsIndexRoute
 }
 export interface FileRoutesByTo {
   '/complete-profile': typeof CompleteProfileRoute
@@ -248,12 +262,14 @@ export interface FileRoutesByTo {
   '/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
   '/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
   '/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
+  '/settings/imports/imdb': typeof AppSettingsImportsImdbRoute
   '/discover/album': typeof AppDiscoverAlbumIndexRoute
   '/discover/book': typeof AppDiscoverBookIndexRoute
   '/discover/game': typeof AppDiscoverGameIndexRoute
   '/discover/movie': typeof AppDiscoverMovieIndexRoute
   '/discover/track': typeof AppDiscoverTrackIndexRoute
   '/discover/tv_show': typeof AppDiscoverTv_showIndexRoute
+  '/settings/imports': typeof AppSettingsImportsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -281,12 +297,14 @@ export interface FileRoutesById {
   '/_app/discover/movie/$externalId': typeof AppDiscoverMovieExternalIdRoute
   '/_app/discover/track/$externalId': typeof AppDiscoverTrackExternalIdRoute
   '/_app/discover/tv_show/$externalId': typeof AppDiscoverTv_showExternalIdRoute
+  '/_app/settings/imports/imdb': typeof AppSettingsImportsImdbRoute
   '/_app/discover/album/': typeof AppDiscoverAlbumIndexRoute
   '/_app/discover/book/': typeof AppDiscoverBookIndexRoute
   '/_app/discover/game/': typeof AppDiscoverGameIndexRoute
   '/_app/discover/movie/': typeof AppDiscoverMovieIndexRoute
   '/_app/discover/track/': typeof AppDiscoverTrackIndexRoute
   '/_app/discover/tv_show/': typeof AppDiscoverTv_showIndexRoute
+  '/_app/settings/imports/': typeof AppSettingsImportsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -314,12 +332,14 @@ export interface FileRouteTypes {
     | '/discover/movie/$externalId'
     | '/discover/track/$externalId'
     | '/discover/tv_show/$externalId'
+    | '/settings/imports/imdb'
     | '/discover/album/'
     | '/discover/book/'
     | '/discover/game/'
     | '/discover/movie/'
     | '/discover/track/'
     | '/discover/tv_show/'
+    | '/settings/imports/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/complete-profile'
@@ -342,12 +362,14 @@ export interface FileRouteTypes {
     | '/discover/movie/$externalId'
     | '/discover/track/$externalId'
     | '/discover/tv_show/$externalId'
+    | '/settings/imports/imdb'
     | '/discover/album'
     | '/discover/book'
     | '/discover/game'
     | '/discover/movie'
     | '/discover/track'
     | '/discover/tv_show'
+    | '/settings/imports'
   id:
     | '__root__'
     | '/auth'
@@ -374,12 +396,14 @@ export interface FileRouteTypes {
     | '/_app/discover/movie/$externalId'
     | '/_app/discover/track/$externalId'
     | '/_app/discover/tv_show/$externalId'
+    | '/_app/settings/imports/imdb'
     | '/_app/discover/album/'
     | '/_app/discover/book/'
     | '/_app/discover/game/'
     | '/_app/discover/movie/'
     | '/_app/discover/track/'
     | '/_app/discover/tv_show/'
+    | '/_app/settings/imports/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -600,6 +624,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDiscoverTv_showExternalIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/imports/': {
+      id: '/_app/settings/imports/'
+      path: '/imports'
+      fullPath: '/settings/imports/'
+      preLoaderRoute: typeof AppSettingsImportsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/imports/imdb': {
+      id: '/_app/settings/imports/imdb'
+      path: '/imports/imdb'
+      fullPath: '/settings/imports/imdb'
+      preLoaderRoute: typeof AppSettingsImportsImdbRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
   }
 }
 
@@ -640,6 +678,8 @@ interface AppSettingsRouteRouteChildren {
   AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
   AppSettingsDangerZoneRoute: typeof AppSettingsDangerZoneRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppSettingsImportsImdbRoute: typeof AppSettingsImportsImdbRoute
+  AppSettingsImportsIndexRoute: typeof AppSettingsImportsIndexRoute
 }
 
 const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
@@ -647,6 +687,8 @@ const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
   AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
   AppSettingsDangerZoneRoute: AppSettingsDangerZoneRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppSettingsImportsImdbRoute: AppSettingsImportsImdbRoute,
+  AppSettingsImportsIndexRoute: AppSettingsImportsIndexRoute,
 }
 
 const AppSettingsRouteRouteWithChildren =

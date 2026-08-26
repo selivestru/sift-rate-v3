@@ -1,0 +1,189 @@
+import { AlertTriangle, CheckCircle, Clock, Refresh, Upload } from 'reicon-react'
+
+import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
+import { Badge } from '~/common/ui/Badge'
+import { Button } from '~/common/ui/Button'
+import { Spinner } from '~/common/ui/Spinner'
+import { cn } from '~/common/utils/cn'
+import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
+
+import type { ImportJobResponse, ImportJobStatus } from '../types/import.types'
+import { ImdbImportRows } from './ImdbImportRows'
+
+type ImdbImportJobStatusProps = {
+  job: ImportJobResponse
+  isRetrying: boolean
+  onRetry: () => void
+  onNewImport: () => void
+}
+
+const STATUS_META: Record<ImportJobStatus, { badge: React.ReactNode; description: string }> = {
+  PENDING: {
+    badge: (
+      <Badge variant="default" startIcon={<Clock aria-hidden />}>
+        Queued
+      </Badge>
+    ),
+    description:
+      'Your file is uploaded and waiting to be processed. This usually starts within a few seconds.',
+  },
+  PROCESSING: {
+    badge: (
+      <Badge variant="default" startIcon={<Spinner className="size-3.5" aria-hidden />}>
+        Processing
+      </Badge>
+    ),
+    description:
+      'Matching each row against the catalog and adding ratings to your library. You can leave this page — the import continues in the background.',
+  },
+  COMPLETED: {
+    badge: (
+      <Badge variant="default" startIcon={<CheckCircle className="text-success" aria-hidden />}>
+        Completed
+      </Badge>
+    ),
+    description: 'The import has finished. Anything that could not be matched is listed below.',
+  },
+  FAILED: {
+    badge: (
+      <Badge variant="destructive" startIcon={<AlertTriangle aria-hidden />}>
+        Failed
+      </Badge>
+    ),
+    description:
+      'The import stopped before finishing. Rows already processed are kept — retrying only picks up what is left.',
+  },
+}
+
+const getProgress = (job: ImportJobResponse) => {
+  if (job.total <= 0) return 0
+  return Math.min(100, Math.round((job.processed / job.total) * 100))
+}
+
+const canRetry = (job: ImportJobResponse) => {
+  return (
+    job.status === 'FAILED' ||
+    (job.status === 'COMPLETED' && job.notFound + job.errorCount + job.skippedType > 0)
+  )
+}
+
+const isTerminalStatus = (status: ImportJobStatus) => {
+  return status === 'COMPLETED' || status === 'FAILED'
+}
+
+export const ImdbImportJobStatus = ({
+  job,
+  isRetrying,
+  onRetry,
+  onNewImport,
+}: ImdbImportJobStatusProps) => {
+  const meta = STATUS_META[job.status]
+  const progress = getProgress(job)
+  const isActive = job.status === 'PENDING' || job.status === 'PROCESSING'
+  const isTerminal = isTerminalStatus(job.status)
+
+  const counts: Array<{ label: string; value: number }> = [
+    { label: 'Imported', value: job.created },
+    { label: 'Already in library', value: job.skippedExisting },
+    { label: 'Unsupported type', value: job.skippedType },
+    { label: 'Not found', value: job.notFound },
+    { label: 'Invalid rows', value: job.invalid },
+    { label: 'Errors', value: job.errorCount },
+  ]
+
+  return (
+    <div className="border-border bg-card flex flex-col gap-5 rounded-xl border px-4 py-4 sm:px-5 sm:py-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          {meta.badge}
+          <span className="text-muted-foreground text-xs">
+            Started {formatRelativeTime(job.createdAt)}
+            {job.finishedAt && ` · Finished ${formatRelativeTime(job.finishedAt)}`}
+          </span>
+        </div>
+        {isTerminal && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            startIcon={<Upload aria-hidden />}
+            onClick={onNewImport}
+          >
+            Import another file
+          </Button>
+        )}
+      </div>
+
+      <p className="text-muted-foreground text-sm leading-relaxed">{meta.description}</p>
+
+      <div className="flex flex-col gap-2" aria-live="polite">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-sm font-medium">{isActive ? 'Progress' : 'Processed'}</p>
+          <p className="text-muted-foreground text-sm tabular-nums">
+            {job.processed.toLocaleString('en-US')} of {job.total.toLocaleString('en-US')} rows
+            {job.total > 0 && ` · ${progress}%`}
+          </p>
+        </div>
+        <div
+          role="progressbar"
+          aria-label="Import progress"
+          aria-valuemin={0}
+          aria-valuemax={Math.max(job.total, 1)}
+          aria-valuenow={job.processed}
+          className="bg-muted h-2 overflow-hidden rounded-full"
+        >
+          <div
+            className={cn(
+              'bg-primary h-full rounded-full transition-[width] duration-500 motion-reduce:transition-none',
+              job.status === 'FAILED' && 'bg-destructive',
+            )}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {counts.map((count) => (
+          <div
+            key={count.label}
+            className="border-border bg-background flex flex-col gap-0.5 rounded-lg border px-3 py-2.5"
+          >
+            <dd className="text-lg font-semibold tabular-nums">
+              {count.value.toLocaleString('en-US')}
+            </dd>
+            <dt className="text-muted-foreground text-xs">{count.label}</dt>
+          </div>
+        ))}
+      </dl>
+
+      {job.status === 'FAILED' && job.errorMessage && (
+        <Alert variant="destructive">
+          <AlertTriangle />
+          <AlertTitle>Why it stopped</AlertTitle>
+          <AlertDescription>{job.errorMessage}</AlertDescription>
+        </Alert>
+      )}
+
+      <ImdbImportRows key={job.id} job={job} />
+
+      {canRetry(job) && (
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-muted-foreground text-xs leading-relaxed">
+            Retry only re-processes unmatched rows — not found, errors, and skipped types.
+          </p>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            className="shrink-0"
+            startIcon={<Refresh aria-hidden />}
+            isLoading={isRetrying}
+            onClick={onRetry}
+          >
+            Retry unfinished rows
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}

@@ -19,11 +19,12 @@ import { GameService } from './services/game.service'
 import { MovieService } from './services/movie.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
+import type { MovieMetadata, TvShowMetadata } from './types/media-metadata.types'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
 import { Queue } from 'bullmq'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
-import { Media } from '~/generated/prisma/client'
+import { Media, Prisma } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
@@ -184,12 +185,16 @@ export class MediaService {
 
     const snapshot = await this.resolveMediaSnapshot(mediaType, externalId)
 
+    const imdbId = this.getSnapshotImdbId(snapshot)
+
     const newMedia = await this.prisma.media.create({
       data: {
         externalId,
         mediaType,
         title: snapshot.title,
         posterUrl: snapshot.posterUrl,
+        metadata: snapshot.metadata ? (snapshot.metadata as Prisma.InputJsonValue) : undefined,
+        imdbId,
       },
     })
 
@@ -211,7 +216,19 @@ export class MediaService {
     })
   }
 
-  schedulePosterIngest(media: Media): void {
+  findByImdbId(imdbId: string): Promise<Media | null> {
+    return this.prisma.media.findUnique({
+      where: { imdbId },
+    })
+  }
+
+  private getSnapshotImdbId(snapshot: MediaSnapshot): string | null {
+    const imdbId =
+      snapshot.metadata && 'imdbId' in snapshot.metadata ? snapshot.metadata.imdbId : null
+    return typeof imdbId === 'string' && imdbId.length > 0 ? imdbId : null
+  }
+
+  schedulePosterIngest(media: Pick<Media, 'id' | 'posterUrl' | 'mediaType' | 'externalId'>): void {
     if (!media.posterUrl) {
       return
     }
@@ -253,6 +270,8 @@ export class MediaService {
       title: string
       posterUrl?: string | null
       coverUrl?: string | null
+      imdbId?: string | null
+      kinopoiskId?: string | null
     },
   ): MediaSnapshot {
     if (!detail.title) {
@@ -261,11 +280,23 @@ export class MediaService {
 
     switch (mediaType) {
       case MediaType.MOVIE:
-      case MediaType.TV_SHOW:
+      case MediaType.TV_SHOW: {
+        const metadata: MovieMetadata | TvShowMetadata = {}
+
+        if (detail.imdbId) {
+          metadata.imdbId = detail.imdbId
+        }
+
+        if (detail.kinopoiskId) {
+          metadata.kinopoiskId = detail.kinopoiskId
+        }
+
         return {
           title: detail.title,
           posterUrl: detail.posterUrl ?? null,
+          metadata: Object.keys(metadata).length > 0 ? metadata : null,
         }
+      }
       case MediaType.GAME:
       case MediaType.BOOK:
       case MediaType.ALBUM:

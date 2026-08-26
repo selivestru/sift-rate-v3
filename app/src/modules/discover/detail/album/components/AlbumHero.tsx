@@ -22,7 +22,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-t-2xl">
+    <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
       <div className="relative min-h-64 sm:min-h-72">
         {backdropUrl ? (
           <>

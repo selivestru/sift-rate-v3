@@ -29,6 +29,7 @@ model User {
   reviews      Review[]
   plannedItems PlannedItem[]
   rankedLists  RankedList[]
+  importJobs   ImportJob[]
 
   @@unique([email])
   @@unique([username])
@@ -41,12 +42,14 @@ model Media {
   title      String
   posterUrl  String?
   metadata   Json?
+  imdbId     String?
 
   reviews      Review[]
   plannedItems PlannedItem[]
   rankedItems  RankedItem[]
 
   @@unique([externalId, mediaType])
+  @@unique([imdbId])
   @@index([mediaType])
 }
 
@@ -102,4 +105,67 @@ model RankedItem {
 
   @@unique([listId, mediaId])
   @@index([listId, position])
+}
+
+enum ImportSource {
+  IMDB
+}
+
+enum ImportJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ImportRowStatus {
+  PENDING
+  CREATED
+  SKIPPED_EXISTING
+  SKIPPED_TYPE
+  NOT_FOUND
+  INVALID
+  ERROR
+}
+
+model ImportJob {
+  id               String          @id @default(uuid(7))
+  userId           String
+  source           ImportSource
+  status           ImportJobStatus
+  total            Int
+  processed        Int             @default(0)
+  createdCount     Int             @default(0)
+  skippedExisting  Int             @default(0)
+  skippedType      Int             @default(0)
+  notFound         Int             @default(0)
+  invalid          Int             @default(0)
+  errorCount       Int             @default(0)
+  errorMessage     String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  finishedAt       DateTime?
+
+  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rows ImportJobRow[]
+
+  @@index([userId, status])
+}
+
+model ImportJobRow {
+  id        String          @id @default(uuid(7))
+  jobId     String
+  position  Int             @default(0)
+  imdbId    String
+  rating    Int?
+  ratedAt   DateTime?
+  title     String
+  titleType String
+  status    ImportRowStatus
+  error     String?
+
+  job ImportJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, position])
+  @@index([jobId, status])
 }

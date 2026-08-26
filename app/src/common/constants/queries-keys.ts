@@ -11,4 +11,9 @@ export const QUERIES_KEYS = {
   userActivity: (username: string) => ['user-activity', username],
   userFeed: (username: string) => ['user-feed', username],
   feed: ['feed'],
+  imdbImportActive: ['imdb-import', 'active'],
+  imdbImport: (id: string) => ['imdb-import', id],
+  imdbImportHistory: ['imdb-import', 'history'],
+  imdbImportRows: (id: string, status?: string) =>
+    status ? ['imdb-import', id, 'rows', status] : ['imdb-import', id, 'rows'],
 } as const

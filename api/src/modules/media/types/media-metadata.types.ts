@@ -1,54 +1,22 @@
 import { MediaType } from '~/generated/prisma/enums'
 
 export interface MovieMetadata {
-  watchUrl?: string
-  releaseYear?: number
-  runtimeMinutes?: number
-  director?: string
-  genres?: string[]
+  imdbId?: string
+  kinopoiskId?: string
 }
 
 export interface TvShowMetadata {
-  watchUrl?: string
-  yearStart?: number
-  yearEnd?: number
-  seasonCount?: number
-  episodeCount?: number
-  genres?: string[]
+  imdbId?: string
+  kinopoiskId?: string
 }
 
-export interface TrackMetadata {
-  audioUrl?: string
-  durationSeconds?: number
-  artistName?: string
-  albumTitle?: string
-  releaseDate?: string
-}
+export type TrackMetadata = Record<string, never>
 
-export interface AlbumMetadata {
-  artistName?: string
-  releaseDate?: string
-  trackCount?: number
-  genres?: string[]
-  label?: string
-}
+export type AlbumMetadata = Record<string, never>
 
-export interface GameMetadata {
-  releaseYear?: number
-  developers?: string[]
-  publishers?: string[]
-  platforms?: string[]
-  genres?: string[]
-}
+export type GameMetadata = Record<string, never>
 
-export interface BookMetadata {
-  authors?: string[]
-  publishedYear?: number
-  pageCount?: number
-  publisher?: string
-  categories?: string[]
-  isbn13?: string
-}
+export type BookMetadata = Record<string, never>
 
 export interface MediaMetadataMap {
   [MediaType.MOVIE]: MovieMetadata

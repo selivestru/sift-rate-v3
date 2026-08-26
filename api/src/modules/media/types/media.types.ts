@@ -1,3 +1,4 @@
+import type { MediaMetadata } from './media-metadata.types'
 import { PaginationCursorResponse } from '~/common/types/pagination-cursor.types'
 import { Author } from '~/common/types/user.types'
 import { Media, PlannedItem, Review } from '~/generated/prisma/client'
@@ -44,7 +45,7 @@ export interface MediaSearchResponse<T> {
 export interface MediaSnapshot {
   title: string
   posterUrl: string | null
-  metadata?: Record<string, unknown>
+  metadata?: MediaMetadata | null
 }
 
 export interface EnsureMediaResult {

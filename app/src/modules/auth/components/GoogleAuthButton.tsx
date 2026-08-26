@@ -6,7 +6,19 @@ import { Button } from '~/common/ui/Button'
 
 import { authApi } from '../api/auth.api'
 
-export const GoogleAuthButton = () => {
+type GoogleAuthButtonProps = Pick<
+  React.ComponentProps<typeof Button>,
+  'variant' | 'size' | 'fullWidth'
+> & {
+  label?: string
+}
+
+export const GoogleAuthButton = ({
+  variant = 'secondary',
+  size,
+  fullWidth = true,
+  label = 'Continue with Google',
+}: GoogleAuthButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handlePress = async () => {
@@ -24,14 +36,15 @@ export const GoogleAuthButton = () => {
 
   return (
     <Button
-      fullWidth
+      fullWidth={fullWidth}
       type="button"
-      variant="secondary"
+      variant={variant}
+      size={size}
       isLoading={isLoading}
       startIcon={<GoogleIcon />}
       onClick={handlePress}
     >
-      Continue with Google
+      {label}
     </Button>
   )
 }

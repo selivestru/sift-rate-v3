@@ -6,119 +6,151 @@ import {
   AlbumSearchItem,
   AlbumSearchResult,
   AlbumTrack,
-  DeezerAlbumRaw,
-  DeezerAlbumTrackRaw,
+  SpotifyAlbumRaw,
+  SpotifyAlbumTrackRaw,
 } from '../types/album.types'
 import { MediaSearchResponse } from '../types/media.types'
-import { deezerGet, pickDeezerCoverUrl } from '../utils/deezer'
-import { fetchArtistEnrichment } from '../utils/deezer-artist-enrichment'
-import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
-import ky from 'ky'
-import { RedisService } from '~/infrastructure/redis/redis.service'
+import {
+  buildDetailCacheKey,
+  buildSearchCacheKey,
+  resolveMusicDetailTtlSeconds,
+  SEARCH_CACHE_TTL_SECONDS,
+} from '../utils/media-cache-policy'
+import { fetchArtistEnrichment } from '../utils/spotify-artist-enrichment'
+import { fetchArtistPictures } from '../utils/spotify-artist-pictures'
+import { MediaCacheService } from './media-cache.service'
+import { pickSpotifyImage, SpotifyClientService } from './spotify-client.service'
+
+const SEARCH_PAGE_SIZE = 10
+const SEARCH_MAX_PAGES = 10
+const ALBUM_TRACKS_PAGE_SIZE = 50
+const ALBUM_TRACKS_MAX_PAGES = 5
 
 @Injectable()
 export class AlbumService {
-  private readonly DEEZER_API_URL = 'https://api.deezer.com'
-  private readonly ALBUM_CACHE_TTL_SECONDS = 6 * 3600
-
-  constructor(private readonly redis: RedisService) {}
+  constructor(
+    private readonly spotify: SpotifyClientService,
+    private readonly cache: MediaCacheService,
+  ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<AlbumSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('album', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<AlbumSearchItem>>(
-      this.redis,
-      cacheKey,
-      { invalidateAcrossMusicRelease: true },
-    )
+    const cached = await this.cache.get<MediaSearchResponse<AlbumSearchItem>>(cacheKey, {
+      invalidateAcrossMusicRelease: true,
+    })
     if (cached) return cached
 
-    const url = new URL(this.DEEZER_API_URL + '/search/album')
+    const response = await this.spotify.get<AlbumSearchResult>(
+      `/search?type=album&q=${encodeURIComponent(q)}&limit=${SEARCH_PAGE_SIZE}&offset=${
+        (pageNum - 1) * SEARCH_PAGE_SIZE
+      }`,
+    )
 
-    url.searchParams.set('q', q)
-    url.searchParams.set('index', String((pageNum - 1) * 10)) // TODO: fix pagination
-    url.searchParams.set('limit', String(10)) // TODO: fix pagination
-
-    const response = await ky<AlbumSearchResult>(url.toString()).json()
-
-    const totalResults = response.total ?? 0
-    const totalPages = Math.max(1, Math.ceil(totalResults / 10)) // TODO: handle pagination
+    const totalResults = response.albums?.total ?? 0
+    const totalPages = Math.max(1, Math.ceil(totalResults / SEARCH_PAGE_SIZE))
 
     const result: MediaSearchResponse<AlbumSearchItem> = {
-      results: response.data.map((album) => ({
-        id: String(album.id),
-        title: album.title,
-        artist: album.artist?.name ?? 'Unknown Artist',
-        coverUrl: album.cover_big ?? null,
-        nbTracks: album.nb_tracks ?? null,
+      results: (response.albums?.items ?? []).map((album) => ({
+        id: album.id,
+        title: album.name,
+        artist: album.artists?.[0]?.name ?? 'Unknown Artist',
+        coverUrl: pickSpotifyImage(album.images),
+        nbTracks: album.total_tracks ?? null,
       })),
       totalResults,
-      totalPages: Math.min(totalPages, 10),
+      totalPages: Math.min(totalPages, SEARCH_MAX_PAGES),
     }
 
-    await setSearchCache(this.redis, cacheKey, result)
+    await this.cache.set(cacheKey, result, SEARCH_CACHE_TTL_SECONDS)
     return result
   }
 
   async getById(id: string): Promise<AlbumDetail> {
-    const cacheKey = `album:${id}`
+    const cacheKey = buildDetailCacheKey('album', id)
 
-    try {
-      const cached = await this.redis.get(cacheKey)
-      if (cached) {
-        return JSON.parse(cached) as AlbumDetail
-      }
-    } catch {
-      // ignore
-    }
-
-    const album = await deezerGet<DeezerAlbumRaw>(`/album/${id}`)
-    const artistId = String(album.artist.id)
-    const tracks = this.mapTracks(album.tracks?.data)
-    const trackCount = album.nb_tracks ?? tracks.length
-
-    const enrichment = await fetchArtistEnrichment(artistId, {
-      excludeAlbumId: String(album.id),
+    const cached = await this.cache.get<AlbumDetail>(cacheKey, {
+      invalidateAcrossMusicRelease: true,
     })
+    if (cached) return cached
+
+    const album = await this.spotify.get<SpotifyAlbumRaw>(`/albums/${id}`)
+    const artistId = album.artists?.[0]?.id
+    const tracks = await this.fetchAllTracks(id, album.tracks?.items)
+    const trackCount = album.total_tracks ?? tracks.length
+
+    const [enrichment, pictures] = await Promise.all([
+      fetchArtistEnrichment(
+        this.spotify,
+        { id: artistId, name: album.artists?.[0]?.name },
+        {
+          excludeAlbumId: album.id,
+        },
+      ),
+      fetchArtistPictures(
+        this.spotify,
+        this.cache,
+        (album.artists ?? []).map((artist) => artist.id),
+      ),
+    ])
+
+    const contributors = (album.artists ?? []).map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+      pictureUrl: pictures.get(artist.id) ?? null,
+      role: 'Artist',
+    }))
 
     const result: AlbumDetail = {
-      id: String(album.id),
-      title: album.title,
-      artistName: album.artist.name,
-      coverUrl: pickDeezerCoverUrl(album, 1000),
-      genres: album.genres?.data.map((genre) => genre.name) ?? [],
+      id: album.id,
+      title: album.name,
+      artistName: album.artists?.[0]?.name ?? 'Unknown Artist',
+      coverUrl: pickSpotifyImage(album.images),
+      genres: [],
       label: album.label ?? '',
-      releaseDate: album.release_date,
-      explicit: album.explicit_lyrics,
+      releaseDate: album.release_date ?? '',
+      explicit: false,
       trackCount,
-      contributors:
-        album.contributors?.map((contributor) => ({
-          id: String(contributor.id),
-          name: contributor.name,
-          pictureUrl: contributor.picture_medium,
-          role: contributor.role,
-        })) ?? [],
+      contributors,
       tracks,
       topTracks: enrichment.topTracks,
       artistAlbums: enrichment.artistAlbums,
     }
 
-    try {
-      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.ALBUM_CACHE_TTL_SECONDS)
-    } catch {
-      // ignore
-    }
+    await this.cache.set(cacheKey, result, resolveMusicDetailTtlSeconds(result.releaseDate))
 
     return result
   }
 
-  private mapTracks(tracks: DeezerAlbumTrackRaw[] | undefined): AlbumTrack[] {
-    return (tracks ?? []).map((track) => ({
-      id: String(track.id),
-      title: track.title,
-      duration: track.duration,
-      explicit: Boolean(track.explicit_lyrics),
-      trackPosition: track.track_position ?? null,
+  private async fetchAllTracks(
+    albumId: string,
+    firstPageItems: SpotifyAlbumTrackRaw[] | undefined,
+  ): Promise<AlbumTrack[]> {
+    const rawTracks: SpotifyAlbumTrackRaw[] = [...(firstPageItems ?? [])]
+
+    for (let page = 1; page < ALBUM_TRACKS_MAX_PAGES; page += 1) {
+      try {
+        const response = await this.spotify.get<{
+          items?: SpotifyAlbumTrackRaw[]
+        }>(
+          `/albums/${albumId}/tracks?limit=${ALBUM_TRACKS_PAGE_SIZE}&offset=${
+            page * ALBUM_TRACKS_PAGE_SIZE
+          }`,
+        )
+
+        if (!response.items || response.items.length === 0) break
+        rawTracks.push(...response.items)
+      } catch {
+        break
+      }
+    }
+
+    return rawTracks.map((track) => ({
+      id: track.id,
+      title: track.name,
+      duration: Math.round(track.duration_ms / 1000),
+      explicit: Boolean(track.explicit),
+      trackPosition: track.track_number ?? null,
     }))
   }
 }

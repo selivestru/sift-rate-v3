@@ -36,7 +36,7 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
   const hasReview = !!data.review
 
   return (
-    <div className={cn('flex gap-1', className)}>
+    <div className={cn('flex gap-1.5', className)}>
       <UpsertReviewDialog
         key={data.review?.id ? 'edit' : 'create'}
         media={props}

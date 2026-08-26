@@ -28,7 +28,13 @@ import {
   TwitchTokenResponse,
 } from '../types/game.types'
 import { MediaSearchResponse } from '../types/media.types'
-import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
+import {
+  buildDetailCacheKey,
+  buildSearchCacheKey,
+  resolveDetailTtlSeconds,
+  SEARCH_CACHE_TTL_SECONDS,
+} from '../utils/media-cache-policy'
+import { MediaCacheService } from './media-cache.service'
 import ky from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
 import { RedisService } from '~/infrastructure/redis/redis.service'
@@ -39,7 +45,6 @@ export class GameService {
   private readonly TWITCH_TOKEN_URL = 'https://id.twitch.tv/oauth2/token'
   private readonly REDIS_TOKEN_KEY = 'igdb:access_token'
   private readonly TOKEN_EXPIRY_BUFFER_MS = 60_000
-  private readonly GAME_CACHE_TTL_SECONDS = 7 * 24 * 3600
   private readonly IMAGE_LIMIT = 16
   private readonly VIDEO_LIMIT = 6
   private readonly RELATED_LIMIT = 12
@@ -160,13 +165,14 @@ export class GameService {
 
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
+    private readonly cache: MediaCacheService,
     private readonly redis: RedisService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<GameSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('game', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<GameSearchItem>>(this.redis, cacheKey)
+    const cached = await this.cache.get<MediaSearchResponse<GameSearchItem>>(cacheKey)
     if (cached) return cached
 
     const offset = (pageNum - 1) * 10 // TODO: fix pagination
@@ -204,7 +210,7 @@ export class GameService {
       totalPages: Math.min(totalPages, 10),
     }
 
-    await setSearchCache(this.redis, cacheKey, result)
+    await this.cache.set(cacheKey, result, SEARCH_CACHE_TTL_SECONDS)
     return result
   }
 
@@ -214,16 +220,10 @@ export class GameService {
       throw new NotFoundException('Game not found')
     }
 
-    const cacheKey = `game:${gameId}`
+    const cacheKey = buildDetailCacheKey('game', gameId)
 
-    try {
-      const cached = await this.redis.get(cacheKey)
-      if (cached) {
-        return JSON.parse(cached) as GameDetail
-      }
-    } catch {
-      // ignore
-    }
+    const cached = await this.cache.get<GameDetail>(cacheKey)
+    if (cached) return cached
 
     let rows: IgdbGameRaw[]
 
@@ -245,11 +245,11 @@ export class GameService {
 
     const result = this.mapGameDetail(raw)
 
-    try {
-      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.GAME_CACHE_TTL_SECONDS)
-    } catch {
-      // ignore
-    }
+    await this.cache.set(
+      cacheKey,
+      result,
+      resolveDetailTtlSeconds({ kind: 'game', releaseDate: result.releaseDate }),
+    )
 
     return result
   }

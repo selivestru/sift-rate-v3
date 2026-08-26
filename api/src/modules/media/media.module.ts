@@ -8,8 +8,10 @@ import { PosterIngestProcessor } from './processors/poster-ingest.processor'
 import { AlbumService } from './services/album.service'
 import { BookService } from './services/book.service'
 import { GameService } from './services/game.service'
+import { MediaCacheService } from './services/media-cache.service'
 import { MovieService } from './services/movie.service'
 import { PosterIngestService } from './services/poster-ingest.service'
+import { SpotifyClientService } from './services/spotify-client.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
 
@@ -23,6 +25,8 @@ import { TvShowService } from './services/tv_show.service'
   controllers: [MediaController],
   providers: [
     MediaService,
+    MediaCacheService,
+    SpotifyClientService,
     MovieService,
     TvShowService,
     TrackService,

@@ -65,6 +65,8 @@ export interface TvShowDetail {
   seasonCount: number
   episodeCount: number
   genres: string[]
+  imdbId: string | null
+  kinopoiskId: string | null
   imdbRating: number | null
   imdbVoteCount: number | null
   posterUrl: string | null

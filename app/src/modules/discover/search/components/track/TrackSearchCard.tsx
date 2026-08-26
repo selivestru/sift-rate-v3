@@ -2,7 +2,6 @@ import { Link } from '@tanstack/react-router'
 import { Clock } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatDuration } from '~/common/utils/formatDuration'
 
@@ -45,18 +44,10 @@ export const TrackSearchCard = ({ item }: TrackSearchCardProps) => {
         </p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
-        {item.rank != null && (
-          <Badge className="hidden h-5 px-1.5 text-[10px] sm:flex">
-            ★ {Math.round(item.rank / 1000)}k
-          </Badge>
-        )}
-
-        <span className="text-muted-foreground flex items-center gap-1 text-xs tabular-nums">
-          <Clock className="size-3" />
-          {formatDuration(item.duration)}
-        </span>
-      </div>
+      <span className="text-muted-foreground flex items-center gap-1 text-xs tabular-nums">
+        <Clock className="size-3" />
+        {formatDuration(item.duration)}
+      </span>
     </Link>
   )
 }

@@ -1,21 +1,37 @@
-import type {
-  DeezerContributorRaw,
-  MusicAlbumRailItem,
-  MusicContributor,
-  MusicTrackRailItem,
-} from './music.types'
+import type { SpotifyImage } from '../services/spotify-client.service'
+import type { MusicAlbumRailItem, MusicContributor, MusicTrackRailItem } from './music.types'
 
 export interface AlbumSearchResult {
-  data: AlbumSearchRaw[]
-  total?: number
+  albums?: {
+    items?: SpotifyAlbumRaw[]
+    total?: number
+  }
 }
 
-export interface AlbumSearchRaw {
-  id: number
-  title: string
-  cover_big: string | null
-  nb_tracks?: number | null
-  artist?: { name?: string }
+export interface SpotifyAlbumRaw {
+  id: string
+  name: string
+  album_type: 'album' | 'single' | 'compilation'
+  total_tracks: number
+  label: string | null
+  release_date: string
+  popularity: number
+  images?: SpotifyImage[]
+  artists?: Array<{ id: string; name: string }>
+  tracks?: {
+    items?: SpotifyAlbumTrackRaw[]
+    total?: number
+    limit?: number
+    next?: string | null
+  }
+}
+
+export interface SpotifyAlbumTrackRaw {
+  id: string
+  name: string
+  duration_ms: number
+  explicit: boolean
+  track_number: number | null
 }
 
 export interface AlbumSearchItem {
@@ -48,37 +64,4 @@ export interface AlbumDetail {
   tracks: AlbumTrack[]
   topTracks: MusicTrackRailItem[]
   artistAlbums: MusicAlbumRailItem[]
-}
-
-export interface DeezerAlbumTrackRaw {
-  id: number
-  title: string
-  duration: number
-  explicit_lyrics?: boolean
-  track_position?: number
-}
-
-export interface DeezerAlbumRaw {
-  id: number
-  title: string
-  cover?: string | null
-  cover_small?: string | null
-  cover_medium?: string | null
-  cover_big?: string | null
-  cover_xl?: string | null
-  label?: string
-  release_date: string
-  explicit_lyrics: boolean
-  nb_tracks?: number
-  genres?: {
-    data: Array<{ name: string }>
-  }
-  contributors?: DeezerContributorRaw[]
-  artist: {
-    id: number
-    name: string
-  }
-  tracks?: {
-    data: DeezerAlbumTrackRaw[]
-  }
 }

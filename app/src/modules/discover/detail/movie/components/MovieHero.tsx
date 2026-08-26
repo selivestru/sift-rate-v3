@@ -8,7 +8,7 @@ import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
 import { formatDate } from '~/common/utils/formatDate'
 import { formatRuntime } from '~/common/utils/formatRuntime'
 
-import { MediaCoverLightbox } from '../../shared'
+import { MediaCoverLightbox, WatchMediaButton } from '../../shared'
 import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { MovieDetail } from '../types/movie-detail.types'
 
@@ -27,7 +27,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
   const overviewLong = movie.overview.length > 280
 
   return (
-    <div className="relative overflow-hidden rounded-t-2xl">
+    <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
       {movie.backdropUrl ? (
         <>
           <img
@@ -145,7 +145,10 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
             )}
           </div>
 
-          <MediaStateButtons externalId={movie.id} mediaType={MEDIA_TYPES.MOVIE} />
+          <div className="flex flex-wrap gap-1.5">
+            <MediaStateButtons externalId={movie.id} mediaType={MEDIA_TYPES.MOVIE} />
+            <WatchMediaButton mediaType={MEDIA_TYPES.MOVIE} kinopoiskId={movie.kinopoiskId} />
+          </div>
 
           {movie.genres.length > 0 && (
             <div className="flex flex-wrap gap-1.5">

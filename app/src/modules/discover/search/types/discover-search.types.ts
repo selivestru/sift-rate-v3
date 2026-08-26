@@ -40,7 +40,6 @@ export interface TrackSearchItem {
   albumTitle: string
   coverUrl: string | null
   duration: number
-  rank: number | null
 }
 
 export interface AlbumSearchItem {

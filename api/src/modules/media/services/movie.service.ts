@@ -20,16 +20,21 @@ import {
   TmdbVideoRaw,
 } from '../types/movie.types'
 import { getImdbRating } from '../utils/imdb'
-import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
+import { getKinopoiskId } from '../utils/kinopoisk'
+import {
+  buildDetailCacheKey,
+  buildSearchCacheKey,
+  resolveDetailTtlSeconds,
+  SEARCH_CACHE_TTL_SECONDS,
+} from '../utils/media-cache-policy'
+import { MediaCacheService } from './media-cache.service'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
-import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
 export class MovieService {
   private readonly TMDB_API_URL = 'https://api.themoviedb.org/3'
   private readonly TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p'
-  private readonly MOVIE_CACHE_TTL_SECONDS = 7 * 24 * 3600
   private readonly CAST_LIMIT = 16
   private readonly IMAGE_LIMIT = 12
   private readonly SIMILAR_LIMIT = 12
@@ -38,13 +43,13 @@ export class MovieService {
 
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
-    private readonly redis: RedisService,
+    private readonly cache: MediaCacheService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<MovieSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('movie', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<MovieSearchItem>>(this.redis, cacheKey)
+    const cached = await this.cache.get<MediaSearchResponse<MovieSearchItem>>(cacheKey)
     if (cached) return cached
 
     const url = new URL(this.TMDB_API_URL + '/search/movie')
@@ -74,7 +79,7 @@ export class MovieService {
       totalPages: Math.min(response.total_pages, 10),
     }
 
-    await setSearchCache(this.redis, cacheKey, result)
+    await this.cache.set(cacheKey, result, SEARCH_CACHE_TTL_SECONDS)
     return result
   }
 
@@ -92,63 +97,56 @@ export class MovieService {
 
     if (!external.imdb_id) return null
 
-    const imdb = await getImdbRating(this.config, this.redis, external.imdb_id)
+    const imdb = await getImdbRating(this.config, this.cache, external.imdb_id)
     return imdb?.rating ?? null
   }
 
   async getById(id: string): Promise<MovieDetail> {
-    const cacheKey = `movie:${id}`
+    const cacheKey = buildDetailCacheKey('movie', id)
 
-    let result: MovieDetail | null = null
+    const cached = await this.cache.get<MovieDetail>(cacheKey)
+    if (cached) return cached
+
+    const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+    url.searchParams.set('language', 'en-US')
+    url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
+    url.searchParams.set('include_image_language', 'en,null')
+
+    let raw: TmdbMovieDetailRaw
 
     try {
-      const cached = await this.redis.get(cacheKey)
-      if (cached) {
-        result = JSON.parse(cached) as MovieDetail
+      raw = await ky.get(url.toString()).json<TmdbMovieDetailRaw>()
+    } catch (error) {
+      if (error instanceof HTTPError && error.response.status === 404) {
+        throw new NotFoundException('Movie not found')
       }
-    } catch {
-      // ignore
-    }
-
-    if (!result) {
-      const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
-      url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
-      url.searchParams.set('language', 'en-US')
-      url.searchParams.set(
-        'append_to_response',
-        'credits,videos,images,recommendations,external_ids',
+      throw new InternalServerErrorException(
+        `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
-      url.searchParams.set('include_image_language', 'en,null')
-
-      let raw: TmdbMovieDetailRaw
-
-      try {
-        raw = await ky.get(url.toString()).json<TmdbMovieDetailRaw>()
-      } catch (error) {
-        if (error instanceof HTTPError && error.response.status === 404) {
-          throw new NotFoundException('Movie not found')
-        }
-        throw new InternalServerErrorException(
-          `TMDB API error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        )
-      }
-
-      result = this.mapMovieDetail(raw)
-
-      const imdbId = raw.external_ids?.imdb_id
-
-      if (imdbId) {
-        const imdbRating = await getImdbRating(this.config, this.redis, imdbId)
-        result.imdbRating = imdbRating?.rating ?? null
-        result.imdbVoteCount = imdbRating?.votes ?? null
-      }
-
-      try {
-        await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.MOVIE_CACHE_TTL_SECONDS)
-      } catch {
-        // ignore
-      }
     }
+
+    const result = this.mapMovieDetail(raw)
+
+    const imdbId = raw.external_ids?.imdb_id
+
+    if (imdbId) {
+      const imdbRating = await getImdbRating(this.config, this.cache, imdbId)
+      result.imdbRating = imdbRating?.rating ?? null
+      result.imdbVoteCount = imdbRating?.votes ?? null
+    }
+
+    result.kinopoiskId = await getKinopoiskId(this.config, result.originalTitle, result.year)
+
+    await this.cache.set(
+      cacheKey,
+      result,
+      resolveDetailTtlSeconds({
+        kind: 'movie',
+        releaseDate: result.releaseDate,
+        status: result.status,
+      }),
+    )
 
     return result
   }
@@ -281,6 +279,8 @@ export class MovieService {
       runtimeMinutes: raw.runtime && raw.runtime > 0 ? raw.runtime : null,
       status: raw.status || '',
       genres: raw.genres.map((g) => g.name),
+      imdbId: raw.external_ids?.imdb_id ?? null,
+      kinopoiskId: null,
       imdbRating: null,
       imdbVoteCount: null,
       posterUrl: this.buildImageUrl(raw.poster_path, 'w780'),

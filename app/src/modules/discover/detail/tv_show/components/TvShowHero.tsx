@@ -6,7 +6,7 @@ import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
 
-import { MediaCoverLightbox } from '../../shared'
+import { MediaCoverLightbox, WatchMediaButton } from '../../shared'
 import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { TvShowDetail } from '../types/tv-show-detail.types'
 
@@ -33,7 +33,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
   const overviewLong = show.overview.length > 280
 
   return (
-    <div className="relative overflow-hidden rounded-t-2xl">
+    <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
       {show.backdropUrl ? (
         <>
           <img
@@ -155,7 +155,10 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
             )}
           </div>
 
-          <MediaStateButtons externalId={show.id} mediaType={MEDIA_TYPES.TV_SHOW} />
+          <div className="flex flex-wrap gap-1.5">
+            <MediaStateButtons externalId={show.id} mediaType={MEDIA_TYPES.TV_SHOW} />
+            <WatchMediaButton mediaType={MEDIA_TYPES.TV_SHOW} kinopoiskId={show.kinopoiskId} />
+          </div>
 
           {show.genres.length > 0 && (
             <div className="flex flex-wrap gap-1.5">

@@ -13,26 +13,30 @@ import {
   GoogleVolume,
 } from '../types/book.types'
 import { MediaSearchResponse } from '../types/media.types'
-import { buildSearchCacheKey, getSearchCache, setSearchCache } from '../utils/search-cache'
+import {
+  buildDetailCacheKey,
+  buildSearchCacheKey,
+  resolveDetailTtlSeconds,
+  SEARCH_CACHE_TTL_SECONDS,
+} from '../utils/media-cache-policy'
+import { MediaCacheService } from './media-cache.service'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
-import { RedisService } from '~/infrastructure/redis/redis.service'
 
 @Injectable()
 export class BookService {
   private readonly GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1'
-  private readonly BOOK_CACHE_TTL_SECONDS = 7 * 24 * 3600
   private readonly MORE_BY_AUTHOR_LIMIT = 12
 
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
-    private readonly redis: RedisService,
+    private readonly cache: MediaCacheService,
   ) {}
 
   async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<BookSearchItem>> {
     const pageNum = +page
     const cacheKey = buildSearchCacheKey('book', q, pageNum)
-    const cached = await getSearchCache<MediaSearchResponse<BookSearchItem>>(this.redis, cacheKey)
+    const cached = await this.cache.get<MediaSearchResponse<BookSearchItem>>(cacheKey)
     if (cached) return cached
 
     const url = new URL(this.GOOGLE_BOOKS_API_URL + '/volumes')
@@ -70,7 +74,7 @@ export class BookService {
       totalPages: Math.min(totalPages, 10),
     }
 
-    await setSearchCache(this.redis, cacheKey, result)
+    await this.cache.set(cacheKey, result, SEARCH_CACHE_TTL_SECONDS)
     return result
   }
 
@@ -80,16 +84,10 @@ export class BookService {
       throw new NotFoundException('Book not found')
     }
 
-    const cacheKey = `book:${bookId}`
+    const cacheKey = buildDetailCacheKey('book', bookId)
 
-    try {
-      const cached = await this.redis.get(cacheKey)
-      if (cached) {
-        return JSON.parse(cached) as BookDetail
-      }
-    } catch {
-      // ignore
-    }
+    const cached = await this.cache.get<BookDetail>(cacheKey)
+    if (cached) return cached
 
     const url = new URL(`${this.GOOGLE_BOOKS_API_URL}/volumes/${encodeURIComponent(bookId)}`)
     url.searchParams.set('key', this.config.get('GOOGLE_BOOKS_API_KEY', { infer: true }))
@@ -116,11 +114,11 @@ export class BookService {
 
     const result = this.mapBookDetail(raw, moreByAuthor)
 
-    try {
-      await this.redis.set(cacheKey, JSON.stringify(result), 'EX', this.BOOK_CACHE_TTL_SECONDS)
-    } catch {
-      // ignore
-    }
+    await this.cache.set(
+      cacheKey,
+      result,
+      resolveDetailTtlSeconds({ kind: 'book', releaseDate: result.publishedDate }),
+    )
 
     return result
   }

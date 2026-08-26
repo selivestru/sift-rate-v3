@@ -26,7 +26,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
   if (book.publisher) stats.push({ label: 'Publisher', value: book.publisher })
 
   return (
-    <div className="relative overflow-hidden rounded-t-2xl">
+    <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
       <div
         aria-hidden
         className="absolute inset-0"

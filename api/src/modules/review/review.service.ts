@@ -183,6 +183,11 @@ export class ReviewService {
             mediaType: dto.mediaType,
             title: snapshot.title,
             posterUrl: snapshot.posterUrl,
+            metadata: snapshot.metadata ? (snapshot.metadata as Prisma.InputJsonValue) : undefined,
+            imdbId:
+              snapshot.metadata && 'imdbId' in snapshot.metadata && snapshot.metadata.imdbId
+                ? snapshot.metadata.imdbId
+                : null,
           },
         })
 

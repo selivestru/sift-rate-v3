@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
-import { Button } from '~/common/ui/Button'
-import { useAuthStore } from '~/modules/auth'
+import { GoogleAuthButton, useAuthStore } from '~/modules/auth'
 
 import { NavDrawer } from './NavDrawer'
 import { Profile } from './Profile'
@@ -24,7 +23,7 @@ export const Header = () => {
             <Profile />
           </div>
         ) : (
-          <Button render={<Link to="/auth">Sign in</Link>} />
+          <GoogleAuthButton size="sm" fullWidth={false} label="Sign in" />
         )}
       </div>
     </header>

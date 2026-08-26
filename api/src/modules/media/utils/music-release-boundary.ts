@@ -112,3 +112,10 @@ export const isStaleAcrossMusicRelease = (
   const boundaryMs = getLastMusicReleaseBoundaryMs(nowMs, timeZone)
   return cachedAtMs < boundaryMs && nowMs >= boundaryMs
 }
+
+const DAY_MS = 86_400_000
+
+export const getNextMusicReleaseBoundaryMs = (
+  nowMs: number = Date.now(),
+  timeZone: string = MUSIC_RELEASE_TIMEZONE,
+): number => getLastMusicReleaseBoundaryMs(nowMs, timeZone) + 7 * DAY_MS

@@ -3,7 +3,7 @@ import { Skeleton } from '~/common/ui/Skeleton'
 export const MovieDetailSkeleton = () => {
   return (
     <div className="flex max-w-full flex-col overflow-x-clip">
-      <div className="relative overflow-hidden rounded-t-2xl">
+      <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
         <Skeleton className="absolute inset-0 rounded-none" />
 
         <div className="relative z-10 flex flex-col gap-5 p-5 pt-6 sm:flex-row sm:items-start sm:gap-5 sm:p-6 sm:pt-8">
@@ -18,6 +18,7 @@ export const MovieDetailSkeleton = () => {
             <div className="flex flex-wrap gap-2">
               <Skeleton className="h-10 w-20 rounded-xl" />
               <Skeleton className="h-10 w-22 rounded-xl" />
+              <Skeleton className="h-10 w-20 rounded-xl" />
             </div>
 
             <div className="flex flex-wrap gap-1.5">

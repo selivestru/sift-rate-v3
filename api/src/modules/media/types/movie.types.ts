@@ -67,6 +67,8 @@ export interface MovieDetail {
   runtimeMinutes: number | null
   status: string
   genres: string[]
+  imdbId: string | null
+  kinopoiskId: string | null
   imdbRating: number | null
   imdbVoteCount: number | null
   posterUrl: string | null

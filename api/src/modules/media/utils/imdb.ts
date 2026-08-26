@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config'
 
 import ky from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
-import { RedisService } from '~/infrastructure/redis/redis.service'
+import type { MediaCacheService } from '~/modules/media/services/media-cache.service'
 
 const OMDB_API_URL = 'https://www.omdbapi.com'
 const IMDB_TITLE_URL = 'https://www.imdb.com/title'
@@ -122,19 +122,13 @@ const scrapeFromImdb = async (imdbId: string): Promise<ImdbRating | null> => {
 
 export const getImdbRating = async (
   config: ConfigService<EnvConfig, true>,
-  redis: RedisService,
+  cache: Pick<MediaCacheService, 'get' | 'set'>,
   imdbId: string,
 ): Promise<ImdbRating | null> => {
   const cacheKey = buildCacheKey(imdbId)
 
-  try {
-    const cached = await redis.get(cacheKey)
-    if (cached) {
-      return JSON.parse(cached) as ImdbRating | null
-    }
-  } catch {
-    // ignore
-  }
+  const cached = await cache.get<ImdbRating | null>(cacheKey)
+  if (cached !== undefined) return cached
 
   let rating: ImdbRating | null = null
 
@@ -152,16 +146,11 @@ export const getImdbRating = async (
     }
   }
 
-  try {
-    await redis.set(
-      cacheKey,
-      JSON.stringify(rating),
-      'EX',
-      rating ? IMDB_CACHE_TTL_SECONDS : IMDB_NEGATIVE_CACHE_TTL_SECONDS,
-    )
-  } catch {
-    // ignore
-  }
+  await cache.set(
+    cacheKey,
+    rating,
+    rating ? IMDB_CACHE_TTL_SECONDS : IMDB_NEGATIVE_CACHE_TTL_SECONDS,
+  )
 
   return rating
 }
