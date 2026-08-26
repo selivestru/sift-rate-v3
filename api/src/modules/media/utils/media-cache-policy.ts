@@ -23,10 +23,15 @@ export type DetailCacheKind = SearchCacheKind
 
 const normalizeSearchQuery = (query: string) => query.trim().toLowerCase().replace(/\s+/g, ' ')
 
-export const buildSearchCacheKey = (kind: SearchCacheKind, query: string, page: number) =>
-  `search:${kind}:${normalizeSearchQuery(query)}:p${page}`
+export const buildSearchCacheKey = (
+  kind: SearchCacheKind,
+  query: string,
+  page: number,
+  language?: string,
+) => `search:${kind}:${normalizeSearchQuery(query)}:p${page}${language ? `:${language}` : ''}`
 
-export const buildDetailCacheKey = (kind: DetailCacheKind, id: string) => `${kind}:${id}`
+export const buildDetailCacheKey = (kind: DetailCacheKind, id: string, language?: string) =>
+  `${kind}:${id}${language ? `:${language}` : ''}`
 
 export const parsePartialDateToMs = (value?: string | null): number | null => {
   if (!value?.trim()) return null

@@ -4,6 +4,8 @@ import { MediaByIdParamsDto } from './dto/media-by-id.params'
 import { MediaTypeParamsDto } from './dto/media-search.params'
 import { SearchMediaQueryDto } from './dto/search-media.query'
 import { MediaService } from './media.service'
+import { CurrentLanguage } from '~/common/decorators/current-language.decorator'
+import type { MediaLanguage } from '~/common/decorators/current-language.decorator'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
@@ -14,14 +16,18 @@ export class MediaController {
 
   @Public()
   @Get(':mediaType')
-  searchMedia(@Param() params: MediaTypeParamsDto, @Query() query: SearchMediaQueryDto) {
-    return this.mediaService.searchMedia(params.mediaType, query)
+  searchMedia(
+    @Param() params: MediaTypeParamsDto,
+    @Query() query: SearchMediaQueryDto,
+    @CurrentLanguage() language: MediaLanguage,
+  ) {
+    return this.mediaService.searchMedia(params.mediaType, query, language)
   }
 
   @Public()
   @Get(':mediaType/:externalId')
-  getMediaById(@Param() params: MediaByIdParamsDto) {
-    return this.mediaService.getMediaById(params)
+  getMediaById(@Param() params: MediaByIdParamsDto, @CurrentLanguage() language: MediaLanguage) {
+    return this.mediaService.getMediaById(params, language)
   }
 
   @Get(':mediaType/:externalId/state')

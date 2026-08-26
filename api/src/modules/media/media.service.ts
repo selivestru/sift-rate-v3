@@ -24,6 +24,8 @@ import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types
 import { Queue } from 'bullmq'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
+import { DEFAULT_MEDIA_LANGUAGE } from '~/common/decorators/current-language.decorator'
+import type { MediaLanguage } from '~/common/decorators/current-language.decorator'
 import { Media, Prisma } from '~/generated/prisma/client'
 import { MediaType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
@@ -49,12 +51,12 @@ export class MediaService {
     private readonly bookService: BookService,
   ) {}
 
-  searchMedia(mediaType: MediaType, query: SearchMediaQueryDto) {
+  searchMedia(mediaType: MediaType, query: SearchMediaQueryDto, language: MediaLanguage) {
     switch (mediaType) {
       case MediaType.MOVIE:
-        return this.movieService.search(query)
+        return this.movieService.search(query, language)
       case MediaType.TV_SHOW:
-        return this.tvShowService.search(query)
+        return this.tvShowService.search(query, language)
       case MediaType.TRACK:
         return this.trackService.search(query)
       case MediaType.ALBUM:
@@ -68,12 +70,12 @@ export class MediaService {
     }
   }
 
-  getMediaById({ mediaType, externalId }: MediaByIdParamsDto) {
+  getMediaById({ mediaType, externalId }: MediaByIdParamsDto, language: MediaLanguage) {
     switch (mediaType) {
       case MediaType.MOVIE:
-        return this.movieService.getById(externalId)
+        return this.movieService.getById(externalId, language)
       case MediaType.TV_SHOW:
-        return this.tvShowService.getById(externalId)
+        return this.tvShowService.getById(externalId, language)
       case MediaType.TRACK:
         return this.trackService.getById(externalId)
       case MediaType.ALBUM:
@@ -204,7 +206,7 @@ export class MediaService {
   }
 
   async resolveMediaSnapshot(mediaType: MediaType, externalId: string): Promise<MediaSnapshot> {
-    const detail = await this.getMediaById({ mediaType, externalId })
+    const detail = await this.getMediaById({ mediaType, externalId }, DEFAULT_MEDIA_LANGUAGE)
     return this.toSnapshot(mediaType, detail)
   }
 

@@ -30,6 +30,8 @@ import {
 import { MediaCacheService } from './media-cache.service'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
+import { DEFAULT_MEDIA_LANGUAGE } from '~/common/decorators/current-language.decorator'
+import type { MediaLanguage } from '~/common/decorators/current-language.decorator'
 
 @Injectable()
 export class MovieService {
@@ -46,9 +48,12 @@ export class MovieService {
     private readonly cache: MediaCacheService,
   ) {}
 
-  async search({ q, page }: SearchMediaQueryDto): Promise<MediaSearchResponse<MovieSearchItem>> {
+  async search(
+    { q, page }: SearchMediaQueryDto,
+    language: MediaLanguage = DEFAULT_MEDIA_LANGUAGE,
+  ): Promise<MediaSearchResponse<MovieSearchItem>> {
     const pageNum = +page
-    const cacheKey = buildSearchCacheKey('movie', q, pageNum)
+    const cacheKey = buildSearchCacheKey('movie', q, pageNum, language)
     const cached = await this.cache.get<MediaSearchResponse<MovieSearchItem>>(cacheKey)
     if (cached) return cached
 
@@ -56,7 +61,7 @@ export class MovieService {
 
     url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('query', q)
-    url.searchParams.set('language', 'en-US')
+    url.searchParams.set('language', language)
     url.searchParams.set('page', page)
 
     const response = await ky<MovieSearchResult>(url.toString()).json()
@@ -101,15 +106,18 @@ export class MovieService {
     return imdb?.rating ?? null
   }
 
-  async getById(id: string): Promise<MovieDetail> {
-    const cacheKey = buildDetailCacheKey('movie', id)
+  async getById(
+    id: string,
+    language: MediaLanguage = DEFAULT_MEDIA_LANGUAGE,
+  ): Promise<MovieDetail> {
+    const cacheKey = buildDetailCacheKey('movie', id, language)
 
     const cached = await this.cache.get<MovieDetail>(cacheKey)
     if (cached) return cached
 
     const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
     url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
-    url.searchParams.set('language', 'en-US')
+    url.searchParams.set('language', language)
     url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
     url.searchParams.set('include_image_language', 'en,null')
 

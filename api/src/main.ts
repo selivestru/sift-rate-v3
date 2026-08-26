@@ -35,7 +35,7 @@ async function bootstrap() {
     origin: config.get('ORIGIN', { infer: true }),
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Accept-Language'],
   })
 
   app.useGlobalPipes(
