@@ -106,7 +106,7 @@ export class TmdbFindService {
     return {
       externalId: String(match.id),
       mediaType: isMovie ? MediaType.MOVIE : MediaType.TV_SHOW,
-      title: isMovie ? match.title : match.name,
+      title: isMovie ? (match.original_title ?? match.title) : (match.original_name ?? match.name),
       posterUrl: match.poster_path ? `${TMDB_IMAGE_URL}/w780${match.poster_path}` : null,
     }
   }

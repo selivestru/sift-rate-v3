@@ -268,6 +268,7 @@ export class MediaService {
     mediaType: MediaType,
     detail: {
       title: string
+      originalTitle?: string | null
       posterUrl?: string | null
       coverUrl?: string | null
       imdbId?: string | null
@@ -292,7 +293,7 @@ export class MediaService {
         }
 
         return {
-          title: detail.title,
+          title: detail.originalTitle ?? detail.title,
           posterUrl: detail.posterUrl ?? null,
           metadata: Object.keys(metadata).length > 0 ? metadata : null,
         }

@@ -3,6 +3,7 @@ import { MediaType } from '~/generated/prisma/enums'
 export interface TmdbFindMovieResult {
   id: number
   title: string
+  original_title?: string
   poster_path: string | null
   media_type?: string
 }
@@ -10,6 +11,7 @@ export interface TmdbFindMovieResult {
 export interface TmdbFindTvResult {
   id: number
   name: string
+  original_name?: string
   poster_path: string | null
   media_type?: string
 }
