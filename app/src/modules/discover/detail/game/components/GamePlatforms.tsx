@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Monitor } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
@@ -36,6 +37,7 @@ const priorityOf = (name: string) => {
 }
 
 export const GamePlatforms = ({ platforms, className }: GamePlatformsProps) => {
+  const content = useIntlayer('discover-detail')
   if (platforms.length === 0) return null
 
   const sorted = [...platforms].sort(
@@ -47,7 +49,7 @@ export const GamePlatforms = ({ platforms, className }: GamePlatformsProps) => {
       <div className="mb-3 flex items-center gap-2">
         <Monitor className="text-muted-foreground size-4" aria-hidden />
         <h2 id="platforms-heading" className="text-foreground text-lg font-semibold">
-          Platforms
+          {content.platforms.value}
         </h2>
       </div>
 

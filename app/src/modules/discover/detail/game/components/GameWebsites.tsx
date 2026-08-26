@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Globe, Link6, ShoppingBag, Video } from 'reicon-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
@@ -27,6 +28,7 @@ const iconFor = (kind: GameWebsiteKind) => {
 }
 
 export const GameWebsites = ({ websites, className }: GameWebsitesProps) => {
+  const content = useIntlayer('discover-detail')
   const MediaTypeIcon = mediaTypeMeta.GAME.icon
 
   if (websites.length === 0) return null
@@ -36,7 +38,7 @@ export const GameWebsites = ({ websites, className }: GameWebsitesProps) => {
       <div className="mb-3 flex items-center gap-2">
         <MediaTypeIcon className="text-muted-foreground size-4" aria-hidden />
         <h2 id="websites-heading" className="text-foreground text-lg font-semibold">
-          Where to play
+          {content.whereToPlay.value}
         </h2>
       </div>
 

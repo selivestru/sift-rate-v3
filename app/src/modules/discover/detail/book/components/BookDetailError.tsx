@@ -1,6 +1,8 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { XCircle } from 'reicon-react'
 
+import { useMediaTypeLabel } from '~/common/i18n'
 import { Alert, AlertTitle } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
 
@@ -9,21 +11,21 @@ interface BookDetailErrorProps {
   onRetry: () => void
 }
 
-export const BookDetailError = ({
-  message = 'Something went wrong while loading this book. Try again.',
-  onRetry,
-}: BookDetailErrorProps) => {
+export const BookDetailError = ({ message, onRetry }: BookDetailErrorProps) => {
+  const content = useIntlayer('discover-detail')
+  const shared = useIntlayer('shared')
+  const media = useMediaTypeLabel('BOOK')
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3 p-6">
       <Alert variant="destructive">
         <XCircle />
-        <AlertTitle>{message}</AlertTitle>
+        <AlertTitle>{message ?? content.loadingError({ media })}</AlertTitle>
       </Alert>
       <Button fullWidth variant="secondary" onClick={onRetry}>
-        Retry
+        {shared.retry.value}
       </Button>
       <Button fullWidth variant="outline" render={<Link to="/discover/book" />}>
-        Back to book search
+        {content.backToSearch({ media })}
       </Button>
     </div>
   )

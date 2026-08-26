@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { objectValues } from '~/common/utils/typedObject'
 
 interface RatingDistributionProps {
@@ -7,12 +9,13 @@ interface RatingDistributionProps {
 const RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const
 
 export const RatingDistribution = ({ distribution }: RatingDistributionProps) => {
+  const content = useIntlayer('rating-distribution')
   const maxCount = Math.max(...objectValues(distribution), 1)
 
   return (
     <section className="flex flex-col gap-8">
       <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">
-        Rating Distribution
+        {content.title.value}
       </h2>
 
       <div className="flex h-56 items-end gap-1.5 p-4 max-md:h-48">

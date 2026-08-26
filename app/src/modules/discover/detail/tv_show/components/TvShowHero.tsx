@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
@@ -24,6 +26,9 @@ const formatYears = (start: string, end: string, inProduction: boolean) => {
 
 export const TvShowHero = ({ show }: TvShowHeroProps) => {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
+  const shared = useIntlayer('shared')
+  const content = useIntlayer('discover-detail')
+  const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.TV_SHOW)
   const accent = mediaTypeMeta[MEDIA_TYPES.TV_SHOW].color
   const MediaTypeIcon = mediaTypeMeta.TV_SHOW.icon
   const showOriginal =
@@ -103,7 +108,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
 
         <div className="flex flex-1 flex-col gap-2.5">
           <span className="text-xs font-medium tracking-widest uppercase" style={{ color: accent }}>
-            Series
+            {typeLabel}
           </span>
 
           <div className="flex flex-col gap-1">
@@ -139,17 +144,9 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
                   ·
                 </span>
                 <span className="tabular-nums">
-                  {show.seasonCount > 0 && (
-                    <>
-                      {show.seasonCount} {show.seasonCount === 1 ? 'season' : 'seasons'}
-                    </>
-                  )}
+                  {show.seasonCount > 0 && content.seasonCount(show.seasonCount)}
                   {show.seasonCount > 0 && show.episodeCount > 0 && ' · '}
-                  {show.episodeCount > 0 && (
-                    <>
-                      {show.episodeCount} {show.episodeCount === 1 ? 'episode' : 'episodes'}
-                    </>
-                  )}
+                  {show.episodeCount > 0 && content.episodeCount(show.episodeCount)}
                 </span>
               </>
             )}
@@ -184,7 +181,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
                   onClick={() => setOverviewExpanded(true)}
                   className="text-foreground mt-1 cursor-pointer text-xs font-medium underline-offset-2 hover:underline"
                 >
-                  Show more
+                  {shared.showMore}
                 </button>
               )}
             </div>

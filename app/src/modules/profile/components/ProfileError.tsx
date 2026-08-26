@@ -1,4 +1,5 @@
 import { isHTTPError } from 'ky'
+import { useIntlayer } from 'react-intlayer'
 
 import { ErrorState } from '~/common/ui/ErrorState'
 
@@ -9,9 +10,16 @@ interface ProfileErrorProps {
 const isUserNotFound = (error: unknown) => isHTTPError(error) && error.response.status === 404
 
 export const ProfileError = ({ error }: ProfileErrorProps) => {
+  const content = useIntlayer('profile-error')
+
   if (isUserNotFound(error)) {
-    return <ErrorState title="User not found" description="This profile doesn't exist." />
+    return (
+      <ErrorState
+        title={content.userNotFound.value}
+        description={content.profileDoesNotExist.value}
+      />
+    )
   }
 
-  return <ErrorState title="Couldn't load profile" />
+  return <ErrorState title={content.unableToLoadProfile.value} />
 }

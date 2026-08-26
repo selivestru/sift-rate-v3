@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { ArrowLeft } from 'reicon-react'
 
 import { Button, type ButtonProps } from './Button'
@@ -8,6 +9,8 @@ type BackButtonProps = ButtonProps & {
 }
 
 export const BackButton = ({ children, render, ...props }: BackButtonProps) => {
+  const shared = useIntlayer('shared')
+
   return (
     <Button
       type="button"
@@ -17,7 +20,7 @@ export const BackButton = ({ children, render, ...props }: BackButtonProps) => {
       variant="secondary"
       {...props}
     >
-      {children ?? 'Back'}
+      {children ?? shared.back}
     </Button>
   )
 }

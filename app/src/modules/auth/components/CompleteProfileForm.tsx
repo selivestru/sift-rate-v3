@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
@@ -9,6 +10,8 @@ import { useCompleteProfileForm } from '../hooks/useCompleteProfileForm'
 
 export const CompleteProfileForm = () => {
   const { register, onSubmit, isLoading, errors, serverError } = useCompleteProfileForm()
+  const content = useIntlayer('complete-profile-form')
+  const shared = useIntlayer('shared')
 
   return (
     <div className="flex flex-col gap-6">
@@ -18,9 +21,9 @@ export const CompleteProfileForm = () => {
         </span>
 
         <div className="space-y-1.5">
-          <h1 className="text-2xl font-semibold tracking-tight">Complete your profile</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{content.title.value}</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            Choose how your name appears and pick a unique username.
+            {content.description.value}
           </p>
         </div>
       </div>
@@ -34,29 +37,29 @@ export const CompleteProfileForm = () => {
         )}
 
         <Field isInvalid={!!errors.displayName}>
-          <FieldLabel htmlFor="displayName">Display name</FieldLabel>
+          <FieldLabel htmlFor="displayName">{content.displayNameLabel.value}</FieldLabel>
           <Input
             id="displayName"
             autoComplete="nickname"
-            placeholder="Your name"
+            placeholder={content.displayNamePlaceholder.value}
             isInvalid={!!errors.displayName}
             {...register('displayName')}
           />
           {errors.displayName ? (
             <FieldError>{errors.displayName.message}</FieldError>
           ) : (
-            <FieldDescription>Use 2 to 50 characters.</FieldDescription>
+            <FieldDescription>{content.displayNameHint.value}</FieldDescription>
           )}
         </Field>
 
         <Field isInvalid={!!errors.username}>
-          <FieldLabel htmlFor="username">Username</FieldLabel>
+          <FieldLabel htmlFor="username">{content.usernameLabel.value}</FieldLabel>
           <Input
             id="username"
             autoComplete="username"
             autoCapitalize="off"
             spellCheck={false}
-            placeholder="Choose a username"
+            placeholder={content.usernamePlaceholder.value}
             isInvalid={!!errors.username}
             startIcon={<span className="text-muted-foreground text-sm font-medium">@</span>}
             {...register('username')}
@@ -64,14 +67,12 @@ export const CompleteProfileForm = () => {
           {errors.username ? (
             <FieldError>{errors.username.message}</FieldError>
           ) : (
-            <FieldDescription>
-              4–25 characters. Letters, numbers, and underscores only.
-            </FieldDescription>
+            <FieldDescription>{content.usernameHint.value}</FieldDescription>
           )}
         </Field>
 
         <Button type="submit" fullWidth isLoading={isLoading}>
-          {isLoading ? 'Saving…' : 'Save'}
+          {isLoading ? content.saving.value : shared.save.value}
         </Button>
       </form>
     </div>

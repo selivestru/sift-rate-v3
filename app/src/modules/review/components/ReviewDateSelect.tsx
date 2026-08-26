@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Calendar, ChevronDown, ChevronLeft, ChevronRight } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -6,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '~/common/ui/Popover'
 import { selectTriggerVariants } from '~/common/ui/Select'
 import { cn } from '~/common/utils/cn'
 
-import { formatReviewDateLabel, REVIEW_MIN_YEAR, reviewMonthNames } from '../utils/review-date'
+import { formatReviewDateLabel, REVIEW_MIN_YEAR, reviewMonthKeys } from '../utils/review-date'
 
 interface ReviewDateValue {
   year?: number
@@ -20,11 +21,13 @@ interface ReviewDateSelectProps {
 }
 
 export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProps) => {
+  const content = useIntlayer('review-date')
   const currentYear = new Date().getFullYear()
   const [open, setOpen] = useState(false)
   const [displayedYear, setDisplayedYear] = useState(year ?? currentYear)
 
   const isActive = year != null
+  const monthNames = reviewMonthKeys.map((key) => content.months[key].value)
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
@@ -52,7 +55,10 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
-      <PopoverTrigger aria-label="Filter by date" className={cn(selectTriggerVariants())}>
+      <PopoverTrigger
+        aria-label={content.filterByDate.value}
+        className={cn(selectTriggerVariants())}
+      >
         <span
           className={cn(
             'inline-flex flex-1 items-center gap-1.5 truncate text-left',
@@ -60,7 +66,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
           )}
         >
           <Calendar />
-          {formatReviewDateLabel(year, month)}
+          {formatReviewDateLabel(year, month, monthNames, content.anyDate.value)}
         </span>
         <span className="text-muted-foreground inline-flex shrink-0">
           <ChevronDown />
@@ -73,7 +79,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
               isIconOnly
               variant="ghost"
               size="sm"
-              aria-label="Previous year"
+              aria-label={content.previousYear.value}
               isDisabled={displayedYear <= REVIEW_MIN_YEAR}
               onClick={() => setDisplayedYear((value) => Math.max(REVIEW_MIN_YEAR, value - 1))}
             >
@@ -81,7 +87,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
             </Button>
             <button
               type="button"
-              aria-label={`Show all of ${displayedYear}`}
+              aria-label={content.showAllYear({ year: displayedYear })}
               onClick={handleYearOnly}
               className={cn(
                 'rounded-md px-3 py-1.5 text-sm font-semibold tabular-nums transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40',
@@ -94,7 +100,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
               isIconOnly
               variant="ghost"
               size="sm"
-              aria-label="Next year"
+              aria-label={content.nextYear.value}
               isDisabled={displayedYear >= currentYear}
               onClick={() => setDisplayedYear((value) => Math.min(currentYear, value + 1))}
             >
@@ -103,7 +109,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
           </div>
 
           <div className="grid grid-cols-3 gap-1">
-            {reviewMonthNames.map((name, index) => {
+            {monthNames.map((name, index) => {
               const monthValue = index + 1
               const isSelected = year === displayedYear && month === monthValue
 
@@ -126,7 +132,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
           </div>
 
           <Button variant="ghost" size="sm" fullWidth onClick={handleClear}>
-            Any date
+            {content.anyDate.value}
           </Button>
         </div>
       </PopoverContent>

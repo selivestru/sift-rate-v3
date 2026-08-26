@@ -1,6 +1,10 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { cn } from '~/common/utils/cn'
 
 export const Spinner = ({ className, ...props }: React.ComponentProps<'svg'>) => {
+  const shared = useIntlayer('shared')
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +18,7 @@ export const Spinner = ({ className, ...props }: React.ComponentProps<'svg'>) =>
       strokeLinejoin="round"
       data-slot="spinner"
       role="status"
-      aria-label="Loading"
+      aria-label={shared.loading.value}
       className={cn('size-4 animate-spin', className)}
       {...props}
     >

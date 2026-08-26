@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { toastApiError } from '~/common/api'
 import type { MediaType } from '~/common/constants/media-type'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
@@ -28,6 +30,8 @@ export const DeleteReviewDialog = ({
   mediaType,
   children,
 }: DeleteReviewDialogProps) => {
+  const content = useIntlayer('delete-review-dialog')
+  const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
 
   const mutation = useDeleteReviewMutation()
@@ -47,19 +51,19 @@ export const DeleteReviewDialog = ({
       <AlertDialog open={opened} onOpenChange={close}>
         <AlertDialogContent className={cn(mutation.isPending && 'pointer-events-none')}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete review?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your review for this title will be permanently removed.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{content.title.value}</AlertDialogTitle>
+            <AlertDialogDescription>{content.description.value}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={mutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={mutation.isPending}>
+              {shared.cancel.value}
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleDelete}
               isLoading={mutation.isPending}
             >
-              Delete
+              {shared.delete.value}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

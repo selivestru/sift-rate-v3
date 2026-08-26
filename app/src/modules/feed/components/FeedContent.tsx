@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 
 import { Button } from '~/common/ui/Button'
 
@@ -8,6 +9,7 @@ interface FeedContentProps {
 }
 
 export const FeedContent = ({ content, maxLength = 280 }: FeedContentProps) => {
+  const shared = useIntlayer('shared')
   const [expanded, setExpanded] = useState(false)
   const isLong = content.length > maxLength
   const visible = expanded || !isLong ? content : `${content.slice(0, maxLength)}…`
@@ -23,7 +25,7 @@ export const FeedContent = ({ content, maxLength = 280 }: FeedContentProps) => {
           onClick={() => setExpanded(true)}
           className="text-muted-foreground hover:text-primary -ml-2 h-auto px-2 py-0.5"
         >
-          Show more
+          {shared.showMore.value}
         </Button>
       )}
     </blockquote>

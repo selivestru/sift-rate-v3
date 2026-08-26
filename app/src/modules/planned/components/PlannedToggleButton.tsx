@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Bookmark } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
@@ -15,6 +16,7 @@ interface PlannedToggleButtonProps {
 }
 
 export const PlannedToggleButton = ({ id, ...props }: PlannedToggleButtonProps) => {
+  const content = useIntlayer('planned')
   const addMutation = useAddToPlannedList()
   const deleteMutation = useDeletePlannedItem()
 
@@ -39,9 +41,9 @@ export const PlannedToggleButton = ({ id, ...props }: PlannedToggleButtonProps) 
       isLoading={isLoading}
       startIcon={<Bookmark className={cn(isPlanned && 'fill-current')} aria-hidden />}
       onClick={handleToggle}
-      aria-label={isPlanned ? 'Remove from planned' : 'Add to planned'}
+      aria-label={isPlanned ? content.removeFromPlanned.value : content.addToPlanned.value}
     >
-      {isPlanned ? 'Planned' : 'Plan'}
+      {isPlanned ? content.planned.value : content.plan.value}
     </Button>
   )
 }

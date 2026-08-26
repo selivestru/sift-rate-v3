@@ -1,9 +1,12 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronLeft } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
 
 export const SettingsBackLink = () => {
+  const shared = useIntlayer('shared')
+
   return (
     <Link
       to="/"
@@ -14,7 +17,7 @@ export const SettingsBackLink = () => {
       )}
     >
       <ChevronLeft className="size-5 shrink-0" />
-      <span className="flex-1">Back</span>
+      <span className="flex-1">{shared.back}</span>
     </Link>
   )
 }

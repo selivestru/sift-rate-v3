@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronRight } from 'reicon-react'
 
 import {
@@ -7,17 +8,20 @@ import {
   type MediaTypeSlug,
 } from '~/common/constants/media-type'
 import { discoverChildren, discoverNav } from '~/common/constants/navigation'
+import { useNavLabels } from '~/common/i18n'
 import { PageHeader } from '~/common/ui/PageHeader'
 import { cn } from '~/common/utils/cn'
 
 export const DiscoverPage = () => {
+  const content = useIntlayer('discover-page')
+  const navLabels = useNavLabels()
   return (
     <div className="flex flex-col gap-6 p-4 sm:gap-8 sm:p-6">
       <PageHeader
         icon={discoverNav.icon}
-        label={discoverNav.label}
-        title="Explore the catalog"
-        description="Pick a medium and start searching. Six doors into one endless library."
+        label={navLabels['/discover'].label}
+        title={content.title.value}
+        description={content.description.value}
       />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3">
@@ -52,8 +56,12 @@ export const DiscoverPage = () => {
               </div>
 
               <div className="relative mt-8 space-y-1">
-                <p className="text-lg font-semibold tracking-tight">{meta.label}</p>
-                <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+                <p className="text-lg font-semibold tracking-tight">
+                  {navLabels[item.to as keyof typeof navLabels].label}
+                </p>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {navLabels[item.to as keyof typeof navLabels].description}
+                </p>
               </div>
             </Link>
           )
@@ -62,7 +70,7 @@ export const DiscoverPage = () => {
 
       <div>
         <p className="text-muted-foreground border-border border-t pt-4 text-xs leading-relaxed">
-          Discover is for finding something new. Your ratings and lists live in Library.
+          {content.footer.value}
         </p>
       </div>
     </div>

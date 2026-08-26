@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useIntlayer } from 'react-intlayer'
 import { toast } from 'sonner'
 
 import { getApiError } from '~/common/api'
@@ -12,6 +13,7 @@ import { changeDisplayNameSchema, type ChangeDisplayNameInput } from '../schema/
 import { useChangeDisplayNameMutation } from './useChangeDisplayNameMutation'
 
 export const useChangeDisplayNameForm = () => {
+  const content = useIntlayer('user-change-display-name-form')
   const mutation = useChangeDisplayNameMutation()
   const currentDisplayName = useAuthStore((state) => state.user?.displayName)
   const setDisplayName = useAuthStore((state) => state.setDisplayName)
@@ -37,7 +39,7 @@ export const useChangeDisplayNameForm = () => {
     if (currentDisplayName === data.displayName) {
       setError('displayName', {
         type: 'manual',
-        message: 'Display name cannot be the same',
+        message: content.same.value,
       })
       return
     }
@@ -47,7 +49,7 @@ export const useChangeDisplayNameForm = () => {
     try {
       const response = await mutation.mutateAsync(data.displayName)
       setDisplayName(response.displayName)
-      toast.success('Display name updated')
+      toast.success(content.updated.value)
       reset()
     } catch (error) {
       const apiError = await getApiError(error)

@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { FactsPanel } from '../../shared'
 import type { BookDetail } from '../types/book-detail.types'
 import { formatPublished } from '../utils/format-published'
@@ -17,63 +19,64 @@ const ChipList = ({ items }: { items: string[] }) => (
 )
 
 export const BookFacts = ({ book }: BookFactsProps) => {
+  const content = useIntlayer('discover-detail')
   const facts: { label: string; value: React.ReactNode }[] = []
 
   if (book.authors.length > 0) {
-    facts.push({ label: 'Authors', value: book.authors.join(', ') })
+    facts.push({ label: content.authors.value, value: book.authors.join(', ') })
   }
 
   if (book.publisher) {
-    facts.push({ label: 'Publisher', value: book.publisher })
+    facts.push({ label: content.publisher.value, value: book.publisher })
   }
 
   const published = formatPublished(book.publishedDate, book.year)
   if (published) {
-    facts.push({ label: 'Published', value: published })
+    facts.push({ label: content.published.value, value: published })
   }
 
   if (book.pageCount != null) {
     facts.push({
-      label: 'Pages',
+      label: content.pages.value,
       value: <span className="tabular-nums">{book.pageCount}</span>,
     })
   }
 
   if (book.language) {
-    facts.push({ label: 'Language', value: book.language })
+    facts.push({ label: content.language.value, value: book.language })
   }
 
   if (book.printType && book.printType !== 'BOOK') {
-    facts.push({ label: 'Type', value: book.printType })
+    facts.push({ label: content.type.value, value: book.printType })
   }
 
   if (book.isbn13) {
     facts.push({
-      label: 'ISBN-13',
+      label: content.isbn13.value,
       value: <span className="tracking-wide tabular-nums">{book.isbn13}</span>,
     })
   }
 
   if (book.isbn10) {
     facts.push({
-      label: 'ISBN-10',
+      label: content.isbn10.value,
       value: <span className="tracking-wide tabular-nums">{book.isbn10}</span>,
     })
   }
 
   if (book.mainCategory) {
-    facts.push({ label: 'Main category', value: book.mainCategory })
+    facts.push({ label: content.mainCategory.value, value: book.mainCategory })
   }
 
   if (book.categories.length > 0) {
     facts.push({
-      label: 'Categories',
+      label: content.categories.value,
       value: <ChipList items={book.categories.slice(0, 8)} />,
     })
   }
 
   if (book.isEbook) {
-    facts.push({ label: 'Format', value: 'eBook available' })
+    facts.push({ label: content.format.value, value: content.ebookAvailable.value })
   }
 
   if (facts.length === 0) return null
@@ -81,7 +84,7 @@ export const BookFacts = ({ book }: BookFactsProps) => {
   return (
     <section className="" aria-labelledby="book-facts-heading">
       <h2 id="book-facts-heading" className="text-foreground mb-3 text-lg font-semibold">
-        Book info
+        {content.bookInfo.value}
       </h2>
       <FactsPanel facts={facts} />
     </section>

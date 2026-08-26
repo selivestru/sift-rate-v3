@@ -1,6 +1,8 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
 import { formatDuration } from '~/common/utils/formatDuration'
@@ -14,6 +16,8 @@ interface TrackHeroProps {
 }
 
 export const TrackHero = ({ track }: TrackHeroProps) => {
+  const content = useIntlayer('discover-detail')
+  const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.TRACK)
   const accent = mediaTypeMeta[MEDIA_TYPES.TRACK].color
   const MediaTypeIcon = mediaTypeMeta.TRACK.icon
   const backdropUrl = track.coverUrl
@@ -85,10 +89,12 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
                   className="text-[10px] font-semibold tracking-[0.2em] uppercase"
                   style={{ color: accent }}
                 >
-                  Track
+                  {typeLabel}
                 </span>
                 {track.explicit && (
-                  <Badge className="h-5 px-1.5 text-[10px] uppercase">Explicit</Badge>
+                  <Badge className="h-5 px-1.5 text-[10px] uppercase">
+                    {content.explicit.value}
+                  </Badge>
                 )}
               </div>
 
@@ -100,7 +106,7 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
 
               {track.album && (
                 <p className="truncate text-sm text-pretty">
-                  <span className="text-muted-foreground">from </span>
+                  <span className="text-muted-foreground">{content.from.value} </span>
                   <Link
                     to="/discover/album/$externalId"
                     params={{ externalId: track.album.id }}

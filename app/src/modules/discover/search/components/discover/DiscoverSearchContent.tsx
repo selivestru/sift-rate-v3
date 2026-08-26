@@ -1,4 +1,4 @@
-import { mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeLabel } from '~/common/i18n'
 import { cn } from '~/common/utils/cn'
 
 import type { DiscoverSearchConfig } from '../../types/discover-search.types'
@@ -34,7 +34,7 @@ export const DiscoverSearchContent = <T,>({
   const skeletonCount = config.skeletonCount
   const Card = config.Card
   const Skeleton = config.Skeleton
-  const mediaLabel = mediaTypeMeta[config.mediaType].label
+  const mediaLabel = useMediaTypeLabel(config.mediaType)
 
   let state: ContentState = 'idle'
 

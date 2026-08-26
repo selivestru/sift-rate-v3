@@ -11,3 +11,4 @@ coverage
 docker/minio.license
 backups/
 .slim/deepwork/
+.intlayer

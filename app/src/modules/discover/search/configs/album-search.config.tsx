@@ -7,9 +7,6 @@ import type { AlbumSearchItem, DiscoverSearchConfig } from '../types/discover-se
 
 export const albumSearchConfig: DiscoverSearchConfig<AlbumSearchItem> = {
   mediaType: MEDIA_TYPES.ALBUM,
-  title: 'Find albums',
-  description: 'Search full listens to keep in your life.',
-  searchPlaceholder: 'Search albums…',
   skeletonCount: 9,
   pageSize: 9,
   resultsClassName: 'grid grid-cols-2 gap-3 sm:grid-cols-3',

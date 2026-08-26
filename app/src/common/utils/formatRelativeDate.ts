@@ -1,20 +1,23 @@
+import { getCurrentLocale, getLocalizedContent } from '~/common/i18n'
+
 export const formatRelativeDate = (iso: string) => {
   const date = new Date(iso)
   const diffMs = Date.now() - date.getTime()
   const dayMs = 86_400_000
   const days = Math.floor(diffMs / dayMs)
+  const content = getLocalizedContent('formatters')
 
   if (days <= 0) {
-    return 'today'
+    return content.today
   }
   if (days === 1) {
-    return 'yesterday'
+    return content.yesterday
   }
   if (days < 30) {
-    return `${days} days ago`
+    return String(content.daysAgo({ count: String(days) }))
   }
 
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(getCurrentLocale(), {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

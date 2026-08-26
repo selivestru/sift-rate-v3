@@ -1,8 +1,9 @@
+import { getCurrentLocale } from '~/common/i18n'
 import { formatDate } from '~/common/utils/formatDate'
 
 const formatMonthYear = (year: number, monthIndex: number) => {
   const date = new Date(Date.UTC(year, monthIndex, 1))
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(getCurrentLocale(), {
     month: 'short',
     year: 'numeric',
     timeZone: 'UTC',

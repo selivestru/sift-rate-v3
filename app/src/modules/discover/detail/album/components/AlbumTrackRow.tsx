@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronRight } from 'reicon-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
@@ -15,6 +16,7 @@ interface AlbumTrackRowProps {
 }
 
 export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) => {
+  const content = useIntlayer('discover-detail')
   const trackNumber = String(track.trackPosition ?? index + 1).padStart(2, '0')
   const MediaTypeIcon = mediaTypeMeta.ALBUM.icon
 
@@ -57,7 +59,9 @@ export const AlbumTrackRow = ({ track, index, coverUrl }: AlbumTrackRowProps) =>
         </span>
         <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
           <span className="tabular-nums">{formatDuration(track.duration)}</span>
-          {track.explicit && <Badge className="h-4 px-1 text-[9px] uppercase">E</Badge>}
+          {track.explicit && (
+            <Badge className="h-4 px-1 text-[9px] uppercase">{content.explicit.value}</Badge>
+          )}
         </span>
       </div>
 

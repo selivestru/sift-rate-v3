@@ -10,5 +10,5 @@ interface TvShowSimilarProps {
 export const TvShowSimilar = ({ items }: TvShowSimilarProps) => {
   if (items.length === 0) return null
 
-  return <SimilarRow title="You might also like" mediaType={MEDIA_TYPES.TV_SHOW} items={items} />
+  return <SimilarRow mediaType={MEDIA_TYPES.TV_SHOW} items={items} />
 }

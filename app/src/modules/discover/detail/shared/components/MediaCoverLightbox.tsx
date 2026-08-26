@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 
 import { Lightbox } from '~/common/ui/Lightbox'
 import { cn } from '~/common/utils/cn'
@@ -26,6 +27,7 @@ export const MediaCoverLightbox = ({
   priority = false,
   label,
 }: MediaCoverLightboxProps) => {
+  const content = useIntlayer('discover-detail')
   const [open, setOpen] = useState(false)
 
   if (!src) {
@@ -42,7 +44,7 @@ export const MediaCoverLightbox = ({
           'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset focus-visible:outline-none',
           className,
         )}
-        aria-label={`View cover of ${alt}`}
+        aria-label={content.viewCover({ title: alt })}
       >
         <img
           src={src}

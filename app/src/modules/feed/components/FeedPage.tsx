@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useIntlayer } from 'react-intlayer'
 
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
 import { EmptyState } from '~/common/ui/EmptyState'
@@ -24,6 +25,8 @@ export const FeedPage = () => {
 }
 
 const FeedList = () => {
+  const shared = useIntlayer('shared')
+  const content = useIntlayer('feed')
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useGetFeedQuery()
 
   const items = data.pages.flatMap((page) => page.data)
@@ -36,10 +39,7 @@ const FeedList = () => {
 
   if (isEmpty) {
     return (
-      <EmptyState
-        title="No reviews yet"
-        description="Ratings and reviews from across SiftRate will show up here."
-      />
+      <EmptyState title={shared.noReviewsYet.value} description={content.emptyDescription.value} />
     )
   }
 

@@ -1,4 +1,5 @@
 import { useLocation } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { Menu } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -10,6 +11,7 @@ import { Navigation } from './Navigation'
 export const NavDrawer = () => {
   const pathname = useLocation({ select: (location) => location.pathname })
   const isSettings = pathname.startsWith('/settings')
+  const shared = useIntlayer('shared')
 
   return (
     <Drawer>
@@ -18,7 +20,7 @@ export const NavDrawer = () => {
           <Button
             isIconOnly
             variant="secondary"
-            aria-label="Open menu"
+            aria-label={shared.openMenu.value}
             className="hidden max-md:flex"
           >
             <Menu />
@@ -29,7 +31,7 @@ export const NavDrawer = () => {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>{isSettings ? 'Settings' : 'Menu'}</DrawerTitle>
+          <DrawerTitle>{isSettings ? shared.settings : shared.menu}</DrawerTitle>
         </DrawerHeader>
         <div className="flex flex-col gap-1 p-4">
           {isSettings ? (

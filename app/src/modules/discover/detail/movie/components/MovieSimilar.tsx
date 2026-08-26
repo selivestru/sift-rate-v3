@@ -10,5 +10,5 @@ interface MovieSimilarProps {
 export const MovieSimilar = ({ items }: MovieSimilarProps) => {
   if (items.length === 0) return null
 
-  return <SimilarRow title="You might also like" mediaType={MEDIA_TYPES.MOVIE} items={items} />
+  return <SimilarRow mediaType={MEDIA_TYPES.MOVIE} items={items} />
 }

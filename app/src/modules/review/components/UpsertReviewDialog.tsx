@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form'
+import { useIntlayer } from 'react-intlayer'
 import { Star, XCircle } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
@@ -21,6 +22,8 @@ interface UpsertReviewDialogProps {
 }
 
 export const UpsertReviewDialog = ({ initialData, media, children }: UpsertReviewDialogProps) => {
+  const content = useIntlayer('upsert-review-dialog')
+  const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
 
   const { onSubmit, control, reset, isLoading, serverError } = useUpsertReviewForm(
@@ -77,13 +80,13 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                       </span>
                     </div>
                     <span className="text-muted-foreground text-xs">
-                      {field.value == null ? 'Pick a score' : 'Tap to change'}
+                      {field.value == null ? content.pickScore.value : content.tapToChange.value}
                     </span>
                   </div>
 
                   <div
                     role="group"
-                    aria-label="Rating from 1 to 10"
+                    aria-label={content.ratingAria.value}
                     className="flex w-full gap-1.5"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => {
@@ -104,7 +107,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                                 : 'bg-muted hover:bg-muted',
                           )}
                           aria-pressed={isSelected}
-                          aria-label={`Rate ${value} out of 10`}
+                          aria-label={content.rateAria({ value })}
                         >
                           <Star
                             weight={isSelected || isFilled ? 'Filled' : 'Outline'}
@@ -128,7 +131,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
               render={({ field, fieldState }) => (
                 <Field className="bg-muted ring-border flex flex-col gap-4 rounded-2xl p-4 ring-1">
                   <div className="flex items-center justify-between gap-2">
-                    <FieldLabel htmlFor="review-content">Review (optional)</FieldLabel>
+                    <FieldLabel htmlFor="review-content">{content.reviewOptional.value}</FieldLabel>
                     <span
                       className={cn(
                         'text-xs tabular-nums',
@@ -146,7 +149,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                     value={field.value}
                     onChange={(e) => field.onChange(e.target.value)}
                     onBlur={field.onBlur}
-                    placeholder="What stayed with you?"
+                    placeholder={content.placeholder.value}
                     maxLength={CONTENT_MAX_LENGTH}
                     className="border-border h-50 scrollbar-none break-all"
                   />
@@ -156,10 +159,10 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
             />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
+                {shared.cancel.value}
               </Button>
               <Button type="submit" isLoading={isLoading}>
-                Save rating
+                {content.saveRating.value}
               </Button>
             </DialogFooter>
           </form>

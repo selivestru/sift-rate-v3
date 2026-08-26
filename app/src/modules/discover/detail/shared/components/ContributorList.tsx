@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { User } from 'reicon-react'
 
 import type { MusicContributor } from '../types/music-rail.types'
@@ -7,12 +8,13 @@ interface ContributorListProps {
 }
 
 export const ContributorList = ({ contributors }: ContributorListProps) => {
+  const content = useIntlayer('discover-detail')
   if (contributors.length === 0) return null
 
   return (
     <section className="flex flex-col gap-4" aria-labelledby="credits-heading">
       <h2 id="credits-heading" className="text-foreground text-lg font-semibold">
-        Credits
+        {content.credits.value}
       </h2>
 
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">

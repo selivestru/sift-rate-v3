@@ -1,6 +1,7 @@
 import { Suspense, useState } from 'react'
 import { ActivityCalendar } from 'react-activity-calendar'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useIntlayer } from 'react-intlayer'
 
 import 'react-activity-calendar/tooltips.css'
 
@@ -9,7 +10,7 @@ import { ErrorState } from '~/common/ui/ErrorState'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/common/ui/Select'
 import { cn } from '~/common/utils/cn'
 
-import { calendarTheme, MONTH_LABELS, WEEKDAY_LABELS } from '../constants/profile-constans'
+import { calendarTheme, useProfileCalendarLabels } from '../constants/profile-constans'
 import { useGetUserActivityQuery } from '../hooks/useGetUserActivityQuery'
 import { formatActivityDate } from '../utils/formatActivityDate'
 import { getUserActivityData, getUserActivityYears } from '../utils/user-activity'
@@ -20,12 +21,14 @@ interface UserActivityProps {
 }
 
 export const UserActivity = ({ username }: UserActivityProps) => {
+  const content = useIntlayer('user-activity')
+
   return (
     <ErrorBoundary
       fallback={
         <ErrorState
-          title="Unable to load activity"
-          description="We couldn't load this user's activity. Please try again later."
+          title={content.unableToLoadActivity.value}
+          description={content.activityLoadDescription.value}
           className="border-b-border border-b"
         />
       }
@@ -39,6 +42,8 @@ export const UserActivity = ({ username }: UserActivityProps) => {
 
 const UserActivityContent = ({ username }: UserActivityProps) => {
   const { resolvedTheme } = useTheme()
+  const content = useIntlayer('user-activity')
+  const { MONTH_LABELS, WEEKDAY_LABELS } = useProfileCalendarLabels()
 
   const { data: activity } = useGetUserActivityQuery(username)
 
@@ -53,7 +58,7 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
   return (
     <section>
       <div className="border-b-border flex items-center justify-between gap-3 border-b p-4">
-        <h2 className="text-lg font-semibold tracking-tight">User Activity</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{content.title.value}</h2>
 
         <Select
           disabled={years.length === 1}
@@ -67,7 +72,7 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
             variant="outline"
             size="sm"
             className="w-auto min-w-22"
-            aria-label="Select year"
+            aria-label={content.selectYear.value}
           >
             <SelectValue />
           </SelectTrigger>
@@ -98,9 +103,9 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
           colorScheme={resolvedTheme}
           fontSize={12}
           labels={{
-            legend: { less: 'Less', more: 'More' },
+            legend: { less: content.less.value, more: content.more.value },
             months: MONTH_LABELS,
-            totalCount: '{{count}} reviews in {{year}}',
+            totalCount: String(content.totalCount({ count: '{{count}}', year: '{{year}}' })),
             weekdays: WEEKDAY_LABELS,
           }}
           showWeekdayLabels={isEmpty ? [] : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']}
@@ -108,7 +113,14 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
           tooltips={{
             activity: {
               text: (item) =>
-                `${item.count} ${item.count === 1 ? 'review' : 'reviews'} on ${formatActivityDate(item.date)}`,
+                String(
+                  (item.count === 1
+                    ? content.activityTooltipSingular
+                    : content.activityTooltipPlural)({
+                    count: String(item.count),
+                    date: formatActivityDate(item.date),
+                  }),
+                ),
               withArrow: true,
               hoverRestMs: 50,
             },
@@ -118,7 +130,7 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
 
         {isEmpty && (
           <div className="absolute inset-0 flex items-center justify-center p-4">
-            <p className="text-sm font-medium">No activity yet</p>
+            <p className="text-sm font-medium">{content.noActivityYet.value}</p>
           </div>
         )}
       </div>

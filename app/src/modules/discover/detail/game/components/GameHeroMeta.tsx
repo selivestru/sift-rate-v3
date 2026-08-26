@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -15,6 +16,8 @@ const GENRE_PREVIEW = 4
 const PLATFORM_PREVIEW = 8
 
 export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
+  const content = useIntlayer('discover-detail')
+  const shared = useIntlayer('shared')
   const [summaryExpanded, setSummaryExpanded] = useState(false)
   const summaryLong = game.summary.length > 200
   const genrePreview = game.genres.slice(0, GENRE_PREVIEW)
@@ -31,7 +34,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
             {game.developers.length > 0 && (
               <div className="">
                 <p className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase">
-                  Developer
+                  {content.developerLabel.value}
                 </p>
                 <p className="text-foreground text-sm text-pretty">
                   {game.developers.slice(0, 2).join(', ')}
@@ -41,7 +44,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
             {game.publishers.length > 0 && (
               <div className="">
                 <p className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase">
-                  Publisher
+                  {content.publisher.value}
                 </p>
                 <p className="text-foreground text-sm text-pretty">
                   {game.publishers.slice(0, 2).join(', ')}
@@ -103,7 +106,7 @@ export const GameHeroMeta = ({ game }: GameHeroMetaProps) => {
                 onClick={() => setSummaryExpanded(true)}
                 className="text-foreground mt-1 cursor-pointer text-xs font-medium underline-offset-2 hover:underline"
               >
-                Show more
+                {shared.showMore.value}
               </button>
             )}
           </div>

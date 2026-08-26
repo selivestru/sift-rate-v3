@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { FileText, Upload, X } from 'reicon-react'
 
+import { getCurrentLocale } from '~/common/i18n'
 import { Alert, AlertDescription } from '~/common/ui/Alert'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
@@ -18,29 +20,28 @@ type ImdbImportUploadProps = {
   onUpload: (file: File) => void
 }
 
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024 * 1024) {
-    return `${Math.max(1, Math.round(bytes / 1024))} KB`
-  }
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-const validateFile = (file: File): string | null => {
-  const isCsv = file.name.toLowerCase().endsWith('.csv') || file.type === 'text/csv'
-  if (!isCsv) {
-    return 'Only CSV files are accepted. Export your ratings from IMDb as a CSV file.'
-  }
-  if (file.size > IMDB_IMPORT_MAX_FILE_BYTES) {
-    return `This file is ${formatFileSize(file.size)}. The maximum size is ${MAX_FILE_MB} MB.`
-  }
-  return null
-}
-
 export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProps) => {
+  const content = useIntlayer('imdb-import-upload')
   const inputRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024 * 1024) {
+      return content.fileSizeKb({ size: Math.max(1, Math.round(bytes / 1024)) }).value
+    }
+    return content.fileSizeMb({ size: (bytes / (1024 * 1024)).toFixed(1) }).value
+  }
+
+  const validateFile = (next: File): string | null => {
+    const isCsv = next.name.toLowerCase().endsWith('.csv') || next.type === 'text/csv'
+    if (!isCsv) return content.onlyCsv.value
+    if (next.size > IMDB_IMPORT_MAX_FILE_BYTES) {
+      return content.fileTooLarge({ size: formatFileSize(next.size), maxSize: MAX_FILE_MB }).value
+    }
+    return null
+  }
 
   const selectFile = (next: File | null) => {
     if (!next) return
@@ -77,7 +78,7 @@ export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProp
     <div className="flex flex-col gap-4">
       <div
         role="group"
-        aria-label="IMDb ratings CSV dropzone"
+        aria-label={content.dropzoneLabel.value}
         onDragOver={(event) => {
           event.preventDefault()
           if (!isUploading) setIsDragging(true)
@@ -93,9 +94,14 @@ export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProp
           <Upload className="size-5" aria-hidden />
         </span>
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium">Drop your ratings CSV here</p>
+          <p className="text-sm font-medium">{content.dropTitle.value}</p>
           <p className="text-muted-foreground text-xs leading-relaxed">
-            CSV up to {MAX_FILE_MB} MB, at most {IMDB_IMPORT_MAX_ROWS.toLocaleString('en-US')} rows
+            {
+              content.dropDescription({
+                size: MAX_FILE_MB,
+                rows: IMDB_IMPORT_MAX_ROWS.toLocaleString(getCurrentLocale()),
+              }).value
+            }
           </p>
         </div>
         <Button
@@ -105,14 +111,14 @@ export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProp
           onClick={() => inputRef.current?.click()}
           isDisabled={isUploading}
         >
-          Choose file
+          {content.chooseFile.value}
         </Button>
         <input
           ref={inputRef}
           type="file"
           accept={IMDB_IMPORT_ACCEPT}
           className="sr-only"
-          aria-label="Choose IMDb ratings CSV file"
+          aria-label={content.chooseFileAria.value}
           onChange={handleInputChange}
         />
       </div>
@@ -137,7 +143,7 @@ export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProp
             variant="ghost"
             size="sm"
             isIconOnly
-            aria-label="Remove selected file"
+            aria-label={content.removeSelectedFile.value}
             onClick={handleClear}
             isDisabled={isUploading}
           >
@@ -154,7 +160,7 @@ export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProp
         startIcon={<Upload aria-hidden />}
         onClick={() => file && onUpload(file)}
       >
-        Start import
+        {content.startImport.value}
       </Button>
     </div>
   )

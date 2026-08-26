@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { formatDate } from '~/common/utils/formatDate'
 
 import { FactsPanel } from '../../shared'
@@ -25,47 +27,48 @@ const joinOrNull = (items: string[], limit = 8) => {
 }
 
 export const GameFacts = ({ game }: GameFactsProps) => {
+  const content = useIntlayer('discover-detail')
   const facts: { label: string; value: React.ReactNode }[] = []
 
   if (game.developers.length > 0) {
-    facts.push({ label: 'Developer', value: game.developers.join(', ') })
+    facts.push({ label: content.developerLabel.value, value: game.developers.join(', ') })
   }
 
   if (game.publishers.length > 0) {
-    facts.push({ label: 'Publisher', value: game.publishers.join(', ') })
+    facts.push({ label: content.publisher.value, value: game.publishers.join(', ') })
   }
 
   if (game.engines.length > 0) {
-    facts.push({ label: 'Engine', value: game.engines.join(', ') })
+    facts.push({ label: content.engine.value, value: game.engines.join(', ') })
   }
 
   if (game.releaseDate) {
-    facts.push({ label: 'Released', value: formatDate(game.releaseDate) })
+    facts.push({ label: content.released.value, value: formatDate(game.releaseDate) })
   }
 
   if (game.ageRatings.length > 0) {
-    facts.push({ label: 'Age rating', value: <ChipList items={game.ageRatings} /> })
+    facts.push({ label: content.ageRating.value, value: <ChipList items={game.ageRatings} /> })
   }
 
   if (game.genres.length > 0) {
-    facts.push({ label: 'Genres', value: <ChipList items={game.genres} /> })
+    facts.push({ label: content.genres.value, value: <ChipList items={game.genres} /> })
   }
 
   if (game.themes.length > 0) {
-    facts.push({ label: 'Themes', value: <ChipList items={game.themes.slice(0, 8)} /> })
+    facts.push({ label: content.themes.value, value: <ChipList items={game.themes.slice(0, 8)} /> })
   }
 
   if (game.gameModes.length > 0) {
-    facts.push({ label: 'Game modes', value: game.gameModes.join(', ') })
+    facts.push({ label: content.gameModes.value, value: game.gameModes.join(', ') })
   }
 
   if (game.playerPerspectives.length > 0) {
-    facts.push({ label: 'Perspective', value: game.playerPerspectives.join(', ') })
+    facts.push({ label: content.perspective.value, value: game.playerPerspectives.join(', ') })
   }
 
   if (game.platforms.length > 0) {
     facts.push({
-      label: 'Platforms',
+      label: content.platforms.value,
       value: joinOrNull(
         game.platforms.map((p) => p.name),
         10,
@@ -75,22 +78,22 @@ export const GameFacts = ({ game }: GameFactsProps) => {
 
   if (game.languages.length > 0) {
     facts.push({
-      label: 'Languages',
+      label: content.languages.value,
       value: joinOrNull(game.languages, 12),
     })
   }
 
   if (game.franchises.length > 0) {
-    facts.push({ label: 'Franchise', value: game.franchises.join(', ') })
+    facts.push({ label: content.franchise.value, value: game.franchises.join(', ') })
   }
 
   if (game.collections.length > 0) {
-    facts.push({ label: 'Collection', value: game.collections.join(', ') })
+    facts.push({ label: content.collection.value, value: game.collections.join(', ') })
   }
 
   if (game.storyline) {
     facts.push({
-      label: 'Storyline',
+      label: content.storyline.value,
       value: <span className="text-left text-pretty">{game.storyline}</span>,
     })
   }
@@ -100,7 +103,7 @@ export const GameFacts = ({ game }: GameFactsProps) => {
   return (
     <section className="" aria-labelledby="game-facts-heading">
       <h2 id="game-facts-heading" className="text-foreground mb-3 text-lg font-semibold">
-        Game info
+        {content.gameInfo.value}
       </h2>
       <FactsPanel facts={facts} />
     </section>

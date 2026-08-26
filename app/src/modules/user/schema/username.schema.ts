@@ -1,14 +1,16 @@
 import { z } from 'zod'
 
+import { getLocalizedContent } from '~/common/i18n'
+
 const USERNAME_REGEX = /^[a-z0-9_]+$/
 
 export const usernameSchema = z
   .string()
   .trim()
   .toLowerCase()
-  .min(4, 'Username must be at least 4 characters')
-  .max(25, 'Username must be at most 25 characters')
-  .regex(USERNAME_REGEX, 'Username can only contain letters, numbers, and underscores')
+  .min(4, { error: () => getLocalizedContent('username-schema').min })
+  .max(25, { error: () => getLocalizedContent('username-schema').max })
+  .regex(USERNAME_REGEX, { error: () => getLocalizedContent('username-schema').pattern })
 
 export const changeUsernameSchema = z.object({
   username: usernameSchema,

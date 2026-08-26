@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Plus, Search, Star } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
@@ -30,6 +31,8 @@ interface AddRankedItemDialogProps {
 }
 
 export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps) => {
+  const content = useIntlayer('add-ranked-item-dialog')
+  const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
   const [query, setQuery] = useState('')
   const debouncedQ = useDebouncedValue(query, 300)
@@ -99,31 +102,29 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
           className="flex h-[min(52rem,92dvh)] max-h-[min(52rem,92dvh)] flex-col gap-4 sm:max-w-xl"
         >
           <DialogHeader>
-            <DialogTitle>Add to “{list.title}”</DialogTitle>
-            <DialogDescription>
-              Only media you have already rated can join a ranked list.
-            </DialogDescription>
+            <DialogTitle>{content.title({ title: list.title })}</DialogTitle>
+            <DialogDescription>{content.description.value}</DialogDescription>
           </DialogHeader>
 
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search your reviews"
+            placeholder={shared.search.value}
             startIcon={<Search />}
-            aria-label="Search reviews"
+            aria-label={shared.search.value}
           />
 
           <div className="flex min-h-0 flex-1 scrollbar-none flex-col gap-2 overflow-y-auto p-1">
             {showListLoader && (
               <div className="text-muted-foreground flex flex-1 items-center justify-center gap-2 py-10 text-sm">
                 <Spinner className="size-5" />
-                Loading reviews…
+                {content.loadingReviews.value}
               </div>
             )}
 
             {reviewsQuery.isError && (
               <p role="alert" className="text-destructive py-8 text-center text-sm">
-                Couldn&apos;t load reviews.
+                {content.couldNotLoadReviews.value}
               </p>
             )}
 
@@ -132,16 +133,16 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
                 <p className="text-foreground text-sm font-medium">
                   {reviews.length === 0
                     ? debouncedQ.trim()
-                      ? 'No matches'
-                      : 'No rated media yet'
-                    : 'Everything here is already on the list'}
+                      ? content.noMatches.value
+                      : content.noRatedMedia.value
+                    : content.alreadyOnList.value}
                 </p>
                 <p className="text-muted-foreground max-w-xs text-xs leading-relaxed">
                   {reviews.length === 0
                     ? debouncedQ.trim()
-                      ? 'Try another search.'
-                      : 'Rate something first, then come back to place it on the podium.'
-                    : 'Pick a different title or open Discover to rate more media.'}
+                      ? content.tryAnotherSearch.value
+                      : content.rateSomethingFirst.value
+                    : content.pickDifferentTitle.value}
                 </p>
                 {reviews.length === 0 && !debouncedQ.trim() && (
                   <Button
@@ -150,7 +151,7 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
                     size="sm"
                     render={<Link to="/discover" />}
                   >
-                    Browse Discover
+                    {shared.browseDiscover.value}
                   </Button>
                 )}
               </div>
@@ -213,7 +214,7 @@ export const AddRankedItemDialog = ({ list, children }: AddRankedItemDialogProps
             {isSearchLoading && candidates.length > 0 && (
               <div className="text-muted-foreground flex items-center justify-center gap-2 py-3 text-xs">
                 <Spinner className="size-4" />
-                Searching…
+                {content.searching.value}
               </div>
             )}
 

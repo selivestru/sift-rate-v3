@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { XCircle } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -14,14 +15,18 @@ interface ErrorStateProps {
 }
 
 export const ErrorState = ({
-  title = 'Something went wrong',
-  description = 'Please try again later.',
+  title,
+  description,
   onRetry,
-  retryLabel = 'Retry',
+  retryLabel,
   action,
   className,
   border,
 }: ErrorStateProps) => {
+  const shared = useIntlayer('shared')
+  const resolvedTitle = title ?? shared.somethingWentWrong.value
+  const resolvedDescription = description ?? shared.tryAgainLater.value
+  const resolvedRetryLabel = retryLabel ?? shared.retry.value
   return (
     <div
       role="alert"
@@ -35,16 +40,18 @@ export const ErrorState = ({
         <XCircle className="size-5" aria-hidden />
       </span>
       <div className="flex flex-col gap-1.5">
-        <p className="text-foreground font-semibold tracking-tight">{title}</p>
-        {description && (
-          <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">{description}</p>
+        <p className="text-foreground font-semibold tracking-tight">{resolvedTitle}</p>
+        {resolvedDescription && (
+          <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
+            {resolvedDescription}
+          </p>
         )}
       </div>
       {(onRetry || action) && (
         <div className="flex flex-col items-center gap-2">
           {onRetry && (
             <Button variant="secondary" onClick={onRetry}>
-              {retryLabel}
+              {resolvedRetryLabel}
             </Button>
           )}
           {action}

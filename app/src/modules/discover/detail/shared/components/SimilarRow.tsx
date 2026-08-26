@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 import {
   Carousel,
@@ -21,28 +23,24 @@ interface SimilarRowProps {
   className?: string
 }
 
-const toHeadingId = (title: string) =>
-  `similar-${title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')}`
-
 export const SimilarRow = ({
   items,
-  title = 'You might also like',
+  title,
   mediaType = MEDIA_TYPES.MOVIE,
   className,
 }: SimilarRowProps) => {
+  const content = useIntlayer('shared')
+  const resolvedTitle = title ?? content.youMightAlsoLike.value
   if (items.length === 0) return null
 
-  const headingId = toHeadingId(title)
+  const headingId = `similar-${mediaType.toLowerCase()}`
 
   return (
     <section className={cn('', className)} aria-labelledby={headingId}>
       <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id={headingId} className="text-foreground text-lg font-semibold">
-            {title}
+            {resolvedTitle}
           </h2>
           <div className="flex shrink-0 items-center gap-1">
             <CarouselPrevious className={carouselNavClassName} />

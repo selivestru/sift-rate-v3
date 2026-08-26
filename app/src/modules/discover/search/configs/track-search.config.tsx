@@ -7,9 +7,6 @@ import type { DiscoverSearchConfig, TrackSearchItem } from '../types/discover-se
 
 export const trackSearchConfig: DiscoverSearchConfig<TrackSearchItem> = {
   mediaType: MEDIA_TYPES.TRACK,
-  title: 'Find tracks',
-  description: 'Search single moments worth remembering.',
-  searchPlaceholder: 'Search tracks…',
   resultsClassName: 'flex flex-col gap-2',
   skeletonCount: 10,
   pageSize: 10,

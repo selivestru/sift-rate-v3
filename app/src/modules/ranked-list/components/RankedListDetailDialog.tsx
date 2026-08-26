@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Plus } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -24,6 +25,7 @@ export const RankedListDetailDialog = ({
   open,
   onOpenChange,
 }: RankedListDetailDialogProps) => {
+  const content = useIntlayer('ranked-list-detail-dialog')
   const sortedItems = list.items.sort((a, b) => a.position - b.position)
 
   return (
@@ -38,7 +40,7 @@ export const RankedListDetailDialog = ({
               <DialogTitle className="text-lg">{list.title}</DialogTitle>
               <DialogDescription className="flex flex-wrap items-center gap-2">
                 <span className="text-muted-foreground text-xs tabular-nums">
-                  {sortedItems.length} ranked
+                  {content.rankedCount({ count: sortedItems.length })}
                 </span>
               </DialogDescription>
             </div>
@@ -46,7 +48,7 @@ export const RankedListDetailDialog = ({
             <AddRankedItemDialog list={list}>
               {({ open: openAdd }) => (
                 <Button type="button" size="sm" startIcon={<Plus />} onClick={openAdd}>
-                  Add
+                  {content.add.value}
                 </Button>
               )}
             </AddRankedItemDialog>
@@ -56,9 +58,9 @@ export const RankedListDetailDialog = ({
         <div className="flex min-h-0 flex-1 scrollbar-none flex-col gap-2 overflow-y-auto p-1">
           {sortedItems.length === 0 ? (
             <div className="bg-muted ring-border flex flex-col items-center gap-3 rounded-2xl px-4 py-12 text-center ring-1">
-              <p className="text-foreground text-sm font-medium">Empty podium</p>
+              <p className="text-foreground text-sm font-medium">{content.emptyPodium.value}</p>
               <p className="text-muted-foreground max-w-xs text-xs leading-relaxed">
-                Add rated media to start building this ranking.
+                {content.emptyDescription.value}
               </p>
               <AddRankedItemDialog list={list}>
                 {({ open: openAdd }) => (
@@ -69,7 +71,7 @@ export const RankedListDetailDialog = ({
                     startIcon={<Plus />}
                     onClick={openAdd}
                   >
-                    Add media
+                    {content.addMedia.value}
                   </Button>
                 )}
               </AddRankedItemDialog>

@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
@@ -13,6 +14,7 @@ interface BookSearchCardProps {
 }
 
 export const BookSearchCard = ({ item }: BookSearchCardProps) => {
+  const content = useIntlayer('discover-detail')
   const { color, icon: MediaTypeIcon } = mediaTypeMeta[MEDIA_TYPES.BOOK]
 
   return (
@@ -53,7 +55,11 @@ export const BookSearchCard = ({ item }: BookSearchCardProps) => {
 
         <div className="text-muted-foreground mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-1 text-xs">
           {item.year && <span className="tabular-nums">{item.year}</span>}
-          {item.pageCount != null && <span className="tabular-nums">· {item.pageCount} pp</span>}
+          {item.pageCount != null && (
+            <span className="tabular-nums">
+              · {content.pagesShort({ count: String(item.pageCount) })}
+            </span>
+          )}
           {item.rating != null && (
             <span className="text-rating flex items-center gap-0.5 font-medium tabular-nums">
               <Star weight="Filled" className="size-3.5" />

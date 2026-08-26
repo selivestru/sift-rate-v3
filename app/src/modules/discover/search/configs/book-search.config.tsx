@@ -7,9 +7,6 @@ import type { BookSearchItem, DiscoverSearchConfig } from '../types/discover-sea
 
 export const bookSearchConfig: DiscoverSearchConfig<BookSearchItem> = {
   mediaType: MEDIA_TYPES.BOOK,
-  title: 'Find books',
-  description: 'Search pages and shelves for your archive.',
-  searchPlaceholder: 'Search books…',
   resultsClassName: 'flex flex-col gap-3',
   skeletonCount: 9,
   pageSize: 9,

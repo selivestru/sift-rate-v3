@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Image } from 'reicon-react'
 
 import { Alert, AlertDescription } from '~/common/ui/Alert'
@@ -20,6 +21,8 @@ import { useChangeAvatarForm } from '~/modules/user'
 import { SettingsSection } from './SettingsSection'
 
 export const ChangeAvatarForm = () => {
+  const content = useIntlayer('change-avatar-form')
+  const shared = useIntlayer('shared')
   const avatarUrl = useAuthStore((state) => state.user?.avatarUrl)
   const username = useAuthStore((state) => state.user?.username)
   const displayName = useAuthStore((state) => state.user?.displayName)
@@ -45,10 +48,7 @@ export const ChangeAvatarForm = () => {
   }
 
   return (
-    <SettingsSection
-      title="Avatar"
-      description="Shown on your profile, reviews, and in the header. JPEG, PNG, or WebP up to 5MB."
-    >
+    <SettingsSection title={content.title.value} description={content.description.value}>
       <div className="flex items-center gap-4 sm:gap-5">
         <Avatar className="ring-border size-20 ring-2 ring-offset-2 ring-offset-transparent sm:size-24">
           <AvatarImage src={avatarUrl ?? undefined} alt={fallbackName ?? undefined} />
@@ -68,14 +68,14 @@ export const ChangeAvatarForm = () => {
             isLoading={isPreviewing}
             isDisabled={isLoading}
           >
-            Choose image
+            {content.chooseImage}
           </Button>
           <input
             ref={inputRef}
             type="file"
             accept="image/jpeg,image/png,image/webp"
             className="sr-only"
-            aria-label="Choose avatar image"
+            aria-label={content.chooseAvatarImage.value}
             onChange={handleFileChange}
           />
         </div>
@@ -95,13 +95,13 @@ export const ChangeAvatarForm = () => {
       >
         <DialogContent className={cn('sm:max-w-[360px]', isLoading && 'pointer-events-none')}>
           <DialogHeader>
-            <DialogTitle>Preview avatar</DialogTitle>
-            <DialogDescription>This is how your avatar will look.</DialogDescription>
+            <DialogTitle>{content.previewTitle}</DialogTitle>
+            <DialogDescription>{content.previewDescription}</DialogDescription>
           </DialogHeader>
 
           <div className="flex justify-center">
             <Avatar className="ring-border size-[300px] ring-2 ring-offset-2 ring-offset-transparent">
-              <AvatarImage src={previewUrl ?? undefined} alt="New avatar preview" />
+              <AvatarImage src={previewUrl ?? undefined} alt={content.newAvatarPreview.value} />
               <AvatarFallback className="text-5xl">{getFirstLetter(fallbackName)}</AvatarFallback>
             </Avatar>
           </div>
@@ -114,10 +114,10 @@ export const ChangeAvatarForm = () => {
 
           <DialogFooter>
             <Button variant="outline" onClick={onClear} isDisabled={isLoading}>
-              Cancel
+              {shared.cancel}
             </Button>
             <Button onClick={() => void onSubmit()} isLoading={isLoading}>
-              Save avatar
+              {content.saveAvatar}
             </Button>
           </DialogFooter>
         </DialogContent>

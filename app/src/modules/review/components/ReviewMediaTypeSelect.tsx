@@ -1,15 +1,9 @@
+import { useIntlayer } from 'react-intlayer'
 import { Layers } from 'reicon-react'
 
 import { mediaTypeList, mediaTypeMeta, type MediaType } from '~/common/constants/media-type'
+import { useMediaTypeLabels } from '~/common/i18n'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/common/ui/Select'
-
-const items = [
-  { value: null, label: 'All' },
-  ...mediaTypeList.map((item) => ({
-    value: item.type,
-    label: item.label,
-  })),
-]
 
 interface ReviewMediaTypeSelectProps {
   value?: MediaType
@@ -24,20 +18,31 @@ export const ReviewMediaTypeSelect = ({
   total = 0,
   counts,
 }: ReviewMediaTypeSelectProps) => {
+  const content = useIntlayer('review-media-type-select')
+  const shared = useIntlayer('shared')
+  const mediaTypeLabels = useMediaTypeLabels()
+  const items = [
+    { value: null, label: shared.all.value },
+    ...mediaTypeList.map((item) => ({
+      value: item.type,
+      label: mediaTypeLabels[item.type],
+    })),
+  ]
+
   return (
     <Select
       value={value ?? null}
       onValueChange={(next) => onChange(next ?? undefined)}
       items={items}
     >
-      <SelectTrigger aria-label="Filter by media type">
-        <SelectValue placeholder="All">
+      <SelectTrigger aria-label={content.filterByMediaType.value}>
+        <SelectValue placeholder={shared.all.value}>
           {(selected: MediaType | null) => {
             if (selected == null) {
               return (
                 <span className="text-primary inline-flex items-center gap-1.5">
                   <Layers />
-                  All
+                  {shared.all.value}
                 </span>
               )
             }
@@ -48,7 +53,7 @@ export const ReviewMediaTypeSelect = ({
             return (
               <span className="inline-flex items-center gap-1.5" style={{ color: meta.color }}>
                 <Icon />
-                {meta.label}
+                {mediaTypeLabels[selected]}
               </span>
             )
           }}

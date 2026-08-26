@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Search, X } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
@@ -40,6 +41,9 @@ export const ReviewListFilters = ({
   onDateChange,
   stats,
 }: ReviewListFiltersProps) => {
+  const content = useIntlayer('review-list-filters')
+  const shared = useIntlayer('shared')
+
   const handleClear = () => {
     onQueryChange('')
   }
@@ -49,7 +53,7 @@ export const ReviewListFilters = ({
       <Input
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
-        placeholder="Search your reviews"
+        placeholder={content.searchYourReviews.value}
         startIcon={<Search />}
         endIcon={
           query.length > 0 && (
@@ -58,7 +62,7 @@ export const ReviewListFilters = ({
             </Button>
           )
         }
-        aria-label="Search reviews"
+        aria-label={shared.search.value}
         className="pr-0"
       />
 

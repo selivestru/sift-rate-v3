@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
 import { navItems, type NavItemConfig } from '~/common/constants/navigation'
+import { useNavLabels } from '~/common/i18n'
 import { cn } from '~/common/utils/cn'
 import { useAuthStore, type User } from '~/modules/auth'
 
@@ -10,10 +11,13 @@ interface NavItemProps {
   nested?: boolean
 }
 
-function NavItem({ item, user, nested }: NavItemProps) {
+const NavItem = ({ item, user, nested }: NavItemProps) => {
+  const labels = useNavLabels()
+
   if (item.show && !item.show(user)) return null
 
   const children = item.children?.filter((child) => !child.show || child.show(user))
+  const copy = labels[item.to as keyof typeof labels]
 
   return (
     <>
@@ -40,7 +44,9 @@ function NavItem({ item, user, nested }: NavItemProps) {
                 isActive && 'text-accent-foreground',
               )}
             />
-            <span className={cn('flex-1', isActive && 'text-accent-foreground')}>{item.label}</span>
+            <span className={cn('flex-1', isActive && 'text-accent-foreground')}>
+              {copy?.label ?? item.label}
+            </span>
           </>
         )}
       </Link>

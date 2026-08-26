@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ArrowDown, ArrowUp, ArrowUpRight, Trash6 } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
@@ -19,6 +20,7 @@ interface RankedListItemRowProps {
 }
 
 export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProps) => {
+  const content = useIntlayer('ranked-list-item-row')
   const deleteMutation = useDeleteRankedItem()
   const reorderMutation = useReorderRankedItem()
 
@@ -118,7 +120,7 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
           size="sm"
           type="button"
           variant="outline"
-          aria-label={`Move ${media.title} up`}
+          aria-label={content.moveUp({ title: media.title })}
           isDisabled={position <= 1}
           onClick={() => handleMove(position - 1)}
         >
@@ -129,7 +131,7 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
           size="sm"
           type="button"
           variant="outline"
-          aria-label={`Move ${media.title} down`}
+          aria-label={content.moveDown({ title: media.title })}
           isDisabled={position >= total}
           onClick={() => handleMove(position + 1)}
         >
@@ -140,7 +142,7 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
           size="sm"
           variant="secondary"
           type="button"
-          aria-label={`Open ${media.title}`}
+          aria-label={content.open({ title: media.title })}
           render={
             <Link
               to={mediaDetailRouteByType[media.mediaType]}
@@ -155,7 +157,7 @@ export const RankedListItemRow = ({ listId, item, total }: RankedListItemRowProp
           size="sm"
           type="button"
           variant="destructive-soft"
-          aria-label={`Remove ${media.title} from list`}
+          aria-label={content.remove({ title: media.title })}
           onClick={handleDelete}
         >
           <Trash6 weight="Filled" />

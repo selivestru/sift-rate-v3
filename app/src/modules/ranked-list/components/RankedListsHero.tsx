@@ -1,6 +1,8 @@
+import { useIntlayer } from 'react-intlayer'
 import { PlusCircle2 } from 'reicon-react'
 
 import { rankedListNavItem } from '~/common/constants/navigation'
+import { useNavLabels } from '~/common/i18n'
 import { Button } from '~/common/ui/Button'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
@@ -13,6 +15,9 @@ interface RankedListsHeroProps {
 }
 
 export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
+  const content = useIntlayer('ranked-lists-hero')
+  const shared = useIntlayer('shared')
+  const navLabels = useNavLabels()
   const { color, icon: ListsIcon } = rankedListNavItem
   const isLoading = total == null
   const isEmpty = total === 0
@@ -35,20 +40,22 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
       <div className="relative flex flex-col gap-8 sm:flex-row sm:justify-between sm:gap-10">
         <div className="flex flex-1 flex-col gap-3">
           <p className="text-muted-foreground text-[11px] font-medium tracking-[0.18em] uppercase">
-            Library
+            {shared.library.value}
           </p>
 
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Ranked lists</h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              {navLabels['/library/ranked-list'].label}
+            </h1>
             <p className="text-muted-foreground max-w-[36ch] text-sm leading-relaxed sm:text-[15px]">
-              Ordered boards of favorites. Podium first, full ranks inside each list.
+              {content.description.value}
             </p>
           </div>
 
           <UpsertRankedListDialog>
             {({ open }) => (
               <Button type="button" startIcon={<PlusCircle2 />} onClick={open} className="w-fit">
-                New list
+                {content.newList.value}
               </Button>
             )}
           </UpsertRankedListDialog>
@@ -56,7 +63,9 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
 
         <div
           className="flex shrink-0 flex-col items-start gap-3 sm:items-end"
-          aria-label={isLoading ? 'Loading list count' : `${total} lists ordered`}
+          aria-label={
+            isLoading ? content.loadingListCount.value : content.listCount({ count: total ?? 0 })
+          }
         >
           <div className="flex flex-col items-start gap-0.5 sm:items-end sm:text-right">
             {isLoading ? (
@@ -73,7 +82,7 @@ export const RankedListsHero = ({ total }: RankedListsHeroProps) => {
               </p>
             )}
             <p className="text-muted-foreground text-xs font-medium tracking-wide sm:text-sm">
-              lists ordered
+              {content.listsOrdered.value}
             </p>
           </div>
         </div>

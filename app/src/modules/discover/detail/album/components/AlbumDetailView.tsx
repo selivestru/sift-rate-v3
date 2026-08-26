@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 
 import { AlbumRail, ContributorList, TrackRail } from '../../shared'
@@ -11,6 +13,7 @@ interface AlbumDetailViewProps {
 }
 
 export const AlbumDetailView = ({ album }: AlbumDetailViewProps) => {
+  const content = useIntlayer('discover-detail')
   const hasCredits = album.contributors.length > 0
   const hasArtistAlbums = album.artistAlbums.length > 0
   const hasTopTracks = album.topTracks.length > 0
@@ -26,14 +29,22 @@ export const AlbumDetailView = ({ album }: AlbumDetailViewProps) => {
 
         {hasArtistAlbums && (
           <AlbumRail
-            title={album.artistName ? `More by ${album.artistName}` : 'More albums'}
+            title={
+              album.artistName
+                ? content.moreBy({ author: album.artistName })
+                : content.moreAlbums.value
+            }
             items={album.artistAlbums}
           />
         )}
 
         {hasTopTracks && (
           <TrackRail
-            title={album.artistName ? `Popular by ${album.artistName}` : 'Popular tracks'}
+            title={
+              album.artistName
+                ? content.popularBy({ artist: album.artistName })
+                : content.popularTracks.value
+            }
             items={album.topTracks}
           />
         )}

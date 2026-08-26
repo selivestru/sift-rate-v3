@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { AlertTriangle, XCircle } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
@@ -22,6 +23,8 @@ interface DeleteAccountDialogProps {
 }
 
 export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
+  const content = useIntlayer('delete-account-dialog')
+  const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
 
   const { onSubmit, isLoading, serverError } = useDeleteAccountForm({
@@ -42,11 +45,8 @@ export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
             <AlertDialogMedia variant="destructive">
               <AlertTriangle />
             </AlertDialogMedia>
-            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This permanently removes your profile, reviews, lists, and media archive. This cannot
-              be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{content.title}</AlertDialogTitle>
+            <AlertDialogDescription>{content.description}</AlertDialogDescription>
           </AlertDialogHeader>
 
           {serverError && (
@@ -57,13 +57,13 @@ export const DeleteAccountDialog = ({ children }: DeleteAccountDialogProps) => {
           )}
 
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isLoading}>{shared.cancel}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => void onSubmit()}
               isLoading={isLoading}
             >
-              Delete account
+              {shared.delete}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

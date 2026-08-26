@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { mediaTypeMeta } from '~/common/constants/media-type'
 import { RatingBadge } from '~/common/ui/RatingBadge'
 
@@ -9,9 +11,10 @@ interface TvSeasonCardProps {
 }
 
 export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
+  const content = useIntlayer('discover-detail')
   const MediaTypeIcon = mediaTypeMeta.TV_SHOW.icon
   const isSpecials = season.seasonNumber === 0
-  const label = isSpecials ? 'Specials' : `S${season.seasonNumber}`
+  const label = isSpecials ? content.specials.value : `S${season.seasonNumber}`
 
   return (
     <div className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]">
@@ -53,7 +56,7 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
         </p>
         {season.episodeCount > 0 && (
           <p className="text-muted-foreground text-xs tabular-nums">
-            {season.episodeCount} {season.episodeCount === 1 ? 'ep' : 'eps'}
+            {content.episodeCount(season.episodeCount)}
           </p>
         )}
       </div>

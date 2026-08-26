@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { toastApiError } from '~/common/api'
 import { useDisclosure } from '~/common/hooks/useDisclosure'
 import {
@@ -25,6 +27,8 @@ export const DeleteRankedListDialog = ({
   title,
   children,
 }: DeleteRankedListDialogProps) => {
+  const content = useIntlayer('delete-ranked-list-dialog')
+  const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
   const mutation = useDeleteRankedList()
 
@@ -43,19 +47,19 @@ export const DeleteRankedListDialog = ({
       <AlertDialog open={opened} onOpenChange={close}>
         <AlertDialogContent className={cn(mutation.isPending && 'pointer-events-none')}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete list?</AlertDialogTitle>
-            <AlertDialogDescription>
-              “{title}” and every ranked item in it will be removed. This cannot be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{content.title.value}</AlertDialogTitle>
+            <AlertDialogDescription>{content.description({ title })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={mutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={mutation.isPending}>
+              {shared.cancel.value}
+            </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleDelete}
               isLoading={mutation.isPending}
             >
-              Delete list
+              {content.deleteList.value}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { toast } from 'sonner'
 
 import { getApiError } from '~/common/api'
@@ -14,6 +15,7 @@ interface UseDeleteAccountFormOptions {
 }
 
 export const useDeleteAccountForm = ({ onSuccess }: UseDeleteAccountFormOptions = {}) => {
+  const content = useIntlayer('delete-account-dialog')
   const mutation = useDeleteAccountMutation()
   const navigate = useNavigate()
   const setUser = useAuthStore((state) => state.setUser)
@@ -31,7 +33,7 @@ export const useDeleteAccountForm = ({ onSuccess }: UseDeleteAccountFormOptions 
       removeStorageItem('has_session')
       queryClient.clear()
       onSuccess?.()
-      toast.success('Your account has been deleted')
+      toast.success(content.deletedToast.value)
       navigate({ to: '/' })
     } catch (error) {
       const apiError = await getApiError(error)

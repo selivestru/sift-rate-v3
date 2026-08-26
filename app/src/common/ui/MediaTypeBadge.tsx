@@ -1,3 +1,5 @@
+import { useMediaTypeLabel } from '~/common/i18n'
+
 import { mediaTypeMeta, type MediaType } from '../constants/media-type'
 import { Badge } from './Badge'
 
@@ -16,6 +18,7 @@ export const MediaTypeBadge = ({
 }: MediaBadgeProps) => {
   const meta = mediaTypeMeta[mediaType]
   const Icon = meta.icon
+  const label = useMediaTypeLabel(mediaType)
 
   return (
     <Badge
@@ -25,7 +28,7 @@ export const MediaTypeBadge = ({
       startIcon={<Icon />}
       className={className}
     >
-      {meta.label}
+      {label}
     </Badge>
   )
 }

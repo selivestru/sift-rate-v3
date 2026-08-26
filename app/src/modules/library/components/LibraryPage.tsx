@@ -1,18 +1,24 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronRight } from 'reicon-react'
 
 import { libraryChildren, libraryNav } from '~/common/constants/navigation'
+import { useNavLabels } from '~/common/i18n'
 import { PageHeader } from '~/common/ui/PageHeader'
 import { cn } from '~/common/utils/cn'
 
 export const LibraryPage = () => {
+  const shared = useIntlayer('shared')
+  const content = useIntlayer('library')
+  const labels = useNavLabels()
+
   return (
     <div className="flex flex-col gap-6 p-4 sm:gap-8 sm:p-6">
       <PageHeader
         icon={libraryNav.icon}
-        label={libraryNav.label}
-        title="Your collection"
-        description="Personal archive tools. Ordered, private, yours."
+        label={shared.library.value}
+        title={content.title.value}
+        description={content.description.value}
       />
 
       <div className="border-border divide-border divide-y overflow-hidden rounded-xl border">
@@ -37,9 +43,11 @@ export const LibraryPage = () => {
             </span>
 
             <div className="flex-1 space-y-0.5">
-              <p className="text-sm font-semibold tracking-tight sm:text-base">{section.label}</p>
+              <p className="text-sm font-semibold tracking-tight sm:text-base">
+                {labels[section.to as keyof typeof labels]?.label}
+              </p>
               <p className="text-muted-foreground truncate text-sm leading-relaxed">
-                {section.description}
+                {labels[section.to as keyof typeof labels]?.description}
               </p>
             </div>
 
@@ -48,9 +56,7 @@ export const LibraryPage = () => {
         ))}
       </div>
 
-      <p className="text-muted-foreground text-xs leading-relaxed">
-        Looking for something new? Head to Discover for what's next.
-      </p>
+      <p className="text-muted-foreground text-xs leading-relaxed">{content.footer.value}</p>
     </div>
   )
 }

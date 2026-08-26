@@ -1,4 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 
 import { PaginationBar } from '~/common/ui/PaginationBar'
 
@@ -18,6 +19,8 @@ interface DiscoverSearchPageProps<T> {
 
 export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPageProps<T>) => {
   const navigate = useNavigate()
+  const content = useIntlayer('discover-search')
+  const localizedConfig = content[config.mediaType]
 
   const q = search.q ?? ''
   const page = search.page ?? 1
@@ -59,14 +62,14 @@ export const DiscoverSearchPage = <T,>({ config, search }: DiscoverSearchPagePro
     <div className="relative flex flex-col gap-4 p-4 sm:p-6">
       <DiscoverSearchHeader
         mediaType={config.mediaType}
-        title={config.title}
-        description={config.description}
+        title={localizedConfig.title.value}
+        description={localizedConfig.description.value}
         resultCount={showResultCount ? total : undefined}
       />
 
       <DiscoverSearchForm
         initialQuery={q}
-        placeholder={config.searchPlaceholder}
+        placeholder={localizedConfig.placeholder.value}
         isFetching={isFetching}
         onSearch={commitSearch}
       />

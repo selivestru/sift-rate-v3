@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
 import { mediaTypeToSlug } from '~/common/constants/media-type'
+import { useAppLocale } from '~/common/i18n'
 
 import type { DiscoverSearchConfig } from '../types/discover-search.types'
 
@@ -18,9 +19,10 @@ export const useDiscoverSearchQuery = <T>({
   const pageSize = config.pageSize
   const trimmedQuery = q.trim()
   const enabled = trimmedQuery.length >= 2
+  const { locale } = useAppLocale()
 
   const query = useQuery({
-    queryKey: [...config.queryKey, trimmedQuery, page],
+    queryKey: [...config.queryKey, locale, trimmedQuery, page],
     queryFn: () =>
       config.queryFn({
         slug: mediaTypeToSlug[config.mediaType],

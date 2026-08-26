@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Star, Trash6 } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
@@ -16,6 +17,7 @@ interface MediaStateButtonsProps {
 }
 
 export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProps) => {
+  const content = useIntlayer('discover-detail')
   const { data, isLoading, isError } = useGetMediaState(props)
 
   if (isLoading) {
@@ -51,10 +53,12 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
             }
             onClick={open}
             aria-label={
-              hasReview ? `Edit rating, ${data.review!.rating} out of 10` : 'Rate this title'
+              hasReview
+                ? content.editRating({ rating: data.review!.rating })
+                : content.rateTitle.value
             }
           >
-            {hasReview ? data.review!.rating : 'Rate'}
+            {hasReview ? data.review!.rating : content.rate.value}
           </Button>
         )}
       </UpsertReviewDialog>
@@ -65,7 +69,12 @@ export const MediaStateButtons = ({ className, ...props }: MediaStateButtonsProp
           mediaType={props.mediaType}
         >
           {({ open }) => (
-            <Button isIconOnly variant="destructive-soft" onClick={open} aria-label="Delete review">
+            <Button
+              isIconOnly
+              variant="destructive-soft"
+              onClick={open}
+              aria-label={content.deleteReview.value}
+            >
               <Trash6 weight="Filled" />
             </Button>
           )}

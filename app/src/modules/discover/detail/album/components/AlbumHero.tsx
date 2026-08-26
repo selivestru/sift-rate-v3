@@ -1,4 +1,7 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
 
@@ -11,6 +14,8 @@ interface AlbumHeroProps {
 }
 
 export const AlbumHero = ({ album }: AlbumHeroProps) => {
+  const content = useIntlayer('discover-detail')
+  const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.ALBUM)
   const accent = mediaTypeMeta[MEDIA_TYPES.ALBUM].color
   const MediaTypeIcon = mediaTypeMeta[MEDIA_TYPES.ALBUM].icon
   const backdropUrl = album.coverUrl
@@ -18,7 +23,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
   const metaParts: string[] = []
   if (album.releaseDate) metaParts.push(formatDate(album.releaseDate))
   if (album.trackCount > 0) {
-    metaParts.push(`${album.trackCount} ${album.trackCount === 1 ? 'track' : 'tracks'}`)
+    metaParts.push(String(content.trackCount(album.trackCount)))
   }
 
   return (
@@ -84,10 +89,12 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
                   className="text-[10px] font-semibold tracking-[0.2em] uppercase"
                   style={{ color: accent }}
                 >
-                  Album
+                  {typeLabel}
                 </span>
                 {album.explicit && (
-                  <Badge className="h-5 px-1.5 text-[10px] uppercase">Explicit</Badge>
+                  <Badge className="h-5 px-1.5 text-[10px] uppercase">
+                    {content.explicit.value}
+                  </Badge>
                 )}
               </div>
 

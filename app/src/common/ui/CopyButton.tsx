@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Check, Copy } from 'reicon-react'
 
 import { useCopy } from '../hooks/useCopy'
@@ -8,6 +9,7 @@ type CopyButtonProps = ButtonProps & {
 }
 
 export const CopyButton = ({ text, ...props }: CopyButtonProps) => {
+  const shared = useIntlayer('shared')
   const { copy, copied } = useCopy()
 
   const handleCopy = async () => {
@@ -20,7 +22,7 @@ export const CopyButton = ({ text, ...props }: CopyButtonProps) => {
       type="button"
       variant="outline"
       size="sm"
-      aria-label={copied ? 'Copied' : 'Copy secret key'}
+      aria-label={copied ? shared.copied.value : shared.copySecretKey.value}
       onClick={handleCopy}
       {...props}
     >

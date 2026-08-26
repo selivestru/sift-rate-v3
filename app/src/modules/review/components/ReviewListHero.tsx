@@ -1,5 +1,8 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { mediaTypeList } from '~/common/constants/media-type'
 import { reviewsNavItem } from '~/common/constants/navigation'
+import { useNavLabels } from '~/common/i18n'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
 
@@ -9,6 +12,9 @@ interface ReviewListHeroProps {
 }
 
 export const ReviewListHero = ({ totalResults, isLoading = false }: ReviewListHeroProps) => {
+  const content = useIntlayer('review-list-hero')
+  const shared = useIntlayer('shared')
+  const navLabels = useNavLabels()
   const { color, icon: ReviewsIcon } = reviewsNavItem
   const isEmpty = !isLoading && totalResults === 0
 
@@ -30,13 +36,15 @@ export const ReviewListHero = ({ totalResults, isLoading = false }: ReviewListHe
       <div className="relative flex flex-col gap-8 sm:flex-row sm:justify-between sm:gap-10">
         <div className="flex flex-1 flex-col gap-3">
           <p className="text-muted-foreground text-[11px] font-medium tracking-[0.18em] uppercase">
-            Library
+            {shared.library.value}
           </p>
 
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Reviews</h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              {navLabels['/library/reviews'].label}
+            </h1>
             <p className="text-muted-foreground max-w-[36ch] text-sm leading-relaxed sm:text-[15px]">
-              Ratings and notes that map what you watch, read, play, and hear.
+              {content.description.value}
             </p>
           </div>
         </div>
@@ -44,7 +52,9 @@ export const ReviewListHero = ({ totalResults, isLoading = false }: ReviewListHe
         <div
           className="flex shrink-0 flex-col items-start gap-3 sm:items-end"
           aria-label={
-            isLoading ? 'Loading review count' : `${totalResults} reviews logged in your archive`
+            isLoading
+              ? content.loadingReviewCount.value
+              : content.reviewCount({ count: totalResults })
           }
         >
           <div className="flex flex-col items-start gap-0.5 sm:items-end sm:text-right">
@@ -62,7 +72,7 @@ export const ReviewListHero = ({ totalResults, isLoading = false }: ReviewListHe
               </p>
             )}
             <p className="text-muted-foreground text-xs font-medium tracking-wide sm:text-sm">
-              reviews logged
+              {shared.reviews.value} {content.logged.value}
             </p>
           </div>
         </div>

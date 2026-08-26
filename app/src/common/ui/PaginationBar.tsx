@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { ChevronLeft, ChevronRight, MoreH } from 'reicon-react'
 
 import { cn } from '../utils/cn'
@@ -38,13 +39,15 @@ const getPageNumbers = (currentPage: number, totalPages: number) => {
 }
 
 export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarProps) => {
+  const shared = useIntlayer('shared')
+
   if (totalPages <= 1) {
     return null
   }
 
   return (
     <nav
-      aria-label="pagination"
+      aria-label={shared.pagination.value}
       className={cn(
         'bg-card border-border inline-flex items-center gap-1 rounded-xl border p-1.5',
         'animate-blur-morph-in',
@@ -61,7 +64,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
         )}
       >
         <ChevronLeft className="size-4" />
-        <span className="hidden sm:inline">Prev</span>
+        <span className="hidden sm:inline">{shared.prev}</span>
       </button>
 
       {getPageNumbers(page, totalPages).map((p, i) =>
@@ -100,7 +103,7 @@ export const PaginationBar = ({ page, totalPages, onPageChange }: PaginationBarP
           'disabled:pointer-events-none disabled:opacity-50',
         )}
       >
-        <span className="hidden sm:inline">Next</span>
+        <span className="hidden sm:inline">{shared.next}</span>
         <ChevronRight className="size-4" />
       </button>
     </nav>

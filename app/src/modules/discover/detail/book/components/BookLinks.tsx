@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Link6, ShoppingBag } from 'reicon-react'
 
 import { mediaTypeMeta } from '~/common/constants/media-type'
@@ -12,11 +13,12 @@ interface BookLinksProps {
 }
 
 export const BookLinks = ({ book, className }: BookLinksProps) => {
+  const content = useIntlayer('discover-detail')
   const links: Array<{ label: string; url: string; icon: typeof Link6 }> = []
   const MediaTypeIcon = mediaTypeMeta.BOOK.icon
 
   if (book.previewUrl) {
-    links.push({ label: 'Preview', url: book.previewUrl, icon: MediaTypeIcon })
+    links.push({ label: content.preview.value, url: book.previewUrl, icon: MediaTypeIcon })
   }
 
   if (book.infoUrl) {
@@ -24,7 +26,7 @@ export const BookLinks = ({ book, className }: BookLinksProps) => {
   }
 
   if (book.buyUrl) {
-    links.push({ label: 'Buy', url: book.buyUrl, icon: ShoppingBag })
+    links.push({ label: content.buy.value, url: book.buyUrl, icon: ShoppingBag })
   }
 
   if (links.length === 0) return null
@@ -32,7 +34,7 @@ export const BookLinks = ({ book, className }: BookLinksProps) => {
   return (
     <section className={cn('', className)} aria-labelledby="book-links-heading">
       <h2 id="book-links-heading" className="text-foreground mb-3 text-lg font-semibold">
-        Links
+        {content.links.value}
       </h2>
       <ul className="flex flex-wrap gap-2">
         {links.map((link) => {

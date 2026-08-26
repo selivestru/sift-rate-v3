@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
@@ -18,6 +20,8 @@ interface MovieHeroProps {
 
 export const MovieHero = ({ movie }: MovieHeroProps) => {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
+  const shared = useIntlayer('shared')
+  const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.MOVIE)
   const accent = mediaTypeMeta[MEDIA_TYPES.MOVIE].color
   const MediaTypeIcon = mediaTypeMeta.MOVIE.icon
   const runtime = formatRuntime(movie.runtimeMinutes)
@@ -97,7 +101,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
 
         <div className="flex flex-1 flex-col gap-2.5">
           <span className="text-xs font-medium tracking-widest uppercase" style={{ color: accent }}>
-            Movie
+            {typeLabel}
           </span>
 
           <div className="flex flex-col gap-1">
@@ -174,7 +178,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
                   onClick={() => setOverviewExpanded(true)}
                   className="text-foreground mt-1 cursor-pointer text-xs font-medium underline-offset-2 hover:underline"
                 >
-                  Show more
+                  {shared.showMore}
                 </button>
               )}
             </div>

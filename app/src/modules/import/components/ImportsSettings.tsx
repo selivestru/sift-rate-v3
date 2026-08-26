@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronRight, Film, type IconComponent } from 'reicon-react'
 
 import { PageHeader } from '~/common/ui/PageHeader'
@@ -7,7 +8,6 @@ import { importsNavItem } from '~/modules/settings'
 
 type ImportService = {
   name: string
-  description: string
   icon: IconComponent
   isAvailable: boolean
   to?: string
@@ -16,7 +16,6 @@ type ImportService = {
 const IMPORT_SERVICES: ImportService[] = [
   {
     name: 'IMDb',
-    description: 'Import ratings from your IMDb ratings export (CSV).',
     icon: Film,
     isAvailable: true,
     to: '/settings/imports/imdb',
@@ -24,18 +23,22 @@ const IMPORT_SERVICES: ImportService[] = [
 ]
 
 export const ImportsSettings = () => {
+  const content = useIntlayer('imports-settings')
+  const shared = useIntlayer('shared')
+  const settingsNav = useIntlayer('settings-nav')
+
   return (
     <div className="flex flex-col gap-6 p-4 sm:gap-8 sm:p-6">
       <PageHeader
         icon={importsNavItem.icon}
-        label="Settings"
-        title={importsNavItem.label}
-        description="Bring ratings from other services into your archive."
+        label={shared.settings.value}
+        title={settingsNav.imports.value}
+        description={content.pageDescription.value}
       />
 
       <ul className="flex flex-col gap-3">
         {IMPORT_SERVICES.map((service) => {
-          const content = (
+          const serviceContent = (
             <>
               <span
                 className={cn(
@@ -48,7 +51,7 @@ export const ImportsSettings = () => {
               <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <span className="text-sm font-medium">{service.name}</span>
                 <span className="text-muted-foreground text-xs leading-relaxed">
-                  {service.description}
+                  {content.imdbDescription.value}
                 </span>
               </span>
               <ChevronRight className="text-muted-foreground size-4 shrink-0" aria-hidden />
@@ -71,13 +74,13 @@ export const ImportsSettings = () => {
                 <Link
                   to={service.to}
                   className={className}
-                  aria-label={`Import from ${service.name}`}
+                  aria-label={content.importFrom({ service: service.name }).value}
                 >
-                  {content}
+                  {serviceContent}
                 </Link>
               ) : (
                 <div className={className} aria-disabled="true">
-                  {content}
+                  {serviceContent}
                 </div>
               )}
             </li>

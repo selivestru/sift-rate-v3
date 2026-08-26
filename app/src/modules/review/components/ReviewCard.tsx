@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { Calendar, CrownStar, Pen, Trash6 } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
@@ -19,6 +20,8 @@ interface ReviewCardProps {
 }
 
 export const ReviewCard = ({ review }: ReviewCardProps) => {
+  const content = useIntlayer('review-card')
+  const shared = useIntlayer('shared')
   const { media } = review
   const typeMeta = mediaTypeMeta[media.mediaType]
   const accent = typeMeta.color
@@ -62,7 +65,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               type="button"
               variant="secondary"
               onClick={open}
-              aria-label={`Edit review for ${media.title}`}
+              aria-label={content.editReviewFor({ title: media.title })}
             >
               <Pen weight="Filled" />
             </Button>
@@ -76,7 +79,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               type="button"
               variant="destructive-soft"
               onClick={open}
-              aria-label={`Delete review for ${media.title}`}
+              aria-label={content.deleteReviewFor({ title: media.title })}
             >
               <Trash6 weight="Filled" />
             </Button>
@@ -87,7 +90,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
       <Link
         to={detailTo}
         params={{ externalId: media.externalId }}
-        aria-label={`Open ${media.title}`}
+        aria-label={content.openTitle({ title: media.title })}
         className={cn(
           'bg-muted group/poster relative z-px w-full shrink-0 overflow-hidden rounded-lg border border-border outline-none h-fit',
           'focus-visible:ring-2 focus-visible:ring-ring/40',
@@ -129,7 +132,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
 
           {isPerfect && (
             <Badge variant="rating" startIcon={<CrownStar />}>
-              Perfect
+              {content.perfect.value}
             </Badge>
           )}
         </div>
@@ -168,7 +171,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           {hasContent ? (
             <p className="text-foreground break-all italic">{review.content}</p>
           ) : (
-            <p className="text-muted-foreground italic">No written review</p>
+            <p className="text-muted-foreground italic">{content.noWrittenReview.value}</p>
           )}
         </blockquote>
       </div>
@@ -187,9 +190,9 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               variant="secondary"
               startIcon={<Pen weight="Filled" />}
               onClick={open}
-              aria-label={`Edit review for ${media.title}`}
+              aria-label={content.editReviewFor({ title: media.title })}
             >
-              Edit
+              {shared.edit.value}
             </Button>
           )}
         </UpsertReviewDialog>
@@ -201,9 +204,9 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
               variant="destructive-soft"
               startIcon={<Trash6 weight="Filled" />}
               onClick={open}
-              aria-label={`Delete review for ${media.title}`}
+              aria-label={content.deleteReviewFor({ title: media.title })}
             >
-              Delete
+              {shared.delete.value}
             </Button>
           )}
         </DeleteReviewDialog>

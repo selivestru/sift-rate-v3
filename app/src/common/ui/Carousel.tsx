@@ -1,5 +1,6 @@
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
 import { createContext, use, useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronLeft, ChevronRight } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -120,6 +121,7 @@ export const Carousel = ({
     }),
     [carouselRef, api, opts, orientation, scrollPrev, scrollNext, canScrollPrev, canScrollNext],
   )
+  const shared = useIntlayer('shared')
 
   return (
     <CarouselContext.Provider value={contextValue}>
@@ -127,7 +129,7 @@ export const Carousel = ({
         onKeyDownCapture={handleKeyDown}
         className={cn('relative max-w-full ', className)}
         role="region"
-        aria-roledescription="carousel"
+        aria-roledescription={shared.carousel.value}
         data-slot="carousel"
         {...props}
       >
@@ -162,11 +164,12 @@ export const CarouselContent = ({
 
 export const CarouselItem = ({ className, ...props }: React.ComponentProps<'div'>) => {
   const { orientation } = useCarousel()
+  const shared = useIntlayer('shared')
 
   return (
     <div
       role="group"
-      aria-roledescription="slide"
+      aria-roledescription={shared.slide.value}
       data-slot="carousel-item"
       className={cn(
         ' shrink-0 grow-0 basis-full',
@@ -187,6 +190,7 @@ export const CarouselPrevious = ({
   ...props
 }: CarouselNavButtonProps) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const shared = useIntlayer('shared')
 
   return (
     <Button
@@ -206,7 +210,7 @@ export const CarouselPrevious = ({
       {...props}
     >
       <ChevronLeft />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{shared.previousSlide}</span>
     </Button>
   )
 }
@@ -218,6 +222,7 @@ export const CarouselNext = ({
   ...props
 }: CarouselNavButtonProps) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const shared = useIntlayer('shared')
 
   return (
     <Button
@@ -237,7 +242,7 @@ export const CarouselNext = ({
       {...props}
     >
       <ChevronRight />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">{shared.nextSlide}</span>
     </Button>
   )
 }

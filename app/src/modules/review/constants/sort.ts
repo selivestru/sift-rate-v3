@@ -11,17 +11,17 @@ export const DEFAULT_REVIEW_SORT = REVIEW_SORT.NEWEST
 
 export const reviewSortMeta: {
   value: ReviewSort
-  label: string
+  labelKey: 'newest' | 'oldest'
   icon: IconComponent
 }[] = [
   {
     value: REVIEW_SORT.NEWEST,
-    label: 'New ratings',
+    labelKey: 'newest',
     icon: SortDesc,
   },
   {
     value: REVIEW_SORT.OLDEST,
-    label: 'Old ratings',
+    labelKey: 'oldest',
     icon: SortAsc,
   },
 ]

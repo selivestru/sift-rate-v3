@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { Compass, Search, Star } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -8,6 +9,9 @@ interface ReviewListEmptyProps {
 }
 
 export const ReviewListEmpty = ({ variant }: ReviewListEmptyProps) => {
+  const content = useIntlayer('review-list-empty')
+  const shared = useIntlayer('shared')
+
   if (variant === 'search') {
     return (
       <div className="bg-card border-border flex flex-col items-center gap-3 rounded-xl border px-4 py-14 text-center">
@@ -15,9 +19,9 @@ export const ReviewListEmpty = ({ variant }: ReviewListEmptyProps) => {
           <Search className="size-5" aria-hidden />
         </span>
         <div className="flex flex-col gap-1.5">
-          <p className="text-foreground font-semibold tracking-tight">No matches</p>
+          <p className="text-foreground font-semibold tracking-tight">{content.noMatches.value}</p>
           <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
-            Nothing in your archive matches this search. Try another title or keyword.
+            {content.noMatchesDescription.value}
           </p>
         </div>
       </div>
@@ -30,10 +34,9 @@ export const ReviewListEmpty = ({ variant }: ReviewListEmptyProps) => {
         <Star className="size-5" aria-hidden />
       </span>
       <div className="flex flex-col gap-1.5">
-        <p className="text-foreground font-semibold tracking-tight">No reviews yet</p>
+        <p className="text-foreground font-semibold tracking-tight">{shared.noReviewsYet.value}</p>
         <p className="text-muted-foreground max-w-sm text-sm leading-relaxed">
-          Your rated media will live here as a personal archive. Rate something in Discover to
-          start.
+          {content.archiveDescription.value}
         </p>
       </div>
       <Button
@@ -42,7 +45,7 @@ export const ReviewListEmpty = ({ variant }: ReviewListEmptyProps) => {
         startIcon={<Compass />}
         render={<Link to="/discover" />}
       >
-        Browse Discover
+        {shared.browseDiscover.value}
       </Button>
     </div>
   )

@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
@@ -16,6 +17,8 @@ interface FeedReviewCardProps {
 }
 
 export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
+  const shared = useIntlayer('shared')
+  const content = useIntlayer('feed')
   const { media, user } = item
   const typeMeta = mediaTypeMeta[media.mediaType]
   const TypeIcon = typeMeta.icon
@@ -39,7 +42,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
         <Link
           to="/$username"
           params={{ username: user.username }}
-          aria-label={`Open ${user.displayName}'s profile`}
+          aria-label={content.openProfile({ name: user.displayName ?? user.username ?? '' })}
           className="focus-visible:ring-ring/40 h-fit shrink-0 rounded-full outline-none focus-visible:ring-2"
         >
           {avatar}
@@ -80,7 +83,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
             <Link
               to={detailTo}
               params={{ externalId: media.externalId }}
-              aria-label={`Open ${media.title}`}
+              aria-label={`${shared.open.value} ${media.title}`}
               className={cn(
                 'bg-muted border-border relative shrink-0 overflow-hidden rounded-lg border outline-none',
                 'focus-visible:ring-ring/40 focus-visible:ring-2',

@@ -8,7 +8,7 @@ import { PlannedListError } from './PlannedListError'
 import { PlannedListSkeleton } from './PlannedListSkeleton'
 
 export const PlannedListPage = () => {
-  const { data, isLoading, isError } = useGetPlannedList()
+  const { data, isLoading, isError, refetch } = useGetPlannedList()
 
   const state = getQueryState({
     data,
@@ -32,7 +32,7 @@ export const PlannedListPage = () => {
       <div className="relative">
         {state === 'loading' && <PlannedListSkeleton />}
         {state === 'empty' && <PlannedListEmpty />}
-        {state === 'error' && <PlannedListError />}
+        {state === 'error' && <PlannedListError onRetry={refetch} />}
         {state === 'success' && data?.data && <PlannedList data={data.data} />}
       </div>
     </div>

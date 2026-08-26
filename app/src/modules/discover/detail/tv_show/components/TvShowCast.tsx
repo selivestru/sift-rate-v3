@@ -8,5 +8,5 @@ interface TvShowCastProps {
 export const TvShowCast = ({ cast }: TvShowCastProps) => {
   if (cast.length === 0) return null
 
-  return <PersonCarousel people={cast} title="Cast" titleId="tv-cast-heading" />
+  return <PersonCarousel people={cast} titleId="tv-cast-heading" />
 }

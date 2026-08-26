@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 
 import { cn } from '~/common/utils/cn'
 
@@ -8,6 +9,8 @@ interface BookDescriptionProps {
 
 export const BookDescription = ({ description }: BookDescriptionProps) => {
   const [expanded, setExpanded] = useState(false)
+  const shared = useIntlayer('shared')
+  const content = useIntlayer('discover-detail')
   const long = description.length > 420
 
   if (!description) return null
@@ -15,7 +18,7 @@ export const BookDescription = ({ description }: BookDescriptionProps) => {
   return (
     <section className="" aria-labelledby="book-description-heading">
       <h2 id="book-description-heading" className="text-foreground mb-3 text-lg font-semibold">
-        Synopsis
+        {content.synopsis}
       </h2>
       <p
         className={cn(
@@ -31,7 +34,7 @@ export const BookDescription = ({ description }: BookDescriptionProps) => {
           onClick={() => setExpanded(true)}
           className="text-foreground mt-2 cursor-pointer text-xs font-medium underline-offset-2 hover:underline"
         >
-          Show more
+          {shared.showMore}
         </button>
       )}
     </section>

@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { formatDate } from '~/common/utils/formatDate'
 import { formatRuntime } from '~/common/utils/formatRuntime'
 
@@ -19,50 +21,66 @@ const ChipList = ({ items }: { items: string[] }) => (
 )
 
 export const TvShowFacts = ({ show }: TvShowFactsProps) => {
+  const content = useIntlayer('discover-detail')
   const facts: { label: string; value: React.ReactNode }[] = []
 
   if (show.firstAirDate) {
-    facts.push({ label: 'First aired', value: formatDate(show.firstAirDate) })
+    facts.push({ label: content.firstAired.value, value: formatDate(show.firstAirDate) })
   }
   if (show.lastAirDate) {
-    facts.push({ label: 'Last aired', value: formatDate(show.lastAirDate) })
+    facts.push({ label: content.lastAired.value, value: formatDate(show.lastAirDate) })
   }
   if (show.status) {
-    facts.push({ label: 'Status', value: show.status })
+    facts.push({ label: content.status.value, value: show.status })
   }
   if (show.type) {
-    facts.push({ label: 'Type', value: show.type })
+    facts.push({ label: content.type.value, value: show.type })
   }
   if (show.networks.length > 0) {
-    facts.push({ label: 'Network', value: <ChipList items={show.networks.slice(0, 4)} /> })
+    facts.push({
+      label: content.network.value,
+      value: <ChipList items={show.networks.slice(0, 4)} />,
+    })
   }
   if (show.countries.length > 0) {
-    facts.push({ label: 'Countries', value: <ChipList items={show.countries.slice(0, 4)} /> })
+    facts.push({
+      label: content.countries.value,
+      value: <ChipList items={show.countries.slice(0, 4)} />,
+    })
   }
   if (show.languages.length > 0) {
-    facts.push({ label: 'Languages', value: <ChipList items={show.languages.slice(0, 4)} /> })
+    facts.push({
+      label: content.languages.value,
+      value: <ChipList items={show.languages.slice(0, 4)} />,
+    })
   }
   if (show.seasonCount > 0) {
     facts.push({
-      label: 'Seasons',
+      label: content.seasons.value,
       value: <span className="tabular-nums">{show.seasonCount}</span>,
     })
   }
   if (show.episodeCount > 0) {
     facts.push({
-      label: 'Episodes',
+      label: content.episodes.value,
       value: <span className="tabular-nums">{show.episodeCount}</span>,
     })
   }
   const runtime = formatRuntime(show.episodeRunTimeMinutes)
   if (runtime) {
-    facts.push({ label: 'Runtime', value: `${runtime} / ep` })
+    facts.push({ label: content.runtime.value, value: `${runtime} / ${content.perEpisode.value}` })
   }
   if (show.createdBy.length > 0) {
-    facts.push({ label: 'Created by', value: <ChipList items={show.createdBy.slice(0, 4)} /> })
+    facts.push({
+      label: content.createdBy.value,
+      value: <ChipList items={show.createdBy.slice(0, 4)} />,
+    })
   }
   if (show.studios.length > 0) {
-    facts.push({ label: 'Studios', value: <ChipList items={show.studios.slice(0, 4)} /> })
+    facts.push({
+      label: content.studios.value,
+      value: <ChipList items={show.studios.slice(0, 4)} />,
+    })
   }
 
   if (facts.length === 0) return null
@@ -70,7 +88,7 @@ export const TvShowFacts = ({ show }: TvShowFactsProps) => {
   return (
     <section className="flex flex-col gap-3" aria-labelledby="tv-details-heading">
       <h2 id="tv-details-heading" className="text-foreground text-lg font-semibold">
-        Details
+        {content.details.value}
       </h2>
       <FactsPanel facts={facts} />
     </section>

@@ -1,5 +1,14 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { ErrorState } from '~/common/ui/ErrorState'
 
 export const MediaReviewsError = () => {
-  return <ErrorState title="Couldn't load reviews" description="Try again later." border />
+  const shared = useIntlayer('shared')
+  return (
+    <ErrorState
+      title={shared.somethingWentWrong.value}
+      description={shared.tryAgainLater.value}
+      border
+    />
+  )
 }

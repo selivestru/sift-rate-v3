@@ -1,23 +1,18 @@
+import { useIntlayer } from 'react-intlayer'
 import { Building2 } from 'reicon-react'
 
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 
-import type { GameCompany, GameCompanyRole } from '../types/game-detail.types'
+import type { GameCompany } from '../types/game-detail.types'
 
 interface GameCompaniesProps {
   companies: GameCompany[]
   className?: string
 }
 
-const ROLE_LABEL: Record<GameCompanyRole, string> = {
-  developer: 'Developer',
-  publisher: 'Publisher',
-  supporting: 'Supporting',
-  porting: 'Porting',
-}
-
 export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
+  const content = useIntlayer('discover-detail')
   if (companies.length === 0) return null
 
   return (
@@ -25,7 +20,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
       <div className="mb-3 flex items-center gap-2">
         <Building2 className="text-muted-foreground size-4" aria-hidden />
         <h2 id="companies-heading" className="text-foreground text-lg font-semibold">
-          Companies
+          {content.companies.value}
         </h2>
       </div>
 
@@ -54,7 +49,7 @@ export const GameCompanies = ({ companies, className }: GameCompaniesProps) => {
               <div className="mt-1 flex flex-wrap gap-1">
                 {company.roles.map((role) => (
                   <Badge key={role} className="text-[10px]">
-                    {ROLE_LABEL[role]}
+                    {content[role].value}
                   </Badge>
                 ))}
               </div>

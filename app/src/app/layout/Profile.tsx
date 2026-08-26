@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { Logout, Settings, User } from 'reicon-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
@@ -13,9 +14,12 @@ import {
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 import { useAuthStore, useLogout } from '~/modules/auth'
 
+import { ProfileLocaleSwitcher } from './ProfileLocaleSwitcher'
+
 export const Profile = () => {
   const user = useAuthStore((state) => state.user!)
   const { logout } = useLogout()
+  const shared = useIntlayer('shared')
 
   return (
     <DropdownMenu>
@@ -34,17 +38,19 @@ export const Profile = () => {
             className="justify-between"
             render={<Link to="/$username" params={{ username: user.username! }} />}
           >
-            Profile
+            {shared.profile}
             <User />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="justify-between" render={<Link to="/settings/account" />}>
-            Settings
+            {shared.settings}
             <Settings />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <ProfileLocaleSwitcher />
+          <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" className="justify-between" onClick={logout}>
-            Log Out
+            {shared.logOut}
             <Logout />
           </DropdownMenuItem>
         </DropdownMenuGroup>

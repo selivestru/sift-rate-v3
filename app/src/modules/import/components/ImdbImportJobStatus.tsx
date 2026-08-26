@@ -1,5 +1,7 @@
+import { useIntlayer } from 'react-intlayer'
 import { AlertTriangle, CheckCircle, Clock, Refresh, Upload } from 'reicon-react'
 
+import { getCurrentLocale } from '~/common/i18n'
 import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
@@ -15,44 +17,6 @@ type ImdbImportJobStatusProps = {
   isRetrying: boolean
   onRetry: () => void
   onNewImport: () => void
-}
-
-const STATUS_META: Record<ImportJobStatus, { badge: React.ReactNode; description: string }> = {
-  PENDING: {
-    badge: (
-      <Badge variant="default" startIcon={<Clock aria-hidden />}>
-        Queued
-      </Badge>
-    ),
-    description:
-      'Your file is uploaded and waiting to be processed. This usually starts within a few seconds.',
-  },
-  PROCESSING: {
-    badge: (
-      <Badge variant="default" startIcon={<Spinner className="size-3.5" aria-hidden />}>
-        Processing
-      </Badge>
-    ),
-    description:
-      'Matching each row against the catalog and adding ratings to your library. You can leave this page — the import continues in the background.',
-  },
-  COMPLETED: {
-    badge: (
-      <Badge variant="default" startIcon={<CheckCircle className="text-success" aria-hidden />}>
-        Completed
-      </Badge>
-    ),
-    description: 'The import has finished. Anything that could not be matched is listed below.',
-  },
-  FAILED: {
-    badge: (
-      <Badge variant="destructive" startIcon={<AlertTriangle aria-hidden />}>
-        Failed
-      </Badge>
-    ),
-    description:
-      'The import stopped before finishing. Rows already processed are kept — retrying only picks up what is left.',
-  },
 }
 
 const getProgress = (job: ImportJobResponse) => {
@@ -77,18 +41,54 @@ export const ImdbImportJobStatus = ({
   onRetry,
   onNewImport,
 }: ImdbImportJobStatusProps) => {
-  const meta = STATUS_META[job.status]
+  const content = useIntlayer('imdb-import-job-status')
   const progress = getProgress(job)
   const isActive = job.status === 'PENDING' || job.status === 'PROCESSING'
   const isTerminal = isTerminalStatus(job.status)
 
+  const statusMeta: Record<ImportJobStatus, { badge: React.ReactNode; description: string }> = {
+    PENDING: {
+      badge: (
+        <Badge variant="default" startIcon={<Clock aria-hidden />}>
+          {content.queued.value}
+        </Badge>
+      ),
+      description: content.queuedDescription.value,
+    },
+    PROCESSING: {
+      badge: (
+        <Badge variant="default" startIcon={<Spinner className="size-3.5" aria-hidden />}>
+          {content.processing.value}
+        </Badge>
+      ),
+      description: content.processingDescription.value,
+    },
+    COMPLETED: {
+      badge: (
+        <Badge variant="default" startIcon={<CheckCircle className="text-success" aria-hidden />}>
+          {content.completed.value}
+        </Badge>
+      ),
+      description: content.completedDescription.value,
+    },
+    FAILED: {
+      badge: (
+        <Badge variant="destructive" startIcon={<AlertTriangle aria-hidden />}>
+          {content.failed.value}
+        </Badge>
+      ),
+      description: content.failedDescription.value,
+    },
+  }
+
+  const meta = statusMeta[job.status]
   const counts: Array<{ label: string; value: number }> = [
-    { label: 'Imported', value: job.created },
-    { label: 'Already in library', value: job.skippedExisting },
-    { label: 'Unsupported type', value: job.skippedType },
-    { label: 'Not found', value: job.notFound },
-    { label: 'Invalid rows', value: job.invalid },
-    { label: 'Errors', value: job.errorCount },
+    { label: content.imported.value, value: job.created },
+    { label: content.alreadyInLibrary.value, value: job.skippedExisting },
+    { label: content.unsupportedType.value, value: job.skippedType },
+    { label: content.notFound.value, value: job.notFound },
+    { label: content.invalidRows.value, value: job.invalid },
+    { label: content.errors.value, value: job.errorCount },
   ]
 
   return (
@@ -97,8 +97,10 @@ export const ImdbImportJobStatus = ({
         <div className="flex items-center gap-2.5">
           {meta.badge}
           <span className="text-muted-foreground text-xs">
-            Started {formatRelativeTime(job.createdAt)}
-            {job.finishedAt && ` · Finished ${formatRelativeTime(job.finishedAt)}`}
+            {content.started({ time: formatRelativeTime(job.createdAt) }).value}
+            {job.finishedAt && (
+              <> · {content.finished({ time: formatRelativeTime(job.finishedAt) }).value}</>
+            )}
           </span>
         </div>
         {isTerminal && (
@@ -109,7 +111,7 @@ export const ImdbImportJobStatus = ({
             startIcon={<Upload aria-hidden />}
             onClick={onNewImport}
           >
-            Import another file
+            {content.importAnotherFile.value}
           </Button>
         )}
       </div>
@@ -118,15 +120,28 @@ export const ImdbImportJobStatus = ({
 
       <div className="flex flex-col gap-2" aria-live="polite">
         <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm font-medium">{isActive ? 'Progress' : 'Processed'}</p>
+          <p className="text-sm font-medium">
+            {isActive ? content.progress.value : content.processed.value}
+          </p>
           <p className="text-muted-foreground text-sm tabular-nums">
-            {job.processed.toLocaleString('en-US')} of {job.total.toLocaleString('en-US')} rows
-            {job.total > 0 && ` · ${progress}%`}
+            {
+              (job.total > 0
+                ? content.processedCountWithPercent({
+                    processed: job.processed.toLocaleString(getCurrentLocale()),
+                    total: job.total.toLocaleString(getCurrentLocale()),
+                    progress,
+                  })
+                : content.processedCount({
+                    processed: job.processed.toLocaleString(getCurrentLocale()),
+                    total: job.total.toLocaleString(getCurrentLocale()),
+                  })
+              ).value
+            }
           </p>
         </div>
         <div
           role="progressbar"
-          aria-label="Import progress"
+          aria-label={content.progressAriaLabel.value}
           aria-valuemin={0}
           aria-valuemax={Math.max(job.total, 1)}
           aria-valuenow={job.processed}
@@ -149,7 +164,7 @@ export const ImdbImportJobStatus = ({
             className="border-border bg-background flex flex-col gap-0.5 rounded-lg border px-3 py-2.5"
           >
             <dd className="text-lg font-semibold tabular-nums">
-              {count.value.toLocaleString('en-US')}
+              {count.value.toLocaleString(getCurrentLocale())}
             </dd>
             <dt className="text-muted-foreground text-xs">{count.label}</dt>
           </div>
@@ -159,7 +174,7 @@ export const ImdbImportJobStatus = ({
       {job.status === 'FAILED' && job.errorMessage && (
         <Alert variant="destructive">
           <AlertTriangle />
-          <AlertTitle>Why it stopped</AlertTitle>
+          <AlertTitle>{content.whyStopped.value}</AlertTitle>
           <AlertDescription>{job.errorMessage}</AlertDescription>
         </Alert>
       )}
@@ -169,7 +184,7 @@ export const ImdbImportJobStatus = ({
       {canRetry(job) && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-muted-foreground text-xs leading-relaxed">
-            Retry only re-processes unmatched rows — not found, errors, and skipped types.
+            {content.retryDescription.value}
           </p>
           <Button
             type="button"
@@ -180,7 +195,7 @@ export const ImdbImportJobStatus = ({
             isLoading={isRetrying}
             onClick={onRetry}
           >
-            Retry unfinished rows
+            {content.retryUnfinishedRows.value}
           </Button>
         </div>
       )}

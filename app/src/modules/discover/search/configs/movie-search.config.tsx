@@ -7,9 +7,6 @@ import type { DiscoverSearchConfig, MovieSearchItem } from '../types/discover-se
 
 export const movieSearchConfig: DiscoverSearchConfig<MovieSearchItem> = {
   mediaType: MEDIA_TYPES.MOVIE,
-  title: 'Find movies',
-  description: 'Search films to watch and archive in your life timeline.',
-  searchPlaceholder: 'Search movies…',
   skeletonCount: 6,
   pageSize: 10,
   resultsClassName: 'flex flex-col gap-3',

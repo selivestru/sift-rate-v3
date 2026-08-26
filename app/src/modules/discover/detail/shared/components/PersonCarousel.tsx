@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import {
   Carousel,
   CarouselContent,
@@ -23,21 +25,23 @@ interface PersonCarouselProps {
 
 export const PersonCarousel = ({
   people,
-  title = 'Cast',
+  title,
   titleId,
   subtitleKey = 'character',
   className,
 }: PersonCarouselProps) => {
+  const content = useIntlayer('discover-detail')
+  const resolvedTitle = title ?? content.cast.value
   if (people.length === 0) return null
 
-  const headingId = titleId ?? `person-carousel-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  const headingId = titleId ?? 'person-carousel-heading'
 
   return (
     <section className={cn('', className)} aria-labelledby={headingId}>
       <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id={headingId} className="text-foreground text-lg font-semibold">
-            {title}
+            {resolvedTitle}
           </h2>
           <div className="flex shrink-0 items-center gap-1">
             <CarouselPrevious className={carouselNavClassName} />

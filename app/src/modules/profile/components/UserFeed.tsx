@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useIntlayer } from 'react-intlayer'
 
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
 import { EmptyState } from '~/common/ui/EmptyState'
@@ -15,12 +16,14 @@ interface UserFeedProps {
 }
 
 export const UserFeed = ({ username }: UserFeedProps) => {
+  const content = useIntlayer('user-feed')
+
   return (
     <ErrorBoundary
       fallback={
         <ErrorState
-          title="Unable to load feed"
-          description="We couldn't load this user's reviews. Please try again later."
+          title={content.unableToLoadFeed.value}
+          description={content.feedLoadDescription.value}
         />
       }
     >
@@ -32,6 +35,8 @@ export const UserFeed = ({ username }: UserFeedProps) => {
 }
 
 const UserFeedList = ({ username }: UserFeedProps) => {
+  const content = useIntlayer('user-feed')
+  const shared = useIntlayer('shared')
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useGetUserFeedQuery(username)
 
@@ -45,10 +50,15 @@ const UserFeedList = ({ username }: UserFeedProps) => {
 
   return (
     <section className="flex flex-col">
-      <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">Feed</h2>
+      <h2 className="border-b-border border-b p-4 text-lg font-semibold tracking-tight">
+        {content.title.value}
+      </h2>
 
       {isEmpty && (
-        <EmptyState title="No reviews yet" description="Nothing rated or reviewed so far." />
+        <EmptyState
+          title={shared.noReviewsYet.value}
+          description={content.noReviewsDescription.value}
+        />
       )}
 
       <div className="divide-border divide-y">

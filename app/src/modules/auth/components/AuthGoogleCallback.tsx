@@ -1,5 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { CheckCircle, XCircle } from 'reicon-react'
 
 import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
@@ -11,13 +12,6 @@ import { authApi } from '../api/auth.api'
 import type { AuthGoogleCallbackSearch } from '../schema/auth-callback.schema'
 import { useAuthStore } from '../store/auth.store'
 
-const ERROR_MESSAGES: Record<AuthGoogleCallbackSearch['status'], string> = {
-  email_taken:
-    'This email is already linked to an account. Try signing in again, or contact us if that wasn’t you.',
-  google_auth_failed: 'Google sign-in failed. Please try again.',
-  success: 'Google sign-in successful.',
-}
-
 interface AuthGoogleCallbackProps {
   status: AuthGoogleCallbackSearch['status']
 }
@@ -25,8 +19,14 @@ interface AuthGoogleCallbackProps {
 export const AuthGoogleCallback = ({ status }: AuthGoogleCallbackProps) => {
   const navigate = useNavigate()
   const setUser = useAuthStore((state) => state.setUser)
+  const content = useIntlayer('auth-google-callback')
+  const shared = useIntlayer('shared')
 
-  const message = ERROR_MESSAGES[status]
+  const message = {
+    email_taken: content.emailAlreadyLinked.value,
+    google_auth_failed: content.googleSignInFailed.value,
+    success: content.googleSignInSuccessful.value,
+  }[status]
   const isSuccess = status === 'success'
   const Icon = isSuccess ? CheckCircle : XCircle
 
@@ -55,11 +55,11 @@ export const AuthGoogleCallback = ({ status }: AuthGoogleCallbackProps) => {
       <div className="flex flex-col gap-4">
         <Alert variant={isSuccess ? 'success' : 'destructive'}>
           <Icon />
-          <AlertTitle>{isSuccess ? 'Success' : 'Failed'}</AlertTitle>
+          <AlertTitle>{isSuccess ? content.success.value : content.failed.value}</AlertTitle>
           <AlertDescription>{message}</AlertDescription>
         </Alert>
         <Button fullWidth variant="secondary" render={<Link to="/auth" />}>
-          Back to sign in
+          {content.backToSignIn({ signIn: shared.signIn.value })}
         </Button>
       </div>
     )

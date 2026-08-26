@@ -1,11 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronLeft, Film } from 'reicon-react'
 import { toast } from 'sonner'
 
 import { getApiError, toastApiError } from '~/common/api'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+import { getCurrentLocale } from '~/common/i18n'
 import { Button } from '~/common/ui/Button'
 import { ErrorState } from '~/common/ui/ErrorState'
 import { PageHeader } from '~/common/ui/PageHeader'
@@ -22,6 +24,9 @@ import { ImdbImportSkeleton } from './ImdbImportSkeleton'
 import { ImdbImportUpload } from './ImdbImportUpload'
 
 export const ImdbImportPage = () => {
+  const content = useIntlayer('imdb-import-page')
+  const shared = useIntlayer('shared')
+  const settingsNav = useIntlayer('settings-nav')
   const queryClient = useQueryClient()
   const [viewedJobId, setViewedJobId] = useState<string | null>(null)
   const [isCreatingNew, setIsCreatingNew] = useState(false)
@@ -101,13 +106,13 @@ export const ImdbImportPage = () => {
           className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/40 flex w-fit items-center gap-1 rounded-md text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
         >
           <ChevronLeft className="size-4" aria-hidden />
-          All imports
+          {content.backToImports.value}
         </Link>
         <PageHeader
           icon={Film}
-          label="Imports"
-          title="IMDb ratings"
-          description="Import the ratings.csv export from your IMDb account. Each row is matched by IMDb ID and added to your library as a rating."
+          label={settingsNav.imports.value}
+          title={content.title.value}
+          description={content.description.value}
         />
       </div>
 
@@ -116,8 +121,8 @@ export const ImdbImportPage = () => {
       {jobLoadError && (
         <ErrorState
           border
-          title="Could not load the import"
-          description="Something went wrong while loading your import status."
+          title={shared.somethingWentWrong.value}
+          description={content.loadErrorDescription.value}
           onRetry={() => {
             void activeQuery.refetch()
             void jobQuery.refetch()
@@ -128,10 +133,10 @@ export const ImdbImportPage = () => {
       {isViewingPastImport && (
         <div className="border-border bg-card flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3">
           <p className="text-muted-foreground text-xs leading-relaxed">
-            You are viewing a past import. Another import is active right now.
+            {content.pastImportDescription.value}
           </p>
           <Button type="button" variant="outline" size="sm" onClick={handleViewActive}>
-            View active import
+            {content.viewActiveImport.value}
           </Button>
         </div>
       )}
@@ -148,30 +153,29 @@ export const ImdbImportPage = () => {
       {!showJob && !isResolvingJob && !jobLoadError && (
         <>
           <SettingsSection
-            title="Upload your ratings export"
-            description="On IMDb, open Your Ratings and choose Export to download ratings.csv."
+            title={content.uploadTitle.value}
+            description={content.uploadDescription.value}
           >
             <ImdbImportUpload isUploading={uploadMutation.isPending} onUpload={handleUpload} />
           </SettingsSection>
 
           <SettingsSection
-            title="What gets imported"
-            description="A few things worth knowing before you start."
+            title={content.whatGetsImported.value}
+            description={content.whatGetsImportedDescription.value}
           >
             <ul className="text-muted-foreground list-inside list-disc space-y-1.5 text-sm leading-relaxed">
+              <li>{content.requiredColumns.value}</li>
               <li>
-                Required columns: Const, Your Rating, Date Rated, Title, Title Type — all present in
-                the standard IMDb export
+                {
+                  content.rowAndFileLimit({
+                    rows: IMDB_IMPORT_MAX_ROWS.toLocaleString(getCurrentLocale()),
+                    size: 5,
+                  }).value
+                }
               </li>
-              <li>
-                Up to {IMDB_IMPORT_MAX_ROWS.toLocaleString('en-US')} rows per file, 5 MB maximum
-              </li>
-              <li>
-                Movies (including shorts) and TV series are imported; episodes, video games, and
-                podcasts are skipped
-              </li>
-              <li>Ratings you already have in your library are left untouched</li>
-              <li>Only one import can run at a time</li>
+              <li>{content.supportedTypes.value}</li>
+              <li>{content.existingRatings.value}</li>
+              <li>{content.oneImportAtATime.value}</li>
             </ul>
           </SettingsSection>
         </>

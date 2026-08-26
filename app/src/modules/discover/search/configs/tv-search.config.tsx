@@ -7,9 +7,6 @@ import type { DiscoverSearchConfig, TvSearchItem } from '../types/discover-searc
 
 export const tvSearchConfig: DiscoverSearchConfig<TvSearchItem> = {
   mediaType: MEDIA_TYPES.TV_SHOW,
-  title: 'Find TV shows',
-  description: 'Search series and seasons worth following.',
-  searchPlaceholder: 'Search TV shows…',
   skeletonCount: 6,
   pageSize: 10,
   resultsClassName: 'flex flex-col gap-3',

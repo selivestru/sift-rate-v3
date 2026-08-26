@@ -1,4 +1,5 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
+import { useIntlayer } from 'react-intlayer'
 import { X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -41,6 +42,8 @@ export const DialogContent = ({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) => {
+  const shared = useIntlayer('shared')
+
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -61,7 +64,7 @@ export const DialogContent = ({
             }
           >
             <X />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{shared.close}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -83,6 +86,8 @@ export const DialogFooter = ({
 }: React.ComponentProps<'div'> & {
   showCloseButton?: boolean
 }) => {
+  const shared = useIntlayer('shared')
+
   return (
     <div
       data-slot="dialog-footer"
@@ -91,7 +96,9 @@ export const DialogFooter = ({
     >
       {children}
       {showCloseButton && (
-        <DialogPrimitive.Close render={<Button variant="outline" />}>Close</DialogPrimitive.Close>
+        <DialogPrimitive.Close render={<Button variant="outline" />}>
+          {shared.close}
+        </DialogPrimitive.Close>
       )}
     </div>
   )

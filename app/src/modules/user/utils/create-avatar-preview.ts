@@ -1,10 +1,13 @@
+import { getLocalizedContent } from '~/common/i18n'
+
 export const createSquareCoverPreviewUrl = async (file: File, size = 300): Promise<string> => {
+  const previewError = getLocalizedContent('user-change-avatar-form').previewError
   let bitmap: ImageBitmap
 
   try {
     bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' })
   } catch {
-    throw new Error('Could not preview this image.')
+    throw new Error(previewError)
   }
 
   try {
@@ -13,7 +16,7 @@ export const createSquareCoverPreviewUrl = async (file: File, size = 300): Promi
     canvas.height = size
 
     const context = canvas.getContext('2d')
-    if (!context) throw new Error('Could not preview this image.')
+    if (!context) throw new Error(previewError)
 
     const scale = Math.max(size / bitmap.width, size / bitmap.height)
     const width = bitmap.width * scale
@@ -21,7 +24,7 @@ export const createSquareCoverPreviewUrl = async (file: File, size = 300): Promi
     context.drawImage(bitmap, (size - width) / 2, (size - height) / 2, width, height)
 
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp'))
-    if (!blob) throw new Error('Could not preview this image.')
+    if (!blob) throw new Error(previewError)
 
     return URL.createObjectURL(blob)
   } finally {

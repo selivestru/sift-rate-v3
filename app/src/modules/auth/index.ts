@@ -1,5 +1,4 @@
 export * from './api/auth.api'
-export * from './components/AuthBrandPanel'
 export * from './components/AuthBootstrap'
 export * from './components/AuthGoogleCallback'
 export * from './components/AuthShell'

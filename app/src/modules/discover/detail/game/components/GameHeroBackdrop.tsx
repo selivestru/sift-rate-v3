@@ -1,6 +1,8 @@
+import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { formatDate } from '~/common/utils/formatDate'
 
 import type { GameDetail } from '../types/game-detail.types'
@@ -11,6 +13,8 @@ interface GameHeroBackdropProps {
 }
 
 export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
+  const content = useIntlayer('discover-detail')
+  const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.GAME)
   const accent = mediaTypeMeta[MEDIA_TYPES.GAME].color
 
   return (
@@ -53,7 +57,7 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
       <div className="relative z-10 flex min-h-56 flex-col justify-end p-5 pb-16 sm:min-h-72 sm:p-6 sm:pb-20">
         <div className="flex max-w-xl flex-col gap-2.5">
           <span className="text-xs font-medium tracking-widest uppercase" style={{ color: accent }}>
-            Game
+            {typeLabel}
           </span>
 
           <div className="flex flex-col gap-1">
@@ -89,8 +93,11 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
                 className="border-border bg-muted flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-md"
                 title={
                   game.igdbRatingCount > 0
-                    ? `${game.igdbRatingCount.toLocaleString()} IGDB ratings`
-                    : 'IGDB rating'
+                    ? content.ratingCount({
+                        count: game.igdbRatingCount.toLocaleString(),
+                        provider: 'IGDB',
+                      })
+                    : content.ratingLabel({ provider: 'IGDB' })
                 }
               >
                 <Star weight="Filled" className="text-rating size-3.5" aria-hidden />

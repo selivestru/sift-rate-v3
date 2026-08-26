@@ -6,7 +6,7 @@ export const podiumMeta: Record<
   PodiumRank,
   {
     rank: PodiumRank
-    label: string
+    labelKey: 'first' | 'second' | 'third'
     heightClass: string
     accent: string
     accentSoft: string
@@ -14,21 +14,21 @@ export const podiumMeta: Record<
 > = {
   1: {
     rank: 1,
-    label: '1st',
+    labelKey: 'first',
     heightClass: 'h-40',
     accent: 'oklch(0.82 0.14 85)',
     accentSoft: 'oklch(0.82 0.14 85 / 0.22)',
   },
   2: {
     rank: 2,
-    label: '2nd',
+    labelKey: 'second',
     heightClass: 'h-34',
     accent: 'oklch(0.78 0.03 260)',
     accentSoft: 'oklch(0.78 0.03 260 / 0.22)',
   },
   3: {
     rank: 3,
-    label: '3rd',
+    labelKey: 'third',
     heightClass: 'h-30',
     accent: 'oklch(0.72 0.12 55)',
     accentSoft: 'oklch(0.72 0.12 55 / 0.22)',

@@ -1,6 +1,8 @@
+import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
+import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 
@@ -14,16 +16,19 @@ interface BookHeroProps {
 }
 
 export const BookHero = ({ book }: BookHeroProps) => {
+  const content = useIntlayer('discover-detail')
+  const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.BOOK)
   const accent = mediaTypeMeta[MEDIA_TYPES.BOOK].color
   const MediaTypeIcon = mediaTypeMeta.BOOK.icon
   const publishedLabel = formatPublished(book.publishedDate, book.year)
   const categoryPreview = book.categories.slice(0, 3)
 
   const stats: Array<{ label: string; value: string }> = []
-  if (publishedLabel) stats.push({ label: 'Published', value: publishedLabel })
-  if (book.pageCount != null) stats.push({ label: 'Length', value: `${book.pageCount} pp.` })
-  if (book.language) stats.push({ label: 'Language', value: book.language })
-  if (book.publisher) stats.push({ label: 'Publisher', value: book.publisher })
+  if (publishedLabel) stats.push({ label: content.published.value, value: publishedLabel })
+  if (book.pageCount != null)
+    stats.push({ label: content.pages.value, value: String(book.pageCount) })
+  if (book.language) stats.push({ label: content.language.value, value: book.language })
+  if (book.publisher) stats.push({ label: content.publisher.value, value: book.publisher })
 
   return (
     <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">
@@ -84,7 +89,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
                 <div className="flex size-full flex-col items-center justify-center gap-2 px-3">
                   <MediaTypeIcon className="text-muted-foreground size-10" aria-hidden />
                   <span className="text-muted-foreground text-center text-[10px] tracking-wide uppercase">
-                    No cover
+                    {content.noCover.value}
                   </span>
                 </div>
               }
@@ -103,9 +108,11 @@ export const BookHero = ({ book }: BookHeroProps) => {
               className="text-[10px] font-semibold tracking-[0.28em] uppercase"
               style={{ color: accent }}
             >
-              Book
+              {typeLabel}
             </span>
-            {book.isEbook && <Badge className="h-5 px-1.5 text-[10px] uppercase">eBook</Badge>}
+            {book.isEbook && (
+              <Badge className="h-5 px-1.5 text-[10px] uppercase">{content.ebook.value}</Badge>
+            )}
             <span
               aria-hidden
               className="h-px w-6 sm:w-8"
@@ -125,10 +132,7 @@ export const BookHero = ({ book }: BookHeroProps) => {
 
           {book.authors.length > 0 && (
             <p className="text-foreground mt-4 text-sm tracking-wide text-pretty sm:text-base">
-              <span className="text-muted-foreground font-normal tracking-normal normal-case">
-                by{' '}
-              </span>
-              <span className="font-medium">{book.authors.join(' · ')}</span>
+              {content.byAuthors({ authors: book.authors.join(' · ') })}
             </p>
           )}
 
@@ -169,8 +173,11 @@ export const BookHero = ({ book }: BookHeroProps) => {
                 className="border-border bg-muted flex items-center gap-1 rounded-full border px-2.5 py-1"
                 title={
                   book.googleRatingsCount > 0
-                    ? `${book.googleRatingsCount.toLocaleString()} Google ratings`
-                    : 'Google rating'
+                    ? content.ratingCount({
+                        count: book.googleRatingsCount.toLocaleString(),
+                        provider: 'Google',
+                      })
+                    : content.ratingLabel({ provider: 'Google' })
                 }
               >
                 <Star weight="Filled" className="text-muted-foreground size-3.5" aria-hidden />

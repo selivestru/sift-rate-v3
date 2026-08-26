@@ -1,10 +1,15 @@
 import { z } from 'zod'
 
-export const getStorageItem = <T>(key: string, schema: z.ZodType<T>, fallback: T): T => {
+export const getStorageItem = <T>(
+  key: string,
+  schema: z.ZodType<T>,
+  fallback: T,
+  withParse: boolean = true,
+): T => {
   try {
     const raw = localStorage.getItem(key)
     if (raw === null) return fallback
-    return schema.parse(JSON.parse(raw))
+    return schema.parse(withParse ? JSON.parse(raw) : raw)
   } catch {
     return fallback
   }

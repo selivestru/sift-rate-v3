@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { Pen, Star, Trash6 } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
@@ -19,6 +20,7 @@ interface MediaReviewCardProps {
 }
 
 export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCardProps) => {
+  const content = useIntlayer('discover-detail')
   const { user } = review
 
   const currentUserId = useAuthStore((state) => state.user?.id)
@@ -48,7 +50,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                 </Link>
               ) : (
                 <span className="text-foreground truncate text-sm font-semibold">
-                  {user.displayName ?? 'Unknown'}
+                  {user.displayName ?? content.unknown.value}
                 </span>
               )}
 
@@ -59,7 +61,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
 
             <div
               className="flex items-center gap-0.5"
-              aria-label={`Rated ${review.rating} out of 10`}
+              aria-label={content.rated({ rating: review.rating })}
             >
               {Array.from({ length: 10 }, (_, index) => {
                 const filled = index < review.rating
@@ -91,7 +93,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                     size="sm"
                     variant="secondary"
                     onClick={open}
-                    aria-label="Edit review"
+                    aria-label={content.editReview.value}
                   >
                     <Pen weight="Filled" />
                   </Button>
@@ -104,7 +106,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                     size="sm"
                     variant="destructive-soft"
                     onClick={open}
-                    aria-label="Delete review"
+                    aria-label={content.deleteReview.value}
                   >
                     <Trash6 weight="Filled" />
                   </Button>

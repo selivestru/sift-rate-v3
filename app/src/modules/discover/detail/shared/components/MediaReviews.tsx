@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useIntlayer } from 'react-intlayer'
 import { MessageText2 } from 'reicon-react'
 
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
@@ -15,10 +16,11 @@ import { MediaReviewsSkeleton } from './MediaReviewsSkeleton'
 type MediaReviewsProps = MediaRef
 
 export const MediaReviews = (props: MediaReviewsProps) => {
+  const content = useIntlayer('shared')
   return (
     <section aria-labelledby="media-reviews-heading" className="flex flex-col gap-3">
       <h2 id="media-reviews-heading" className="text-foreground text-lg font-semibold">
-        Reviews
+        {content.reviews.value}
       </h2>
       <ErrorBoundary fallback={<MediaReviewsError />}>
         <Suspense fallback={<MediaReviewsSkeleton />}>
@@ -30,6 +32,7 @@ export const MediaReviews = (props: MediaReviewsProps) => {
 }
 
 const MediaReviewsList = (props: MediaReviewsProps) => {
+  const content = useIntlayer('discover-detail')
   const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
     useGetMediaReviews(props)
 
@@ -45,10 +48,8 @@ const MediaReviewsList = (props: MediaReviewsProps) => {
     return (
       <div className="bg-muted ring-border flex flex-col items-center gap-2 rounded-2xl px-4 py-10 text-center ring-1">
         <MessageText2 className="text-muted-foreground size-8 opacity-60" />
-        <p className="text-foreground text-sm font-medium">No public reviews yet</p>
-        <p className="text-muted-foreground max-w-sm text-xs">
-          Be the first to share what this meant to you — rate it and write a public review.
-        </p>
+        <p className="text-foreground text-sm font-medium">{content.noPublicReviews.value}</p>
+        <p className="text-muted-foreground max-w-sm text-xs">{content.firstReview.value}</p>
       </div>
     )
   }

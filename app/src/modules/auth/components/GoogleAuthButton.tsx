@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 
 import { toastApiError } from '~/common/api'
 import GoogleIcon from '~/common/assets/icons/google.svg?react'
@@ -17,9 +18,10 @@ export const GoogleAuthButton = ({
   variant = 'secondary',
   size,
   fullWidth = true,
-  label = 'Continue with Google',
+  label,
 }: GoogleAuthButtonProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  const content = useIntlayer('google-auth-button')
 
   const handlePress = async () => {
     setIsLoading(true)
@@ -44,7 +46,7 @@ export const GoogleAuthButton = ({
       startIcon={<GoogleIcon />}
       onClick={handlePress}
     >
-      {label}
+      {label ?? content.continueWithGoogle.value}
     </Button>
   )
 }

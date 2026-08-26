@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { getApiError } from '~/common/api'
+import { getLocalizedContent } from '~/common/i18n'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
 
@@ -13,6 +14,7 @@ import { useAuthStore } from '../store/auth.store'
 import { useCompleteProfileMutation } from './useCompleteProfileMutation'
 
 export const useCompleteProfileForm = () => {
+  const content = getLocalizedContent('complete-profile-form')
   const displayName = useAuthStore((state) => state.user?.displayName)
 
   const navigate = useNavigate()
@@ -41,7 +43,7 @@ export const useCompleteProfileForm = () => {
       const response = await completeProfileMutation.mutateAsync(data)
       setCompleteProfile(response)
       navigate({ to: '/' })
-      toast.success('Profile completed')
+      toast.success(content.profileCompleted)
     } catch (error) {
       const apiError = await getApiError(error)
       applyApiFormError({

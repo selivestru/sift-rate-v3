@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import {
   Carousel,
@@ -20,15 +22,14 @@ interface TvShowSeasonsProps {
 }
 
 export const TvShowSeasons = ({ seasons, className }: TvShowSeasonsProps) => {
+  const content = useIntlayer('discover-detail')
   const accent = mediaTypeMeta[MEDIA_TYPES.TV_SHOW].color
 
   if (seasons.length === 0) {
     return (
       <div className="bg-muted ring-border rounded-2xl px-4 py-10 text-center ring-1">
-        <p className="text-foreground text-sm font-medium">No seasons listed</p>
-        <p className="text-muted-foreground mt-1 text-xs">
-          Season data isn&apos;t available for this series yet.
-        </p>
+        <p className="text-foreground text-sm font-medium">{content.noSeasons.value}</p>
+        <p className="text-muted-foreground mt-1 text-xs">{content.seasonsUnavailable.value}</p>
       </div>
     )
   }
@@ -38,7 +39,7 @@ export const TvShowSeasons = ({ seasons, className }: TvShowSeasonsProps) => {
       <Carousel opts={{ align: 'start', dragFree: true }} className="w-full max-w-full">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id="seasons-heading" className="text-foreground text-lg font-semibold">
-            Seasons
+            {content.seasons.value}
           </h2>
           {seasons.length > 3 && (
             <div className="flex shrink-0 items-center gap-1">

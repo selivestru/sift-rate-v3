@@ -1,4 +1,7 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { plannedNavItem } from '~/common/constants/navigation'
+import { useNavLabels } from '~/common/i18n'
 import { Skeleton } from '~/common/ui/Skeleton'
 import { cn } from '~/common/utils/cn'
 
@@ -15,6 +18,9 @@ const QUEUE_TICKS = [
 ] as const
 
 export const PlannedHero = ({ total }: PlannedHeroProps) => {
+  const content = useIntlayer('planned')
+  const shared = useIntlayer('shared')
+  const labels = useNavLabels()
   const { color, icon: PlannedIcon } = plannedNavItem
   const isLoading = total == null
   const isEmpty = total === 0
@@ -37,20 +43,26 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
       <div className="relative flex flex-col gap-8 sm:flex-row sm:justify-between sm:gap-10">
         <div className="flex flex-1 flex-col gap-3">
           <p className="text-muted-foreground text-[11px] font-medium tracking-[0.18em] uppercase">
-            Library
+            {shared.library.value}
           </p>
 
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Planned</h1>
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              {labels['/library/planned'].label}
+            </h1>
             <p className="text-muted-foreground max-w-[36ch] text-sm leading-relaxed sm:text-[15px]">
-              Media you saved for later. Your queue, ready when you are.
+              {content.heroDescription.value}
             </p>
           </div>
         </div>
 
         <div
           className="flex shrink-0 flex-col items-start gap-3 sm:items-end"
-          aria-label={isLoading ? 'Loading queue count' : `${total} in queue`}
+          aria-label={
+            isLoading
+              ? content.loadingQueueCount.value
+              : content.queueCount({ count: String(total) })
+          }
         >
           <div className="flex flex-col items-start gap-0.5 sm:items-end sm:text-right">
             {isLoading ? (
@@ -67,7 +79,7 @@ export const PlannedHero = ({ total }: PlannedHeroProps) => {
               </p>
             )}
             <p className="text-muted-foreground text-xs font-medium tracking-wide sm:text-sm">
-              in queue
+              {content.inQueue.value}
             </p>
           </div>
         </div>

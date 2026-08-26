@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { XCircle } from 'reicon-react'
 
 import { Alert, AlertTitle } from '~/common/ui/Alert'
@@ -8,18 +9,17 @@ interface DiscoverSearchErrorProps {
   onRetry: () => void
 }
 
-export const DiscoverSearchError = ({
-  message = 'Something went wrong while searching. Try again.',
-  onRetry,
-}: DiscoverSearchErrorProps) => {
+export const DiscoverSearchError = ({ message, onRetry }: DiscoverSearchErrorProps) => {
+  const content = useIntlayer('discover-search-ui')
+  const shared = useIntlayer('shared')
   return (
     <div className="mx-auto flex w-fit max-w-sm flex-col gap-3">
       <Alert variant="destructive">
         <XCircle />
-        <AlertTitle>{message}</AlertTitle>
+        <AlertTitle>{message ?? content.searchError.value}</AlertTitle>
       </Alert>
       <Button fullWidth variant="secondary" onClick={onRetry}>
-        Retry
+        {shared.retry.value}
       </Button>
     </div>
   )

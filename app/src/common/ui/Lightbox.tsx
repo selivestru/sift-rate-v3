@@ -1,5 +1,6 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
 import { useEffect, useLayoutEffect, useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { ChevronLeft, ChevronRight, X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -36,9 +37,12 @@ export const Lightbox = ({
   images,
   index,
   onIndexChange,
-  label = 'Image gallery',
+  label,
   className,
 }: LightboxProps) => {
+  const shared = useIntlayer('shared')
+  const ui = useIntlayer('common-ui')
+  const resolvedLabel = label ?? ui.imageGallery.value
   const hasImages = images.length > 0
   const safeIndex = hasImages ? Math.min(Math.max(index, 0), images.length - 1) : 0
   const current = hasImages ? images[safeIndex] : null
@@ -112,13 +116,13 @@ export const Lightbox = ({
           )}
         >
           <DialogTitle className="sr-only">
-            {label}
-            {hasImages ? ` — ${safeIndex + 1} of ${images.length}` : ''}
+            {resolvedLabel}
+            {hasImages
+              ? ` — ${ui.imageOf({ current: String(safeIndex + 1), total: String(images.length) })}`
+              : ''}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            {hasMultiple
-              ? 'Use arrow keys to navigate between images. Press Escape to close.'
-              : 'Press Escape to close.'}
+            {hasMultiple ? ui.lightboxHelpMultiple : ui.lightboxHelpSingle}
           </DialogDescription>
 
           <div className="relative flex size-full flex-col">
@@ -134,7 +138,7 @@ export const Lightbox = ({
                     size="sm"
                     isIconOnly
                     className="rounded-full bg-white/10 text-white hover:bg-white/20"
-                    aria-label="Close"
+                    aria-label={shared.close.value}
                   />
                 }
               >
@@ -153,7 +157,7 @@ export const Lightbox = ({
                 <div key={current.src} className="absolute inset-12 sm:inset-16">
                   <img
                     src={current.src}
-                    alt={current.alt ?? label}
+                    alt={current.alt ?? resolvedLabel}
                     className={cn(
                       'size-full object-contain',
                       open && 'transition-opacity duration-300',
@@ -173,7 +177,7 @@ export const Lightbox = ({
                   type="button"
                   variant="secondary"
                   className="absolute top-1/2 left-3 z-30 size-10 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20 sm:left-5"
-                  aria-label="Previous image"
+                  aria-label={ui.previousImage.value}
                   onClick={() => onIndexChange(safeIndex <= 0 ? images.length - 1 : safeIndex - 1)}
                 >
                   <ChevronLeft className="size-5" />
@@ -183,7 +187,7 @@ export const Lightbox = ({
                   type="button"
                   variant="secondary"
                   className="absolute top-1/2 right-3 z-30 size-10 -translate-y-1/2 rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-5"
-                  aria-label="Next image"
+                  aria-label={ui.nextImage.value}
                   onClick={() => onIndexChange(safeIndex >= images.length - 1 ? 0 : safeIndex + 1)}
                 >
                   <ChevronRight className="size-5" />

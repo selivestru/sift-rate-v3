@@ -1,0 +1,266 @@
+import { insert, plural, t, type Dictionary } from 'intlayer'
+
+const discoverDetailContent = {
+  key: 'discover-detail',
+  content: {
+    reviews: t({ en: 'Reviews', uk: 'Рецензії', ru: 'Рецензии' }),
+    noPublicReviews: t({
+      en: 'No public reviews yet',
+      uk: 'Публічних рецензій ще немає',
+      ru: 'Публичных рецензий пока нет',
+    }),
+    firstReview: t({
+      en: 'Be the first to share what this meant to you — rate it and write a public review.',
+      uk: 'Першим поділіться своїми враженнями — оцініть і напишіть публічну рецензію.',
+      ru: 'Первым поделитесь впечатлениями — оцените и напишите публичную рецензию.',
+    }),
+    gallery: t({ en: 'Gallery', uk: 'Галерея', ru: 'Галерея' }),
+    posters: t({ en: 'Posters', uk: 'Постери', ru: 'Постеры' }),
+    backdrops: t({ en: 'Backdrops', uk: 'Фони', ru: 'Фоны' }),
+    screenshots: t({ en: 'Screenshots', uk: 'Скріншоти', ru: 'Скриншоты' }),
+    artworks: t({ en: 'Artworks', uk: 'Ілюстрації', ru: 'Иллюстрации' }),
+    trailer: t({ en: 'Trailer', uk: 'Трейлер', ru: 'Трейлер' }),
+    playTrailer: insert(
+      t({
+        en: 'Play trailer: {{name}}',
+        uk: 'Відтворити трейлер: {{name}}',
+        ru: 'Воспроизвести трейлер: {{name}}',
+      }),
+    ),
+    viewCover: insert(
+      t({
+        en: 'View cover of {{title}}',
+        uk: 'Переглянути обкладинку «{{title}}»',
+        ru: 'Посмотреть обложку «{{title}}»',
+      }),
+    ),
+    galleryLabel: insert(
+      t({ en: '{{title}} gallery', uk: 'Галерея «{{title}}»', ru: 'Галерея «{{title}}»' }),
+    ),
+    similar: t({
+      en: 'You might also like',
+      uk: 'Вам також може сподобатися',
+      ru: 'Вам также может понравиться',
+    }),
+    similarGames: t({ en: 'Similar games', uk: 'Схожі ігри', ru: 'Похожие игры' }),
+    cast: t({ en: 'Cast', uk: 'Актори', ru: 'Актёры' }),
+    close: t({ en: 'Close', uk: 'Закрити', ru: 'Закрыть' }),
+    unavailable: insert(
+      t({
+        en: '{{media}} isn’t available',
+        uk: '{{media}} недоступно',
+        ru: '{{media}} недоступно',
+      }),
+    ),
+    unavailableDescription: t({
+      en: 'It may have been removed from the catalog, or the link is outdated.',
+      uk: 'Можливо, його видалили з каталогу або посилання застаріло.',
+      ru: 'Возможно, его удалили из каталога или ссылка устарела.',
+    }),
+    searchMedia: insert(
+      t({ en: 'Search {{media}}', uk: 'Шукати: {{media}}', ru: 'Искать: {{media}}' }),
+    ),
+    loadingError: insert(
+      t({
+        en: 'Something went wrong while loading this {{media}}. Try again.',
+        uk: 'Під час завантаження {{media}} щось пішло не так. Спробуйте ще раз.',
+        ru: 'При загрузке: {{media}} что-то пошло не так. Попробуйте ещё раз.',
+      }),
+    ),
+    backToSearch: insert(
+      t({
+        en: 'Back to {{media}} search',
+        uk: 'Назад до пошуку: {{media}}',
+        ru: 'Назад к поиску: {{media}}',
+      }),
+    ),
+    moreFrom: insert(
+      t({ en: 'More from {{artist}}', uk: 'Більше від {{artist}}', ru: 'Больше от {{artist}}' }),
+    ),
+    moreFromThisArtist: t({
+      en: 'More from this artist',
+      uk: 'Більше від цього виконавця',
+      ru: 'Больше от этого исполнителя',
+    }),
+    albumsBy: insert(
+      t({ en: 'Albums by {{artist}}', uk: 'Альбоми {{artist}}', ru: 'Альбомы {{artist}}' }),
+    ),
+    moreAlbums: t({ en: 'More albums', uk: 'Більше альбомів', ru: 'Больше альбомов' }),
+    moreBy: insert(
+      t({ en: 'More by {{author}}', uk: 'Більше від {{author}}', ru: 'Больше от {{author}}' }),
+    ),
+    popularBy: insert(
+      t({
+        en: 'Popular by {{artist}}',
+        uk: 'Популярне від {{artist}}',
+        ru: 'Популярное от {{artist}}',
+      }),
+    ),
+    popularTracks: t({ en: 'Popular tracks', uk: 'Популярні треки', ru: 'Популярные треки' }),
+    ratingLabel: insert(
+      t({ en: '{{provider}} rating', uk: 'Рейтинг {{provider}}', ru: 'Рейтинг {{provider}}' }),
+    ),
+    ratingCount: insert(
+      t({
+        en: '{{count}} {{provider}} ratings',
+        uk: '{{count}} оцінок {{provider}}',
+        ru: '{{count}} оценок {{provider}}',
+      }),
+    ),
+    links: t({ en: 'Links', uk: 'Посилання', ru: 'Ссылки' }),
+    preview: t({ en: 'Preview', uk: 'Попередній перегляд', ru: 'Предпросмотр' }),
+    buy: t({ en: 'Buy', uk: 'Придбати', ru: 'Купить' }),
+    whereToPlay: t({ en: 'Where to play', uk: 'Де грати', ru: 'Где играть' }),
+    watch: t({ en: 'Watch', uk: 'Дивитися', ru: 'Смотреть' }),
+    credits: t({ en: 'Credits', uk: 'Титри', ru: 'Титры' }),
+    noCover: t({ en: 'No cover', uk: 'Немає обкладинки', ru: 'Нет обложки' }),
+    unknown: t({ en: 'Unknown', uk: 'Невідомо', ru: 'Неизвестно' }),
+    rated: insert(
+      t({
+        en: 'Rated {{rating}} out of 10',
+        uk: 'Оцінка {{rating}} з 10',
+        ru: 'Оценка {{rating}} из 10',
+      }),
+    ),
+    editReview: t({ en: 'Edit review', uk: 'Редагувати рецензію', ru: 'Редактировать рецензию' }),
+    deleteReview: t({ en: 'Delete review', uk: 'Видалити рецензію', ru: 'Удалить рецензию' }),
+    rateTitle: t({ en: 'Rate this title', uk: 'Оцінити цю назву', ru: 'Оценить эту работу' }),
+    editRating: insert(
+      t({
+        en: 'Edit rating, {{rating}} out of 10',
+        uk: 'Змінити оцінку, {{rating}} з 10',
+        ru: 'Изменить оценку, {{rating}} из 10',
+      }),
+    ),
+    rate: t({ en: 'Rate', uk: 'Оцінити', ru: 'Оценить' }),
+    details: t({ en: 'Details', uk: 'Деталі', ru: 'Детали' }),
+    facts: t({ en: 'Facts', uk: 'Факти', ru: 'Факты' }),
+    gameInfo: t({ en: 'Game info', uk: 'Інформація про гру', ru: 'Информация об игре' }),
+    bookInfo: t({ en: 'Book info', uk: 'Інформація про книгу', ru: 'Информация о книге' }),
+    noCrew: t({
+      en: 'No crew credits available.',
+      uk: 'Дані про знімальну групу недоступні.',
+      ru: 'Данные о съёмочной группе недоступны.',
+    }),
+    noSeasons: t({ en: 'No seasons listed', uk: 'Сезони не вказані', ru: 'Сезоны не указаны' }),
+    seasonsUnavailable: t({
+      en: 'Season data isn’t available for this series yet.',
+      uk: 'Дані про сезони цього серіалу ще недоступні.',
+      ru: 'Данные о сезонах этого сериала пока недоступны.',
+    }),
+    seasons: t({ en: 'Seasons', uk: 'Сезони', ru: 'Сезоны' }),
+    specials: t({ en: 'Specials', uk: 'Спецвипуски', ru: 'Спецвыпуски' }),
+    episodes: t({ en: 'Episodes', uk: 'Епізоди', ru: 'Эпизоды' }),
+    seasonCount: plural({
+      one: t({ en: '{{count}} season', uk: '{{count}} сезон', ru: '{{count}} сезон' }),
+      other: t({ en: '{{count}} seasons', uk: '{{count}} сезонів', ru: '{{count}} сезонов' }),
+    }),
+    episodeCount: plural({
+      one: t({ en: '{{count}} episode', uk: '{{count}} епізод', ru: '{{count}} эпизод' }),
+      other: t({ en: '{{count}} episodes', uk: '{{count}} епізодів', ru: '{{count}} эпизодов' }),
+    }),
+    trackCount: plural({
+      one: t({ en: '{{count}} track', uk: '{{count}} трек', ru: '{{count}} трек' }),
+      other: t({ en: '{{count}} tracks', uk: '{{count}} треків', ru: '{{count}} треков' }),
+    }),
+    tracks: t({ en: 'Tracks', uk: 'Треки', ru: 'Треки' }),
+    noTracks: t({
+      en: 'No tracks available for this album.',
+      uk: 'Для цього альбому немає треків.',
+      ru: 'Для этого альбома нет треков.',
+    }),
+    showAllTracks: insert(
+      t({
+        en: 'Show all {{count}} tracks',
+        uk: 'Показати всі {{count}} треків',
+        ru: 'Показать все {{count}} треков',
+      }),
+    ),
+    explicit: t({ en: 'Explicit', uk: 'Ненормативна лексика', ru: 'Ненормативная лексика' }),
+    from: t({ en: 'from', uk: 'з', ru: 'из' }),
+    companies: t({ en: 'Companies', uk: 'Компанії', ru: 'Компании' }),
+    developer: t({ en: 'Developer', uk: 'Розробник', ru: 'Разработчик' }),
+    publisher: t({ en: 'Publisher', uk: 'Видавець', ru: 'Издатель' }),
+    supporting: t({ en: 'Supporting', uk: 'Підтримка', ru: 'Поддержка' }),
+    porting: t({ en: 'Porting', uk: 'Портування', ru: 'Портирование' }),
+    developerLabel: t({ en: 'Developer', uk: 'Розробник', ru: 'Разработчик' }),
+    engine: t({ en: 'Engine', uk: 'Рушій', ru: 'Движок' }),
+    released: t({ en: 'Released', uk: 'Випущено', ru: 'Выпущено' }),
+    ageRating: t({ en: 'Age rating', uk: 'Віковий рейтинг', ru: 'Возрастной рейтинг' }),
+    genres: t({ en: 'Genres', uk: 'Жанри', ru: 'Жанры' }),
+    themes: t({ en: 'Themes', uk: 'Теми', ru: 'Темы' }),
+    gameModes: t({ en: 'Game modes', uk: 'Режими гри', ru: 'Режимы игры' }),
+    perspective: t({ en: 'Perspective', uk: 'Перспектива', ru: 'Перспектива' }),
+    platforms: t({ en: 'Platforms', uk: 'Платформи', ru: 'Платформы' }),
+    languages: t({ en: 'Languages', uk: 'Мови', ru: 'Языки' }),
+    franchise: t({ en: 'Franchise', uk: 'Франшиза', ru: 'Франшиза' }),
+    collection: t({ en: 'Collection', uk: 'Колекція', ru: 'Коллекция' }),
+    storyline: t({ en: 'Storyline', uk: 'Сюжет', ru: 'Сюжет' }),
+    firstAired: t({ en: 'First aired', uk: 'Перша трансляція', ru: 'Первая трансляция' }),
+    lastAired: t({ en: 'Last aired', uk: 'Остання трансляція', ru: 'Последняя трансляция' }),
+    status: t({ en: 'Status', uk: 'Статус', ru: 'Статус' }),
+    type: t({ en: 'Type', uk: 'Тип', ru: 'Тип' }),
+    network: t({ en: 'Network', uk: 'Мережа', ru: 'Сеть' }),
+    countries: t({ en: 'Countries', uk: 'Країни', ru: 'Страны' }),
+    runtime: t({ en: 'Runtime', uk: 'Тривалість', ru: 'Длительность' }),
+    perEpisode: t({ en: 'per episode', uk: 'за епізод', ru: 'за эпизод' }),
+    createdBy: t({ en: 'Created by', uk: 'Створено', ru: 'Создатели' }),
+    studios: t({ en: 'Studios', uk: 'Студії', ru: 'Студии' }),
+    authors: t({ en: 'Authors', uk: 'Автори', ru: 'Авторы' }),
+    published: t({ en: 'Published', uk: 'Опубліковано', ru: 'Опубликовано' }),
+    pages: t({ en: 'Pages', uk: 'Сторінки', ru: 'Страницы' }),
+    language: t({ en: 'Language', uk: 'Мова', ru: 'Язык' }),
+    isbn13: t({ en: 'ISBN-13', uk: 'ISBN-13', ru: 'ISBN-13' }),
+    isbn10: t({ en: 'ISBN-10', uk: 'ISBN-10', ru: 'ISBN-10' }),
+    mainCategory: t({ en: 'Main category', uk: 'Основна категорія', ru: 'Основная категория' }),
+    categories: t({ en: 'Categories', uk: 'Категорії', ru: 'Категории' }),
+    format: t({ en: 'Format', uk: 'Формат', ru: 'Формат' }),
+    ebookAvailable: t({
+      en: 'eBook available',
+      uk: 'Доступна електронна книга',
+      ru: 'Доступна электронная книга',
+    }),
+    ebook: t({
+      en: 'eBook',
+      uk: 'eBook',
+      ru: 'eBook',
+    }),
+    byAuthors: insert(
+      t({
+        en: 'by {{authors}}',
+        uk: '{{authors}}',
+        ru: '{{authors}}',
+      }),
+    ),
+    synopsis: t({
+      en: 'Synopsis',
+      uk: 'Синопсис',
+      ru: 'Синопсис',
+    }),
+    pagesShort: insert(
+      t({
+        en: '{{count}} pp',
+        uk: '{{count}} с.',
+        ru: '{{count}} стр.',
+      }),
+    ),
+    director: t({ en: 'Director', uk: 'Режисер', ru: 'Режиссёр' }),
+    writing: t({ en: 'Writing', uk: 'Сценарій', ru: 'Сценарий' }),
+    production: t({ en: 'Production', uk: 'Продюсування', ru: 'Продюсирование' }),
+    budget: t({ en: 'Budget', uk: 'Бюджет', ru: 'Бюджет' }),
+    revenue: t({ en: 'Revenue', uk: 'Касові збори', ru: 'Сборы' }),
+    baseGame: t({ en: 'Base game', uk: 'Основна гра', ru: 'Основная игра' }),
+    dlc: t({ en: 'DLC', uk: 'DLC', ru: 'DLC' }),
+    expansions: t({ en: 'Expansions', uk: 'Доповнення', ru: 'Дополнения' }),
+    standaloneExpansions: t({
+      en: 'Standalone expansions',
+      uk: 'Окремі доповнення',
+      ru: 'Автономные дополнения',
+    }),
+    remakes: t({ en: 'Remakes', uk: 'Ремейки', ru: 'Ремейки' }),
+    remasters: t({ en: 'Remasters', uk: 'Ремастери', ru: 'Ремастеры' }),
+    ports: t({ en: 'Ports', uk: 'Порти', ru: 'Порты' }),
+  },
+} satisfies Dictionary
+
+export default discoverDetailContent

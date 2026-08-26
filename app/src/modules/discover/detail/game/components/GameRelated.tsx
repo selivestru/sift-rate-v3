@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 
 import { SimilarRow } from '../../shared'
@@ -9,14 +11,15 @@ interface GameRelatedProps {
 }
 
 export const GameRelated = ({ game }: GameRelatedProps) => {
+  const content = useIntlayer('discover-detail')
   const sections: Array<{ title: string; items: GameRelatedItem[] }> = [
-    ...(game.parentGame ? [{ title: 'Base game', items: [game.parentGame] }] : []),
-    { title: 'DLC', items: game.dlcs },
-    { title: 'Expansions', items: game.expansions },
-    { title: 'Standalone expansions', items: game.standaloneExpansions },
-    { title: 'Remakes', items: game.remakes },
-    { title: 'Remasters', items: game.remasters },
-    { title: 'Ports', items: game.ports },
+    ...(game.parentGame ? [{ title: content.baseGame.value, items: [game.parentGame] }] : []),
+    { title: content.dlc.value, items: game.dlcs },
+    { title: content.expansions.value, items: game.expansions },
+    { title: content.standaloneExpansions.value, items: game.standaloneExpansions },
+    { title: content.remakes.value, items: game.remakes },
+    { title: content.remasters.value, items: game.remasters },
+    { title: content.ports.value, items: game.ports },
   ]
 
   const visible = sections.filter((section) => section.items.length > 0)

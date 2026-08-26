@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 
 import { Button } from '~/common/ui/Button'
 import { Lightbox, type LightboxImage } from '~/common/ui/Lightbox'
@@ -40,12 +41,16 @@ export const MediaImageGallery = ({
   posters,
   title,
   className,
-  posterLabel = 'Posters',
-  backdropLabel = 'Backdrops',
+  posterLabel,
+  backdropLabel,
   posterAspect = 'portrait',
   backdropAspect = 'landscape',
   preferBackdrops = false,
 }: MediaImageGalleryProps) => {
+  const content = useIntlayer('discover-detail')
+  const shared = useIntlayer('shared')
+  const resolvedPosterLabel = posterLabel ?? content.posters.value
+  const resolvedBackdropLabel = backdropLabel ?? content.backdrops.value
   const hasBackdrops = backdrops.length > 0
   const hasPosters = posters.length > 0
   const defaultTab: GalleryTab = preferBackdrops
@@ -90,20 +95,20 @@ export const MediaImageGallery = ({
     <div className={cn('', className)}>
       <Tabs value={tab} onValueChange={handleTabChange}>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-foreground text-lg font-semibold">Gallery</h2>
+          <h2 className="text-foreground text-lg font-semibold">{content.gallery.value}</h2>
           <TabsList className="shrink-0 p-0.5">
             <TabsIndicator />
             {preferBackdrops ? (
               <>
                 {hasBackdrops && (
                   <TabsTab value="backdrops" className="h-8 px-2.5 text-xs">
-                    {backdropLabel}
+                    {resolvedBackdropLabel}
                     <span className="text-muted-foreground tabular-nums">{backdrops.length}</span>
                   </TabsTab>
                 )}
                 {hasPosters && (
                   <TabsTab value="posters" className="h-8 px-2.5 text-xs">
-                    {posterLabel}
+                    {resolvedPosterLabel}
                     <span className="text-muted-foreground tabular-nums">{posters.length}</span>
                   </TabsTab>
                 )}
@@ -112,13 +117,13 @@ export const MediaImageGallery = ({
               <>
                 {hasPosters && (
                   <TabsTab value="posters" className="h-8 px-2.5 text-xs">
-                    {posterLabel}
+                    {resolvedPosterLabel}
                     <span className="text-muted-foreground tabular-nums">{posters.length}</span>
                   </TabsTab>
                 )}
                 {hasBackdrops && (
                   <TabsTab value="backdrops" className="h-8 px-2.5 text-xs">
-                    {backdropLabel}
+                    {resolvedBackdropLabel}
                     <span className="text-muted-foreground tabular-nums">{backdrops.length}</span>
                   </TabsTab>
                 )}
@@ -142,7 +147,7 @@ export const MediaImageGallery = ({
                 itemClassName={
                   posterAspect === 'landscape' ? landscapeItemClass : portraitItemClass
                 }
-                onOpen={(index) => openLightbox(posters, index, posterLabel.toLowerCase())}
+                onOpen={(index) => openLightbox(posters, index, 'poster')}
               />
 
               {canToggle && !expanded && (
@@ -153,7 +158,7 @@ export const MediaImageGallery = ({
                   className="mx-auto"
                   onClick={() => setExpanded(true)}
                 >
-                  Show all ({hiddenCount} more)
+                  {shared.showMore.value} ({hiddenCount})
                 </Button>
               )}
             </div>
@@ -174,7 +179,7 @@ export const MediaImageGallery = ({
                   itemClassName={
                     backdropAspect === 'portrait' ? portraitItemClass : landscapeItemClass
                   }
-                  onOpen={(index) => openLightbox(backdrops, index, backdropLabel.toLowerCase())}
+                  onOpen={(index) => openLightbox(backdrops, index, 'backdrop')}
                 />
 
                 {canToggle && !expanded && (
@@ -185,7 +190,7 @@ export const MediaImageGallery = ({
                     className="mx-auto"
                     onClick={() => setExpanded(true)}
                   >
-                    Show all ({hiddenCount} more)
+                    {shared.showMore.value} ({hiddenCount})
                   </Button>
                 )}
               </div>
@@ -200,7 +205,7 @@ export const MediaImageGallery = ({
         images={lightboxImages}
         index={lightboxIndex}
         onIndexChange={setLightboxIndex}
-        label={`${title} gallery`}
+        label={content.galleryLabel({ title })}
       />
     </div>
   )

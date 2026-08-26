@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 import { ArrowUpRight, CalendarCheck, Trash6 } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
@@ -16,6 +17,8 @@ interface PlannedMediaCardProps {
 }
 
 export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
+  const shared = useIntlayer('shared')
+  const content = useIntlayer('planned')
   const { media } = item
   const config = mediaTypeMeta[media.mediaType]
   const TypeIcon = config.icon
@@ -65,7 +68,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
             </h3>
             <p className="flex items-center gap-1 text-[11px] text-white/80">
               <CalendarCheck className="size-3 shrink-0" />
-              <span>Saved {formatRelativeDate(item.createdAt)}</span>
+              <span>{content.saved({ date: formatRelativeDate(item.createdAt) })}</span>
             </p>
           </div>
         </div>
@@ -83,18 +86,18 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
           }
           endIcon={<ArrowUpRight />}
         >
-          Open
+          {shared.open.value}
         </Button>
 
         <Button
           className="rounded-none rounded-br-xl border-none"
-          aria-label={`Delete ${media.title} from planned`}
+          aria-label={content.deleteFromPlanned({ title: media.title })}
           variant="destructive-soft"
           onClick={handleDelete}
           startIcon={<Trash6 weight="Filled" />}
           isLoading={deleteMutation.isPending}
         >
-          Delete
+          {shared.delete.value}
         </Button>
       </div>
     </div>

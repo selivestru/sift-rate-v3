@@ -1,10 +1,12 @@
 import { z } from 'zod'
 
+import { getLocalizedContent } from '~/common/i18n'
+
 export const displayNameSchema = z
-  .string('Display name is required')
+  .string({ error: () => getLocalizedContent('display-name-schema').required })
   .trim()
-  .min(2, 'Display name must be at least 2 characters')
-  .max(50, 'Display name must be at most 50 characters')
+  .min(2, { error: () => getLocalizedContent('display-name-schema').min })
+  .max(50, { error: () => getLocalizedContent('display-name-schema').max })
 
 export const changeDisplayNameSchema = z.object({
   displayName: displayNameSchema,

@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 
@@ -9,6 +11,7 @@ import { ReviewListHero } from './ReviewListHero'
 import { ReviewListSkeleton } from './ReviewListSkeleton'
 
 export const ReviewList = () => {
+  const content = useIntlayer('review-list')
   const {
     query,
     setQuery,
@@ -54,7 +57,7 @@ export const ReviewList = () => {
 
       {isError && !isInitialLoading && (
         <p role="alert" className="text-destructive py-10 text-center text-sm">
-          Couldn&apos;t load reviews.
+          {content.couldNotLoadReviews.value}
         </p>
       )}
 

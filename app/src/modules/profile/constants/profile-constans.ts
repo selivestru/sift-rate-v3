@@ -1,19 +1,13 @@
-export const MONTH_LABELS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
+import { useIntlayer } from 'react-intlayer'
 
-export const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+export const useProfileCalendarLabels = () => {
+  const content = useIntlayer('profile-constants')
+
+  return {
+    MONTH_LABELS: content.monthLabels.map((label) => label.value),
+    WEEKDAY_LABELS: content.weekdayLabels.map((label) => label.value),
+  }
+}
 
 export const calendarTheme = {
   light: [

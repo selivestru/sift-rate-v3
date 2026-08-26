@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Pen, Trash6 } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
@@ -15,6 +16,7 @@ interface RankedListCardProps {
 }
 
 export const RankedListCard = ({ item }: RankedListCardProps) => {
+  const content = useIntlayer('ranked-list-card')
   const detail = useDisclosure()
   const count = item.items.length
 
@@ -43,7 +45,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
               {item.title}
             </h2>
             <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-xs tabular-nums">
-              {count} {count === 1 ? 'item' : 'items'}
+              {content.itemCount({ count })(count)}
             </div>
           </div>
 
@@ -62,7 +64,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
                   variant="secondary"
                   size="sm"
                   isIconOnly
-                  aria-label={`Edit ${item.title}`}
+                  aria-label={content.edit({ title: item.title })}
                   onClick={(event) => {
                     event.stopPropagation()
                     open()
@@ -80,7 +82,7 @@ export const RankedListCard = ({ item }: RankedListCardProps) => {
                   variant="destructive-soft"
                   size="sm"
                   isIconOnly
-                  aria-label={`Delete ${item.title}`}
+                  aria-label={content.delete({ title: item.title })}
                   onClick={(event) => {
                     event.stopPropagation()
                     open()

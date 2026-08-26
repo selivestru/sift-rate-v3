@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Play } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -12,6 +13,7 @@ interface TrailerEmbedProps {
 }
 
 export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
+  const content = useIntlayer('discover-detail')
   const [activeId, setActiveId] = useState(() => videos[0]?.id ?? '')
   const [playing, setPlaying] = useState(false)
 
@@ -39,7 +41,7 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
               type="button"
               onClick={() => setPlaying(true)}
               className="group relative size-full cursor-pointer"
-              aria-label={`Play trailer: ${active.name}`}
+              aria-label={content.playTrailer({ name: active.name })}
             >
               <img
                 src={thumbUrl}

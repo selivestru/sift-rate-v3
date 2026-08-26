@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 
 import { SimilarRow } from '../../shared'
@@ -9,9 +11,14 @@ interface GameSimilarProps {
 }
 
 export const GameSimilar = ({ items }: GameSimilarProps) => {
+  const content = useIntlayer('discover-detail')
   if (items.length === 0) return null
 
   return (
-    <SimilarRow title="Similar games" mediaType={MEDIA_TYPES.GAME} items={toSimilarItems(items)} />
+    <SimilarRow
+      title={content.similarGames.value}
+      mediaType={MEDIA_TYPES.GAME}
+      items={toSimilarItems(items)}
+    />
   )
 }

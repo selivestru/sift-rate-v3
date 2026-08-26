@@ -73,9 +73,6 @@ export interface BookSearchItem {
 
 export interface DiscoverSearchConfig<T> {
   mediaType: MediaType
-  title: string
-  description: string
-  searchPlaceholder: string
   resultsClassName: string
   skeletonCount: number
   pageSize: number

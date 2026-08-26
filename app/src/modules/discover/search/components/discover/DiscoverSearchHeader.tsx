@@ -1,4 +1,7 @@
+import { useIntlayer } from 'react-intlayer'
+
 import { mediaTypeMeta, type MediaType } from '~/common/constants/media-type'
+import { useMediaTypeLabel } from '~/common/i18n'
 import { PageHeader } from '~/common/ui/PageHeader'
 
 interface DiscoverSearchHeaderProps {
@@ -15,11 +18,13 @@ export const DiscoverSearchHeader = ({
   resultCount,
 }: DiscoverSearchHeaderProps) => {
   const meta = mediaTypeMeta[mediaType]
+  const mediaLabel = useMediaTypeLabel(mediaType)
+  const content = useIntlayer('discover-search-ui')
 
   return (
     <PageHeader
       icon={meta.icon}
-      label={meta.label}
+      label={mediaLabel}
       title={title}
       description={description}
       iconWell="muted"
@@ -27,9 +32,7 @@ export const DiscoverSearchHeader = ({
     >
       <p className="text-muted-foreground h-4 text-xs tabular-nums">
         {resultCount !== undefined &&
-          (resultCount === 0
-            ? 'No results'
-            : `${resultCount.toLocaleString()} result${resultCount === 1 ? '' : 's'}`)}
+          (resultCount === 0 ? content.noResults.value : content.resultCount(resultCount))}
       </p>
     </PageHeader>
   )

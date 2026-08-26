@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useIntlayer } from 'react-intlayer'
 import { toast } from 'sonner'
 
 import { getApiError } from '~/common/api'
@@ -12,6 +13,7 @@ import { changeUsernameSchema, type ChangeUsernameInput } from '../schema/userna
 import { useChangeUsernameMutation } from './useChangeUsernameMutation'
 
 export const useChangeUsernameForm = () => {
+  const content = useIntlayer('user-change-username-form')
   const mutation = useChangeUsernameMutation()
   const currentUsername = useAuthStore((state) => state.user?.username)
   const setUsername = useAuthStore((state) => state.setUsername)
@@ -35,7 +37,7 @@ export const useChangeUsernameForm = () => {
     if (mutation.isPending) return
 
     if (currentUsername === data.username) {
-      setError('username', { type: 'manual', message: 'Username cannot be the same' })
+      setError('username', { type: 'manual', message: content.same.value })
       return
     }
 
@@ -44,7 +46,7 @@ export const useChangeUsernameForm = () => {
     try {
       const response = await mutation.mutateAsync(data.username)
       setUsername(response.username)
-      toast.success('Username updated')
+      toast.success(content.updated.value)
       reset()
     } catch (error) {
       const apiError = await getApiError(error)

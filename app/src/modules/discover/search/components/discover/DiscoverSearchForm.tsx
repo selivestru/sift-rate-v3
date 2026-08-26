@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { Search, X } from 'reicon-react'
 
 import { Button } from '~/common/ui/Button'
@@ -18,6 +19,7 @@ export const DiscoverSearchForm = ({
   isFetching,
   onSearch,
 }: DiscoverSearchFormProps) => {
+  const shared = useIntlayer('shared')
   const [draft, setDraft] = useState(initialQuery)
 
   const trimmed = draft.trim()
@@ -57,7 +59,7 @@ export const DiscoverSearchForm = ({
 
       <Button fullWidth type="submit" isDisabled={!canSubmit || isFetching}>
         {isFetching ? <Spinner className="text-foreground" /> : <Search className="size-4" />}
-        Search
+        {shared.search.value}
       </Button>
     </form>
   )

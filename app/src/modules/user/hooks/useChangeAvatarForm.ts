@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
+import { useIntlayer } from 'react-intlayer'
 import { toast } from 'sonner'
 
 import { getApiError } from '~/common/api'
@@ -13,6 +14,7 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE_BYTES = 5 * 1024 * 1024
 
 export const useChangeAvatarForm = () => {
+  const content = useIntlayer('user-change-avatar-form')
   const mutation = useChangeAvatarMutation()
   const queryClient = useQueryClient()
   const username = useAuthStore((state) => state.user?.username)
@@ -55,13 +57,13 @@ export const useChangeAvatarForm = () => {
 
     if (!ACCEPTED_TYPES.includes(selected.type)) {
       clearSelection()
-      setError('Use a JPEG, PNG, or WebP image.')
+      setError(content.invalidType.value)
       return
     }
 
     if (selected.size > MAX_SIZE_BYTES) {
       clearSelection()
-      setError('Image must be 5MB or smaller.')
+      setError(content.maxSize.value)
       return
     }
 
@@ -75,7 +77,7 @@ export const useChangeAvatarForm = () => {
       setFile(selected)
     } catch {
       clearSelection()
-      setError('Could not preview this image.')
+      setError(content.previewError.value)
     } finally {
       setIsPreviewing(false)
     }
@@ -89,7 +91,7 @@ export const useChangeAvatarForm = () => {
     try {
       const response = await mutation.mutateAsync(file)
       setAvatarUrl(response.avatarUrl)
-      toast.success('Avatar updated')
+      toast.success(content.updated.value)
       clearSelection()
 
       if (username) {

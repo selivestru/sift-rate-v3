@@ -1,3 +1,4 @@
+import { useIntlayer } from 'react-intlayer'
 import { Trophy } from 'reicon-react'
 
 import { cn } from '~/common/utils/cn'
@@ -14,6 +15,13 @@ const byPosition = (items: RankedListEntry[], rank: PodiumRank) => {
 }
 
 export const RankedListPodium = ({ items }: RankedListPodiumProps) => {
+  const content = useIntlayer('podium')
+  const getRankLabel = (rank: PodiumRank) => {
+    if (rank === 1) return content.first.value
+    if (rank === 2) return content.second.value
+    return content.third.value
+  }
+
   return (
     <div className="grid grid-cols-3 items-end justify-center gap-2">
       {PODIUM_RANKS.map((rank) => {
@@ -24,6 +32,7 @@ export const RankedListPodium = ({ items }: RankedListPodiumProps) => {
         return (
           <div
             key={rank}
+            aria-label={getRankLabel(rank)}
             className={cn(
               'group/pedestal relative flex flex-col items-center',
               rank === 1 && 'z-1',
@@ -63,7 +72,9 @@ export const RankedListPodium = ({ items }: RankedListPodiumProps) => {
               ) : (
                 <div className="text-muted-foreground flex size-full flex-col items-center justify-center gap-1">
                   <span className="text-2xl font-semibold tabular-nums opacity-40">{rank}</span>
-                  <span className="text-[10px] font-medium tracking-wide uppercase">Open</span>
+                  <span className="text-[10px] font-medium tracking-wide uppercase">
+                    {content.open.value}
+                  </span>
                 </div>
               )}
 

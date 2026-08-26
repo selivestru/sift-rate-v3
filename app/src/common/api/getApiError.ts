@@ -1,5 +1,7 @@
 import { HTTPError, isHTTPError, isNetworkError, isTimeoutError } from 'ky'
 
+import { getLocalizedContent } from '~/common/i18n'
+
 import { objectEntries } from '../utils/typedObject'
 
 export interface ApiError {
@@ -16,9 +18,9 @@ interface ApiErrorBody {
   code?: string
 }
 
-const SERVER_UNAVAILABLE_MESSAGE = 'Server is unavailable. Please try again later.'
-const NETWORK_MESSAGE = 'No internet connection'
-const FALLBACK_MESSAGE = 'Something went wrong'
+const getServerUnavailableMessage = () => getLocalizedContent('api-errors').serverUnavailable
+const getNetworkMessage = () => getLocalizedContent('api-errors').noInternet
+const getFallbackMessage = () => getLocalizedContent('api-errors').fallback
 
 const SERVER_UNAVAILABLE_STATUSES = new Set([502, 503, 504, 0])
 
@@ -27,14 +29,14 @@ const normalizeMessage = (message?: string | string[]): string => {
     const parts = message.filter(
       (item): item is string => typeof item === 'string' && item.length > 0,
     )
-    return parts.length > 0 ? parts.join('. ') : FALLBACK_MESSAGE
+    return parts.length > 0 ? parts.join('. ') : getFallbackMessage()
   }
 
   if (typeof message === 'string' && message.length > 0) {
     return message
   }
 
-  return FALLBACK_MESSAGE
+  return getFallbackMessage()
 }
 
 const normalizeFieldErrors = (
@@ -104,7 +106,7 @@ const readHttpErrorBody = async (err: HTTPError): Promise<ApiErrorBody | undefin
 
 export const getApiError = async (err: unknown): Promise<ApiError> => {
   if (isNetworkError(err) || isTimeoutError(err)) {
-    return { message: SERVER_UNAVAILABLE_MESSAGE }
+    return { message: getServerUnavailableMessage() }
   }
 
   if (isHTTPError(err)) {
@@ -112,7 +114,7 @@ export const getApiError = async (err: unknown): Promise<ApiError> => {
 
     if (SERVER_UNAVAILABLE_STATUSES.has(status)) {
       return {
-        message: SERVER_UNAVAILABLE_MESSAGE,
+        message: getServerUnavailableMessage(),
         status,
       }
     }
@@ -136,11 +138,11 @@ export const getApiError = async (err: unknown): Promise<ApiError> => {
       message.includes('load failed') ||
       message.includes('network request failed')
     ) {
-      return { message: SERVER_UNAVAILABLE_MESSAGE }
+      return { message: getServerUnavailableMessage() }
     }
 
-    return { message: NETWORK_MESSAGE }
+    return { message: getNetworkMessage() }
   }
 
-  return { message: FALLBACK_MESSAGE }
+  return { message: getFallbackMessage() }
 }

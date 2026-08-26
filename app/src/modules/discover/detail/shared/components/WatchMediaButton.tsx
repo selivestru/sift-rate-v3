@@ -1,3 +1,5 @@
+import { useIntlayer } from 'react-intlayer'
+
 import type { MediaType } from '~/common/constants/media-type'
 import { Button } from '~/common/ui/Button'
 
@@ -7,6 +9,7 @@ interface WatchMediaButtonProps {
 }
 
 export const WatchMediaButton = ({ kinopoiskId }: WatchMediaButtonProps) => {
+  const content = useIntlayer('discover-detail')
   if (!kinopoiskId) return
 
   const href = `https://kinobox.in/movie/${kinopoiskId}`
@@ -16,7 +19,7 @@ export const WatchMediaButton = ({ kinopoiskId }: WatchMediaButtonProps) => {
       render={<a href={href} target="_blank" rel="noopener noreferrer" />}
       variant="secondary"
     >
-      Watch
+      {content.watch.value}
     </Button>
   )
 }

@@ -1,16 +1,9 @@
+import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/common/ui/Select'
 
 const RATING_VALUES = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] as const
-
-const items = [
-  { value: null, label: 'All ratings' },
-  ...RATING_VALUES.map((rating) => ({
-    value: rating,
-    label: String(rating),
-  })),
-]
 
 interface ReviewRatingSelectProps {
   value?: number
@@ -25,20 +18,26 @@ export const ReviewRatingSelect = ({
   total = 0,
   counts,
 }: ReviewRatingSelectProps) => {
+  const content = useIntlayer('review-rating-select')
+  const items = [
+    { value: null, label: content.allRatings.value },
+    ...RATING_VALUES.map((rating) => ({ value: rating, label: String(rating) })),
+  ]
+
   return (
     <Select
       value={value ?? null}
       onValueChange={(next) => onChange(next ?? undefined)}
       items={items}
     >
-      <SelectTrigger aria-label="Filter by rating">
-        <SelectValue placeholder="All ratings">
+      <SelectTrigger aria-label={content.filterByRating.value}>
+        <SelectValue placeholder={content.allRatings.value}>
           {(selected: number | null) => {
             if (selected == null) {
               return (
                 <span className="text-rating inline-flex items-center gap-1.5">
                   <Star weight="Filled" className="text-rating" />
-                  All ratings
+                  {content.allRatings.value}
                 </span>
               )
             }
@@ -57,7 +56,7 @@ export const ReviewRatingSelect = ({
           <span className="flex w-full items-center justify-between gap-3">
             <span className="text-rating inline-flex items-center gap-2">
               <Star weight="Filled" className="text-rating" />
-              All ratings
+              {content.allRatings.value}
             </span>
             <span className="text-primary text-xs tabular-nums">{total}</span>
           </span>

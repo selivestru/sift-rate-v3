@@ -1,4 +1,5 @@
 import { Controller } from 'react-hook-form'
+import { useIntlayer } from 'react-intlayer'
 import { XCircle } from 'reicon-react'
 
 import { useDisclosure } from '~/common/hooks/useDisclosure'
@@ -25,6 +26,8 @@ interface UpsertRankedListDialogProps {
 }
 
 export const UpsertRankedListDialog = ({ list, children }: UpsertRankedListDialogProps) => {
+  const content = useIntlayer('upsert-ranked-list-dialog')
+  const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
 
   const onClose = () => {
@@ -43,11 +46,9 @@ export const UpsertRankedListDialog = ({ list, children }: UpsertRankedListDialo
       <Dialog open={opened} onOpenChange={onClose}>
         <DialogContent showCloseButton className="gap-4 sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{isEdit ? 'Edit list' : 'New ranked list'}</DialogTitle>
+            <DialogTitle>{isEdit ? content.editTitle.value : content.newTitle.value}</DialogTitle>
             <DialogDescription>
-              {isEdit
-                ? 'Update the title and who can see this ranking.'
-                : 'Name a ranking and choose how visible it is.'}
+              {isEdit ? content.editDescription.value : content.newDescription.value}
             </DialogDescription>
           </DialogHeader>
 
@@ -67,10 +68,10 @@ export const UpsertRankedListDialog = ({ list, children }: UpsertRankedListDialo
               control={control}
               render={({ field, fieldState }) => (
                 <Field>
-                  <FieldLabel htmlFor="ranked-list-title">Title</FieldLabel>
+                  <FieldLabel htmlFor="ranked-list-title">{content.titleLabel.value}</FieldLabel>
                   <Input
                     id="ranked-list-title"
-                    placeholder="Top films of the decade"
+                    placeholder={content.titlePlaceholder.value}
                     autoComplete="off"
                     aria-invalid={!!fieldState.error}
                     {...field}
@@ -82,10 +83,10 @@ export const UpsertRankedListDialog = ({ list, children }: UpsertRankedListDialo
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
+                {shared.cancel.value}
               </Button>
               <Button type="submit" isLoading={isLoading}>
-                {isEdit ? 'Save changes' : 'Create list'}
+                {isEdit ? content.saveChanges.value : content.createList.value}
               </Button>
             </DialogFooter>
           </form>
