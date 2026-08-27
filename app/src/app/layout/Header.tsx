@@ -14,12 +14,13 @@ export const Header = () => {
     <header className="border-border bg-card app-container sticky top-2 z-20 flex h-(--header-height) items-center rounded-2xl border max-md:top-0 max-md:rounded-none max-md:border-x-transparent">
       <div className="flex w-full items-center justify-between gap-3 px-4 max-md:justify-start">
         <NavDrawer />
-        <div className="flex items-center gap-3 max-md:mr-auto">
-          <div className="bg-primary size-10 rounded-lg" />
-          <Link to="/" className="text-xl font-semibold tracking-tight">
-            SiftRate
-          </Link>
-        </div>
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-xl font-semibold tracking-tight max-md:mr-auto"
+        >
+          <img src="/public/logo.png" alt="SiftRate" className="size-10" />
+          SiftRate
+        </Link>
         {user ? (
           <div className="flex items-center gap-3">
             <Profile />
