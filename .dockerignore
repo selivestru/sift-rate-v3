@@ -1,0 +1,19 @@
+.git
+.env
+*.log
+
+# frontend is not part of the api image (package.json kept for workspace resolution)
+app
+!app/package.json
+
+backups
+docker
+
+node_modules
+**/node_modules
+**/dist
+**/build
+**/coverage
+
+api/.env
+api/src/generated

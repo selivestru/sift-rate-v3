@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
 import { seconds, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 
+import { AppController } from './app.controller'
 import { EnvConfig, validateEnv } from './app/config/env.config'
 import { AuthGuard } from './common/guards/auth.guard'
 import { PrismaModule } from './infrastructure/prisma/prisma.module'
@@ -64,7 +65,7 @@ import Redis from 'ioredis'
     SessionModule,
     FeedModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
