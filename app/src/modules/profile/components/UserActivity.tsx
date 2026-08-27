@@ -34,7 +34,10 @@ export const UserActivity = ({ username, activityYears }: UserActivityProps) => 
       }
     >
       <Suspense fallback={<UserActivitySkeleton />}>
-        <UserActivityContent username={username} activityYears={activityYears} />
+        <UserActivityContent
+          username={username}
+          activityYears={activityYears.length > 0 ? activityYears : [new Date().getFullYear()]}
+        />
       </Suspense>
     </ErrorBoundary>
   )
