@@ -10,13 +10,6 @@ export const useProfileCalendarLabels = () => {
 }
 
 export const calendarTheme = {
-  light: [
-    'var(--muted)',
-    'color-mix(in oklab, var(--primary) 28%, var(--muted))',
-    'color-mix(in oklab, var(--primary) 50%, var(--muted))',
-    'color-mix(in oklab, var(--primary) 74%, var(--muted))',
-    'var(--primary)',
-  ],
   dark: [
     'var(--muted)',
     'color-mix(in oklab, var(--primary) 28%, var(--muted))',

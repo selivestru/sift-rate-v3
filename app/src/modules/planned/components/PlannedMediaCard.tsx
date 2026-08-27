@@ -55,11 +55,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
           </div>
         )}
 
-        <MediaTypeBadge
-          alternateColor
-          mediaType={media.mediaType}
-          className="absolute top-2.5 right-2.5"
-        />
+        <MediaTypeBadge mediaType={media.mediaType} className="absolute top-2.5 right-2.5" />
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-black/85 via-black/50 to-transparent pt-16 pb-3">
           <div className="flex flex-col gap-1 px-3">

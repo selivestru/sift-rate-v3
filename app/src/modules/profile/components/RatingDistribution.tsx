@@ -25,9 +25,9 @@ export const RatingDistribution = ({ distribution }: RatingDistributionProps) =>
 
           return (
             <div key={rating} className="flex h-full flex-1 flex-col items-center gap-2">
-              <div className="group hover:bg-primary/10 flex w-full flex-1 items-end rounded-t-sm">
+              <div className="group hover:bg-accent flex w-full flex-1 items-end rounded-t-sm">
                 <div
-                  className="bg-primary/60 group-hover:bg-primary pointer-coarse:bg-primary relative w-full rounded-t-sm transition-colors duration-200"
+                  className="bg-primary relative w-full rounded-t-sm transition-colors duration-200"
                   style={{ height: `${height}%` }}
                 >
                   <div className="bg-popover border-border text-popover-foreground pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 rounded-md border px-2 py-1 text-xs font-semibold tabular-nums shadow-sm group-hover:block pointer-coarse:block">

@@ -90,7 +90,7 @@ export const ReviewDateSelect = ({ year, month, onChange }: ReviewDateSelectProp
               aria-label={content.showAllYear({ year: displayedYear })}
               onClick={handleYearOnly}
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm font-semibold tabular-nums transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40',
+                'rounded-md px-3 py-1.5 text-sm font-semibold tabular-nums transition-colors outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/40',
                 isActive && month == null && year === displayedYear && 'text-primary',
               )}
             >

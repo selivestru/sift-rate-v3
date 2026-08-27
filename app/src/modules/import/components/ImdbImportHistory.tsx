@@ -111,8 +111,8 @@ export const ImdbImportHistory = ({ selectedJobId, onSelect }: ImdbImportHistory
                     'flex w-full items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors duration-200',
                     'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
                     isSelected
-                      ? 'border-ring/50 bg-accent'
-                      : 'border-border bg-background hover:bg-muted',
+                      ? 'border-border bg-accent'
+                      : 'border-border bg-background hover:bg-accent',
                   )}
                 >
                   <span className="flex min-w-0 flex-1 flex-col gap-1.5">

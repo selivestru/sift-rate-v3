@@ -36,7 +36,7 @@ export const ErrorState = ({
         border && 'border-border rounded-xl',
       )}
     >
-      <span className="bg-destructive/10 text-destructive flex size-11 items-center justify-center rounded-lg">
+      <span className="bg-muted text-destructive flex size-11 items-center justify-center rounded-lg">
         <XCircle className="size-5" aria-hidden />
       </span>
       <div className="flex flex-col gap-1.5">

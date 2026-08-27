@@ -65,8 +65,8 @@ export const BookHero = ({ book }: BookHeroProps) => {
             className="bg-muted relative aspect-2/3 w-38 overflow-hidden rounded-sm sm:w-48"
             style={{
               boxShadow: [
-                `-10px 0 0 -4px color-mix(in oklab, ${accent} 55%, #1a1208)`,
-                `-6px 0 0 -2px color-mix(in oklab, ${accent} 25%, #2a1f12)`,
+                `-10px 0 0 -4px color-mix(in oklab, ${accent} 55%, var(--background))`,
+                `-6px 0 0 -2px color-mix(in oklab, ${accent} 25%, var(--card))`,
                 `0 28px 50px -18px rgb(0 0 0 / 0.55)`,
                 `0 14px 28px -12px color-mix(in oklab, ${accent} 30%, transparent)`,
               ].join(', '),

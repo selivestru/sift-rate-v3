@@ -14,7 +14,7 @@ Sources:
 
 - Surfaces over decoration: spacing, typography, and subtle borders create hierarchy
 - Brand purple (`primary`) is selective — CTAs, links, focus ring — not card washes
-- Light and dark are intentional separate systems (off-white / deep dark, not pure white/black pages)
+- Dark only: deep layered surfaces, not a pure-black page. No light theme.
 
 ---
 
@@ -120,16 +120,16 @@ Most common: 8 / 12 / 16 / 24 / 32px. Avoid arbitrary `p-[13px]`-style values.
 
 ### Variants
 
-| Variant            | Look                                | When                               |
-| ------------------ | ----------------------------------- | ---------------------------------- |
-| `default`          | Solid primary                       | Primary action                     |
-| `secondary`        | Soft surface                        | Secondary / quiet                  |
-| `outline`          | Bordered, transparent fill          | Low emphasis with edge             |
-| `ghost`            | Transparent, accent hover           | Chrome / inline                    |
-| `destructive-soft` | Quiet destructive text + soft hover | Icon / secondary delete and remove |
-| `destructive`      | Solid destructive                   | Confirm delete / irreversible      |
+| Variant            | Look                                       | When                               |
+| ------------------ | ------------------------------------------ | ---------------------------------- |
+| `default`          | Solid primary                              | Primary action                     |
+| `secondary`        | Soft surface                               | Secondary / quiet                  |
+| `outline`          | Bordered, transparent fill                 | Low emphasis with edge             |
+| `ghost`            | Transparent, accent hover                  | Chrome / inline                    |
+| `destructive-soft` | Soft destructive fill + `text-destructive` | Icon / secondary delete and remove |
+| `destructive`      | Solid destructive                          | Confirm delete / irreversible      |
 
-Use `destructive-soft` for quiet delete/remove actions. Use solid `destructive` for confirm dialogs.
+Use `destructive-soft` for quiet delete/remove actions. Fill is `color-mix` of `--destructive` into `--muted`, not a solid destructive button. Use solid `destructive` for confirm dialogs.
 
 Solid `default` / `destructive` hover darkens via `color-mix(in oklab, var(--token) 88%, black)` — not brightness filters or opacity washes.
 
@@ -201,12 +201,14 @@ Content cards must **not** use:
 
 Runtime domain colors (media type, library section, perfect rating) may appear **only** on:
 
-- badges (`MediaTypeBadge`, `Badge color=…`)
+- badges (`MediaTypeBadge`, `Badge color=…` tints text/icon on `bg-muted`, never fills)
 - icons (inline `style={{ color }}` on type icons)
 - poster/image scrims (black gradients for title legibility)
 - hero metric number tint
 - rating chips (`text-rating` / `border-rating` for perfect state)
-- restrained **single** radial wash on `ReviewCard` (media-type **or** perfect via `color-mix`; not multi-radial, not solid fills)
+- restrained **single** radial wash on `ReviewCard` (media-type via `color-mix`; not multi-radial, not solid fills)
+- light type-tint hover on `DiscoverPage` type cards and `ReviewCard` (`color-mix` of `--card-accent` into `--card`)
+- type-colored focus ring on those same cards (`ring-(--card-accent)/40`)
 
 Not on full-page washes, nav active states, or other content cards.
 
@@ -255,7 +257,7 @@ Soft pill: `rounded-full`, icon + label.
 | `warning`     | Caution meta                |
 | `blur`        | Over photo (restrained)     |
 
-Dynamic `color` / `isSolid` for media-type chips. Prefer `MediaTypeBadge` / `RatingBadge` wrappers.
+Dynamic `color` tints text and icon only on a muted surface. Prefer `MediaTypeBadge` / `RatingBadge` wrappers.
 
 ---
 
@@ -268,11 +270,9 @@ Dynamic `color` / `isSolid` for media-type chips. Prefer `MediaTypeBadge` / `Rat
 
 ---
 
-## Themes
+## Theme
 
-**Light:** off-white background, white cards, dark (not pure black) text, subtle borders.
-
-**Dark:** deep layered dark (not pure black), readable foreground, solid borders (not white/10 stacks).
+Dark only. Deep layered surfaces (not pure black), readable foreground, solid `border-border` (not white/10 stacks). Do not add a light theme.
 
 ---
 
@@ -283,7 +283,7 @@ Dynamic `color` / `isSolid` for media-type chips. Prefer `MediaTypeBadge` / `Rat
 - [ ] Radius matches category (md / xl / 2xl / full)
 - [ ] No uncontrolled primary/opacity washes
 - [ ] Focus ring kept
-- [ ] Light and dark both readable
+- [ ] Dark theme readable; no light-theme leftovers
 - [ ] Public booleans named `is*`
 - [ ] One visual language with Button / Input / Select
 - [ ] Primary used selectively

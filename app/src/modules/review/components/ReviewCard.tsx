@@ -34,10 +34,10 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   return (
     <article
       style={{
-        '--card-accent': isPerfect ? 'var(--rating)' : accent,
+        '--card-accent': accent,
       }}
       className={cn(
-        'bg-card group hover:border-(--card-accent)/40 border-(--card-accent)/20 relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3 transition-colors duration-300',
+        'bg-card group hover:bg-[color-mix(in_oklab,var(--card-accent)_12%,var(--card))] hover:border-border border-border relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3 transition-colors duration-300',
         'sm:flex-row sm:items-stretch sm:gap-4 sm:p-4',
       )}
     >
@@ -93,7 +93,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         aria-label={content.openTitle({ title: media.title })}
         className={cn(
           'bg-muted group/poster relative z-px w-full shrink-0 overflow-hidden rounded-lg border border-border outline-none h-fit',
-          'focus-visible:ring-2 focus-visible:ring-ring/40',
+          'focus-visible:ring-2 focus-visible:ring-(--card-accent)/40',
           isMusic
             ? 'aspect-square max-h-56 sm:max-h-none sm:size-36 md:size-42'
             : 'aspect-2/3 max-h-64 sm:max-h-none sm:w-36 md:w-42',

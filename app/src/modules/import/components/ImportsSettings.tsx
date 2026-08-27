@@ -62,7 +62,7 @@ export const ImportsSettings = () => {
             'border-border bg-card flex items-center gap-3.5 rounded-xl border px-4 py-3.5',
             service.isAvailable
               ? cn(
-                  'hover:bg-muted transition-colors duration-200',
+                  'hover:bg-accent transition-colors duration-200',
                   'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
                 )
               : 'opacity-70',

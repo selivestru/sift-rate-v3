@@ -17,7 +17,7 @@ export const badgeVariants = cva(
         default: 'border-border bg-muted text-foreground',
         outline: 'border-border bg-background text-foreground',
         destructive: 'border-border bg-muted text-destructive',
-        rating: 'border-rating/30 bg-rating/10 text-rating',
+        rating: 'border-border bg-muted text-rating',
         warning: 'border-border bg-muted text-warning',
         blur: 'border-transparent bg-card/50 text-foreground backdrop-blur-sm',
         none: 'border-transparent bg-transparent',
@@ -40,33 +40,15 @@ export type BadgeProps = useRender.ComponentProps<'span'> &
   Omit<BadgeVariantProps, 'variant'> & {
     variant?: Exclude<BadgeVariantProps['variant'], 'none'>
     color?: string
-    isSolid?: boolean
     startIcon?: React.ReactNode
     endIcon?: React.ReactNode
   }
-
-const getAccentStyle = (color: string, isSolid: boolean): React.CSSProperties => {
-  if (isSolid) {
-    return {
-      backgroundColor: color,
-      borderColor: color,
-      color: 'white',
-    }
-  }
-
-  return {
-    backgroundColor: `color-mix(in oklab, ${color} 12%, transparent)`,
-    borderColor: `color-mix(in oklab, ${color} 28%, transparent)`,
-    color,
-  }
-}
 
 export const Badge = ({
   className,
   variant = 'default',
   size = 'md',
   color,
-  isSolid = false,
   startIcon,
   endIcon,
   render,
@@ -82,12 +64,12 @@ export const Badge = ({
       {
         className: cn(
           badgeVariants({
-            variant: hasAccent ? 'none' : variant,
+            variant: hasAccent ? 'default' : variant,
             size,
           }),
           className,
         ),
-        style: hasAccent && color ? { ...getAccentStyle(color, isSolid), ...style } : style,
+        style: hasAccent && color ? { color, ...style } : style,
         children: (
           <>
             {startIcon != null && (
@@ -109,7 +91,7 @@ export const Badge = ({
     render,
     state: {
       slot: 'badge',
-      variant: hasAccent ? 'none' : variant,
+      variant: hasAccent ? 'default' : variant,
       size,
     },
   })

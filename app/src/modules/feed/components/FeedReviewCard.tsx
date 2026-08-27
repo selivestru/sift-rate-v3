@@ -37,7 +37,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
   )
 
   return (
-    <article className="hover:bg-muted/35 flex gap-3 p-3 transition-colors duration-300 sm:gap-4 sm:p-4">
+    <article className="hover:bg-accent flex gap-3 p-3 transition-colors duration-300 sm:gap-4 sm:p-4">
       {user.username ? (
         <Link
           to="/$username"
@@ -75,10 +75,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
           </time>
         </div>
 
-        <div
-          style={{ '--card-accent': isPerfect ? 'var(--rating)' : typeMeta.color }}
-          className="bg-card overflow-hidden rounded-xl border border-(--card-accent)/20 transition-colors duration-300 hover:border-(--card-accent)/40"
-        >
+        <div className="bg-card border-border overflow-hidden rounded-xl border">
           <div className="flex gap-3 p-3">
             <Link
               to={detailTo}

@@ -29,10 +29,10 @@ const NavItem = ({ item, user, nested }: NavItemProps) => {
           'text-muted-foreground relative flex items-center gap-2.5 rounded-md px-3 text-sm font-medium',
           'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:outline-none',
           nested ? 'h-9' : 'h-10',
-          'hover:bg-primary/30 hover:text-primary-foreground',
+          'hover:bg-accent hover:text-accent-foreground',
         )}
         activeProps={{
-          className: 'bg-primary/40 hover:bg-primary/50',
+          className: 'bg-accent text-accent-foreground hover:bg-accent',
         }}
       >
         {({ isActive }) => (

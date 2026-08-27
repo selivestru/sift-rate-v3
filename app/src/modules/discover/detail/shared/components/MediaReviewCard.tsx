@@ -70,7 +70,7 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                   <Star
                     key={index}
                     weight={filled ? 'Filled' : 'Outline'}
-                    className={cn('size-5', filled ? 'text-rating' : 'text-muted-foreground/40')}
+                    className={cn('size-5', filled ? 'text-rating' : 'text-muted-foreground')}
                     aria-hidden
                   />
                 )

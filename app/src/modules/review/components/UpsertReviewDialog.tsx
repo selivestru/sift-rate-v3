@@ -99,12 +99,12 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           type="button"
                           onClick={() => field.onChange(value)}
                           className={cn(
-                            'group focus-visible:ring-ring/30 flex aspect-square min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border',
+                            'group focus-visible:ring-ring/40 flex aspect-square min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border',
                             isSelected
-                              ? 'bg-rating/20 hover:bg-rating/30'
+                              ? 'bg-secondary hover:bg-accent'
                               : isFilled
-                                ? 'bg-rating/20 hover:bg-rating/30'
-                                : 'bg-muted hover:bg-muted',
+                                ? 'bg-secondary hover:bg-accent'
+                                : 'bg-muted hover:bg-accent',
                           )}
                           aria-pressed={isSelected}
                           aria-label={content.rateAria({ value })}

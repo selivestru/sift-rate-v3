@@ -5,29 +5,17 @@ import { Badge } from './Badge'
 
 interface MediaBadgeProps {
   mediaType: MediaType
-  alternateColor?: boolean
   size?: 'sm' | 'md'
   className?: string
 }
 
-export const MediaTypeBadge = ({
-  mediaType,
-  size = 'md',
-  alternateColor,
-  className,
-}: MediaBadgeProps) => {
+export const MediaTypeBadge = ({ mediaType, size = 'md', className }: MediaBadgeProps) => {
   const meta = mediaTypeMeta[mediaType]
   const Icon = meta.icon
   const label = useMediaTypeLabel(mediaType)
 
   return (
-    <Badge
-      color={meta.color}
-      isSolid={alternateColor}
-      size={size}
-      startIcon={<Icon />}
-      className={className}
-    >
+    <Badge color={meta.color} size={size} startIcon={<Icon />} className={className}>
       {label}
     </Badge>
   )

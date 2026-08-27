@@ -11,15 +11,14 @@ export const buttonVariants = cva(
       variant: {
         default:
           'bg-primary text-primary-foreground hover:bg-[color-mix(in_oklab,var(--primary)_88%,black)]',
-        secondary:
-          'bg-secondary text-primary hover:bg-accent hover:border-ring/40 aria-expanded:bg-accent',
+        secondary: 'bg-secondary text-primary hover:bg-accent aria-expanded:bg-accent',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-[color-mix(in_oklab,var(--destructive)_88%,black)] focus-visible:border-destructive focus-visible:ring-destructive/30',
         'destructive-soft':
-          'text-destructive bg-destructive/20 hover:bg-destructive/30 aria-expanded:bg-accent aria-expanded:text-destructive focus-visible:border-destructive focus-visible:ring-destructive/30',
+          'bg-[color-mix(in_oklab,var(--destructive)_18%,var(--muted))] text-destructive hover:bg-[color-mix(in_oklab,var(--destructive)_26%,var(--muted))] aria-expanded:bg-[color-mix(in_oklab,var(--destructive)_26%,var(--muted))] aria-expanded:text-destructive focus-visible:border-destructive focus-visible:ring-destructive/30',
         outline:
-          'border-border bg-background text-foreground hover:bg-muted aria-expanded:bg-muted',
-        ghost: 'hover:bg-muted aria-expanded:bg-muted',
+          'border-border bg-background text-foreground hover:bg-accent aria-expanded:bg-accent',
+        ghost: 'hover:bg-accent aria-expanded:bg-accent',
       },
       size: {
         default: 'h-10 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5',

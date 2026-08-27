@@ -34,11 +34,12 @@ export const DiscoverPage = () => {
             <Link
               key={item.to}
               to={item.to}
+              style={{ '--card-accent': meta.color }}
               className={cn(
                 'group border-border bg-card relative flex h-full flex-col justify-between overflow-hidden rounded-xl border p-4 sm:p-5',
                 'transition-colors duration-200',
-                'hover:bg-accent',
-                'focus-visible:ring-ring/40 focus-visible:z-px focus-visible:ring-2 focus-visible:outline-none',
+                'hover:bg-[color-mix(in_oklab,var(--card-accent)_12%,var(--card))]',
+                'focus-visible:ring-(--card-accent)/40 focus-visible:z-px focus-visible:ring-2 focus-visible:outline-none',
               )}
             >
               <div className="relative flex items-start justify-between gap-3">

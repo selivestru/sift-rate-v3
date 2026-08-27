@@ -15,9 +15,9 @@ export const selectTriggerVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-secondary text-foreground hover:bg-muted focus-visible:bg-secondary',
+        default: 'bg-secondary text-foreground hover:bg-accent focus-visible:bg-secondary',
         outline:
-          'border-input bg-background text-foreground hover:bg-muted focus-visible:bg-background',
+          'border-input bg-background text-foreground hover:bg-accent focus-visible:bg-background',
       },
       size: {
         default: 'h-10 px-3',
@@ -141,7 +141,7 @@ export const SelectItem = ({ className, children, ...props }: SelectPrimitive.It
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        'relative flex w-full cursor-pointer items-center gap-2.5 rounded-md py-2 pr-8 pl-3 text-sm outline-hidden select-none transition-colors duration-150 data-highlighted:bg-muted data-disabled:pointer-events-none data-disabled:opacity-50 data-disabled:bg-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+        'relative flex w-full cursor-pointer items-center gap-2.5 rounded-md py-2 pr-8 pl-3 text-sm outline-hidden select-none transition-colors duration-150 data-highlighted:bg-accent data-disabled:pointer-events-none data-disabled:opacity-50 data-disabled:bg-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
         className,
       )}
       {...props}
