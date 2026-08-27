@@ -121,7 +121,7 @@ export const ImdbImportRows = ({ job }: ImdbImportRowsProps) => {
         <div className="border-border bg-background divide-border divide-y rounded-xl border">
           {['row-1', 'row-2', 'row-3', 'row-4', 'row-5'].map((key) => (
             <div key={key} className="flex items-center justify-between gap-3 px-3.5 py-3">
-              <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+              <div className="flex flex-1 flex-col gap-1.5">
                 <Skeleton className="h-3.5 w-2/5" />
                 <Skeleton className="h-3 w-3/5" />
               </div>
@@ -154,7 +154,7 @@ export const ImdbImportRows = ({ job }: ImdbImportRowsProps) => {
               return (
                 <li key={row.id} className="flex flex-col gap-1.5 px-3.5 py-2.5">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 flex-col">
+                    <div className="flex flex-col">
                       <p className="truncate text-sm font-medium">{row.title || row.imdbId}</p>
                       <p className="text-muted-foreground truncate text-xs tabular-nums">
                         #{(row.position + 1).toLocaleString(getCurrentLocale())} · {row.imdbId}

@@ -5,7 +5,7 @@ export const FeedReviewCardSkeleton = () => {
     <article aria-hidden className="flex gap-3 p-3 sm:gap-4 sm:p-4">
       <Skeleton className="size-10 shrink-0 rounded-full" />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+      <div className="flex flex-1 flex-col gap-2.5">
         <div className="flex items-center gap-2">
           <Skeleton className="h-4 w-28 rounded-md" />
           <Skeleton className="h-3.5 w-20 rounded-md" />

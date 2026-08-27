@@ -48,7 +48,7 @@ export const ImportsSettings = () => {
               >
                 <service.icon className="size-5" strokeWidth={1.75} aria-hidden />
               </span>
-              <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="flex flex-1 flex-col gap-0.5">
                 <span className="text-sm font-medium">{service.name}</span>
                 <span className="text-muted-foreground text-xs leading-relaxed">
                   {content.imdbDescription.value}

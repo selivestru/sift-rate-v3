@@ -51,7 +51,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
         <div className="h-fit shrink-0">{avatar}</div>
       )}
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+      <div className="flex flex-1 flex-col gap-2.5">
         <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 overflow-hidden">
           {user.username ? (
             <Link
@@ -101,7 +101,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
               )}
             </Link>
 
-            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <div className="flex flex-1 flex-col gap-1.5">
               <div className="flex flex-wrap items-center gap-1.5">
                 <MediaTypeBadge mediaType={media.mediaType} />
                 <RatingBadge rating={item.rating} variant={isPerfect ? 'rating' : 'default'} />

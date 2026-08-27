@@ -134,7 +134,7 @@ export const ImdbImportUpload = ({ isUploading, onUpload }: ImdbImportUploadProp
           <span className="bg-muted text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-lg">
             <FileText className="size-4" aria-hidden />
           </span>
-          <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex flex-1 flex-col">
             <p className="truncate text-sm font-medium">{file.name}</p>
             <p className="text-muted-foreground text-xs">{formatFileSize(file.size)}</p>
           </div>

@@ -115,7 +115,7 @@ export const ImdbImportHistory = ({ selectedJobId, onSelect }: ImdbImportHistory
                       : 'border-border bg-background hover:bg-accent',
                   )}
                 >
-                  <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                  <span className="flex flex-1 flex-col gap-1.5">
                     <span className="flex flex-wrap items-center gap-2">
                       <Badge variant={badge.variant} size="sm" startIcon={badge.startIcon}>
                         {badge.label}
