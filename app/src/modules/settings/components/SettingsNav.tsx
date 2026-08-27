@@ -11,7 +11,6 @@ const useSettingsNavCopy = () => {
 
   return {
     '/settings/account': content.account.value,
-    '/settings/appearance': content.appearance.value,
     '/settings/imports': content.imports.value,
     '/settings/danger-zone': content.dangerZone.value,
   } as const satisfies Partial<Record<SettingsNavItem['to'], string>>

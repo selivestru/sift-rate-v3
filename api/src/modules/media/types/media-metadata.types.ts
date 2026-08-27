@@ -10,9 +10,13 @@ export interface TvShowMetadata {
   kinopoiskId?: string
 }
 
-export type TrackMetadata = Record<string, never>
+export interface TrackMetadata {
+  spotifyUrl?: string
+}
 
-export type AlbumMetadata = Record<string, never>
+export interface AlbumMetadata {
+  spotifyUrl?: string
+}
 
 export type GameMetadata = Record<string, never>
 

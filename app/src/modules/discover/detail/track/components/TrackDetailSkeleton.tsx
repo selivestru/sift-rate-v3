@@ -7,8 +7,8 @@ export const TrackDetailSkeleton = () => {
         <Skeleton className="absolute inset-0 scale-105 rounded-none" />
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
-          <div className="bg-card ring-border flex gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
-            <Skeleton className="size-32 shrink-0 rounded-xl sm:size-48" />
+          <div className="bg-card ring-border flex gap-3 rounded-2xl p-3 shadow-sm ring-1 max-lg:flex-col sm:gap-4 sm:p-3.5">
+            <Skeleton className="size-32 shrink-0 rounded-xl max-lg:mx-auto sm:size-48" />
 
             <div className="flex flex-1 flex-col justify-end gap-1.5 py-0.5">
               <Skeleton className="h-3 w-12 rounded-lg" />
@@ -20,6 +20,7 @@ export const TrackDetailSkeleton = () => {
               <div className="mt-1.5 flex flex-wrap gap-2">
                 <Skeleton className="h-9 w-18 rounded-xl" />
                 <Skeleton className="h-9 w-20 rounded-xl" />
+                <Skeleton className="h-9 w-18 rounded-xl" />
               </div>
             </div>
           </div>

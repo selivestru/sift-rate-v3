@@ -5,12 +5,13 @@ import { useIntlayer } from 'react-intlayer'
 import { ChevronLeft, Film } from 'reicon-react'
 import { toast } from 'sonner'
 
-import { getApiError, toastApiError } from '~/common/api'
+import { getApiError, toastApiError, translateApiErrorMessage } from '~/common/api'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import { getCurrentLocale } from '~/common/i18n'
 import { Button } from '~/common/ui/Button'
 import { ErrorState } from '~/common/ui/ErrorState'
 import { PageHeader } from '~/common/ui/PageHeader'
+import { useAuthStore } from '~/modules/auth'
 import { SettingsSection } from '~/modules/settings'
 
 import { IMDB_IMPORT_MAX_ROWS } from '../constants/imdb-import'
@@ -49,6 +50,22 @@ export const ImdbImportPage = () => {
     if (jobId !== null && jobId === activeJob?.id) {
       queryClient.setQueryData(QUERIES_KEYS.imdbImportActive, null)
     }
+
+    if (jobStatus === 'COMPLETED') {
+      const username = useAuthStore.getState().user?.username
+
+      if (username) {
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.profile(username) })
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.userFeed(username) })
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.userActivity(username) })
+      }
+
+      queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.feed })
+      queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.myReviews })
+      queryClient.invalidateQueries({ queryKey: ['media-reviews'] })
+      queryClient.invalidateQueries({ queryKey: ['media-state'] })
+      queryClient.invalidateQueries({ queryKey: ['my-review-stats'] })
+    }
   }, [jobStatus, jobId, activeJob?.id, queryClient])
 
   const handleUpload = async (file: File) => {
@@ -67,7 +84,7 @@ export const ImdbImportPage = () => {
         }
       }
 
-      toast.error(apiError.message)
+      toast.error(translateApiErrorMessage(apiError.message))
     }
   }
 

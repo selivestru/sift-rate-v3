@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 import { toast } from 'sonner'
 
-import { getApiError } from '~/common/api'
+import { getApiError, translateApiErrorMessage } from '~/common/api'
 import { removeStorageItem } from '~/common/utils/storage'
 import { useAuthStore } from '~/modules/auth'
 
@@ -37,7 +37,7 @@ export const useDeleteAccountForm = ({ onSuccess }: UseDeleteAccountFormOptions 
       navigate({ to: '/' })
     } catch (error) {
       const apiError = await getApiError(error)
-      setServerError(apiError.message)
+      setServerError(translateApiErrorMessage(apiError.message))
     }
   }
 

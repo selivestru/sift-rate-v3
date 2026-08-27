@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 
+import { translateApiErrorMessage } from '~/common/api'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
 import { getCurrentLocale } from '~/common/i18n'
@@ -171,7 +172,9 @@ export const ImdbImportRows = ({ job }: ImdbImportRowsProps) => {
                     </Badge>
                   </div>
                   {row.error && (
-                    <p className="text-muted-foreground text-xs leading-relaxed">{row.error}</p>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                      {translateApiErrorMessage(row.error)}
+                    </p>
                   )}
                 </li>
               )

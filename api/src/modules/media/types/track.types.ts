@@ -13,6 +13,10 @@ export interface SpotifyArtistRef {
   name: string
 }
 
+export interface SpotifyExternalUrls {
+  spotify?: string
+}
+
 export interface SpotifyTrackRaw {
   id: string
   name: string
@@ -20,6 +24,7 @@ export interface SpotifyTrackRaw {
   explicit: boolean
   popularity: number
   preview_url: string | null
+  external_urls?: SpotifyExternalUrls
   artists?: SpotifyArtistRef[]
   album?: {
     id: string
@@ -42,6 +47,7 @@ export interface TrackDetail {
   id: string
   title: string
   artistName: string
+  spotifyUrl: string | null
   album: {
     id: string
     title: string

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 import { toast } from 'sonner'
 
-import { getApiError } from '~/common/api'
+import { getApiError, translateApiErrorMessage } from '~/common/api'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import { useAuthStore } from '~/modules/auth'
 
@@ -103,7 +103,7 @@ export const useChangeAvatarForm = () => {
       queryClient.invalidateQueries({ queryKey: ['media-reviews'] })
     } catch (submitError) {
       const apiError = await getApiError(submitError)
-      setServerError(apiError.message)
+      setServerError(translateApiErrorMessage(apiError.message))
     }
   }
 

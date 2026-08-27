@@ -15,4 +15,5 @@ export interface TrackDetail {
   contributors: MusicContributor[]
   topTracks: MusicTrackRailItem[]
   artistAlbums: MusicAlbumRailItem[]
+  spotifyUrl: string | null
 }

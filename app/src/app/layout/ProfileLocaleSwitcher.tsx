@@ -1,6 +1,9 @@
 import { useIntlayer } from 'react-intlayer'
 
-import { LOCALES, LOCALE_NATIVE_NAMES, useAppLocale } from '~/common/i18n'
+import EnFlag from '~/common/assets/icons/en.svg?react'
+import RuFlag from '~/common/assets/icons/ru.svg?react'
+import UkFlag from '~/common/assets/icons/uk.svg?react'
+import { LOCALES, LOCALE_NATIVE_NAMES, useAppLocale, type AppLocale } from '~/common/i18n'
 import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -8,6 +11,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '~/common/ui/DropdownMenu'
+
+const flagIcon: Record<AppLocale, React.JSX.Element> = {
+  en: <EnFlag />,
+  uk: <UkFlag />,
+  ru: <RuFlag />,
+}
 
 export const ProfileLocaleSwitcher = () => {
   const { locale, setLocale } = useAppLocale()
@@ -28,6 +37,7 @@ export const ProfileLocaleSwitcher = () => {
                 value={option}
                 aria-label={`${LOCALE_NATIVE_NAMES[option]}${selected ? content.selectedSuffix.value : ''}`}
               >
+                {flagIcon[option]}
                 {LOCALE_NATIVE_NAMES[option]}
               </DropdownMenuRadioItem>
             )

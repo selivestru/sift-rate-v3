@@ -102,6 +102,7 @@ export class TrackService {
       id: track.id,
       title: track.name,
       artistName: primaryArtist?.name ?? 'Unknown Artist',
+      spotifyUrl: track.external_urls?.spotify ?? null,
       album: track.album ? { id: track.album.id, title: track.album.name } : null,
       coverUrl: pickSpotifyImage(track.album?.images),
       releaseDate: track.album?.release_date ?? '',

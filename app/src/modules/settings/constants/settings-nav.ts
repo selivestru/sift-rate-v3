@@ -1,4 +1,4 @@
-import { AlertTriangle, Import, Palette, User as UserIcon, type IconComponent } from 'reicon-react'
+import { AlertTriangle, Import, User as UserIcon, type IconComponent } from 'reicon-react'
 
 import type { FileRoutesByTo } from '~/app/routeTree.gen'
 import type { User } from '~/modules/auth'
@@ -19,13 +19,6 @@ export const accountNavItem: SettingsNavItem = {
   icon: UserIcon,
 }
 
-export const appearanceNavItem: SettingsNavItem = {
-  to: '/settings/appearance',
-  label: 'Appearance',
-  description: 'Theme and accent color',
-  icon: Palette,
-}
-
 export const importsNavItem: SettingsNavItem = {
   to: '/settings/imports',
   label: 'Imports',
@@ -43,7 +36,6 @@ export const dangerZoneNavItem: SettingsNavItem = {
 
 export const settingsNavItems: SettingsNavItem[] = [
   accountNavItem,
-  appearanceNavItem,
   importsNavItem,
   dangerZoneNavItem,
 ]

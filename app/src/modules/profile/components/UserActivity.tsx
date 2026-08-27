@@ -5,7 +5,6 @@ import { useIntlayer } from 'react-intlayer'
 
 import 'react-activity-calendar/tooltips.css'
 
-import { useTheme } from '~/common/theme/useTheme'
 import { ErrorState } from '~/common/ui/ErrorState'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/common/ui/Select'
 import { cn } from '~/common/utils/cn'
@@ -41,7 +40,6 @@ export const UserActivity = ({ username }: UserActivityProps) => {
 }
 
 const UserActivityContent = ({ username }: UserActivityProps) => {
-  const { resolvedTheme } = useTheme()
   const content = useIntlayer('user-activity')
   const { MONTH_LABELS, WEEKDAY_LABELS } = useProfileCalendarLabels()
 
@@ -100,7 +98,7 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
           blockMargin={3}
           blockRadius={3}
           blockSize={16}
-          colorScheme={resolvedTheme}
+          colorScheme="dark"
           fontSize={12}
           labels={{
             legend: { less: content.less.value, more: content.more.value },

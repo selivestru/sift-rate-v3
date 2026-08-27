@@ -109,15 +109,15 @@ Current modules: `auth`, `discover` (search + detail), `feed`, `library`, `plann
 
 File routes: `src/app/routes/`.
 
-| Area             | Paths                                                                             | Intent                                                 |
-| ---------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Auth             | `/auth`, `/auth/google/callback`                                                  | Google sign-in and OAuth result                        |
-| Complete Profile | `/complete-profile`                                                               | Username onboarding when account has no username       |
-| Home             | `/`                                                                               | Activity feed / home of the archive                    |
-| Discover         | `/discover`, `/discover/{movie,tv_show,game,book,album,track}`, `/$externalId`    | Search by type, detail by external ID                  |
-| Library          | `/library`, `/library/reviews`, `/library/ranked-list`, `/library/planned`        | Personal library, reviews, ranked lists, planned queue |
-| Settings         | `/settings`, `/settings/account`, `/settings/appearance`, `/settings/danger-zone` | Account settings, theme, danger zone                   |
-| Profile          | `/$username`                                                                      | Public/personal profile by username                    |
+| Area             | Paths                                                                          | Intent                                                 |
+| ---------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| Auth             | `/auth`, `/auth/google/callback`                                               | Google sign-in and OAuth result                        |
+| Complete Profile | `/complete-profile`                                                            | Username onboarding when account has no username       |
+| Home             | `/`                                                                            | Activity feed / home of the archive                    |
+| Discover         | `/discover`, `/discover/{movie,tv_show,game,book,album,track}`, `/$externalId` | Search by type, detail by external ID                  |
+| Library          | `/library`, `/library/reviews`, `/library/ranked-list`, `/library/planned`     | Personal library, reviews, ranked lists, planned queue |
+| Settings         | `/settings`, `/settings/account`, `/settings/imports`, `/settings/danger-zone` | Account settings, imports, danger zone                 |
+| Profile          | `/$username`                                                                   | Public/personal profile by username                    |
 
 ## Data layer
 
@@ -137,7 +137,7 @@ Validated by `src/common/constants/env.ts` via `@t3-oss/env-core`. Single client
 ## Design system
 
 - Quiet, personal archive — not a loud social feed or generic SaaS dashboard.
-- Brand is purple OKLCH accent on soft body/block surfaces; light and dark themes share the same accent hue.
+- Brand is purple OKLCH accent on soft body/block surfaces; the app ships a dark theme only.
 - Prefer restraint: semantic tokens, large soft radii, clear hierarchy, minimal chrome outside the shell.
 - Product copy and UI should support "media as life", not only ratings tables.
 

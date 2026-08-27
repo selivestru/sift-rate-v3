@@ -1,5 +1,4 @@
 import { I18nProvider } from '~/common/i18n'
-import { ThemeProvider } from '~/common/theme'
 import { Toaster } from '~/common/ui/Sonner'
 import { TooltipProvider } from '~/common/ui/Tooltip'
 import { AuthBootstrap } from '~/modules/auth'
@@ -13,13 +12,11 @@ export const Providers = () => {
     <TanstackQueryProvider>
       <I18nProvider>
         <MotionProvider>
-          <ThemeProvider>
-            <AuthBootstrap>
-              <TooltipProvider>
-                <TanstackRouterProvider />
-              </TooltipProvider>
-            </AuthBootstrap>
-          </ThemeProvider>
+          <AuthBootstrap>
+            <TooltipProvider>
+              <TanstackRouterProvider />
+            </TooltipProvider>
+          </AuthBootstrap>
         </MotionProvider>
         <Toaster />
       </I18nProvider>

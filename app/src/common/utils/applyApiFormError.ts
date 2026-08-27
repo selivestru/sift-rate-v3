@@ -1,6 +1,6 @@
 import type { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 
-import type { ApiError } from '~/common/api'
+import { translateApiErrorMessage, type ApiError } from '~/common/api'
 
 const matchFieldMessage = (message: string, field: string): boolean => {
   const normalizedMessage = message.toLowerCase()
@@ -31,7 +31,10 @@ export const applyApiFormError = <TFieldValues extends FieldValues>({
     for (const field of fields) {
       const message = apiError.fieldErrors[field]
       if (message) {
-        setError(field, { type: 'server', message })
+        setError(field, {
+          type: 'server',
+          message: translateApiErrorMessage(message, { fields: fields.map(String) }),
+        })
         hasFieldError = true
       }
     }
@@ -49,10 +52,13 @@ export const applyApiFormError = <TFieldValues extends FieldValues>({
       const field = fields.find((item) => matchFieldMessage(message, String(item)))
 
       if (field) {
-        setError(field, { type: 'server', message })
+        setError(field, {
+          type: 'server',
+          message: translateApiErrorMessage(message, { fields: fields.map(String) }),
+        })
         hasFieldError = true
       } else {
-        unmatched.push(message)
+        unmatched.push(translateApiErrorMessage(message, { fields: fields.map(String) }))
       }
     }
 
@@ -63,6 +69,6 @@ export const applyApiFormError = <TFieldValues extends FieldValues>({
   }
 
   if (!hasFieldError) {
-    setServerError(apiError.message)
+    setServerError(translateApiErrorMessage(apiError.message, { fields: fields.map(String) }))
   }
 }

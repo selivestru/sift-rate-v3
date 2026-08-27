@@ -19,7 +19,12 @@ import { GameService } from './services/game.service'
 import { MovieService } from './services/movie.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
-import type { MovieMetadata, TvShowMetadata } from './types/media-metadata.types'
+import type {
+  AlbumMetadata,
+  MovieMetadata,
+  TrackMetadata,
+  TvShowMetadata,
+} from './types/media-metadata.types'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
 import { Queue } from 'bullmq'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
@@ -273,6 +278,7 @@ export class MediaService {
       originalTitle?: string | null
       posterUrl?: string | null
       coverUrl?: string | null
+      spotifyUrl?: string | null
       imdbId?: string | null
       kinopoiskId?: string | null
     },
@@ -302,12 +308,23 @@ export class MediaService {
       }
       case MediaType.GAME:
       case MediaType.BOOK:
-      case MediaType.ALBUM:
-      case MediaType.TRACK:
         return {
           title: detail.title,
           posterUrl: detail.coverUrl ?? null,
         }
+      case MediaType.ALBUM:
+      case MediaType.TRACK: {
+        const spotifyMetadata: TrackMetadata | AlbumMetadata | null =
+          typeof detail.spotifyUrl === 'string' && detail.spotifyUrl.length > 0
+            ? { spotifyUrl: detail.spotifyUrl }
+            : null
+
+        return {
+          title: detail.title,
+          posterUrl: detail.coverUrl ?? null,
+          metadata: spotifyMetadata,
+        }
+      }
       default:
         throw new BadRequestException('Invalid media type')
     }

@@ -18,16 +18,6 @@ const settingsNavContent = {
       uk: 'Ім’я користувача та відображуване ім’я',
       ru: 'Имя пользователя и отображаемое имя',
     }),
-    appearance: t({
-      en: 'Appearance',
-      uk: 'Оформлення',
-      ru: 'Оформление',
-    }),
-    appearanceDescription: t({
-      en: 'Theme and accent color',
-      uk: 'Тема та акцентний колір',
-      ru: 'Тема и акцентный цвет',
-    }),
     imports: t({
       en: 'Imports',
       uk: 'Імпорт',

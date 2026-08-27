@@ -1,6 +1,7 @@
 import { useIntlayer } from 'react-intlayer'
 import { AlertTriangle, CheckCircle, Clock, Refresh, Upload } from 'reicon-react'
 
+import { translateApiErrorMessage } from '~/common/api'
 import { getCurrentLocale } from '~/common/i18n'
 import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Badge } from '~/common/ui/Badge'
@@ -175,7 +176,7 @@ export const ImdbImportJobStatus = ({
         <Alert variant="destructive">
           <AlertTriangle />
           <AlertTitle>{content.whyStopped.value}</AlertTitle>
-          <AlertDescription>{job.errorMessage}</AlertDescription>
+          <AlertDescription>{translateApiErrorMessage(job.errorMessage)}</AlertDescription>
         </Alert>
       )}
 

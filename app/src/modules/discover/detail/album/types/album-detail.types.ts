@@ -22,4 +22,5 @@ export interface AlbumDetail {
   tracks: AlbumTrack[]
   topTracks: MusicTrackRailItem[]
   artistAlbums: MusicAlbumRailItem[]
+  spotifyUrl: string | null
 }

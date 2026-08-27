@@ -1,5 +1,6 @@
 import type { SpotifyImage } from '../services/spotify-client.service'
 import type { MusicAlbumRailItem, MusicContributor, MusicTrackRailItem } from './music.types'
+import type { SpotifyExternalUrls } from './track.types'
 
 export interface AlbumSearchResult {
   albums?: {
@@ -16,6 +17,7 @@ export interface SpotifyAlbumRaw {
   label: string | null
   release_date: string
   popularity: number
+  external_urls?: SpotifyExternalUrls
   images?: SpotifyImage[]
   artists?: Array<{ id: string; name: string }>
   tracks?: {
@@ -54,6 +56,7 @@ export interface AlbumDetail {
   id: string
   title: string
   artistName: string
+  spotifyUrl: string | null
   coverUrl: string | null
   genres: string[]
   label: string

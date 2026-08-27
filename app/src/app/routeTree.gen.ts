@@ -24,7 +24,6 @@ import { Route as AppLibraryRankedListRouteImport } from './routes/_app/library/
 import { Route as AppLibraryReviewsRouteImport } from './routes/_app/library/reviews'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
-import { Route as AppSettingsAppearanceRouteImport } from './routes/_app/settings/appearance'
 import { Route as AppSettingsDangerZoneRouteImport } from './routes/_app/settings/danger-zone'
 import { Route as AuthGoogleCallbackRouteImport } from './routes/auth/google.callback'
 import { Route as AppDiscoverAlbumIndexRouteImport } from './routes/_app/discover/album/index'
@@ -114,11 +113,6 @@ const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
 const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
   id: '/account',
   path: '/account',
-  getParentRoute: () => AppSettingsRouteRoute,
-} as any)
-const AppSettingsAppearanceRoute = AppSettingsAppearanceRouteImport.update({
-  id: '/appearance',
-  path: '/appearance',
   getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppSettingsDangerZoneRoute = AppSettingsDangerZoneRouteImport.update({
@@ -220,7 +214,6 @@ export interface FileRoutesByFullPath {
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
   '/settings/account': typeof AppSettingsAccountRoute
-  '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/auth/google/callback': typeof AuthGoogleCallbackRoute
   '/discover/': typeof AppDiscoverIndexRoute
@@ -250,7 +243,6 @@ export interface FileRoutesByTo {
   '/library/ranked-list': typeof AppLibraryRankedListRoute
   '/library/reviews': typeof AppLibraryReviewsRoute
   '/settings/account': typeof AppSettingsAccountRoute
-  '/settings/appearance': typeof AppSettingsAppearanceRoute
   '/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/auth/google/callback': typeof AuthGoogleCallbackRoute
   '/discover': typeof AppDiscoverIndexRoute
@@ -285,7 +277,6 @@ export interface FileRoutesById {
   '/_app/library/ranked-list': typeof AppLibraryRankedListRoute
   '/_app/library/reviews': typeof AppLibraryReviewsRoute
   '/_app/settings/account': typeof AppSettingsAccountRoute
-  '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
   '/_app/settings/danger-zone': typeof AppSettingsDangerZoneRoute
   '/auth/google/callback': typeof AuthGoogleCallbackRoute
   '/_app/discover/': typeof AppDiscoverIndexRoute
@@ -320,7 +311,6 @@ export interface FileRouteTypes {
     | '/library/ranked-list'
     | '/library/reviews'
     | '/settings/account'
-    | '/settings/appearance'
     | '/settings/danger-zone'
     | '/auth/google/callback'
     | '/discover/'
@@ -350,7 +340,6 @@ export interface FileRouteTypes {
     | '/library/ranked-list'
     | '/library/reviews'
     | '/settings/account'
-    | '/settings/appearance'
     | '/settings/danger-zone'
     | '/auth/google/callback'
     | '/discover'
@@ -384,7 +373,6 @@ export interface FileRouteTypes {
     | '/_app/library/ranked-list'
     | '/_app/library/reviews'
     | '/_app/settings/account'
-    | '/_app/settings/appearance'
     | '/_app/settings/danger-zone'
     | '/auth/google/callback'
     | '/_app/discover/'
@@ -517,13 +505,6 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/settings/account'
       preLoaderRoute: typeof AppSettingsAccountRouteImport
-      parentRoute: typeof AppSettingsRouteRoute
-    }
-    '/_app/settings/appearance': {
-      id: '/_app/settings/appearance'
-      path: '/appearance'
-      fullPath: '/settings/appearance'
-      preLoaderRoute: typeof AppSettingsAppearanceRouteImport
       parentRoute: typeof AppSettingsRouteRoute
     }
     '/_app/settings/danger-zone': {
@@ -675,7 +656,6 @@ const AppLibraryRouteRouteWithChildren = AppLibraryRouteRoute._addFileChildren(
 
 interface AppSettingsRouteRouteChildren {
   AppSettingsAccountRoute: typeof AppSettingsAccountRoute
-  AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
   AppSettingsDangerZoneRoute: typeof AppSettingsDangerZoneRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
   AppSettingsImportsImdbRoute: typeof AppSettingsImportsImdbRoute
@@ -684,7 +664,6 @@ interface AppSettingsRouteRouteChildren {
 
 const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
   AppSettingsAccountRoute: AppSettingsAccountRoute,
-  AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
   AppSettingsDangerZoneRoute: AppSettingsDangerZoneRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
   AppSettingsImportsImdbRoute: AppSettingsImportsImdbRoute,

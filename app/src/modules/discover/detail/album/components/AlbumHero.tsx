@@ -5,7 +5,7 @@ import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
 
-import { MediaCoverLightbox } from '../../shared'
+import { ListenOnSpotifyButton, MediaCoverLightbox } from '../../shared'
 import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
 import type { AlbumDetail } from '../types/album-detail.types'
 
@@ -66,8 +66,8 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
         )}
 
         <div className="relative z-10 flex min-h-72 flex-col justify-end p-4 sm:min-h-80 sm:p-5">
-          <div className="bg-card ring-border flex gap-3 rounded-2xl p-3 shadow-sm ring-1 sm:gap-4 sm:p-3.5">
-            <div className="bg-muted ring-border relative size-32 shrink-0 overflow-hidden rounded-xl ring-1 sm:size-48">
+          <div className="bg-card ring-border flex gap-3 rounded-2xl p-3 shadow-sm ring-1 max-lg:flex-col sm:gap-4 sm:p-3.5">
+            <div className="bg-muted ring-border relative size-32 shrink-0 overflow-hidden rounded-xl ring-1 max-lg:mx-auto sm:size-48">
               <MediaCoverLightbox
                 src={album.coverUrl}
                 alt={album.title}
@@ -133,11 +133,10 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
                 </div>
               )}
 
-              <MediaStateButtons
-                externalId={album.id}
-                mediaType={MEDIA_TYPES.ALBUM}
-                className="mt-1"
-              />
+              <div className="mt-1 flex flex-wrap gap-1.5">
+                <MediaStateButtons externalId={album.id} mediaType={MEDIA_TYPES.ALBUM} />
+                <ListenOnSpotifyButton spotifyUrl={album.spotifyUrl} />
+              </div>
             </div>
           </div>
         </div>

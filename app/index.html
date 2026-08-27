@@ -8,48 +8,9 @@
     <script>
       ;(function () {
         const root = document.documentElement
-
-        let themeStored = null
-        try {
-          themeStored = JSON.parse(localStorage.getItem('theme'))
-        } catch (e) {}
-        const mode =
-          themeStored === 'light' || themeStored === 'dark' || themeStored === 'system'
-            ? themeStored
-            : 'system'
-        const resolved =
-          mode === 'system'
-            ? window.matchMedia('(prefers-color-scheme: dark)').matches
-              ? 'dark'
-              : 'light'
-            : mode
-        if (resolved === 'dark') {
-          root.classList.add('dark')
-          root.setAttribute('data-theme', 'dark')
-        } else {
-          root.classList.remove('dark')
-          root.setAttribute('data-theme', 'light')
-        }
-        root.style.colorScheme = resolved
-
-        const accents = [
-          'red',
-          'orange',
-          'yellow',
-          'green',
-          'teal',
-          'cyan',
-          'blue',
-          'indigo',
-          'purple',
-          'pink',
-        ]
-        let accentStored = null
-        try {
-          accentStored = JSON.parse(localStorage.getItem('accent'))
-        } catch (e) {}
-        const accent = accents.indexOf(accentStored) !== -1 ? accentStored : 'purple'
-        root.setAttribute('data-accent', accent)
+        root.classList.add('dark')
+        root.setAttribute('data-theme', 'dark')
+        root.style.colorScheme = 'dark'
       })()
     </script>
   </head>

@@ -105,6 +105,7 @@ export class AlbumService {
       id: album.id,
       title: album.name,
       artistName: album.artists?.[0]?.name ?? 'Unknown Artist',
+      spotifyUrl: album.external_urls?.spotify ?? null,
       coverUrl: pickSpotifyImage(album.images),
       genres: [],
       label: album.label ?? '',

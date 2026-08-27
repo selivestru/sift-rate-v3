@@ -112,6 +112,7 @@ const discoverDetailContent = {
     buy: t({ en: 'Buy', uk: 'Придбати', ru: 'Купить' }),
     whereToPlay: t({ en: 'Where to play', uk: 'Де грати', ru: 'Где играть' }),
     watch: t({ en: 'Watch', uk: 'Дивитися', ru: 'Смотреть' }),
+    listenOnSpotify: t({ en: 'Listen', uk: 'Слухати', ru: 'Слушать' }),
     credits: t({ en: 'Credits', uk: 'Титри', ru: 'Титры' }),
     noCover: t({ en: 'No cover', uk: 'Немає обкладинки', ru: 'Нет обложки' }),
     unknown: t({ en: 'Unknown', uk: 'Невідомо', ru: 'Неизвестно' }),
