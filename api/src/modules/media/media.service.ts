@@ -1,16 +1,5 @@
-import { InjectQueue } from '@nestjs/bullmq'
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common'
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
 
-import {
-  POSTER_INGEST_JOB,
-  POSTER_INGEST_QUEUE,
-  PosterIngestJobData,
-} from './constants/poster-queue'
 import { MediaByIdParamsDto } from './dto/media-by-id.params'
 import { SearchMediaQueryDto } from './dto/search-media.query'
 import { AlbumService } from './services/album.service'
@@ -26,7 +15,6 @@ import type {
   TvShowMetadata,
 } from './types/media-metadata.types'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
-import { Queue } from 'bullmq'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { DEFAULT_MEDIA_LANGUAGE } from '~/common/decorators/current-language.decorator'
@@ -42,12 +30,8 @@ export type EnsureMediaResult = {
 
 @Injectable()
 export class MediaService {
-  private readonly logger = new Logger(MediaService.name)
-
   constructor(
     private readonly prisma: PrismaService,
-    @InjectQueue(POSTER_INGEST_QUEUE)
-    private readonly posterIngestQueue: Queue<PosterIngestJobData>,
     private readonly movieService: MovieService,
     private readonly tvShowService: TvShowService,
     private readonly trackService: TrackService,
@@ -205,8 +189,6 @@ export class MediaService {
       },
     })
 
-    this.schedulePosterIngest(newMedia)
-
     return newMedia
   }
 
@@ -233,42 +215,6 @@ export class MediaService {
     const imdbId =
       snapshot.metadata && 'imdbId' in snapshot.metadata ? snapshot.metadata.imdbId : null
     return typeof imdbId === 'string' && imdbId.length > 0 ? imdbId : null
-  }
-
-  schedulePosterIngest(media: Pick<Media, 'id' | 'posterUrl' | 'mediaType' | 'externalId'>): void {
-    if (!media.posterUrl) {
-      return
-    }
-
-    this.posterIngestQueue
-      .add(
-        POSTER_INGEST_JOB,
-        {
-          mediaId: media.id,
-          sourcePosterUrl: media.posterUrl,
-        },
-        {
-          jobId: `poster-${media.id}`,
-          attempts: 3,
-          backoff: { type: 'exponential', delay: 2000 },
-          removeOnComplete: true,
-          removeOnFail: 100,
-        },
-      )
-      .then(() => {
-        this.logger.debug(
-          `Poster ingest enqueued for media ${media.id} (${media.mediaType}/${media.externalId})`,
-        )
-      })
-      .catch((error: unknown) => {
-        const message = error instanceof Error ? error.message : String(error)
-        if (message.includes('Job is already') || message.includes('already exists')) {
-          this.logger.debug(`Poster ingest already queued for media ${media.id}`)
-          return
-        }
-
-        this.logger.warn(`Failed to enqueue poster ingest for media ${media.id}: ${message}`)
-      })
   }
 
   private toSnapshot(

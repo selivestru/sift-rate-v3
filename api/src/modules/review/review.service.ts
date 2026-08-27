@@ -168,7 +168,7 @@ export class ReviewService {
       throw new InternalServerErrorException('Snapshot is required to create Media')
     }
 
-    const { review, inserted } = await this.prisma.$transaction(async (tx) => {
+    const review = await this.prisma.$transaction(async (tx) => {
       let media = await tx.media.findUnique({
         where: {
           externalId_mediaType: {
@@ -177,8 +177,6 @@ export class ReviewService {
           },
         },
       })
-
-      let inserted = false
 
       if (!media) {
         media = await tx.media.create({
@@ -194,8 +192,6 @@ export class ReviewService {
                 : null,
           },
         })
-
-        inserted = true
       }
 
       const hasReview = await tx.review.findUnique({
@@ -244,12 +240,8 @@ export class ReviewService {
         },
       })
 
-      return { review, inserted }
+      return review
     })
-
-    if (inserted) {
-      this.mediaService.schedulePosterIngest(review.media)
-    }
 
     return review
   }

@@ -34,10 +34,10 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   return (
     <article
       style={{
-        '--card-accent': accent,
+        '--card-accent': isPerfect ? 'var(--rating)' : accent,
       }}
       className={cn(
-        'bg-card group hover:bg-[color-mix(in_oklab,var(--card-accent)_12%,var(--card))] hover:border-border border-border relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3 transition-colors duration-300',
+        'bg-card group hover:border-(--card-accent)/40 border-(--card-accent)/20 relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3 transition-colors duration-300',
         'sm:flex-row sm:items-stretch sm:gap-4 sm:p-4',
       )}
     >

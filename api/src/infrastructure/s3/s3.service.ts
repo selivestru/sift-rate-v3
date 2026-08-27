@@ -9,12 +9,10 @@ export class S3Service {
   private readonly client: S3Client
   private readonly bucket: string
   private readonly publicBaseUrl: string
-  private readonly ownedHost: string
 
   constructor(private readonly config: ConfigService<EnvConfig, true>) {
     this.bucket = this.config.get('S3_BUCKET', { infer: true })
     this.publicBaseUrl = this.config.get('S3_PUBLIC_BASE_URL', { infer: true })
-    this.ownedHost = new URL(this.publicBaseUrl).host
 
     const endpoint = this.config.get('S3_ENDPOINT', { infer: true })
 
@@ -27,14 +25,6 @@ export class S3Service {
       },
       forcePathStyle: !!endpoint,
     })
-  }
-
-  isOwnedUrl(url: string): boolean {
-    try {
-      return new URL(url).host === this.ownedHost
-    } catch {
-      return false
-    }
   }
 
   buildPublicUrl(key: string): string {
