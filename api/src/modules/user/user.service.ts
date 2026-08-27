@@ -151,6 +151,15 @@ export class UserService {
       throw new BadRequestException('Invalid image')
     }
 
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { avatarUrl: true },
+    })
+
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
     const randomId = crypto.randomUUID().replace(/-/g, '')
     const key = `avatars/${randomId}.webp`
 
@@ -160,24 +169,49 @@ export class UserService {
       contentType: 'image/webp',
     })
 
-    return this.prisma.user.update({
+    const updated = await this.prisma.user.update({
       where: { id: userId },
       data: { avatarUrl: this.s3.buildPublicUrl(key) },
       select: { avatarUrl: true },
     })
+
+    await this.deleteOwnedFile(user.avatarUrl)
+
+    return updated
   }
 
   async deleteAccount(req: Request, res: Response, userId: string): Promise<void> {
-    await this.findById(userId)
+    const user = await this.findById(userId)
     await this.prisma.user.delete({ where: { id: userId } })
     await this.sessionService.destroyAllForUser(userId)
     await this.redis.del(REDIS_KEYS.USER_SESSIONS(userId))
+
+    await this.deleteOwnedFile(user.avatarUrl)
 
     if (req.session?.userId === userId) {
       await this.sessionService.revokeCurrent(req, res)
     }
 
     this.logger.log({ userId }, 'Account deleted')
+  }
+
+  private async deleteOwnedFile(url: string | null): Promise<void> {
+    if (!url) {
+      return
+    }
+
+    const key = this.s3.extractOwnedKey(url)
+
+    if (!key) {
+      return
+    }
+
+    try {
+      await this.s3.deleteObject(key)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      this.logger.warn({ url, key, message }, 'Failed to delete S3 object')
+    }
   }
 
   private async getUserActivityYears(userId: string): Promise<number[]> {

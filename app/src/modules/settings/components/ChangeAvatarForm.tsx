@@ -93,7 +93,7 @@ export const ChangeAvatarForm = () => {
           if (!next && !isLoading) onClear()
         }}
       >
-        <DialogContent className={cn('sm:max-w-[360px]', isLoading && 'pointer-events-none')}>
+        <DialogContent className={cn('sm:max-w-90', isLoading && 'pointer-events-none')}>
           <DialogHeader>
             <DialogTitle>{content.previewTitle}</DialogTitle>
             <DialogDescription>{content.previewDescription}</DialogDescription>

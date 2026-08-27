@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { EnvConfig } from '~/app/config/env.config'
 
 @Injectable()
@@ -32,6 +32,21 @@ export class S3Service {
     return `${this.publicBaseUrl}/${normalizedKey}`
   }
 
+  extractOwnedKey(url: string): string | null {
+    try {
+      const parsed = new URL(url)
+      const ownedHost = new URL(this.publicBaseUrl).host
+
+      if (parsed.host !== ownedHost) {
+        return null
+      }
+
+      return parsed.pathname.replace(/^\/+/, '') || null
+    } catch {
+      return null
+    }
+  }
+
   async putObject(params: { key: string; body: Buffer; contentType: string }): Promise<void> {
     await this.client.send(
       new PutObjectCommand({
@@ -39,6 +54,15 @@ export class S3Service {
         Key: params.key,
         Body: params.body,
         ContentType: params.contentType,
+      }),
+    )
+  }
+
+  async deleteObject(key: string): Promise<void> {
+    await this.client.send(
+      new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
       }),
     )
   }
