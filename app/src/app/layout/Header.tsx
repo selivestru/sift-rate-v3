@@ -18,7 +18,7 @@ export const Header = () => {
           to="/"
           className="flex items-center gap-2 text-xl font-semibold tracking-tight max-md:mr-auto"
         >
-          <img src="/public/logo.png" alt="SiftRate" className="size-10" />
+          <img src="/logo.png" alt="SiftRate" className="size-10" />
           SiftRate
         </Link>
         {user ? (
