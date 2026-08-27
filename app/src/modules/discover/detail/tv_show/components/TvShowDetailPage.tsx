@@ -1,5 +1,4 @@
-import { HTTPError } from 'ky'
-
+import { MediaDetailBoundary } from '../../shared'
 import { useTvShowDetailQuery } from '../hooks/useTvShowDetailQuery'
 import { TvShowDetailError } from './TvShowDetailError'
 import { TvShowDetailNotFound } from './TvShowDetailNotFound'
@@ -10,30 +9,20 @@ interface TvShowDetailPageProps {
   externalId: string
 }
 
-type PageState = 'loading' | 'not-found' | 'error' | 'success'
-
 export const TvShowDetailPage = ({ externalId }: TvShowDetailPageProps) => {
-  const { data, isPending, isError, error, refetch } = useTvShowDetailQuery(externalId)
-
-  const isNotFound = isError && error instanceof HTTPError && error.response.status === 404
-
-  let state: PageState = 'loading'
-  if (isPending) {
-    state = 'loading'
-  } else if (isNotFound) {
-    state = 'not-found'
-  } else if (isError) {
-    state = 'error'
-  } else if (data) {
-    state = 'success'
-  }
-
   return (
-    <>
-      {state === 'loading' && <TvShowDetailSkeleton />}
-      {state === 'not-found' && <TvShowDetailNotFound externalId={externalId} />}
-      {state === 'error' && <TvShowDetailError onRetry={() => void refetch()} />}
-      {state === 'success' && data && <TvShowDetailView key={data.id} show={data} />}
-    </>
+    <MediaDetailBoundary
+      fallback={<TvShowDetailSkeleton />}
+      notFound={<TvShowDetailNotFound externalId={externalId} />}
+      renderError={(onRetry) => <TvShowDetailError onRetry={onRetry} />}
+    >
+      <TvShowDetailContent externalId={externalId} />
+    </MediaDetailBoundary>
   )
+}
+
+const TvShowDetailContent = ({ externalId }: TvShowDetailPageProps) => {
+  const { data } = useTvShowDetailQuery(externalId)
+
+  return <TvShowDetailView key={data.id} show={data} />
 }

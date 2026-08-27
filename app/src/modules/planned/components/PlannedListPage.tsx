@@ -1,4 +1,6 @@
-import { getQueryState } from '~/common/utils/getQueryState'
+import { useQueryErrorResetBoundary } from '@tanstack/react-query'
+import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { useGetPlannedList } from '../hook/useGetPlannedList'
 import { PlannedHero } from './PlannedHero'
@@ -8,33 +10,42 @@ import { PlannedListError } from './PlannedListError'
 import { PlannedListSkeleton } from './PlannedListSkeleton'
 
 export const PlannedListPage = () => {
-  const { data, isLoading, isError, refetch } = useGetPlannedList()
-
-  const state = getQueryState({
-    data,
-    isLoading,
-    isError,
-    isEmpty: (response) => response.data.length === 0,
-  })
-  const total =
-    state === 'loading'
-      ? null
-      : state === 'success' && data
-        ? (data.totalResults ?? data.data.length)
-        : state === 'empty'
-          ? 0
-          : null
-
   return (
     <div className="relative flex flex-col gap-6 p-4 sm:gap-8 sm:p-6">
-      <PlannedHero total={total} />
-
-      <div className="relative">
-        {state === 'loading' && <PlannedListSkeleton />}
-        {state === 'empty' && <PlannedListEmpty />}
-        {state === 'error' && <PlannedListError onRetry={refetch} />}
-        {state === 'success' && data?.data && <PlannedList data={data.data} />}
-      </div>
+      <PlannedListBoundary>
+        <Suspense fallback={<PlannedHero total={null} />}>
+          <PlannedHeroContent />
+        </Suspense>
+        <Suspense fallback={<PlannedListSkeleton />}>
+          <PlannedListContent />
+        </Suspense>
+      </PlannedListBoundary>
     </div>
   )
+}
+
+const PlannedListBoundary = ({ children }: React.PropsWithChildren) => {
+  const { reset } = useQueryErrorResetBoundary()
+
+  return (
+    <ErrorBoundary onReset={reset} fallback={<PlannedListError onRetry={reset} />}>
+      {children}
+    </ErrorBoundary>
+  )
+}
+
+const PlannedHeroContent = () => {
+  const { data } = useGetPlannedList()
+
+  return <PlannedHero total={data.totalResults ?? data.data.length} />
+}
+
+const PlannedListContent = () => {
+  const { data } = useGetPlannedList()
+
+  if (data.data.length === 0) {
+    return <PlannedListEmpty />
+  }
+
+  return <PlannedList data={data.data} />
 }

@@ -1,4 +1,5 @@
-import { getQueryState } from '~/common/utils/getQueryState'
+import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { useGetMyRankedLists } from '../hooks/useGetMyRankedLists'
 import { RankedListCard } from './RankedListCard'
@@ -8,31 +9,42 @@ import { RankingListError } from './RankingListError'
 import { RankingListSkeleton } from './RankingListSkeleton'
 
 export const RankedListsPage = () => {
-  const { data, isLoading, isError } = useGetMyRankedLists()
-
-  const state = getQueryState({
-    data,
-    isLoading,
-    isError,
-    isEmpty: (response) => response.data.length === 0,
-  })
-
   return (
     <div className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-6">
-      <RankedListsHero total={data?.data?.length ?? null} />
+      <RankedListsBoundary>
+        <Suspense fallback={<RankedListsHero total={null} />}>
+          <RankedListsHeroContent />
+        </Suspense>
+        <Suspense fallback={<RankingListSkeleton />}>
+          <RankedListsContent />
+        </Suspense>
+      </RankedListsBoundary>
+    </div>
+  )
+}
 
-      <div className="z-px relative">
-        {state === 'loading' && <RankingListSkeleton />}
-        {state === 'error' && <RankingListError />}
-        {state === 'empty' && <RankingListEmpty />}
-        {state === 'success' && data?.data && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {data.data.map((item) => (
-              <RankedListCard key={item.id} item={item} />
-            ))}
-          </div>
-        )}
-      </div>
+const RankedListsBoundary = ({ children }: React.PropsWithChildren) => {
+  return <ErrorBoundary fallback={<RankingListError />}>{children}</ErrorBoundary>
+}
+
+const RankedListsHeroContent = () => {
+  const { data } = useGetMyRankedLists()
+
+  return <RankedListsHero total={data.data.length} />
+}
+
+const RankedListsContent = () => {
+  const { data } = useGetMyRankedLists()
+
+  if (data.data.length === 0) {
+    return <RankingListEmpty />
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {data.data.map((item) => (
+        <RankedListCard key={item.id} item={item} />
+      ))}
     </div>
   )
 }
