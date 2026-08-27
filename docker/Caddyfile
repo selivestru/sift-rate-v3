@@ -1,3 +1,9 @@
 api.siftrate.com {
 	reverse_proxy api:5000
 }
+
+siftrate.com {
+	root * /srv
+	try_files {path} /index.html
+	file_server
+}
