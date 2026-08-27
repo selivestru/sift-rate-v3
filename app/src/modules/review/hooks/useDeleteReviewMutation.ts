@@ -32,8 +32,11 @@ export const useDeleteReviewMutation = () => {
       removeReviewFromFeedCaches(context.client, data, user?.username)
 
       if (user?.username) {
-        patchUserActivity(context.client, user.username, (activity) =>
-          bumpUserActivity(activity, data.createdAt, -1),
+        patchUserActivity(
+          context.client,
+          user.username,
+          new Date(data.createdAt).getFullYear(),
+          (activity) => bumpUserActivity(activity, data.createdAt, -1),
         )
         patchProfileReviewStats(context.client, user.username, (profile) =>
           applyProfileReviewDeleted(profile, {

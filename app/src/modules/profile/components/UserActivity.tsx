@@ -12,14 +12,15 @@ import { cn } from '~/common/utils/cn'
 import { calendarTheme, useProfileCalendarLabels } from '../constants/profile-constans'
 import { useGetUserActivityQuery } from '../hooks/useGetUserActivityQuery'
 import { formatActivityDate } from '../utils/formatActivityDate'
-import { getUserActivityData, getUserActivityYears } from '../utils/user-activity'
+import { getUserActivityData } from '../utils/user-activity'
 import { UserActivitySkeleton } from './UserActivitySkeleton'
 
 interface UserActivityProps {
   username: string
+  activityYears: number[]
 }
 
-export const UserActivity = ({ username }: UserActivityProps) => {
+export const UserActivity = ({ username, activityYears }: UserActivityProps) => {
   const content = useIntlayer('user-activity')
 
   return (
@@ -33,21 +34,19 @@ export const UserActivity = ({ username }: UserActivityProps) => {
       }
     >
       <Suspense fallback={<UserActivitySkeleton />}>
-        <UserActivityContent username={username} />
+        <UserActivityContent username={username} activityYears={activityYears} />
       </Suspense>
     </ErrorBoundary>
   )
 }
 
-const UserActivityContent = ({ username }: UserActivityProps) => {
+const UserActivityContent = ({ username, activityYears }: UserActivityProps) => {
   const content = useIntlayer('user-activity')
   const { MONTH_LABELS, WEEKDAY_LABELS } = useProfileCalendarLabels()
 
-  const { data: activity } = useGetUserActivityQuery(username)
+  const [selectedYear, setSelectedYear] = useState(activityYears[0])
 
-  const years = getUserActivityYears(activity)
-
-  const [selectedYear, setSelectedYear] = useState(years[0])
+  const { data: activity } = useGetUserActivityQuery(username, selectedYear)
 
   const calendarData = getUserActivityData(selectedYear, activity)
 
@@ -59,12 +58,12 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
         <h2 className="text-lg font-semibold tracking-tight">{content.title.value}</h2>
 
         <Select
-          disabled={years.length === 1}
+          disabled={activityYears.length === 1}
           value={selectedYear}
           onValueChange={(next) => {
             if (typeof next === 'number') setSelectedYear(next)
           }}
-          items={years.map((year) => ({ value: year, label: String(year) }))}
+          items={activityYears.map((year) => ({ value: year, label: String(year) }))}
         >
           <SelectTrigger
             variant="outline"
@@ -75,7 +74,7 @@ const UserActivityContent = ({ username }: UserActivityProps) => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent alignItemWithTrigger={false} align="end">
-            {years.map((year) => (
+            {activityYears.map((year) => (
               <SelectItem key={year} value={year}>
                 {year}
               </SelectItem>

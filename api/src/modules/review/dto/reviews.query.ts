@@ -10,7 +10,7 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator'
-import { CURRENT_YEAR } from '~/common/constants/common'
+import { CURRENT_YEAR, MIN_YEAR } from '~/common/constants/common'
 import { Trim } from '~/common/decorators/trim.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
 import { MediaType } from '~/generated/prisma/enums'
@@ -49,7 +49,7 @@ export class ReviewsQueryDto extends PaginationCursor {
   )
   @IsDefined()
   @IsInt()
-  @Min(2000)
+  @Min(MIN_YEAR)
   @Max(CURRENT_YEAR)
   year?: number
 
@@ -73,7 +73,7 @@ export class ReviewsStatsQueryDto {
   )
   @IsDefined()
   @IsInt()
-  @Min(2000)
+  @Min(MIN_YEAR)
   @Max(CURRENT_YEAR)
   year?: number
 

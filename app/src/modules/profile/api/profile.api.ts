@@ -7,8 +7,12 @@ export const profileApi = {
   getProfile: (username: string) => {
     return api.get<Profile>(`/user/${username}`).json()
   },
-  getUserActivity: (username: string) => {
-    return api.get<UserActivity[]>(`/user/${username}/activity`).json()
+  getUserActivity: (username: string, selectedYear: number) => {
+    const searchParams = new URLSearchParams()
+
+    searchParams.set('year', String(selectedYear))
+
+    return api.get<UserActivity[]>(`/user/${username}/activity`, { searchParams }).json()
   },
   getUserFeed: (username: string, cursor?: string) => {
     const searchParams = new URLSearchParams()

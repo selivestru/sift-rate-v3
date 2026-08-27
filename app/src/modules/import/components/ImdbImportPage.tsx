@@ -57,7 +57,7 @@ export const ImdbImportPage = () => {
       if (username) {
         queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.profile(username) })
         queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.userFeed(username) })
-        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.userActivity(username) })
+        queryClient.invalidateQueries({ queryKey: ['user-activity'] })
       }
 
       queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.feed })

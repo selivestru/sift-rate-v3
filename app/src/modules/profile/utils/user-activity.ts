@@ -12,14 +12,6 @@ const getActivityLevel = (count: number, maxCount: number) => {
   return Math.min(4, Math.ceil((count / maxCount) * 4))
 }
 
-export const getUserActivityYears = (activity?: UserActivity[]) => {
-  if (!activity || activity.length === 0) return [new Date().getFullYear()]
-
-  return [...new Set(activity.map(({ date }) => new Date(date).getFullYear()))].sort(
-    (a, b) => b - a,
-  )
-}
-
 export const getUserActivityData = (year: number, entries?: UserActivity[]): Activity[] => {
   if (!entries || entries.length === 0) return []
 

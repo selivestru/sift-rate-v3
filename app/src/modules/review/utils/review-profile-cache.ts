@@ -86,9 +86,10 @@ export const applyProfileRatingChanged = (
 export const patchUserActivity = (
   client: QueryClient,
   username: string,
+  year: number,
   recipe: (activity: UserActivity[]) => UserActivity[] | undefined,
 ) => {
-  client.setQueryData<UserActivity[]>(QUERIES_KEYS.userActivity(username), (prev) => {
+  client.setQueryData<UserActivity[]>(QUERIES_KEYS.userActivity(username, year), (prev) => {
     if (!prev) return prev
 
     return recipe(prev)

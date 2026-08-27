@@ -17,7 +17,7 @@ export const ProfilePage = ({ username }: ProfilePageProps) => {
       <ProfileHero user={data.user} />
       <UserStatsSection reviewStats={data.reviewStats} />
       <RatingDistribution distribution={data.ratingDistribution} />
-      <UserActivity username={username} />
+      <UserActivity username={username} activityYears={data.activityYears} />
       <UserFeed username={username} />
     </div>
   )

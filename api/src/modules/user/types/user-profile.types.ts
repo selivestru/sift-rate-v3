@@ -15,4 +15,5 @@ export interface UserProfile {
   user: Omit<SafeUser, 'createdAt' | 'email'>
   ratingDistribution: Record<string, number>
   reviewStats: ReviewStats
+  activityYears: number[]
 }

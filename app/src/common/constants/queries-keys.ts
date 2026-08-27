@@ -8,7 +8,11 @@ export const QUERIES_KEYS = {
   mediaReviews: (data: MediaRef) => ['media-reviews', data.mediaType, data.externalId],
   rankedLists: ['ranked-lists'],
   profile: (username: string) => ['profile', username],
-  userActivity: (username: string) => ['user-activity', username],
+  userActivity: (username: string, selectedYear: number) => [
+    'user-activity',
+    username,
+    selectedYear,
+  ],
   userFeed: (username: string) => ['user-feed', username],
   feed: ['feed'],
   imdbImportActive: ['imdb-import', 'active'],

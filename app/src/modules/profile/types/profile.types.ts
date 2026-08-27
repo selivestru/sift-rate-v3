@@ -21,4 +21,5 @@ export interface Profile {
   user: ProfileUser
   ratingDistribution: Record<number, number>
   reviewStats: ReviewStats
+  activityYears: number[]
 }

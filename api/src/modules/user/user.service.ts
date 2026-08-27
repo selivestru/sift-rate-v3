@@ -12,6 +12,7 @@ import { FeedResponse } from '../feed/types/feed.types'
 import { ReviewActivity, ReviewStats, UserProfile } from './types/user-profile.types'
 import type { Request, Response } from 'express'
 import sharp from 'sharp'
+import { CURRENT_YEAR } from '~/common/constants/common'
 import { REDIS_KEYS } from '~/common/constants/redis-keys'
 import { normalize } from '~/common/utils/normalize'
 import { omit } from '~/common/utils/omit'
@@ -42,15 +43,17 @@ export class UserService {
       throw new NotFoundException('User not found')
     }
 
-    const [ratingDistribution, reviewStats] = await Promise.all([
+    const [ratingDistribution, reviewStats, activityYears] = await Promise.all([
       this.getUserRatingDistribution(user.id),
       this.getUserReviewStats(user.id),
+      this.getUserActivityYears(user.id),
     ])
 
     return {
       user: omit(safeUser(user), ['email', 'createdAt']),
       ratingDistribution,
       reviewStats,
+      activityYears,
     }
   }
 
@@ -175,6 +178,28 @@ export class UserService {
     }
 
     this.logger.log({ userId }, 'Account deleted')
+  }
+
+  private async getUserActivityYears(userId: string): Promise<number[]> {
+    const rows = await this.prisma.$queryRaw<{ year: number }[]>(Prisma.sql`
+      SELECT DISTINCT EXTRACT(YEAR FROM r."createdAt")::int AS year
+      FROM "Review" r
+      WHERE r."userId" = ${userId}
+      ORDER BY year DESC
+    `)
+
+    if (rows.length === 0) {
+      return []
+    }
+
+    const firstYear = rows[rows.length - 1].year
+    const years: number[] = []
+
+    for (let year = CURRENT_YEAR; year >= firstYear; year--) {
+      years.push(year)
+    }
+
+    return years
   }
 
   private async getUserRatingDistribution(userId: string): Promise<Record<string, number>> {
