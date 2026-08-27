@@ -1,14 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { bookSearchConfig, DiscoverSearchPage, validateDiscoverSearch } from '~/modules/discover'
+import { validateDiscoverSearch } from '~/modules/discover'
 
 export const Route = createFileRoute('/_app/discover/book/')({
   validateSearch: validateDiscoverSearch,
-  component: RouteComponent,
 })
-
-function RouteComponent() {
-  const search = Route.useSearch()
-
-  return <DiscoverSearchPage search={search} config={bookSearchConfig} />
-}

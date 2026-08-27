@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { AuthGoogleCallback, authGoogleCallbackSearchSchema } from '~/modules/auth'
+import { authGoogleCallbackSearchSchema } from '~/modules/auth'
 
 export const Route = createFileRoute('/auth/google/callback')({
   validateSearch: (search) => {
@@ -17,11 +17,4 @@ export const Route = createFileRoute('/auth/google/callback')({
 
     return search
   },
-  component: RouteComponent,
 })
-
-function RouteComponent() {
-  const { status } = Route.useSearch()
-
-  return <AuthGoogleCallback status={status!} />
-}
