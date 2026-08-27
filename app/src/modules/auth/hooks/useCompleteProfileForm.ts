@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { getIntlayer } from 'intlayer'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { getApiError } from '~/common/api'
-import { getLocalizedContent } from '~/common/i18n'
+import { getCurrentLocale } from '~/common/i18n'
 import { applyApiFormError } from '~/common/utils/applyApiFormError'
 import { objectKeys } from '~/common/utils/typedObject'
 
@@ -14,7 +15,7 @@ import { useAuthStore } from '../store/auth.store'
 import { useCompleteProfileMutation } from './useCompleteProfileMutation'
 
 export const useCompleteProfileForm = () => {
-  const content = getLocalizedContent('complete-profile-form')
+  const content = getIntlayer('complete-profile-form', getCurrentLocale())
   const displayName = useAuthStore((state) => state.user?.displayName)
 
   const navigate = useNavigate()

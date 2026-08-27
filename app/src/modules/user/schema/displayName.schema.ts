@@ -1,12 +1,13 @@
+import { getIntlayer } from 'intlayer'
 import { z } from 'zod'
 
-import { getLocalizedContent } from '~/common/i18n'
+import { getCurrentLocale } from '~/common/i18n'
 
 export const displayNameSchema = z
-  .string({ error: () => getLocalizedContent('display-name-schema').required })
+  .string({ error: () => getIntlayer('display-name-schema', getCurrentLocale()).required })
   .trim()
-  .min(2, { error: () => getLocalizedContent('display-name-schema').min })
-  .max(50, { error: () => getLocalizedContent('display-name-schema').max })
+  .min(2, { error: () => getIntlayer('display-name-schema', getCurrentLocale()).min })
+  .max(50, { error: () => getIntlayer('display-name-schema', getCurrentLocale()).max })
 
 export const changeDisplayNameSchema = z.object({
   displayName: displayNameSchema,

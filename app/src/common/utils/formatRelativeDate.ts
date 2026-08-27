@@ -1,11 +1,13 @@
-import { getCurrentLocale, getLocalizedContent } from '~/common/i18n'
+import { getIntlayer } from 'intlayer'
+
+import { getCurrentLocale } from '~/common/i18n'
 
 export const formatRelativeDate = (iso: string) => {
   const date = new Date(iso)
   const diffMs = Date.now() - date.getTime()
   const dayMs = 86_400_000
   const days = Math.floor(diffMs / dayMs)
-  const content = getLocalizedContent('formatters')
+  const content = getIntlayer('formatters', getCurrentLocale())
 
   if (days <= 0) {
     return content.today

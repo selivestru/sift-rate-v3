@@ -1,4 +1,6 @@
-import { getLocalizedContent } from '~/common/i18n'
+import { getIntlayer } from 'intlayer'
+
+import { getCurrentLocale } from '~/common/i18n'
 
 export const formatTime = ({
   days,
@@ -11,7 +13,7 @@ export const formatTime = ({
   minutes: number
   seconds: number
 }) => {
-  const content = getLocalizedContent('formatters')
+  const content = getIntlayer('formatters', getCurrentLocale())
   const paddedMinutes = minutes.toString().padStart(2, '0')
   const paddedSeconds = seconds.toString().padStart(2, '0')
 

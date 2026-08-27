@@ -1,6 +1,7 @@
+import { getIntlayer } from 'intlayer'
 import { z } from 'zod'
 
-import { getLocalizedContent } from '~/common/i18n'
+import { getCurrentLocale } from '~/common/i18n'
 
 export const CONTENT_MAX_LENGTH = 1000
 
@@ -9,9 +10,13 @@ export const contentSchema = z
   .trim()
   .max(CONTENT_MAX_LENGTH, {
     error: () =>
-      String(getLocalizedContent('content-schema').max({ count: String(CONTENT_MAX_LENGTH) })),
+      String(
+        getIntlayer('content-schema', getCurrentLocale()).max({
+          count: String(CONTENT_MAX_LENGTH),
+        }),
+      ),
   })
 
 export const contentRequiredSchema = contentSchema.min(1, {
-  error: () => getLocalizedContent('content-schema').required,
+  error: () => getIntlayer('content-schema', getCurrentLocale()).required,
 })

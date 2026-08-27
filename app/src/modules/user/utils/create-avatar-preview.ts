@@ -1,7 +1,9 @@
-import { getLocalizedContent } from '~/common/i18n'
+import { getIntlayer } from 'intlayer'
+
+import { getCurrentLocale } from '~/common/i18n'
 
 export const createSquareCoverPreviewUrl = async (file: File, size = 300): Promise<string> => {
-  const previewError = getLocalizedContent('user-change-avatar-form').previewError
+  const previewError = getIntlayer('user-change-avatar-form', getCurrentLocale()).previewError
   let bitmap: ImageBitmap
 
   try {

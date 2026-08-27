@@ -1,6 +1,8 @@
-import { getLocalizedContent } from '~/common/i18n'
+import { getIntlayer } from 'intlayer'
 
-type ApiErrorsContent = ReturnType<typeof getLocalizedContent<'api-errors'>>
+import { getCurrentLocale } from '~/common/i18n'
+
+type ApiErrorsContent = ReturnType<typeof getIntlayer<'api-errors'>>
 
 type ExactApiErrorKey = {
   [K in keyof ApiErrorsContent]: ApiErrorsContent[K] extends string ? K : never
@@ -73,7 +75,7 @@ const CSV_MISSING_COLUMNS_PREFIX = 'CSV is missing required columns: '
 const CSV_ROW_LIMIT_PATTERN = /^CSV exceeds the limit of (\d+) rows$/
 
 const translateOne = (message: string): string => {
-  const content = getLocalizedContent('api-errors')
+  const content = getIntlayer('api-errors', getCurrentLocale())
   const exactKey = EXACT_MESSAGES[message]
 
   if (exactKey) {
@@ -104,7 +106,7 @@ export const translateApiErrorMessage = (
   options?: { fields?: readonly string[] },
 ): string => {
   if (options?.fields?.includes('username') && message === 'Resource already exists') {
-    return getLocalizedContent('api-errors').usernameTaken
+    return getIntlayer('api-errors', getCurrentLocale()).usernameTaken
   }
 
   const parts = message

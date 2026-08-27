@@ -146,7 +146,11 @@ export class ReviewService {
     return review
   }
 
-  async upsertReview(userId: string, dto: UpsertReviewDto): Promise<ReviewItem> {
+  async upsertReview(
+    userId: string,
+    dto: UpsertReviewDto,
+    createdAt?: string,
+  ): Promise<ReviewItem> {
     const existingMedia = await this.mediaService.findByExternalId(dto.mediaType, dto.externalId)
 
     let snapshot: MediaSnapshot
@@ -212,6 +216,7 @@ export class ReviewService {
             mediaId: media.id,
             rating: dto.rating,
             content: dto.content ?? null,
+            ...(createdAt && { createdAt: new Date(createdAt) }),
           },
           include: { media: true },
         })
@@ -226,6 +231,7 @@ export class ReviewService {
           data: {
             rating: dto.rating,
             content: dto.content,
+            ...(createdAt && { createdAt: new Date(createdAt) }),
           },
           include: { media: true },
         })

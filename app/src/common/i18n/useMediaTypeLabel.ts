@@ -1,7 +1,8 @@
+import { getIntlayer } from 'intlayer'
 import { useIntlayer } from 'react-intlayer'
 
 import type { MediaType } from '../constants/media-type'
-import { getLocalizedContent } from './getLocalizedContent'
+import { getCurrentLocale } from './locale'
 
 const SINGULAR_KEYS = {
   MOVIE: 'MOVIE_ONE',
@@ -13,7 +14,7 @@ const SINGULAR_KEYS = {
 } as const
 
 export const getMediaTypeLabel = (type: MediaType) => {
-  return getLocalizedContent('media-type')[type]
+  return getIntlayer('media-type', getCurrentLocale())[type]
 }
 
 export const useMediaTypeLabel = (type: MediaType) => {

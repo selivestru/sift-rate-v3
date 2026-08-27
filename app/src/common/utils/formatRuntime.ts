@@ -1,11 +1,13 @@
-import { getLocalizedContent } from '~/common/i18n'
+import { getIntlayer } from 'intlayer'
+
+import { getCurrentLocale } from '~/common/i18n'
 
 export const formatRuntime = (minutes: number | null | undefined) => {
   if (minutes == null || minutes <= 0) return null
 
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
-  const content = getLocalizedContent('formatters')
+  const content = getIntlayer('formatters', getCurrentLocale())
 
   if (hours === 0) return String(content.minutes({ count: String(mins) }))
   if (mins === 0) return String(content.hours({ count: String(hours) }))

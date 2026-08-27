@@ -1,4 +1,3 @@
-export * from './getLocalizedContent'
 export * from './I18nProvider'
 export * from './locale'
 export * from './useAppLocale'

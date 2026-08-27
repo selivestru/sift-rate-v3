@@ -1,6 +1,7 @@
+import { getIntlayer } from 'intlayer'
 import { HTTPError, isHTTPError, isNetworkError, isTimeoutError } from 'ky'
 
-import { getLocalizedContent } from '~/common/i18n'
+import { getCurrentLocale } from '~/common/i18n'
 
 import { objectEntries } from '../utils/typedObject'
 
@@ -18,9 +19,10 @@ interface ApiErrorBody {
   code?: string
 }
 
-const getServerUnavailableMessage = () => getLocalizedContent('api-errors').serverUnavailable
-const getNetworkMessage = () => getLocalizedContent('api-errors').noInternet
-const getFallbackMessage = () => getLocalizedContent('api-errors').fallback
+const getServerUnavailableMessage = () =>
+  getIntlayer('api-errors', getCurrentLocale()).serverUnavailable
+const getNetworkMessage = () => getIntlayer('api-errors', getCurrentLocale()).noInternet
+const getFallbackMessage = () => getIntlayer('api-errors', getCurrentLocale()).fallback
 
 const SERVER_UNAVAILABLE_STATUSES = new Set([502, 503, 504, 0])
 

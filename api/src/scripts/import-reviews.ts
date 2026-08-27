@@ -12,6 +12,7 @@ interface LegacyReview {
   title: string
   type: string
   externalId: string
+  createdAt: string
 }
 
 const REQUEST_DELAY_MS = 300
@@ -48,12 +49,16 @@ async function main(): Promise<void> {
     const label = `${index + 1}/${items.length} ${item.title} (${item.externalId})`
 
     try {
-      await reviewService.upsertReview(userId, {
-        mediaType: resolveMediaType(item.type),
-        externalId: item.externalId,
-        rating: item.rating,
-        content: item.review,
-      })
+      await reviewService.upsertReview(
+        userId,
+        {
+          mediaType: resolveMediaType(item.type),
+          externalId: item.externalId,
+          rating: item.rating,
+          content: item.review,
+        },
+        item.createdAt,
+      )
       ok += 1
       logger.log(`[ok] ${label}`)
     } catch (error) {

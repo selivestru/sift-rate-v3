@@ -1,13 +1,14 @@
+import { getIntlayer } from 'intlayer'
 import { z } from 'zod'
 
-import { getLocalizedContent } from '~/common/i18n'
+import { getCurrentLocale } from '~/common/i18n'
 import { contentSchema } from '~/common/schema/content.schema'
 
 export const rateFormSchema = z.object({
   rating: z
     .number()
     .int()
-    .min(1, { error: () => getLocalizedContent('rate-schema').rating })
+    .min(1, { error: () => getIntlayer('rate-schema', getCurrentLocale()).rating })
     .max(10),
   content: contentSchema.optional(),
 })
