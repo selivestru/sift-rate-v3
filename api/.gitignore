@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# legacy import dump
+/reviews.json
+
 # Logs
 logs
 *.log
