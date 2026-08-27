@@ -35,13 +35,28 @@ export class S3Service {
   extractOwnedKey(url: string): string | null {
     try {
       const parsed = new URL(url)
-      const ownedHost = new URL(this.publicBaseUrl).host
+      const base = new URL(this.publicBaseUrl)
 
-      if (parsed.host !== ownedHost) {
+      if (parsed.host !== base.host) {
         return null
       }
 
-      return parsed.pathname.replace(/^\/+/, '') || null
+      const basePath = base.pathname.replace(/\/+$/, '')
+      const pathname = parsed.pathname
+
+      if (basePath) {
+        if (pathname === basePath) {
+          return null
+        }
+
+        if (!pathname.startsWith(`${basePath}/`)) {
+          return null
+        }
+
+        return pathname.slice(basePath.length + 1) || null
+      }
+
+      return pathname.replace(/^\/+/, '') || null
     } catch {
       return null
     }

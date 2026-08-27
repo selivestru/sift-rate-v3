@@ -7,11 +7,18 @@ import { getApiError, translateApiErrorMessage } from '~/common/api'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 import { useAuthStore } from '~/modules/auth'
 
-import { createSquareCoverPreviewUrl } from '../utils/create-avatar-preview'
 import { useChangeAvatarMutation } from './useChangeAvatarMutation'
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE_BYTES = 5 * 1024 * 1024
+const EDITOR_OPEN_DELAY_MS = 250
+
+export type ChangeAvatarStage = 'idle' | 'crop' | 'save'
+
+type AvatarImage = {
+  file: File
+  url: string
+}
 
 export const useChangeAvatarForm = () => {
   const content = useIntlayer('user-change-avatar-form')
@@ -20,13 +27,40 @@ export const useChangeAvatarForm = () => {
   const username = useAuthStore((state) => state.user?.username)
   const setAvatarUrl = useAuthStore((state) => state.setAvatarUrl)
 
-  const [file, setFile] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [stage, setStage] = useState<ChangeAvatarStage>('idle')
+  const [source, setSource] = useState<AvatarImage | null>(null)
+  const [preview, setPreview] = useState<AvatarImage | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [serverError, setServerError] = useState<string | null>(null)
-  const [isPreviewing, setIsPreviewing] = useState(false)
 
+  const sourceUrlRef = useRef<string | null>(null)
   const previewUrlRef = useRef<string | null>(null)
+  const openTimeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    const sourceUrl = sourceUrlRef
+    const previewUrl = previewUrlRef
+    const openTimeout = openTimeoutRef
+    return () => {
+      if (openTimeout.current !== null) window.clearTimeout(openTimeout.current)
+      if (sourceUrl.current) URL.revokeObjectURL(sourceUrl.current)
+      if (previewUrl.current) URL.revokeObjectURL(previewUrl.current)
+    }
+  }, [])
+
+  const clearOpenTimeout = () => {
+    if (openTimeoutRef.current !== null) {
+      window.clearTimeout(openTimeoutRef.current)
+      openTimeoutRef.current = null
+    }
+  }
+
+  const revokeSource = () => {
+    if (sourceUrlRef.current) {
+      URL.revokeObjectURL(sourceUrlRef.current)
+      sourceUrlRef.current = null
+    }
+  }
 
   const revokePreview = () => {
     if (previewUrlRef.current) {
@@ -36,19 +70,15 @@ export const useChangeAvatarForm = () => {
   }
 
   const clearSelection = () => {
+    clearOpenTimeout()
+    revokeSource()
     revokePreview()
-    setPreviewUrl(null)
-    setFile(null)
+    setSource(null)
+    setPreview(null)
+    setStage('idle')
   }
 
-  useEffect(() => {
-    const url = previewUrlRef
-    return () => {
-      if (url.current) URL.revokeObjectURL(url.current)
-    }
-  }, [])
-
-  const onFileChange = async (fileList: FileList | null) => {
+  const onFileChange = (fileList: FileList | null) => {
     const selected = fileList?.[0]
     setError(null)
     setServerError(null)
@@ -67,29 +97,42 @@ export const useChangeAvatarForm = () => {
       return
     }
 
-    setIsPreviewing(true)
+    clearOpenTimeout()
+    revokeSource()
+    revokePreview()
 
-    try {
-      const objectUrl = await createSquareCoverPreviewUrl(selected)
-      revokePreview()
-      previewUrlRef.current = objectUrl
-      setPreviewUrl(objectUrl)
-      setFile(selected)
-    } catch {
-      clearSelection()
-      setError(content.previewError.value)
-    } finally {
-      setIsPreviewing(false)
-    }
+    const nextSource: AvatarImage = { file: selected, url: URL.createObjectURL(selected) }
+    sourceUrlRef.current = nextSource.url
+    setSource(nextSource)
+    setPreview(null)
+    setStage('idle')
+    openTimeoutRef.current = window.setTimeout(() => setStage('crop'), EDITOR_OPEN_DELAY_MS)
+  }
+
+  const onCropConfirm = (file: File) => {
+    revokePreview()
+
+    const nextPreview: AvatarImage = { file, url: URL.createObjectURL(file) }
+    previewUrlRef.current = nextPreview.url
+    setPreview(nextPreview)
+    setServerError(null)
+    setStage('save')
+  }
+
+  const onBackToCrop = () => {
+    if (mutation.isPending) return
+
+    setServerError(null)
+    setStage('crop')
   }
 
   const onSubmit = async () => {
-    if (mutation.isPending || !file) return
+    if (mutation.isPending || !preview) return
 
     setServerError(null)
 
     try {
-      const response = await mutation.mutateAsync(file)
+      const response = await mutation.mutateAsync(preview.file)
       setAvatarUrl(response.avatarUrl)
       toast.success(content.updated.value)
       clearSelection()
@@ -108,15 +151,16 @@ export const useChangeAvatarForm = () => {
   }
 
   return {
-    file,
-    previewUrl,
+    stage,
+    source,
+    preview,
     error,
     serverError,
     onFileChange,
+    onCropConfirm,
+    onBackToCrop,
     onSubmit,
     onClear: clearSelection,
     isLoading: mutation.isPending,
-    isPreviewing,
-    isDirty: file !== null,
   }
 }
