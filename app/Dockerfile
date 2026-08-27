@@ -5,7 +5,7 @@ COPY package.json bun.lock ./
 COPY api/package.json ./api/
 COPY app/package.json ./app/
 RUN bun install --frozen-lockfile --filter app
-COPY app ./
+COPY app ./app/
 WORKDIR /repo/app
 ENV VITE_BASE_URL=$VITE_BASE_URL
 RUN bun run build
