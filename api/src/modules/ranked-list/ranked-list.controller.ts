@@ -3,15 +3,17 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { UpsertRankedListDto } from './dto/ranked-list.dto'
 import { ReorderRankedItemDto } from './dto/reorder-ranked-item.dto'
 import { RankedListService } from './ranked-list.service'
+import { CurrentLanguage } from '~/common/decorators/current-language.decorator'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
+import { MediaLanguage } from '~/generated/prisma/enums'
 
 @Controller('ranked-list')
 export class RankedListController {
   constructor(private readonly rankedListService: RankedListService) {}
 
   @Get('me')
-  getMyLists(@CurrentUser('userId') userId: string) {
-    return this.rankedListService.getUserRankedLists(userId)
+  getMyLists(@CurrentUser('userId') userId: string, @CurrentLanguage() language: MediaLanguage) {
+    return this.rankedListService.getUserRankedLists(userId, language)
   }
 
   @Post()
@@ -38,8 +40,9 @@ export class RankedListController {
     @CurrentUser('userId') userId: string,
     @Param('id') listId: string,
     @Param('mediaId') mediaId: string,
+    @CurrentLanguage() language: MediaLanguage,
   ) {
-    return this.rankedListService.addItem(userId, listId, mediaId)
+    return this.rankedListService.addItem(userId, listId, mediaId, language)
   }
 
   @Delete(':id/:itemId')
@@ -57,7 +60,8 @@ export class RankedListController {
     @Param('id') listId: string,
     @Param('itemId') itemId: string,
     @Body() dto: ReorderRankedItemDto,
+    @CurrentLanguage() language: MediaLanguage,
   ) {
-    return this.rankedListService.reorderItem(userId, listId, itemId, dto)
+    return this.rankedListService.reorderItem(userId, listId, itemId, dto, language)
   }
 }

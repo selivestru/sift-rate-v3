@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 
 import { REVIEW_SORT, ReviewsQueryDto, ReviewsStatsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
@@ -11,10 +6,10 @@ import { UpsertReviewDto } from './dto/upsert-review.dto'
 import { ReviewItem, ReviewsResponse, ReviewStatsResponse } from './types/review.types'
 import { getCreatedAtFilter } from './utils/getCreatedAtFilter'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
-import { Prisma } from '~/generated/prisma/client'
+import { MediaLanguage } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { MediaService } from '~/modules/media/media.service'
-import { MediaSnapshot } from '~/modules/media/types/media.types'
+import { buildLocalizedTitleFilter } from '~/modules/media/utils/media-localization'
 
 @Injectable()
 export class ReviewService {
@@ -23,17 +18,12 @@ export class ReviewService {
     private readonly mediaService: MediaService,
   ) {}
 
-  async findMine(userId: string, query: ReviewsQueryDto): Promise<ReviewsResponse> {
-    const mediaFilter: Prisma.MediaWhereInput = {
-      ...(query.mediaType && { mediaType: query.mediaType }),
-      ...(query.q && {
-        title: {
-          contains: query.q,
-          mode: 'insensitive',
-        },
-      }),
-    }
-    const hasMediaFilter = Object.keys(mediaFilter).length > 0
+  async findMine(
+    userId: string,
+    query: ReviewsQueryDto,
+    language: MediaLanguage,
+  ): Promise<ReviewsResponse> {
+    const mediaFilter = this.buildMediaFilter(query)
     const createdAtFilter = getCreatedAtFilter(query?.year, query?.month)
 
     const reviews = await this.prisma.review.findMany({
@@ -41,7 +31,7 @@ export class ReviewService {
         userId,
         ...(query.rating != null && { rating: query.rating }),
         ...(createdAtFilter && { createdAt: createdAtFilter }),
-        ...(hasMediaFilter && { media: mediaFilter }),
+        ...(mediaFilter && { media: mediaFilter }),
       },
       ...(query.cursor && {
         cursor: { id: query.cursor },
@@ -61,9 +51,11 @@ export class ReviewService {
       reviews.pop()
     }
 
+    const data = await this.mediaService.localizeMediaRelations(reviews, language)
+
     return {
-      data: reviews,
-      nextCursor: hasNextPage ? reviews[reviews.length - 1].id : null,
+      data,
+      nextCursor: hasNextPage ? data[data.length - 1].id : null,
     }
   }
 
@@ -124,7 +116,12 @@ export class ReviewService {
     }
   }
 
-  async updateReview(userId: string, reviewId: string, dto: UpdateReviewDto): Promise<ReviewItem> {
+  async updateReview(
+    userId: string,
+    reviewId: string,
+    dto: UpdateReviewDto,
+    language: MediaLanguage,
+  ): Promise<ReviewItem> {
     if (Object.values(dto).every((value) => value === undefined)) {
       throw new BadRequestException('No fields to update')
     }
@@ -143,57 +140,18 @@ export class ReviewService {
       include: { media: true },
     })
 
-    return review
+    return this.mediaService.localizeMediaRelations(review, language)
   }
 
   async upsertReview(
     userId: string,
     dto: UpsertReviewDto,
+    language: MediaLanguage,
     createdAt?: string,
   ): Promise<ReviewItem> {
-    const existingMedia = await this.mediaService.findByExternalId(dto.mediaType, dto.externalId)
-
-    let snapshot: MediaSnapshot
-
-    if (existingMedia) {
-      snapshot = {
-        title: existingMedia.title,
-        posterUrl: existingMedia.posterUrl,
-      }
-    } else {
-      snapshot = await this.mediaService.resolveMediaSnapshot(dto.mediaType, dto.externalId)
-    }
-
-    if (!snapshot) {
-      throw new InternalServerErrorException('Snapshot is required to create Media')
-    }
+    const media = await this.mediaService.ensureMedia(dto.mediaType, dto.externalId)
 
     const review = await this.prisma.$transaction(async (tx) => {
-      let media = await tx.media.findUnique({
-        where: {
-          externalId_mediaType: {
-            externalId: dto.externalId,
-            mediaType: dto.mediaType,
-          },
-        },
-      })
-
-      if (!media) {
-        media = await tx.media.create({
-          data: {
-            externalId: dto.externalId,
-            mediaType: dto.mediaType,
-            title: snapshot.title,
-            posterUrl: snapshot.posterUrl,
-            metadata: snapshot.metadata ? (snapshot.metadata as Prisma.InputJsonValue) : undefined,
-            imdbId:
-              snapshot.metadata && 'imdbId' in snapshot.metadata && snapshot.metadata.imdbId
-                ? snapshot.metadata.imdbId
-                : null,
-          },
-        })
-      }
-
       const hasReview = await tx.review.findUnique({
         where: {
           userId_mediaId: {
@@ -203,50 +161,50 @@ export class ReviewService {
         },
       })
 
-      let review: ReviewItem
-
-      if (!hasReview) {
-        review = await tx.review.create({
-          data: {
-            userId,
-            mediaId: media.id,
-            rating: dto.rating,
-            content: dto.content ?? null,
-            ...(createdAt && { createdAt: new Date(createdAt) }),
-          },
-          include: { media: true },
-        })
-      } else {
-        review = await tx.review.update({
-          where: {
-            userId_mediaId: {
+      const nextReview = hasReview
+        ? await tx.review.update({
+            where: {
+              userId_mediaId: {
+                userId,
+                mediaId: media.id,
+              },
+            },
+            data: {
+              rating: dto.rating,
+              content: dto.content,
+              ...(createdAt && { createdAt: new Date(createdAt) }),
+            },
+            include: { media: true },
+          })
+        : await tx.review.create({
+            data: {
               userId,
               mediaId: media.id,
+              rating: dto.rating,
+              content: dto.content ?? null,
+              ...(createdAt && { createdAt: new Date(createdAt) }),
             },
-          },
-          data: {
-            rating: dto.rating,
-            content: dto.content,
-            ...(createdAt && { createdAt: new Date(createdAt) }),
-          },
-          include: { media: true },
-        })
-      }
+            include: { media: true },
+          })
 
       await tx.plannedItem.deleteMany({
         where: {
           mediaId: media.id,
-          userId: userId,
+          userId,
         },
       })
 
-      return review
+      return nextReview
     })
 
-    return review
+    return this.mediaService.localizeMediaRelations(review, language)
   }
 
-  async deleteReview(userId: string, reviewId: string): Promise<ReviewItem> {
+  async deleteReview(
+    userId: string,
+    reviewId: string,
+    language: MediaLanguage,
+  ): Promise<ReviewItem> {
     const review = await this.prisma.review.findFirst({
       where: { id: reviewId, userId },
     })
@@ -255,9 +213,23 @@ export class ReviewService {
       throw new NotFoundException('Review not found')
     }
 
-    return await this.prisma.review.delete({
+    const deleted = await this.prisma.review.delete({
       where: { id: review.id },
       include: { media: true },
     })
+
+    return this.mediaService.localizeMediaRelations(deleted, language)
+  }
+
+  private buildMediaFilter(query: ReviewsQueryDto) {
+    if (query.q) {
+      return buildLocalizedTitleFilter(query.q, query.mediaType)
+    }
+
+    if (query.mediaType) {
+      return { mediaType: query.mediaType }
+    }
+
+    return undefined
   }
 }

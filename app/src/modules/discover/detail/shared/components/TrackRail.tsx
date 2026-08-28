@@ -53,7 +53,7 @@ export const TrackRail = ({ title, items, className }: TrackRailProps) => {
               <Link
                 to="/discover/track/$externalId"
                 params={{ externalId: item.id }}
-                className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
+                className="group flex h-full w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
               >
                 <div className="bg-muted ring-border relative aspect-square w-full overflow-hidden rounded-xl ring-1">
                   {item.coverUrl ? (
@@ -75,10 +75,10 @@ export const TrackRail = ({ title, items, className }: TrackRailProps) => {
                   )}
                 </div>
                 <div className="px-0.5">
-                  <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
+                  <p className="text-foreground line-clamp-2 h-[2.40625rem] text-sm leading-snug font-medium">
                     {item.title}
                   </p>
-                  <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                  <p className="text-muted-foreground mt-0.5 h-[1.03125rem] truncate text-xs">
                     {item.artistName}
                     {item.duration > 0 ? ` · ${formatDuration(item.duration)}` : null}
                   </p>

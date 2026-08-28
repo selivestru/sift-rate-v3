@@ -4,7 +4,9 @@ import { ReviewsQueryDto, ReviewsStatsQueryDto } from './dto/reviews.query'
 import { UpdateReviewDto } from './dto/update-review.dto'
 import { UpsertReviewDto } from './dto/upsert-review.dto'
 import { ReviewService } from './review.service'
+import { CurrentLanguage } from '~/common/decorators/current-language.decorator'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
+import { MediaLanguage } from '~/generated/prisma/enums'
 
 @Controller('review')
 export class ReviewController {
@@ -16,13 +18,21 @@ export class ReviewController {
   }
 
   @Get('me')
-  findMine(@CurrentUser('userId') userId: string, @Query() query: ReviewsQueryDto) {
-    return this.reviewService.findMine(userId, query)
+  findMine(
+    @CurrentUser('userId') userId: string,
+    @Query() query: ReviewsQueryDto,
+    @CurrentLanguage() language: MediaLanguage,
+  ) {
+    return this.reviewService.findMine(userId, query, language)
   }
 
   @Put()
-  upsertReview(@CurrentUser('userId') userId: string, @Body() dto: UpsertReviewDto) {
-    return this.reviewService.upsertReview(userId, dto)
+  upsertReview(
+    @CurrentUser('userId') userId: string,
+    @Body() dto: UpsertReviewDto,
+    @CurrentLanguage() language: MediaLanguage,
+  ) {
+    return this.reviewService.upsertReview(userId, dto, language)
   }
 
   @Patch(':id')
@@ -30,12 +40,17 @@ export class ReviewController {
     @CurrentUser('userId') userId: string,
     @Param('id') id: string,
     @Body() dto: UpdateReviewDto,
+    @CurrentLanguage() language: MediaLanguage,
   ) {
-    return this.reviewService.updateReview(userId, id, dto)
+    return this.reviewService.updateReview(userId, id, dto, language)
   }
 
   @Delete(':id')
-  deleteReview(@CurrentUser('userId') userId: string, @Param('id') id: string) {
-    return this.reviewService.deleteReview(userId, id)
+  deleteReview(
+    @CurrentUser('userId') userId: string,
+    @Param('id') id: string,
+    @CurrentLanguage() language: MediaLanguage,
+  ) {
+    return this.reviewService.deleteReview(userId, id, language)
   }
 }

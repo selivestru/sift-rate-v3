@@ -13,7 +13,7 @@ export const PersonCard = ({ name, profileUrl, subtitle, className }: PersonCard
   return (
     <div
       className={cn(
-        'group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]',
+        'group flex h-full w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]',
         className,
       )}
     >
@@ -35,9 +35,9 @@ export const PersonCard = ({ name, profileUrl, subtitle, className }: PersonCard
       </div>
       <div className="px-0.5">
         <p className="text-foreground truncate text-sm font-medium">{name}</p>
-        {subtitle && (
-          <p className="text-muted-foreground line-clamp-2 text-xs leading-snug">{subtitle}</p>
-        )}
+        <p className="text-muted-foreground line-clamp-2 h-[2.0625rem] text-xs leading-snug">
+          {subtitle}
+        </p>
       </div>
     </div>
   )

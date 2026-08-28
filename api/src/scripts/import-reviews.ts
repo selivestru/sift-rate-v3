@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core'
 
 import { readFile } from 'node:fs/promises'
 import { AppModule } from '~/app.module'
+import { DEFAULT_MEDIA_LANGUAGE } from '~/common/decorators/current-language.decorator'
 import { MediaType } from '~/generated/prisma/enums'
 import { ReviewService } from '~/modules/review/review.service'
 
@@ -57,6 +58,7 @@ async function main(): Promise<void> {
           rating: item.rating,
           content: item.review,
         },
+        DEFAULT_MEDIA_LANGUAGE,
         item.createdAt,
       )
       ok += 1

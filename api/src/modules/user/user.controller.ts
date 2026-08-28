@@ -21,9 +21,11 @@ import { UserActivityQuery } from './dto/user-activity-query.dto'
 import { UserService } from './user.service'
 import type { Request, Response } from 'express'
 import { memoryStorage } from 'multer'
+import { CurrentLanguage } from '~/common/decorators/current-language.decorator'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
+import { MediaLanguage } from '~/generated/prisma/enums'
 
 @Controller('user')
 export class UserController {
@@ -43,8 +45,12 @@ export class UserController {
 
   @Public()
   @Get(':username/feed')
-  getUserFeed(@Param('username') username: string, @Query() query?: PaginationCursor) {
-    return this.userService.getUserFeed(username, query?.cursor)
+  getUserFeed(
+    @Param('username') username: string,
+    @CurrentLanguage() language: MediaLanguage,
+    @Query() query?: PaginationCursor,
+  ) {
+    return this.userService.getUserFeed(username, language, query?.cursor)
   }
 
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })

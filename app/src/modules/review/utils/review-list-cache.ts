@@ -258,6 +258,18 @@ export const removeReviewFromListCaches = (client: QueryClient, review: Review) 
   removeReviewFromMediaReviewsCache(client, review)
 }
 
+const patchFeedCaches = (
+  client: QueryClient,
+  queryKey: readonly unknown[],
+  updater: (prev: InfiniteData<FeedResponse> | undefined) => InfiniteData<FeedResponse> | undefined,
+) => {
+  const queries = client.getQueryCache().findAll({ queryKey })
+
+  for (const query of queries) {
+    client.setQueryData<InfiniteData<FeedResponse>>(query.queryKey, updater)
+  }
+}
+
 export const upsertReviewInFeedCaches = (
   client: QueryClient,
   review: Review,
@@ -265,13 +277,13 @@ export const upsertReviewInFeedCaches = (
   username?: string | null,
   insertIfMissing = true,
 ) => {
-  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.feed, (prev) =>
+  patchFeedCaches(client, QUERIES_KEYS.feed, (prev) =>
     upsertReviewInFeedData(prev, review, user, insertIfMissing),
   )
 
   if (!username) return
 
-  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.userFeed(username), (prev) =>
+  patchFeedCaches(client, QUERIES_KEYS.userFeed(username), (prev) =>
     upsertReviewInFeedData(prev, review, user, insertIfMissing),
   )
 }
@@ -281,13 +293,11 @@ export const removeReviewFromFeedCaches = (
   review: Review,
   username?: string | null,
 ) => {
-  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.feed, (prev) =>
-    removeReviewFromFeedData(prev, review.id),
-  )
+  patchFeedCaches(client, QUERIES_KEYS.feed, (prev) => removeReviewFromFeedData(prev, review.id))
 
   if (!username) return
 
-  client.setQueryData<InfiniteData<FeedResponse>>(QUERIES_KEYS.userFeed(username), (prev) =>
+  patchFeedCaches(client, QUERIES_KEYS.userFeed(username), (prev) =>
     removeReviewFromFeedData(prev, review.id),
   )
 }

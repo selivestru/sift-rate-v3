@@ -5,10 +5,10 @@ import { MediaTypeParamsDto } from './dto/media-search.params'
 import { SearchMediaQueryDto } from './dto/search-media.query'
 import { MediaService } from './media.service'
 import { CurrentLanguage } from '~/common/decorators/current-language.decorator'
-import type { MediaLanguage } from '~/common/decorators/current-language.decorator'
 import { CurrentUser } from '~/common/decorators/current-user.decorator'
 import { Public } from '~/common/decorators/public.decorator'
 import { PaginationCursor } from '~/common/types/pagination-cursor.types'
+import { MediaLanguage } from '~/generated/prisma/enums'
 
 @Controller('media')
 export class MediaController {
@@ -31,8 +31,12 @@ export class MediaController {
   }
 
   @Get(':mediaType/:externalId/state')
-  getMediaState(@CurrentUser('userId') userId: string, @Param() params: MediaByIdParamsDto) {
-    return this.mediaService.getMediaState(userId, params)
+  getMediaState(
+    @CurrentUser('userId') userId: string,
+    @Param() params: MediaByIdParamsDto,
+    @CurrentLanguage() language: MediaLanguage,
+  ) {
+    return this.mediaService.getMediaState(userId, params, language)
   }
 
   @Public()

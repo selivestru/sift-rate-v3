@@ -18,6 +18,7 @@ import { normalize } from '~/common/utils/normalize'
 import { omit } from '~/common/utils/omit'
 import { safeUser } from '~/common/utils/safeUser'
 import { MediaType, Prisma, User } from '~/generated/prisma/client'
+import { MediaLanguage } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { RedisService } from '~/infrastructure/redis/redis.service'
 import { S3Service } from '~/infrastructure/s3/s3.service'
@@ -67,8 +68,8 @@ export class UserService {
     return this.getReviewActivity(user.id, year)
   }
 
-  getUserFeed(username: string, cursor?: string): Promise<FeedResponse> {
-    return this.feedService.getUserFeed(username, cursor)
+  getUserFeed(username: string, language: MediaLanguage, cursor?: string): Promise<FeedResponse> {
+    return this.feedService.getUserFeed(username, language, cursor)
   }
 
   async findById(id: string): Promise<User> {

@@ -53,7 +53,11 @@ const setRankedLists = (
   client: QueryClient,
   map: (lists: RankedListItem[]) => RankedListItem[],
 ) => {
-  client.setQueryData<RankedListResponse>(QUERIES_KEYS.rankedLists, (prev) => mapLists(prev, map))
+  const queries = client.getQueryCache().findAll({ queryKey: QUERIES_KEYS.rankedLists })
+
+  for (const query of queries) {
+    client.setQueryData<RankedListResponse>(query.queryKey, (prev) => mapLists(prev, map))
+  }
 }
 
 export const addRankedListToCache = (client: QueryClient, server: RankedListServer) => {

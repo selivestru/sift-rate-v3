@@ -20,18 +20,20 @@ import {
   TmdbVideoRaw,
 } from '../types/movie.types'
 import { getImdbRating } from '../utils/imdb'
-import { getKinopoiskId } from '../utils/kinopoisk'
+import { getKinopoiskIdCached } from '../utils/kinopoisk'
 import {
   buildDetailCacheKey,
   buildSearchCacheKey,
   resolveDetailTtlSeconds,
   SEARCH_CACHE_TTL_SECONDS,
 } from '../utils/media-cache-policy'
+import { toTmdbLanguage } from '../utils/media-localization'
 import { MediaCacheService } from './media-cache.service'
+import { TmdbLocalizationService } from './tmdb-localization.service'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
 import { DEFAULT_MEDIA_LANGUAGE } from '~/common/decorators/current-language.decorator'
-import type { MediaLanguage } from '~/common/decorators/current-language.decorator'
+import { MediaLanguage, MediaType } from '~/generated/prisma/enums'
 
 @Injectable()
 export class MovieService {
@@ -46,6 +48,7 @@ export class MovieService {
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly cache: MediaCacheService,
+    private readonly tmdbLocalizationService: TmdbLocalizationService,
   ) {}
 
   async search(
@@ -61,7 +64,7 @@ export class MovieService {
 
     url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
     url.searchParams.set('query', q)
-    url.searchParams.set('language', language)
+    url.searchParams.set('language', toTmdbLanguage(language))
     url.searchParams.set('page', page)
 
     const response = await ky<MovieSearchResult>(url.toString()).json()
@@ -117,7 +120,7 @@ export class MovieService {
 
     const url = new URL(`${this.TMDB_API_URL}/movie/${id}`)
     url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
-    url.searchParams.set('language', language)
+    url.searchParams.set('language', toTmdbLanguage(language))
     url.searchParams.set('append_to_response', 'credits,videos,images,recommendations,external_ids')
     url.searchParams.set('include_image_language', 'en,null')
 
@@ -144,7 +147,20 @@ export class MovieService {
       result.imdbVoteCount = imdbRating?.votes ?? null
     }
 
-    result.kinopoiskId = await getKinopoiskId(this.config, result.originalTitle, result.year)
+    const localizations = await this.tmdbLocalizationService.getLocalizations(MediaType.MOVIE, id)
+    const localizationTitle = (language: MediaLanguage) =>
+      localizations.find((item) => item.language === language)?.title
+
+    result.kinopoiskId = await getKinopoiskIdCached(
+      this.config,
+      this.cache,
+      'movie',
+      id,
+      localizationTitle(MediaLanguage.RU) ??
+        localizationTitle(MediaLanguage.EN) ??
+        result.originalTitle,
+      result.year,
+    )
 
     await this.cache.set(
       cacheKey,

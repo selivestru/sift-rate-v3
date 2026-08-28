@@ -8,13 +8,18 @@ import {
 import { UpsertRankedListDto } from './dto/ranked-list.dto'
 import { ReorderRankedItemDto } from './dto/reorder-ranked-item.dto'
 import { Prisma } from '~/generated/prisma/client'
+import { MediaLanguage } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
+import { MediaService } from '~/modules/media/media.service'
 
 @Injectable()
 export class RankedListService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mediaService: MediaService,
+  ) {}
 
-  async getUserRankedLists(userId: string) {
+  async getUserRankedLists(userId: string, language: MediaLanguage) {
     const data = await this.prisma.rankedList.findMany({
       where: {
         userId,
@@ -34,7 +39,7 @@ export class RankedListService {
       },
     })
 
-    return { data }
+    return { data: await this.mediaService.localizeMediaRelations(data, language) }
   }
 
   createList(userId: string, dto: UpsertRankedListDto) {
@@ -69,7 +74,7 @@ export class RankedListService {
     })
   }
 
-  async addItem(userId: string, listId: string, mediaId: string) {
+  async addItem(userId: string, listId: string, mediaId: string, language: MediaLanguage) {
     const [media, review] = await Promise.all([
       this.prisma.media.findUnique({
         where: {
@@ -95,7 +100,7 @@ export class RankedListService {
     }
 
     try {
-      return await this.prisma.$transaction(async (tx) => {
+      const item = await this.prisma.$transaction(async (tx) => {
         const list = await this.lockOwnedList(tx, userId, listId)
 
         if (!list) {
@@ -135,6 +140,8 @@ export class RankedListService {
           },
         })
       })
+
+      return this.mediaService.localizeMediaRelations(item, language)
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new ConflictException('Media is already in this list')
@@ -187,8 +194,14 @@ export class RankedListService {
     })
   }
 
-  async reorderItem(userId: string, listId: string, itemId: string, dto: ReorderRankedItemDto) {
-    return this.prisma.$transaction(async (tx) => {
+  async reorderItem(
+    userId: string,
+    listId: string,
+    itemId: string,
+    dto: ReorderRankedItemDto,
+    language: MediaLanguage,
+  ) {
+    const item = await this.prisma.$transaction(async (tx) => {
       const list = await this.lockOwnedList(tx, userId, listId)
 
       if (!list) {
@@ -274,6 +287,8 @@ export class RankedListService {
         },
       })
     })
+
+    return this.mediaService.localizeMediaRelations(item, language)
   }
 
   private async requireOwnedList(userId: string, listId: string) {

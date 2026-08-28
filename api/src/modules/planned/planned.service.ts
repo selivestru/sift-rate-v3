@@ -4,6 +4,7 @@ import { MediaService } from '../media/media.service'
 import { AddPlannedItemDto } from './dto/planned.dto'
 import { PlannedItemsResponse } from './types/planned.types'
 import { PlannedItem } from '~/generated/prisma/client'
+import { MediaLanguage } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
 @Injectable()
@@ -13,7 +14,7 @@ export class PlannedService {
     private readonly mediaService: MediaService,
   ) {}
 
-  async getPlannedItems(userId: string): Promise<PlannedItemsResponse> {
+  async getPlannedItems(userId: string, language: MediaLanguage): Promise<PlannedItemsResponse> {
     const items = await this.prisma.plannedItem.findMany({
       where: {
         userId,
@@ -24,16 +25,22 @@ export class PlannedService {
       include: { media: true },
     })
 
+    const data = await this.mediaService.localizeMediaRelations(items, language)
+
     return {
-      data: items,
-      totalResults: items.length,
+      data,
+      totalResults: data.length,
     }
   }
 
-  async addPlannedItem(userId: string, body: AddPlannedItemDto): Promise<PlannedItem> {
+  async addPlannedItem(
+    userId: string,
+    body: AddPlannedItemDto,
+    language: MediaLanguage,
+  ): Promise<PlannedItem> {
     const media = await this.mediaService.ensureMedia(body.mediaType, body.externalId)
 
-    return await this.prisma.$transaction(async (tx) => {
+    const item = await this.prisma.$transaction(async (tx) => {
       const existing = await tx.plannedItem.findUnique({
         where: {
           userId_mediaId: {
@@ -55,9 +62,15 @@ export class PlannedService {
         include: { media: true },
       })
     })
+
+    return this.mediaService.localizeMediaRelations(item, language)
   }
 
-  async deletePlannedItem(userId: string, id: string): Promise<PlannedItem> {
+  async deletePlannedItem(
+    userId: string,
+    id: string,
+    language: MediaLanguage,
+  ): Promise<PlannedItem> {
     const existing = await this.prisma.plannedItem.findFirst({
       where: {
         id,
@@ -69,11 +82,13 @@ export class PlannedService {
       throw new NotFoundException('Planned item not found')
     }
 
-    return await this.prisma.plannedItem.delete({
+    const item = await this.prisma.plannedItem.delete({
       where: {
         id,
       },
       include: { media: true },
     })
+
+    return this.mediaService.localizeMediaRelations(item, language)
   }
 }

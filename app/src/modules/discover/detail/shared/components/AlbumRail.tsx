@@ -52,7 +52,7 @@ export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
               <Link
                 to="/discover/album/$externalId"
                 params={{ externalId: item.id }}
-                className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
+                className="group flex h-full w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]"
               >
                 <div className="bg-muted ring-border relative aspect-square w-full overflow-hidden rounded-xl ring-1">
                   {item.coverUrl ? (
@@ -71,10 +71,10 @@ export const AlbumRail = ({ title, items, className }: AlbumRailProps) => {
                   )}
                 </div>
                 <div className="px-0.5">
-                  <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
+                  <p className="text-foreground line-clamp-2 h-[2.40625rem] text-sm leading-snug font-medium">
                     {item.title}
                   </p>
-                  <p className="text-muted-foreground mt-0.5 text-xs tabular-nums">
+                  <p className="text-muted-foreground mt-0.5 h-[1.03125rem] text-xs tabular-nums">
                     {item.releaseDate ? item.releaseDate.slice(0, 4) : null}
                   </p>
                 </div>

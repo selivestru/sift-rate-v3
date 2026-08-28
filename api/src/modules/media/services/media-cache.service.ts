@@ -37,10 +37,17 @@ export class MediaCacheService {
     }
   }
 
-  async set<T>(key: string, data: T, ttlSeconds: number): Promise<void> {
+  async set<T>(key: string, data: T, ttlSeconds?: number): Promise<void> {
     try {
       const envelope: CacheEnvelope<T> = { cachedAt: Date.now(), data }
-      await this.redis.set(key, JSON.stringify(envelope), 'EX', Math.max(1, Math.floor(ttlSeconds)))
+      const payload = JSON.stringify(envelope)
+
+      if (ttlSeconds === undefined) {
+        await this.redis.set(key, payload)
+        return
+      }
+
+      await this.redis.set(key, payload, 'EX', Math.max(1, Math.floor(ttlSeconds)))
     } catch {
       // ignore
     }

@@ -17,7 +17,7 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
   const label = isSpecials ? content.specials.value : `S${season.seasonNumber}`
 
   return (
-    <div className="group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]">
+    <div className="group flex h-full w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.03]">
       <div className="bg-muted ring-border group-hover:ring-border relative aspect-2/3 w-full overflow-hidden rounded-xl ring-1 transition-[box-shadow,ring-color] duration-300 group-hover:shadow-lg">
         {season.posterUrl ? (
           <img
@@ -51,14 +51,12 @@ export const TvSeasonCard = ({ season, accent }: TvSeasonCardProps) => {
       </div>
 
       <div className="px-0.5">
-        <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
+        <p className="text-foreground line-clamp-2 h-[2.40625rem] text-sm leading-snug font-medium">
           {season.name}
         </p>
-        {season.episodeCount > 0 && (
-          <p className="text-muted-foreground text-xs tabular-nums">
-            {content.episodeCount(season.episodeCount)}
-          </p>
-        )}
+        <p className="text-muted-foreground h-[1.03125rem] text-xs tabular-nums">
+          {season.episodeCount > 0 ? content.episodeCount(season.episodeCount) : null}
+        </p>
       </div>
     </div>
   )

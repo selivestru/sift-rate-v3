@@ -5,8 +5,19 @@ import type { MediaStateResponse } from '~/modules/discover'
 
 import type { PlannedListItem, PlannedListResponse } from '../types/planned.types'
 
+const patchPlannedListCache = (
+  client: QueryClient,
+  updater: (prev: PlannedListResponse | undefined) => PlannedListResponse | undefined,
+) => {
+  const queries = client.getQueryCache().findAll({ queryKey: QUERIES_KEYS.plannedList })
+
+  for (const query of queries) {
+    client.setQueryData<PlannedListResponse>(query.queryKey, updater)
+  }
+}
+
 export const addPlannedItemToCache = (client: QueryClient, item: PlannedListItem) => {
-  client.setQueryData<PlannedListResponse>(QUERIES_KEYS.plannedList, (prev) => {
+  patchPlannedListCache(client, (prev) => {
     if (!prev) return prev
 
     return {
@@ -34,7 +45,7 @@ export const removePlannedItemByMediaFromCache = (
   client: QueryClient,
   media: PlannedListItem['media'],
 ) => {
-  client.setQueryData<PlannedListResponse>(QUERIES_KEYS.plannedList, (prev) => {
+  patchPlannedListCache(client, (prev) => {
     if (!prev) return prev
 
     const data = prev.data.filter(
@@ -52,7 +63,7 @@ export const removePlannedItemByMediaFromCache = (
 }
 
 export const removePlannedItemFromCache = (client: QueryClient, item: PlannedListItem) => {
-  client.setQueryData<PlannedListResponse>(QUERIES_KEYS.plannedList, (prev) => {
+  patchPlannedListCache(client, (prev) => {
     if (!prev) return prev
 
     return {

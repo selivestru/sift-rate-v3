@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 
 import type { MediaType } from '~/common/constants/media-type'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
+import { useAppLocale } from '~/common/i18n'
 
 import { reviewApi } from '../api/review.api'
 import { DEFAULT_REVIEW_SORT, type ReviewSort } from '../constants/sort'
@@ -17,6 +18,7 @@ interface UseMyReviewsQueryOptions {
 }
 
 export const useMyReviewsQuery = (options?: UseMyReviewsQueryOptions) => {
+  const { locale } = useAppLocale()
   const normalizedQ = options?.q?.trim() || undefined
   const mediaType = options?.mediaType
   const rating = options?.rating
@@ -33,6 +35,7 @@ export const useMyReviewsQuery = (options?: UseMyReviewsQueryOptions) => {
       sort,
       year ?? '',
       month ?? '',
+      locale,
     ],
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) =>

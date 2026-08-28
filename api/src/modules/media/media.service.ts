@@ -6,8 +6,10 @@ import { AlbumService } from './services/album.service'
 import { BookService } from './services/book.service'
 import { GameService } from './services/game.service'
 import { MovieService } from './services/movie.service'
+import { TmdbLocalizationService } from './services/tmdb-localization.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
+import type { MediaLocalizationSnapshot } from './types/media-localization.types'
 import type {
   AlbumMetadata,
   MovieMetadata,
@@ -15,12 +17,18 @@ import type {
   TvShowMetadata,
 } from './types/media-metadata.types'
 import { MediaReviewsResponse, MediaSnapshot, MediaStateResponse } from './types/media.types'
+import {
+  collectMediaRecords,
+  isLocalizableMediaType,
+  localizeMediaFields,
+  MEDIA_LANGUAGES,
+  replaceMediaRecords,
+} from './utils/media-localization'
 import { AUTHOR_SELECT } from '~/common/constants/author-select'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
 import { DEFAULT_MEDIA_LANGUAGE } from '~/common/decorators/current-language.decorator'
-import type { MediaLanguage } from '~/common/decorators/current-language.decorator'
 import { Media, Prisma } from '~/generated/prisma/client'
-import { MediaType } from '~/generated/prisma/enums'
+import { MediaLanguage, MediaType } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 
 export type EnsureMediaResult = {
@@ -38,6 +46,7 @@ export class MediaService {
     private readonly albumService: AlbumService,
     private readonly gameService: GameService,
     private readonly bookService: BookService,
+    private readonly tmdbLocalizationService: TmdbLocalizationService,
   ) {}
 
   searchMedia(mediaType: MediaType, query: SearchMediaQueryDto, language: MediaLanguage) {
@@ -59,28 +68,16 @@ export class MediaService {
     }
   }
 
-  getMediaById({ mediaType, externalId }: MediaByIdParamsDto, language: MediaLanguage) {
-    switch (mediaType) {
-      case MediaType.MOVIE:
-        return this.movieService.getById(externalId, language)
-      case MediaType.TV_SHOW:
-        return this.tvShowService.getById(externalId, language)
-      case MediaType.TRACK:
-        return this.trackService.getById(externalId)
-      case MediaType.ALBUM:
-        return this.albumService.getById(externalId)
-      case MediaType.GAME:
-        return this.gameService.getById(externalId)
-      case MediaType.BOOK:
-        return this.bookService.getById(externalId)
-      default:
-        throw new BadRequestException('Invalid media type')
-    }
+  async getMediaById({ mediaType, externalId }: MediaByIdParamsDto, language: MediaLanguage) {
+    const detail = await this.fetchMediaById(mediaType, externalId, language)
+    await this.syncLocalizationsIfNeeded(mediaType, externalId)
+    return detail
   }
 
   async getMediaState(
     userId: string,
     { mediaType, externalId }: MediaByIdParamsDto,
+    language: MediaLanguage,
   ): Promise<MediaStateResponse> {
     const media = await this.prisma.media.findUnique({
       where: {
@@ -115,10 +112,7 @@ export class MediaService {
       }),
     ])
 
-    return {
-      review,
-      plannedItem,
-    }
+    return this.localizeMediaRelations({ review, plannedItem }, language)
   }
 
   async getMediaReviews(
@@ -175,25 +169,44 @@ export class MediaService {
     }
 
     const snapshot = await this.resolveMediaSnapshot(mediaType, externalId)
+    const localizations = isLocalizableMediaType(mediaType)
+      ? await this.tmdbLocalizationService.getLocalizations(mediaType, externalId)
+      : []
 
-    const imdbId = this.getSnapshotImdbId(snapshot)
+    try {
+      return await this.prisma.media.create({
+        data: {
+          externalId,
+          mediaType,
+          title: snapshot.title,
+          posterUrl: snapshot.posterUrl,
+          metadata: snapshot.metadata ? (snapshot.metadata as Prisma.InputJsonValue) : undefined,
+          ...(localizations.length > 0 && {
+            translations: {
+              create: localizations.map((item) => ({
+                language: item.language,
+                title: item.title,
+                posterUrl: item.posterUrl,
+              })),
+            },
+          }),
+        },
+      })
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        const raced = await this.findByExternalId(mediaType, externalId)
+        if (raced) {
+          await this.syncMediaLocalizations(raced)
+          return raced
+        }
+      }
 
-    const newMedia = await this.prisma.media.create({
-      data: {
-        externalId,
-        mediaType,
-        title: snapshot.title,
-        posterUrl: snapshot.posterUrl,
-        metadata: snapshot.metadata ? (snapshot.metadata as Prisma.InputJsonValue) : undefined,
-        imdbId,
-      },
-    })
-
-    return newMedia
+      throw error
+    }
   }
 
   async resolveMediaSnapshot(mediaType: MediaType, externalId: string): Promise<MediaSnapshot> {
-    const detail = await this.getMediaById({ mediaType, externalId }, DEFAULT_MEDIA_LANGUAGE)
+    const detail = await this.fetchMediaById(mediaType, externalId, DEFAULT_MEDIA_LANGUAGE)
     return this.toSnapshot(mediaType, detail)
   }
 
@@ -206,15 +219,141 @@ export class MediaService {
   }
 
   findByImdbId(imdbId: string): Promise<Media | null> {
-    return this.prisma.media.findUnique({
-      where: { imdbId },
+    return this.prisma.media.findFirst({
+      where: {
+        metadata: {
+          path: ['imdbId'],
+          equals: imdbId,
+        },
+      },
     })
   }
 
-  private getSnapshotImdbId(snapshot: MediaSnapshot): string | null {
-    const imdbId =
-      snapshot.metadata && 'imdbId' in snapshot.metadata ? snapshot.metadata.imdbId : null
-    return typeof imdbId === 'string' && imdbId.length > 0 ? imdbId : null
+  async localizeMediaRelations<T>(value: T, language: MediaLanguage): Promise<T> {
+    const mediaById = collectMediaRecords(value)
+    const localizable = [...mediaById.values()].filter((media) =>
+      isLocalizableMediaType(media.mediaType),
+    )
+
+    if (localizable.length === 0) {
+      return value
+    }
+
+    const rows = await this.prisma.mediaTranslation.findMany({
+      where: {
+        mediaId: { in: localizable.map((media) => media.id) },
+        language,
+      },
+      select: {
+        mediaId: true,
+        title: true,
+        posterUrl: true,
+      },
+    })
+
+    const translationByMediaId = new Map<
+      string,
+      Pick<MediaLocalizationSnapshot, 'title' | 'posterUrl'>
+    >()
+
+    for (const row of rows) {
+      translationByMediaId.set(row.mediaId, { title: row.title, posterUrl: row.posterUrl })
+    }
+
+    const localizedById = new Map<string, Media>()
+
+    for (const media of mediaById.values()) {
+      localizedById.set(media.id, localizeMediaFields(media, translationByMediaId.get(media.id)))
+    }
+
+    return replaceMediaRecords(value, localizedById)
+  }
+
+  private fetchMediaById(mediaType: MediaType, externalId: string, language: MediaLanguage) {
+    switch (mediaType) {
+      case MediaType.MOVIE:
+        return this.movieService.getById(externalId, language)
+      case MediaType.TV_SHOW:
+        return this.tvShowService.getById(externalId, language)
+      case MediaType.TRACK:
+        return this.trackService.getById(externalId)
+      case MediaType.ALBUM:
+        return this.albumService.getById(externalId)
+      case MediaType.GAME:
+        return this.gameService.getById(externalId)
+      case MediaType.BOOK:
+        return this.bookService.getById(externalId)
+      default:
+        throw new BadRequestException('Invalid media type')
+    }
+  }
+
+  private async syncLocalizationsIfNeeded(mediaType: MediaType, externalId: string): Promise<void> {
+    if (!isLocalizableMediaType(mediaType)) {
+      return
+    }
+
+    const media = await this.findByExternalId(mediaType, externalId)
+    if (!media) {
+      return
+    }
+
+    try {
+      await this.syncMediaLocalizations(media)
+    } catch {
+      return
+    }
+  }
+
+  private async syncMediaLocalizations(media: Media): Promise<void> {
+    if (!isLocalizableMediaType(media.mediaType)) {
+      return
+    }
+
+    const count = await this.prisma.mediaTranslation.count({
+      where: { mediaId: media.id },
+    })
+
+    if (count >= MEDIA_LANGUAGES.length) {
+      return
+    }
+
+    const localizations = await this.tmdbLocalizationService.getLocalizations(
+      media.mediaType,
+      media.externalId,
+    )
+    await this.persistLocalizations(media.id, media.mediaType, localizations)
+  }
+
+  private persistLocalizations(
+    mediaId: string,
+    mediaType: MediaType,
+    localizations: MediaLocalizationSnapshot[],
+  ) {
+    return Promise.all(
+      localizations.map((item) =>
+        this.prisma.mediaTranslation.upsert({
+          where: {
+            mediaId_language: {
+              mediaId,
+              language: item.language,
+            },
+          },
+          create: {
+            mediaId,
+            mediaType,
+            language: item.language,
+            title: item.title,
+            posterUrl: item.posterUrl,
+          },
+          update: {
+            title: item.title,
+            posterUrl: item.posterUrl,
+            mediaType,
+          },
+        }),
+      ),
+    )
   }
 
   private toSnapshot(

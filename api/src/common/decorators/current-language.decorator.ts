@@ -1,16 +1,17 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 
 import { Request } from 'express'
+import { MediaLanguage } from '~/generated/prisma/enums'
 
-export type MediaLanguage = 'en-US' | 'uk-UA' | 'ru-RU'
+export { MediaLanguage }
 
-export const DEFAULT_MEDIA_LANGUAGE: MediaLanguage = 'en-US'
+export const DEFAULT_MEDIA_LANGUAGE = MediaLanguage.EN
 
 const LANGUAGE_LOCALE_MAP: Record<string, MediaLanguage> = {
-  en: 'en-US',
-  ua: 'uk-UA',
-  uk: 'uk-UA',
-  ru: 'ru-RU',
+  en: MediaLanguage.EN,
+  ua: MediaLanguage.UK,
+  uk: MediaLanguage.UK,
+  ru: MediaLanguage.RU,
 }
 
 export const CurrentLanguage = createParamDecorator(

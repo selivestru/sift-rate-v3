@@ -17,6 +17,12 @@ enum MediaType {
   TRACK
 }
 
+enum MediaLanguage {
+  EN
+  UK
+  RU
+}
+
 model User {
   id          String   @id @default(uuid(7))
   email       String
@@ -42,15 +48,28 @@ model Media {
   title      String
   posterUrl  String?
   metadata   Json?
-  imdbId     String?
 
+  translations MediaTranslation[]
   reviews      Review[]
   plannedItems PlannedItem[]
   rankedItems  RankedItem[]
 
   @@unique([externalId, mediaType])
-  @@unique([imdbId])
+  @@unique([id, mediaType])
   @@index([mediaType])
+}
+
+model MediaTranslation {
+  mediaId   String
+  mediaType MediaType
+  language  MediaLanguage
+  title     String?
+  posterUrl String?
+  updatedAt DateTime      @default(now()) @updatedAt
+
+  media Media @relation(fields: [mediaId, mediaType], references: [id, mediaType], onDelete: Cascade, onUpdate: Restrict)
+
+  @@id([mediaId, language])
 }
 
 model Review {
@@ -129,24 +148,24 @@ enum ImportRowStatus {
 }
 
 model ImportJob {
-  id               String          @id @default(uuid(7))
-  userId           String
-  source           ImportSource
-  status           ImportJobStatus
-  total            Int
-  processed        Int             @default(0)
-  createdCount     Int             @default(0)
-  skippedExisting  Int             @default(0)
-  skippedType      Int             @default(0)
-  notFound         Int             @default(0)
-  invalid          Int             @default(0)
-  errorCount       Int             @default(0)
-  errorMessage     String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  finishedAt       DateTime?
+  id              String          @id @default(uuid(7))
+  userId          String
+  source          ImportSource
+  status          ImportJobStatus
+  total           Int
+  processed       Int             @default(0)
+  createdCount    Int             @default(0)
+  skippedExisting Int             @default(0)
+  skippedType     Int             @default(0)
+  notFound        Int             @default(0)
+  invalid         Int             @default(0)
+  errorCount      Int             @default(0)
+  errorMessage    String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  finishedAt      DateTime?
 
-  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   rows ImportJobRow[]
 
   @@index([userId, status])

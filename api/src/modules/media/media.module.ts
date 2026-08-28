@@ -8,6 +8,7 @@ import { GameService } from './services/game.service'
 import { MediaCacheService } from './services/media-cache.service'
 import { MovieService } from './services/movie.service'
 import { SpotifyClientService } from './services/spotify-client.service'
+import { TmdbLocalizationService } from './services/tmdb-localization.service'
 import { TrackService } from './services/track.service'
 import { TvShowService } from './services/tv_show.service'
 
@@ -20,6 +21,7 @@ import { TvShowService } from './services/tv_show.service'
     SpotifyClientService,
     MovieService,
     TvShowService,
+    TmdbLocalizationService,
     TrackService,
     AlbumService,
     GameService,

@@ -29,7 +29,7 @@ export const SimilarPosterCard = ({
       to={routeFor(mediaType)}
       params={{ externalId: item.id }}
       className={cn(
-        'group flex w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]',
+        'group flex h-full w-full flex-col gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.99]',
         className,
       )}
     >
@@ -53,10 +53,10 @@ export const SimilarPosterCard = ({
         )}
       </div>
       <div className="px-0.5">
-        <p className="text-foreground line-clamp-2 text-sm leading-snug font-medium">
+        <p className="text-foreground line-clamp-2 h-[2.40625rem] text-sm leading-snug font-medium">
           {item.title}
         </p>
-        {item.year && <p className="text-muted-foreground text-xs tabular-nums">{item.year}</p>}
+        <p className="text-muted-foreground h-[1.03125rem] text-xs tabular-nums">{item.year}</p>
       </div>
     </Link>
   )

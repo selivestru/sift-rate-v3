@@ -133,7 +133,7 @@ export class ImportProcessor extends WorkerHost implements OnModuleInit {
 
     try {
       const preferredType = mapImdbTitleType(row.titleType) ?? MediaType.MOVIE
-      const media = await this.resolveMedia(row.imdbId, preferredType, row.title, mediaByImdbId)
+      const media = await this.resolveMedia(row.imdbId, preferredType, mediaByImdbId)
       if (!media) {
         await this.markRow(row.id, ImportRowStatus.NOT_FOUND, 'Title not found on TMDB')
         return
@@ -193,7 +193,6 @@ export class ImportProcessor extends WorkerHost implements OnModuleInit {
   private async resolveMedia(
     imdbId: string,
     preferredType: MediaType,
-    fallbackTitle: string,
     mediaByImdbId: Map<string, Media>,
   ): Promise<Media | null> {
     const cached = mediaByImdbId.get(imdbId)
@@ -212,57 +211,25 @@ export class ImportProcessor extends WorkerHost implements OnModuleInit {
       return null
     }
 
-    const byExternalId = await this.mediaService.findByExternalId(match.mediaType, match.externalId)
-    if (byExternalId) {
-      const linked = await this.attachImdbId(byExternalId, imdbId)
-      mediaByImdbId.set(imdbId, linked)
-      return linked
-    }
-
-    try {
-      const created = await this.prisma.media.create({
-        data: {
-          externalId: match.externalId,
-          mediaType: match.mediaType,
-          title: match.title || fallbackTitle,
-          posterUrl: match.posterUrl,
-          metadata: { imdbId },
-          imdbId,
-        },
-      })
-
-      mediaByImdbId.set(imdbId, created)
-      return created
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        const raced =
-          (await this.mediaService.findByImdbId(imdbId)) ??
-          (await this.mediaService.findByExternalId(match.mediaType, match.externalId))
-        if (raced) {
-          const linked = await this.attachImdbId(raced, imdbId)
-          mediaByImdbId.set(imdbId, linked)
-          return linked
-        }
-      }
-
-      throw error
-    }
+    const created = await this.mediaService.ensureMedia(match.mediaType, match.externalId)
+    const linked = await this.attachImdbId(created, imdbId)
+    mediaByImdbId.set(imdbId, linked)
+    return linked
   }
 
   private async attachImdbId(media: Media, imdbId: string): Promise<Media> {
-    if (media.imdbId === imdbId) {
-      return media
-    }
-
     const current =
       media.metadata && typeof media.metadata === 'object' && !Array.isArray(media.metadata)
         ? (media.metadata as Record<string, unknown>)
         : {}
 
+    if (current.imdbId === imdbId) {
+      return media
+    }
+
     return this.prisma.media.update({
       where: { id: media.id },
       data: {
-        imdbId,
         metadata: { ...current, imdbId },
       },
     })
