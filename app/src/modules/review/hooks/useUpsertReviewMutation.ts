@@ -57,7 +57,6 @@ export const useUpsertReviewMutation = () => {
         ? {
             id: user.id,
             username: user.username,
-            displayName: user.displayName,
             avatarUrl: user.avatarUrl,
           }
         : null

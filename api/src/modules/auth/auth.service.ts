@@ -21,17 +21,15 @@ export class AuthService {
   async completeProfile(
     userId: string,
     dto: CompleteProfileDto,
-  ): Promise<Pick<SafeUser, 'displayName' | 'username'>> {
+  ): Promise<Pick<SafeUser, 'username'>> {
     return this.prismaService.user.update({
       where: {
         id: userId,
       },
       data: {
-        displayName: dto.displayName,
         username: dto.username,
       },
       select: {
-        displayName: true,
         username: true,
       },
     })

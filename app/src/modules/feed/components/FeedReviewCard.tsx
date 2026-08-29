@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
+import { useAppLocale } from '~/common/i18n'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
 import { RatingBadge } from '~/common/ui/RatingBadge'
@@ -17,6 +18,7 @@ interface FeedReviewCardProps {
 }
 
 export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
+  const { locale } = useAppLocale()
   const shared = useIntlayer('shared')
   const content = useIntlayer('feed')
   const { media, user } = item
@@ -29,9 +31,9 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
 
   const avatar = (
     <Avatar size="lg">
-      <AvatarImage src={user.avatarUrl ?? undefined} alt={user.displayName ?? undefined} />
+      <AvatarImage src={user.avatarUrl ?? undefined} alt={user.username ?? undefined} />
       <AvatarFallback className="text-base sm:text-lg">
-        {getFirstLetter(user.displayName)}
+        {getFirstLetter(user.username)}
       </AvatarFallback>
     </Avatar>
   )
@@ -42,7 +44,7 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
         <Link
           to="/$username"
           params={{ username: user.username }}
-          aria-label={content.openProfile({ name: user.displayName ?? user.username ?? '' })}
+          aria-label={content.openProfile({ name: user.username ?? '' })}
           className="focus-visible:ring-ring/40 h-fit shrink-0 rounded-full outline-none focus-visible:ring-2"
         >
           {avatar}
@@ -59,19 +61,14 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
               params={{ username: user.username }}
               className="hover:text-primary focus-visible:text-primary truncate font-semibold transition-colors duration-200 outline-none sm:text-base"
             >
-              {user.displayName}
+              @{user.username}
             </Link>
-          ) : (
-            <span className="truncate font-semibold sm:text-base">{user.displayName}</span>
-          )}
-          {user.username && (
-            <span className="text-muted-foreground truncate text-sm">@{user.username}</span>
-          )}
+          ) : null}
           <span className="text-muted-foreground shrink-0 text-sm" aria-hidden>
             ·
           </span>
           <time className="text-muted-foreground shrink-0 text-sm" dateTime={item.createdAt}>
-            {formatRelativeTime(item.createdAt)}
+            {formatRelativeTime(item.createdAt, locale)}
           </time>
         </div>
 

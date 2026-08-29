@@ -14,9 +14,9 @@ const settingsNavContent = {
       ru: 'Аккаунт',
     }),
     accountDescription: t({
-      en: 'Username and display name',
-      uk: 'Ім’я користувача та відображуване ім’я',
-      ru: 'Имя пользователя и отображаемое имя',
+      en: 'Avatar and username',
+      uk: 'Аватар та ім’я користувача',
+      ru: 'Аватар и имя пользователя',
     }),
     imports: t({
       en: 'Imports',

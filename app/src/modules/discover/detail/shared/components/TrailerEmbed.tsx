@@ -28,7 +28,7 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
         <div key={`${active.id}-${playing ? 'play' : 'idle'}`} className="size-full">
           {playing ? (
             <iframe
-              sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
+              sandbox="allow-scripts allow-presentation allow-popups"
               title={active.name}
               src={`https://www.youtube-nocookie.com/embed/${active.key}?autoplay=1&rel=0`}
               className="size-full"

@@ -90,25 +90,12 @@ export class UserService {
     return this.prisma.user.findUnique({ where: { username: normalize(username) } })
   }
 
-  createGoogleUser(data: {
-    email: string
-    displayName: string | null
-    avatarUrl: string | null
-  }): Promise<User> {
+  createGoogleUser(data: { email: string; avatarUrl: string | null }): Promise<User> {
     return this.prisma.user.create({
       data: {
         email: normalize(data.email),
-        displayName: data.displayName,
         avatarUrl: data.avatarUrl,
       },
-    })
-  }
-
-  updateDisplayName(userId: string, displayName: string): Promise<Pick<User, 'displayName'>> {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { displayName },
-      select: { displayName: true },
     })
   }
 

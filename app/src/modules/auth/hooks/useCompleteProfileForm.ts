@@ -16,7 +16,6 @@ import { useCompleteProfileMutation } from './useCompleteProfileMutation'
 
 export const useCompleteProfileForm = () => {
   const content = getIntlayer('complete-profile-form', getCurrentLocale())
-  const displayName = useAuthStore((state) => state.user?.displayName)
 
   const navigate = useNavigate()
   const setCompleteProfile = useAuthStore((state) => state.setCompleteProfile)
@@ -31,7 +30,6 @@ export const useCompleteProfileForm = () => {
     formState: { errors },
   } = useForm<CompleteProfileInput>({
     defaultValues: {
-      displayName: displayName ?? '',
       username: '',
     },
     resolver: zodResolver(completeProfileSchema),

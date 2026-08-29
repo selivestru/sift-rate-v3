@@ -5,6 +5,5 @@ export interface MeResponse {
 }
 
 export interface CompleteProfileResponse {
-  displayName: string
   username: string
 }

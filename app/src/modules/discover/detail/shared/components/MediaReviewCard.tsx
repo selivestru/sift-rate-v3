@@ -3,6 +3,7 @@ import { useIntlayer } from 'react-intlayer'
 import { Pen, Star, Trash6 } from 'reicon-react'
 
 import type { MediaType } from '~/common/constants/media-type'
+import { useAppLocale } from '~/common/i18n'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
 import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
@@ -20,6 +21,7 @@ interface MediaReviewCardProps {
 }
 
 export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCardProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const { user } = review
 
@@ -29,11 +31,8 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
   return (
     <article className="bg-card text-card-foreground border-border flex gap-3 rounded-xl border p-4">
       <Avatar size="lg">
-        <AvatarImage
-          src={user.avatarUrl ?? undefined}
-          alt={user.displayName ?? user.username ?? undefined}
-        />
-        <AvatarFallback>{getFirstLetter(user.displayName ?? user.username)}</AvatarFallback>
+        <AvatarImage src={user.avatarUrl ?? undefined} alt={user.username ?? undefined} />
+        <AvatarFallback>{getFirstLetter(user.username)}</AvatarFallback>
       </Avatar>
 
       <div className="flex flex-1 flex-col gap-2.5">
@@ -46,16 +45,16 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
                   params={{ username: user.username }}
                   className="text-foreground truncate text-sm font-semibold hover:underline"
                 >
-                  {user.displayName ?? user.username}
+                  @{user.username}
                 </Link>
               ) : (
                 <span className="text-foreground truncate text-sm font-semibold">
-                  {user.displayName ?? content.unknown.value}
+                  {content.unknown.value}
                 </span>
               )}
 
               <time dateTime={review.createdAt} className="text-muted-foreground text-xs">
-                {formatRelativeTime(review.createdAt)}
+                {formatRelativeTime(review.createdAt, locale)}
               </time>
             </div>
 
@@ -117,7 +116,9 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
         </div>
 
         {review.content && (
-          <p className="text-foreground text-sm leading-relaxed break-all">{review.content}</p>
+          <p className="text-foreground text-sm leading-relaxed break-all whitespace-pre-wrap">
+            {review.content}
+          </p>
         )}
       </div>
     </article>

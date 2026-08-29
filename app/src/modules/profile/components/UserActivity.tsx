@@ -5,6 +5,7 @@ import { useIntlayer } from 'react-intlayer'
 
 import 'react-activity-calendar/tooltips.css'
 
+import { useAppLocale } from '~/common/i18n'
 import { ErrorState } from '~/common/ui/ErrorState'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/common/ui/Select'
 import { cn } from '~/common/utils/cn'
@@ -44,6 +45,7 @@ export const UserActivity = ({ username, activityYears }: UserActivityProps) => 
 }
 
 const UserActivityContent = ({ username, activityYears }: UserActivityProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('user-activity')
   const { MONTH_LABELS, WEEKDAY_LABELS } = useProfileCalendarLabels()
 
@@ -118,7 +120,7 @@ const UserActivityContent = ({ username, activityYears }: UserActivityProps) => 
                     ? content.activityTooltipSingular
                     : content.activityTooltipPlural)({
                     count: String(item.count),
-                    date: formatActivityDate(item.date),
+                    date: formatActivityDate(item.date, locale),
                   }),
                 ),
               withArrow: true,

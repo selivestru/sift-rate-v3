@@ -16,7 +16,9 @@ export const FeedContent = ({ content, maxLength = 280 }: FeedContentProps) => {
 
   return (
     <blockquote className="border-border border-t px-3 py-2.5">
-      <p className="text-foreground text-sm leading-relaxed break-all italic">{visible}</p>
+      <p className="text-foreground text-sm leading-relaxed break-all whitespace-pre-wrap italic">
+        {visible}
+      </p>
 
       {isLong && !expanded && (
         <Button

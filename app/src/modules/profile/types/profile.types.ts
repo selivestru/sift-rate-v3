@@ -3,7 +3,6 @@ import type { MediaType } from '~/common/constants/media-type'
 export interface ProfileUser {
   id: string
   username: string
-  displayName: string
   avatarUrl: string | null
 }
 

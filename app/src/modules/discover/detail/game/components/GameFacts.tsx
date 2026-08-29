@@ -1,5 +1,6 @@
 import { useIntlayer } from 'react-intlayer'
 
+import { useAppLocale } from '~/common/i18n'
 import { formatDate } from '~/common/utils/formatDate'
 
 import { FactsPanel } from '../../shared'
@@ -27,6 +28,7 @@ const joinOrNull = (items: string[], limit = 8) => {
 }
 
 export const GameFacts = ({ game }: GameFactsProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const facts: { label: string; value: React.ReactNode }[] = []
 
@@ -43,7 +45,7 @@ export const GameFacts = ({ game }: GameFactsProps) => {
   }
 
   if (game.releaseDate) {
-    facts.push({ label: content.released.value, value: formatDate(game.releaseDate) })
+    facts.push({ label: content.released.value, value: formatDate(game.releaseDate, locale) })
   }
 
   if (game.ageRatings.length > 0) {

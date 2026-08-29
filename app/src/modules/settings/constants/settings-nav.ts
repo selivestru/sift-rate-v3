@@ -15,7 +15,7 @@ export type SettingsNavItem = {
 export const accountNavItem: SettingsNavItem = {
   to: '/settings/account',
   label: 'Account',
-  description: 'Username and display name',
+  description: 'Avatar and username',
   icon: UserIcon,
 }
 

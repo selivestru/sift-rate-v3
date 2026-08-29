@@ -2,7 +2,7 @@ import { useIntlayer } from 'react-intlayer'
 import { AlertTriangle, CheckCircle, ChevronRight } from 'reicon-react'
 
 import { useIntersectionObserver } from '~/common/hooks/useIntersectionObserver'
-import { getCurrentLocale } from '~/common/i18n'
+import { getCurrentLocale, useAppLocale } from '~/common/i18n'
 import { Badge, type BadgeProps } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import { Skeleton } from '~/common/ui/Skeleton'
@@ -20,6 +20,7 @@ type ImdbImportHistoryProps = {
 }
 
 export const ImdbImportHistory = ({ selectedJobId, onSelect }: ImdbImportHistoryProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('imdb-import-history')
   const shared = useIntlayer('shared')
   const statusContent = useIntlayer('imdb-import-job-status')
@@ -121,7 +122,7 @@ export const ImdbImportHistory = ({ selectedJobId, onSelect }: ImdbImportHistory
                         {badge.label}
                       </Badge>
                       <span className="text-muted-foreground text-xs">
-                        {formatRelativeTime(job.createdAt)}
+                        {formatRelativeTime(job.createdAt, locale)}
                       </span>
                     </span>
                     <span className="text-muted-foreground truncate text-xs">

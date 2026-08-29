@@ -36,22 +36,6 @@ export const CompleteProfileForm = () => {
           </Alert>
         )}
 
-        <Field isInvalid={!!errors.displayName}>
-          <FieldLabel htmlFor="displayName">{content.displayNameLabel.value}</FieldLabel>
-          <Input
-            id="displayName"
-            autoComplete="nickname"
-            placeholder={content.displayNamePlaceholder.value}
-            isInvalid={!!errors.displayName}
-            {...register('displayName')}
-          />
-          {errors.displayName ? (
-            <FieldError>{errors.displayName.message}</FieldError>
-          ) : (
-            <FieldDescription>{content.displayNameHint.value}</FieldDescription>
-          )}
-        </Field>
-
         <Field isInvalid={!!errors.username}>
           <FieldLabel htmlFor="username">{content.usernameLabel.value}</FieldLabel>
           <Input

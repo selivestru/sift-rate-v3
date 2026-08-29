@@ -4,6 +4,7 @@ import { ArrowUpRight, CalendarCheck, Trash6 } from 'reicon-react'
 
 import { toastApiError } from '~/common/api'
 import { mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
+import { useAppLocale } from '~/common/i18n'
 import { Button } from '~/common/ui/Button'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
 import { cn } from '~/common/utils/cn'
@@ -17,6 +18,7 @@ interface PlannedMediaCardProps {
 }
 
 export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
+  const { locale } = useAppLocale()
   const shared = useIntlayer('shared')
   const content = useIntlayer('planned')
   const { media } = item
@@ -64,7 +66,7 @@ export const PlannedMediaCard = ({ item }: PlannedMediaCardProps) => {
             </h3>
             <p className="flex items-center gap-1 text-[11px] text-white/80">
               <CalendarCheck className="size-3 shrink-0" />
-              <span>{content.saved({ date: formatRelativeDate(item.createdAt) })}</span>
+              <span>{content.saved({ date: formatRelativeDate(item.createdAt, locale) })}</span>
             </p>
           </div>
         </div>

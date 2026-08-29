@@ -2,7 +2,7 @@ import { useIntlayer } from 'react-intlayer'
 import { AlertTriangle, CheckCircle, Clock, Refresh, Upload } from 'reicon-react'
 
 import { translateApiErrorMessage } from '~/common/api'
-import { getCurrentLocale } from '~/common/i18n'
+import { getCurrentLocale, useAppLocale } from '~/common/i18n'
 import { Alert, AlertDescription, AlertTitle } from '~/common/ui/Alert'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
@@ -42,6 +42,7 @@ export const ImdbImportJobStatus = ({
   onRetry,
   onNewImport,
 }: ImdbImportJobStatusProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('imdb-import-job-status')
   const progress = getProgress(job)
   const isActive = job.status === 'PENDING' || job.status === 'PROCESSING'
@@ -98,9 +99,9 @@ export const ImdbImportJobStatus = ({
         <div className="flex items-center gap-2.5">
           {meta.badge}
           <span className="text-muted-foreground text-xs">
-            {content.started({ time: formatRelativeTime(job.createdAt) }).value}
+            {content.started({ time: formatRelativeTime(job.createdAt, locale) }).value}
             {job.finishedAt && (
-              <> · {content.finished({ time: formatRelativeTime(job.finishedAt) }).value}</>
+              <> · {content.finished({ time: formatRelativeTime(job.finishedAt, locale) }).value}</>
             )}
           </span>
         </div>

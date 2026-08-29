@@ -1,7 +1,7 @@
 import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { useMediaTypeSingularLabel } from '~/common/i18n'
+import { useAppLocale, useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
 
@@ -14,6 +14,7 @@ interface AlbumHeroProps {
 }
 
 export const AlbumHero = ({ album }: AlbumHeroProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.ALBUM)
   const accent = mediaTypeMeta[MEDIA_TYPES.ALBUM].color
@@ -21,7 +22,7 @@ export const AlbumHero = ({ album }: AlbumHeroProps) => {
   const backdropUrl = album.coverUrl
 
   const metaParts: string[] = []
-  if (album.releaseDate) metaParts.push(formatDate(album.releaseDate))
+  if (album.releaseDate) metaParts.push(formatDate(album.releaseDate, locale))
   if (album.trackCount > 0) {
     metaParts.push(String(content.trackCount(album.trackCount)))
   }

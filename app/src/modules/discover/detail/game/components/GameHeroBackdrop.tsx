@@ -2,7 +2,7 @@ import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { useMediaTypeSingularLabel } from '~/common/i18n'
+import { useAppLocale, useMediaTypeSingularLabel } from '~/common/i18n'
 import { formatDate } from '~/common/utils/formatDate'
 
 import type { GameDetail } from '../types/game-detail.types'
@@ -13,6 +13,7 @@ interface GameHeroBackdropProps {
 }
 
 export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.GAME)
   const accent = mediaTypeMeta[MEDIA_TYPES.GAME].color
@@ -81,7 +82,7 @@ export const GameHeroBackdrop = ({ game, showAlt }: GameHeroBackdropProps) => {
                       ·
                     </span>
                   )}
-                  <span className="text-xs">{formatDate(game.releaseDate)}</span>
+                  <span className="text-xs">{formatDate(game.releaseDate, locale)}</span>
                 </>
               )}
             </div>

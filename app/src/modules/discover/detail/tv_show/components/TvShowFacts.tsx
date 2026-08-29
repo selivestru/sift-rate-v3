@@ -1,5 +1,6 @@
 import { useIntlayer } from 'react-intlayer'
 
+import { useAppLocale } from '~/common/i18n'
 import { formatDate } from '~/common/utils/formatDate'
 import { formatRuntime } from '~/common/utils/formatRuntime'
 
@@ -21,14 +22,15 @@ const ChipList = ({ items }: { items: string[] }) => (
 )
 
 export const TvShowFacts = ({ show }: TvShowFactsProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const facts: { label: string; value: React.ReactNode }[] = []
 
   if (show.firstAirDate) {
-    facts.push({ label: content.firstAired.value, value: formatDate(show.firstAirDate) })
+    facts.push({ label: content.firstAired.value, value: formatDate(show.firstAirDate, locale) })
   }
   if (show.lastAirDate) {
-    facts.push({ label: content.lastAired.value, value: formatDate(show.lastAirDate) })
+    facts.push({ label: content.lastAired.value, value: formatDate(show.lastAirDate, locale) })
   }
   if (show.status) {
     facts.push({ label: content.status.value, value: show.status })

@@ -15,7 +15,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { seconds, Throttle } from '@nestjs/throttler'
 
-import { UpdateDisplayNameDto } from './dto/update-display-name.dto'
 import { UpdateUsernameDto } from './dto/update-username.dto'
 import { UserActivityQuery } from './dto/user-activity-query.dto'
 import { UserService } from './user.service'
@@ -63,11 +62,6 @@ export class UserController {
   )
   updateAvatar(@CurrentUser('userId') userId: string, @UploadedFile() file?: Express.Multer.File) {
     return this.userService.updateAvatar(userId, file)
-  }
-
-  @Patch('display-name')
-  updateDisplayName(@CurrentUser('userId') userId: string, @Body() dto: UpdateDisplayNameDto) {
-    return this.userService.updateDisplayName(userId, dto.displayName)
   }
 
   @Patch('username')

@@ -1,5 +1,6 @@
 import { useIntlayer } from 'react-intlayer'
 
+import { useAppLocale } from '~/common/i18n'
 import { formatDate } from '~/common/utils/formatDate'
 import { formatMoney } from '~/common/utils/formatMoney'
 import { formatRuntime } from '~/common/utils/formatRuntime'
@@ -33,6 +34,7 @@ const ChipList = ({ items }: { items: string[] }) => (
 )
 
 export const MovieCrewAndFacts = ({ movie }: MovieCrewAndFactsProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const hasCrew =
     movie.directors.length > 0 || movie.writers.length > 0 || movie.producers.length > 0
@@ -40,7 +42,7 @@ export const MovieCrewAndFacts = ({ movie }: MovieCrewAndFactsProps) => {
   const facts: { label: string; value: React.ReactNode }[] = []
 
   if (movie.releaseDate) {
-    facts.push({ label: content.released.value, value: formatDate(movie.releaseDate) })
+    facts.push({ label: content.released.value, value: formatDate(movie.releaseDate, locale) })
   }
 
   const runtime = formatRuntime(movie.runtimeMinutes)

@@ -1,13 +1,6 @@
 import { api } from '~/common/api'
 
 export const userApi = {
-  changeDisplayName: (displayName: string) => {
-    return api
-      .patch<{ displayName: string }>('/user/display-name', {
-        json: { displayName },
-      })
-      .json()
-  },
   changeAvatar: (file: File) => {
     const body = new FormData()
     body.append('file', file)

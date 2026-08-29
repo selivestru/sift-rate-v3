@@ -2,7 +2,7 @@ import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { useMediaTypeSingularLabel } from '~/common/i18n'
+import { useAppLocale, useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 
@@ -16,11 +16,12 @@ interface BookHeroProps {
 }
 
 export const BookHero = ({ book }: BookHeroProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.BOOK)
   const accent = mediaTypeMeta[MEDIA_TYPES.BOOK].color
   const MediaTypeIcon = mediaTypeMeta.BOOK.icon
-  const publishedLabel = formatPublished(book.publishedDate, book.year)
+  const publishedLabel = formatPublished(book.publishedDate, book.year, locale)
   const categoryPreview = book.categories.slice(0, 3)
 
   const stats: Array<{ label: string; value: string }> = []

@@ -1,13 +1,13 @@
 import { getIntlayer } from 'intlayer'
 
-import { getCurrentLocale } from '~/common/i18n'
+import type { AppLocale } from '~/common/i18n'
 
-export const formatRelativeDate = (iso: string) => {
+export const formatRelativeDate = (iso: string, locale: AppLocale) => {
   const date = new Date(iso)
   const diffMs = Date.now() - date.getTime()
   const dayMs = 86_400_000
   const days = Math.floor(diffMs / dayMs)
-  const content = getIntlayer('formatters', getCurrentLocale())
+  const content = getIntlayer('formatters', locale)
 
   if (days <= 0) {
     return content.today
@@ -19,7 +19,7 @@ export const formatRelativeDate = (iso: string) => {
     return String(content.daysAgo({ count: String(days) }))
   }
 
-  return date.toLocaleDateString(getCurrentLocale(), {
+  return date.toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

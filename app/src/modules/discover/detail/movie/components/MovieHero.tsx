@@ -3,7 +3,7 @@ import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { useMediaTypeSingularLabel } from '~/common/i18n'
+import { useAppLocale, useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
@@ -20,6 +20,7 @@ interface MovieHeroProps {
 
 export const MovieHero = ({ movie }: MovieHeroProps) => {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
+  const { locale } = useAppLocale()
   const shared = useIntlayer('shared')
   const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.MOVIE)
   const accent = mediaTypeMeta[MEDIA_TYPES.MOVIE].color
@@ -144,7 +145,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
                 <span className="opacity-40" aria-hidden>
                   ·
                 </span>
-                <span className="text-xs">{formatDate(movie.releaseDate)}</span>
+                <span className="text-xs">{formatDate(movie.releaseDate, locale)}</span>
               </>
             )}
           </div>

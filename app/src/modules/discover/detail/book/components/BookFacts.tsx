@@ -1,5 +1,7 @@
 import { useIntlayer } from 'react-intlayer'
 
+import { useAppLocale } from '~/common/i18n'
+
 import { FactsPanel } from '../../shared'
 import type { BookDetail } from '../types/book-detail.types'
 import { formatPublished } from '../utils/format-published'
@@ -19,6 +21,7 @@ const ChipList = ({ items }: { items: string[] }) => (
 )
 
 export const BookFacts = ({ book }: BookFactsProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const facts: { label: string; value: React.ReactNode }[] = []
 
@@ -30,7 +33,7 @@ export const BookFacts = ({ book }: BookFactsProps) => {
     facts.push({ label: content.publisher.value, value: book.publisher })
   }
 
-  const published = formatPublished(book.publishedDate, book.year)
+  const published = formatPublished(book.publishedDate, book.year, locale)
   if (published) {
     facts.push({ label: content.published.value, value: published })
   }

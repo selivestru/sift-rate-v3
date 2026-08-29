@@ -26,7 +26,6 @@ enum MediaLanguage {
 model User {
   id          String   @id @default(uuid(7))
   email       String
-  displayName String?
   username    String?
   avatarUrl   String?
   createdAt   DateTime @default(now())

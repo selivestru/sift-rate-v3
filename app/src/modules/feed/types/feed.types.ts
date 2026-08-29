@@ -4,7 +4,6 @@ import type { Review } from '~/modules/review'
 export type FeedAuthor = {
   id: string
   username: string | null
-  displayName: string | null
   avatarUrl: string | null
 }
 

@@ -1,3 +1,3 @@
 import { User } from '~/generated/prisma/client'
 
-export type Author = Pick<User, 'id' | 'username' | 'displayName' | 'avatarUrl'>
+export type Author = Pick<User, 'id' | 'username' | 'avatarUrl'>

@@ -13,19 +13,16 @@ export const ProfileHero = ({ user }: ProfileHeroProps) => {
       <div className="relative p-6 max-md:px-4">
         <div className="flex items-end gap-5 max-md:gap-4">
           <Avatar className="ring-card size-32 ring-4 max-md:size-24">
-            <AvatarImage src={user.avatarUrl ?? undefined} alt={user.displayName} />
+            <AvatarImage src={user.avatarUrl ?? undefined} alt={user.username} />
             <AvatarFallback className="text-4xl max-md:text-2xl">
-              {getFirstLetter(user.displayName)}
+              {getFirstLetter(user.username)}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex-1 pb-1">
             <h1 className="truncate text-2xl font-bold tracking-tight max-md:text-xl">
-              {user.displayName}
+              @{user.username}
             </h1>
-            {user.username && (
-              <p className="text-muted-foreground truncate text-sm">@{user.username}</p>
-            )}
           </div>
         </div>
       </div>

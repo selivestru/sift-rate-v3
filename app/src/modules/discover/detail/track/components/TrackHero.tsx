@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { useMediaTypeSingularLabel } from '~/common/i18n'
+import { useAppLocale, useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { formatDate } from '~/common/utils/formatDate'
 import { formatDuration } from '~/common/utils/formatDuration'
@@ -16,6 +16,7 @@ interface TrackHeroProps {
 }
 
 export const TrackHero = ({ track }: TrackHeroProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.TRACK)
   const accent = mediaTypeMeta[MEDIA_TYPES.TRACK].color
@@ -24,7 +25,7 @@ export const TrackHero = ({ track }: TrackHeroProps) => {
   const durationLabel = track.duration > 0 ? formatDuration(track.duration) : null
 
   const metaParts: string[] = []
-  if (track.releaseDate) metaParts.push(formatDate(track.releaseDate))
+  if (track.releaseDate) metaParts.push(formatDate(track.releaseDate, locale))
 
   return (
     <div className="relative overflow-hidden rounded-t-2xl max-md:rounded-t-none">

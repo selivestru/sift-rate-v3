@@ -1,7 +1,7 @@
-import { getCurrentLocale } from '~/common/i18n'
+import type { AppLocale } from '~/common/i18n'
 
-export const formatActivityDate = (date: string) => {
-  return new Intl.DateTimeFormat(getCurrentLocale(), {
+export const formatActivityDate = (date: string, locale: AppLocale) => {
+  return new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'short',
     timeZone: 'UTC',

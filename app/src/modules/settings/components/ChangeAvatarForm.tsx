@@ -16,7 +16,6 @@ export const ChangeAvatarForm = () => {
   const content = useIntlayer('change-avatar-form')
   const avatarUrl = useAuthStore((state) => state.user?.avatarUrl)
   const username = useAuthStore((state) => state.user?.username)
-  const displayName = useAuthStore((state) => state.user?.displayName)
 
   const {
     stage,
@@ -34,7 +33,7 @@ export const ChangeAvatarForm = () => {
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const fallbackName = displayName ?? username
+  const fallbackName = username
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onFileChange(event.target.files)

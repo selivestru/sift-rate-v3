@@ -9,24 +9,9 @@ const completeProfileFormContent = {
       ru: 'Заполните свой профиль',
     }),
     description: t({
-      en: 'Choose how your name appears and pick a unique username.',
-      uk: 'Оберіть, як відображатиметься ваше ім’я, і придумайте унікальне ім’я користувача.',
-      ru: 'Выберите отображаемое имя и придумайте уникальное имя пользователя.',
-    }),
-    displayNameLabel: t({
-      en: 'Display name',
-      uk: 'Відображуване ім’я',
-      ru: 'Отображаемое имя',
-    }),
-    displayNamePlaceholder: t({
-      en: 'Your name',
-      uk: 'Ваше ім’я',
-      ru: 'Ваше имя',
-    }),
-    displayNameHint: t({
-      en: 'Use 2 to 50 characters.',
-      uk: 'Використайте від 2 до 50 символів.',
-      ru: 'Используйте от 2 до 50 символов.',
+      en: 'Pick a unique username.',
+      uk: 'Оберіть унікальне ім’я користувача.',
+      ru: 'Выберите уникальное имя пользователя.',
     }),
     usernameLabel: t({
       en: 'Username',

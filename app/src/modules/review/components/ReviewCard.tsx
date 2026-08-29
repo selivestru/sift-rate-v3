@@ -3,6 +3,7 @@ import { useIntlayer } from 'react-intlayer'
 import { Calendar, CrownStar, Pen, Trash6 } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
+import { useAppLocale } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { Button } from '~/common/ui/Button'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
@@ -20,6 +21,7 @@ interface ReviewCardProps {
 }
 
 export const ReviewCard = ({ review }: ReviewCardProps) => {
+  const { locale } = useAppLocale()
   const content = useIntlayer('review-card')
   const shared = useIntlayer('shared')
   const { media } = review
@@ -157,7 +159,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           />
           <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs">
             <Calendar className="size-3.5 shrink-0" aria-hidden />
-            <time dateTime={review.createdAt}>{formatDate(review.createdAt)}</time>
+            <time dateTime={review.createdAt}>{formatDate(review.createdAt, locale)}</time>
           </span>
         </div>
 
@@ -169,9 +171,13 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           )}
         >
           {hasContent ? (
-            <p className="text-foreground break-all italic">{review.content}</p>
+            <p className="text-foreground leading-relaxed break-all whitespace-pre-wrap italic">
+              {review.content}
+            </p>
           ) : (
-            <p className="text-muted-foreground italic">{content.noWrittenReview.value}</p>
+            <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap italic">
+              {content.noWrittenReview.value}
+            </p>
           )}
         </blockquote>
       </div>

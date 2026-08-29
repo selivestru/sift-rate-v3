@@ -8,7 +8,6 @@ import { RedisService } from '~/infrastructure/redis/redis.service'
 
 export interface GoogleProfile {
   email: string
-  displayName: string | null
   avatarUrl: string | null
 }
 
@@ -69,8 +68,6 @@ export class GoogleOAuthService {
 
     return {
       email: payload.email,
-      displayName:
-        payload.name ?? [payload.given_name, payload.family_name].filter(Boolean).join(' ') ?? null,
       avatarUrl: payload.picture ?? null,
     }
   }

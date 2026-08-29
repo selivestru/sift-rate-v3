@@ -10,7 +10,6 @@ export type MediaReviewItem = Review & {
   user: {
     id: string
     username: string | null
-    displayName: string | null
     avatarUrl: string | null
   }
 }

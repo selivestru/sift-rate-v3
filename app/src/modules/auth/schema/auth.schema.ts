@@ -1,9 +1,8 @@
 import { z } from 'zod'
 
-import { displayNameSchema, usernameSchema } from '~/modules/user'
+import { usernameSchema } from '~/modules/user'
 
 export const completeProfileSchema = z.object({
-  displayName: displayNameSchema,
   username: usernameSchema,
 })
 

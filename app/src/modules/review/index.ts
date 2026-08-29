@@ -1,5 +1,4 @@
 export * from './components/DeleteReviewDialog'
-export * from './components/RatingPicker'
 export * from './components/ReviewList'
 export * from './components/UpsertReviewDialog'
 export * from './hooks/useMyReviewsQuery'
