@@ -43,7 +43,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
   return (
     <>
       {children({ open })}
-      <Dialog open={opened} onOpenChange={onClose}>
+      <Dialog open={opened} onOpenChange={onClose} disablePointerDismissal>
         <DialogContent showCloseButton className="gap-2 sm:max-w-xl">
           <form
             onSubmit={onSubmit}
@@ -99,7 +99,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           type="button"
                           onClick={() => field.onChange(value)}
                           className={cn(
-                            'group focus-visible:ring-ring/40 flex aspect-square min-h-11 flex-1 cursor-pointer items-center justify-center rounded-2xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border',
+                            'group focus-visible:ring-ring/40 flex aspect-square flex-1 cursor-pointer items-center justify-center rounded-xl border transition-all duration-300 ease-out outline-none focus-visible:ring-3 border-border sm:rounded-2xl',
                             isSelected
                               ? 'bg-secondary hover:bg-accent'
                               : isFilled
@@ -112,7 +112,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                           <Star
                             weight={isSelected || isFilled ? 'Filled' : 'Outline'}
                             className={cn(
-                              'size-5 transition-transform duration-300 ease-out group-hover:-translate-y-1',
+                              'size-[60%] transition-transform duration-300 ease-out group-hover:-translate-y-1',
                               isSelected || isFilled
                                 ? 'text-rating'
                                 : 'text-muted-foreground group-hover:text-foreground',
@@ -129,7 +129,7 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
               name="content"
               control={control}
               render={({ field, fieldState }) => (
-                <Field className="bg-muted ring-border flex flex-col gap-4 rounded-2xl p-4 ring-1">
+                <Field className="flex flex-col gap-4">
                   <div className="flex items-center justify-between gap-2">
                     <FieldLabel htmlFor="review-content">{content.reviewOptional.value}</FieldLabel>
                     <span

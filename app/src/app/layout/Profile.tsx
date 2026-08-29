@@ -17,9 +17,11 @@ import { useAuthStore, useLogout } from '~/modules/auth'
 import { ProfileLocaleSwitcher } from './ProfileLocaleSwitcher'
 
 export const Profile = () => {
-  const user = useAuthStore((state) => state.user!)
+  const user = useAuthStore((state) => state.user)
   const { logout } = useLogout()
   const shared = useIntlayer('shared')
+
+  if (!user) return
 
   return (
     <DropdownMenu>

@@ -50,7 +50,7 @@ export const DialogContent = ({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          'bg-popover text-popover-foreground border-border data-open:animate-blur-morph-in data-closed:animate-blur-morph-out fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl border p-6 text-sm shadow-lg outline-none sm:max-w-md',
+          'bg-popover text-popover-foreground border-border data-open:animate-blur-morph-in data-closed:animate-blur-morph-out fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-xl border p-4 sm:p-6 text-sm shadow-lg outline-none sm:max-w-md',
           className,
         )}
         {...props}

@@ -1,4 +1,5 @@
 import { useLocation } from '@tanstack/react-router'
+import { useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 import { Menu } from 'reicon-react'
 
@@ -12,9 +13,16 @@ export const NavDrawer = () => {
   const pathname = useLocation({ select: (location) => location.pathname })
   const isSettings = pathname.startsWith('/settings')
   const shared = useIntlayer('shared')
+  const [open, setOpen] = useState(false)
+
+  const closeOnNavigate = (event: React.MouseEvent<HTMLDivElement>) => {
+    if ((event.target as HTMLElement).closest('a')) {
+      setOpen(false)
+    }
+  }
 
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger
         render={
           <Button
@@ -33,7 +41,7 @@ export const NavDrawer = () => {
         <DrawerHeader>
           <DrawerTitle>{isSettings ? shared.settings : shared.menu}</DrawerTitle>
         </DrawerHeader>
-        <div className="flex flex-col gap-1 p-4">
+        <div className="flex flex-col gap-1 p-4" onClick={closeOnNavigate}>
           {isSettings ? (
             <>
               <SettingsBackLink />
