@@ -32,7 +32,7 @@ export const RankedListDetailDialog = ({
     <Dialog open={open} onOpenChange={(next) => !next && onOpenChange(false)}>
       <DialogContent
         showCloseButton
-        className="flex h-[min(52rem,92dvh)] max-h-[min(52rem,92dvh)] flex-col gap-4 pt-4 sm:max-w-xl"
+        className="flex h-[min(52rem,92dvh)] max-h-[min(52rem,92dvh)] flex-col gap-4 pt-4 sm:max-w-2xl"
       >
         <DialogHeader className="pr-8">
           <div className="flex flex-wrap items-start justify-between gap-3">

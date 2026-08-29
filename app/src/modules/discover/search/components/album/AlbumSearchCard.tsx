@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { Badge } from '~/common/ui/Badge'
@@ -12,6 +13,7 @@ interface AlbumSearchCardProps {
 
 export const AlbumSearchCard = ({ item }: AlbumSearchCardProps) => {
   const { color, icon: MediaTypeIcon } = mediaTypeMeta[MEDIA_TYPES.ALBUM]
+  const content = useIntlayer('discover-detail')
 
   return (
     <Link
@@ -39,7 +41,7 @@ export const AlbumSearchCard = ({ item }: AlbumSearchCardProps) => {
 
         {item.nbTracks !== null && (
           <Badge variant="blur" className="absolute top-2.5 right-2.5">
-            {item.nbTracks === 1 ? '1 track' : `${item.nbTracks} tracks`}
+            {content.trackCount({ count: item.nbTracks })}
           </Badge>
         )}
       </div>
