@@ -1,35 +1,26 @@
 import { Link } from '@tanstack/react-router'
 import { useIntlayer } from 'react-intlayer'
-import { Pen, Star, Trash6 } from 'reicon-react'
+import { Star } from 'reicon-react'
 
-import type { MediaType } from '~/common/constants/media-type'
 import { useAppLocale } from '~/common/i18n'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
-import { Button } from '~/common/ui/Button'
 import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
-import { useAuthStore } from '~/modules/auth'
-import { DeleteReviewDialog, UpsertReviewDialog } from '~/modules/review'
 
 import type { MediaReviewItem } from '../types/media-state.types'
 
 interface MediaReviewCardProps {
   review: MediaReviewItem
-  externalId: string
-  mediaType: MediaType
 }
 
-export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCardProps) => {
+export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
   const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const { user } = review
 
-  const currentUserId = useAuthStore((state) => state.user?.id)
-  const isOwner = currentUserId === user.id
-
   return (
-    <article className="bg-card text-card-foreground border-border flex gap-3 rounded-xl border p-4">
+    <article className="bg-card text-card-foreground border-border relative flex gap-3 rounded-xl border p-4">
       <Avatar size="lg">
         <AvatarImage src={user.avatarUrl ?? undefined} alt={user.username ?? undefined} />
         <AvatarFallback>{getFirstLetter(user.username)}</AvatarFallback>
@@ -76,43 +67,6 @@ export const MediaReviewCard = ({ review, externalId, mediaType }: MediaReviewCa
               })}
             </div>
           </div>
-
-          {isOwner && (
-            <div className="flex gap-2">
-              <UpsertReviewDialog
-                initialData={review}
-                media={{
-                  mediaType,
-                  externalId,
-                }}
-              >
-                {({ open }) => (
-                  <Button
-                    isIconOnly
-                    size="sm"
-                    variant="secondary"
-                    onClick={open}
-                    aria-label={content.editReview.value}
-                  >
-                    <Pen weight="Filled" />
-                  </Button>
-                )}
-              </UpsertReviewDialog>
-              <DeleteReviewDialog reviewId={review.id} rating={review.rating} mediaType={mediaType}>
-                {({ open }) => (
-                  <Button
-                    isIconOnly
-                    size="sm"
-                    variant="destructive-soft"
-                    onClick={open}
-                    aria-label={content.deleteReview.value}
-                  >
-                    <Trash6 weight="Filled" />
-                  </Button>
-                )}
-              </DeleteReviewDialog>
-            </div>
-          )}
         </div>
 
         {review.content && (
