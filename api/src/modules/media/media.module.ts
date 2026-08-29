@@ -5,6 +5,7 @@ import { MediaService } from './media.service'
 import { AlbumService } from './services/album.service'
 import { BookService } from './services/book.service'
 import { GameService } from './services/game.service'
+import { KinopoiskService } from './services/kinopoisk.service'
 import { MediaCacheService } from './services/media-cache.service'
 import { MovieService } from './services/movie.service'
 import { SpotifyClientService } from './services/spotify-client.service'
@@ -18,6 +19,7 @@ import { TvShowService } from './services/tv_show.service'
   providers: [
     MediaService,
     MediaCacheService,
+    KinopoiskService,
     SpotifyClientService,
     MovieService,
     TvShowService,

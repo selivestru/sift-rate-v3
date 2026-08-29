@@ -18,7 +18,7 @@ No tests exist.
 
 ## Env & config
 
-- `envSchema` in `src/app/config/env.config.ts` zod-validates env at boot — missing/invalid vars crash startup. Only schema keys are readable via `ConfigService`, so add new vars to `envSchema` first. Required: `PORT`, `NODE_ENV`, `ORIGIN`, `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`/`GOOGLE_REDIRECT_URI`, `TMDB_API_KEY`, `OMDB_API_KEY`, `IGDB_CLIENT_ID`/`IGDB_CLIENT_SECRET`, `GOOGLE_BOOKS_API_KEY`, `SPOTIFY_CLIENT_ID`/`SPOTIFY_CLIENT_SECRET`, `S3_*` + `S3_PUBLIC_BASE_URL`. `SESSION_PREFIX` defaults to `sessions:`.
+- `envSchema` in `src/app/config/env.config.ts` zod-validates env at boot — missing/invalid vars crash startup. Only schema keys are readable via `ConfigService`, so add new vars to `envSchema` first. Required: `PORT`, `NODE_ENV`, `ORIGIN`, `DATABASE_URL`, `REDIS_URL`, `SESSION_SECRET` (min 32), `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`/`GOOGLE_REDIRECT_URI`, `TMDB_API_KEY`, `OMDB_API_KEY`, `IGDB_CLIENT_ID`/`IGDB_CLIENT_SECRET`, `GOOGLE_BOOKS_API_KEY`, `TINYFISH_API_KEY`, `SPOTIFY_CLIENT_ID`/`SPOTIFY_CLIENT_SECRET`, `S3_*` + `S3_PUBLIC_BASE_URL`. `SESSION_PREFIX` defaults to `sessions:`.
 - No `api/.env.example`; root `.env.example` only covers docker-compose vars (`POSTGRES_*`, `MINIO_*`).
 - Typed config convention: inject `ConfigService<EnvConfig, true>` and read via `config.get('KEY', { infer: true })`.
 - Global prefix `api`; ValidationPipe `transform/whitelist/forbidNonWhitelisted`; CORS `credentials: true` for `ORIGIN`; global `ThrottlerGuard` (Redis-backed, 10 req/min default).
