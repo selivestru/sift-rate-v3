@@ -11,7 +11,6 @@ import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
 
 import type { FeedItem } from '../types/feed.types'
-import { FeedContent } from './FeedContent'
 
 interface FeedReviewCardProps {
   item: FeedItem
@@ -27,7 +26,6 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
   const isMusic = media.mediaType === MEDIA_TYPES.ALBUM || media.mediaType === MEDIA_TYPES.TRACK
   const detailTo = mediaDetailRouteByType[media.mediaType]
   const isPerfect = item.rating === 10
-  const hasContent = Boolean(item.content?.trim())
 
   const avatar = (
     <Avatar size="lg">
@@ -116,8 +114,6 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
               </Link>
             </div>
           </div>
-
-          {hasContent && <FeedContent content={item.content!} />}
         </div>
       </div>
     </article>

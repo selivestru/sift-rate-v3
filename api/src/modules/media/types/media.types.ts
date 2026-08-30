@@ -58,7 +58,7 @@ export interface MediaStateResponse {
   plannedItem: PlannedItem | null
 }
 
-interface MediaReview extends Review {
+interface MediaReview extends Omit<Review, 'content'> {
   user: Author
 }
 
