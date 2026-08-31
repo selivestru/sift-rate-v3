@@ -3,6 +3,7 @@ import { MEDIA_TYPES } from '~/common/constants/media-type'
 import { MediaReviews } from '../../shared/components/MediaReviews'
 import type { MovieDetail } from '../types/movie-detail.types'
 import { MovieCast } from './MovieCast'
+import { MovieCollection } from './MovieCollection'
 import { MovieCrewAndFacts } from './MovieCrewAndFacts'
 import { MovieGallery } from './MovieGallery'
 import { MovieHero } from './MovieHero'
@@ -18,6 +19,7 @@ export const MovieDetailView = ({ movie }: MovieDetailViewProps) => {
   const hasVideos = movie.videos.length > 0
   const hasGallery = movie.backdrops.length > 0 || movie.posters.length > 0
   const hasSimilar = movie.similar.length > 0
+  const hasCollection = Boolean(movie.collection?.parts.length)
   const hasCrewOrFacts =
     movie.directors.length > 0 ||
     movie.writers.length > 0 ||
@@ -43,6 +45,10 @@ export const MovieDetailView = ({ movie }: MovieDetailViewProps) => {
 
         {hasGallery && (
           <MovieGallery title={movie.title} backdrops={movie.backdrops} posters={movie.posters} />
+        )}
+
+        {hasCollection && movie.collection && (
+          <MovieCollection collection={movie.collection} currentMovieId={movie.id} />
         )}
 
         {hasSimilar && <MovieSimilar items={movie.similar} />}

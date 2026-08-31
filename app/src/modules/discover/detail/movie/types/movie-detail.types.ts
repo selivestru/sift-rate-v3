@@ -5,6 +5,20 @@ export type MovieVideo = MediaVideo
 export type MovieImage = MediaImage
 export type MovieSimilarItem = MediaSimilarItem
 
+export interface MovieCollectionPart {
+  id: string
+  title: string
+  year: string
+  posterUrl: string | null
+  rating: number | null
+}
+
+export interface MovieCollection {
+  id: string
+  name: string
+  parts: MovieCollectionPart[]
+}
+
 export interface MovieDetail {
   id: string
   title: string
@@ -34,4 +48,5 @@ export interface MovieDetail {
   backdrops: MovieImage[]
   posters: MovieImage[]
   similar: MovieSimilarItem[]
+  collection: MovieCollection | null
 }

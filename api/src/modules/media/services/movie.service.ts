@@ -5,6 +5,8 @@ import { MOVIE_GENRES } from '../constants/genres'
 import { SearchMediaQueryDto } from '../dto/search-media.query'
 import { MediaSearchResponse } from '../types/media.types'
 import {
+  MovieCollection,
+  MovieCollectionPart,
   MovieDetail,
   MovieImage,
   MoviePerson,
@@ -12,6 +14,9 @@ import {
   MovieSearchResult,
   MovieSimilarItem,
   MovieVideo,
+  TmdbBelongsToCollectionRaw,
+  TmdbCollectionPartRaw,
+  TmdbCollectionRaw,
   TmdbExternalIdsRaw,
   TmdbImageRaw,
   TmdbImageSize,
@@ -158,7 +163,8 @@ export class MovieService {
       )
     }
 
-    const result = this.mapMovieDetail(raw)
+    const collection = await this.fetchCollection(raw.belongs_to_collection, language)
+    const result = this.mapMovieDetail(raw, collection)
 
     const imdbId = raw.external_ids?.imdb_id
 
@@ -278,7 +284,53 @@ export class MovieService {
       }))
   }
 
-  private mapMovieDetail(raw: TmdbMovieDetailRaw): MovieDetail {
+  private async fetchCollection(
+    belongsTo: TmdbBelongsToCollectionRaw | null,
+    language: MediaLanguage,
+  ): Promise<MovieCollection | null> {
+    if (!belongsTo?.id) return null
+
+    const url = new URL(`${this.TMDB_API_URL}/collection/${belongsTo.id}`)
+    url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
+    url.searchParams.set('language', toTmdbLanguage(language))
+
+    try {
+      const raw = await ky.get(url.toString()).json<TmdbCollectionRaw>()
+      return this.mapCollection(raw)
+    } catch {
+      return null
+    }
+  }
+
+  private async mapCollection(raw: TmdbCollectionRaw): Promise<MovieCollection> {
+    return {
+      id: String(raw.id),
+      name: raw.name,
+      parts: await this.mapCollectionParts(raw.parts),
+    }
+  }
+
+  private async mapCollectionParts(
+    parts: TmdbCollectionPartRaw[] | undefined,
+  ): Promise<MovieCollectionPart[]> {
+    if (!parts?.length) return []
+
+    const sorted = [...parts].sort((a, b) =>
+      (b.release_date ?? '9999').localeCompare(a.release_date ?? '9999'),
+    )
+
+    return Promise.all(
+      sorted.map(async (part) => ({
+        id: String(part.id),
+        title: part.title ?? part.name ?? '',
+        year: part.release_date ? part.release_date.split('-')[0] : '',
+        posterUrl: this.buildImageUrl(part.poster_path, 'w342'),
+        rating: await this.fetchImdbRating(String(part.id)),
+      })),
+    )
+  }
+
+  private mapMovieDetail(raw: TmdbMovieDetailRaw, collection: MovieCollection | null): MovieDetail {
     const cast = [...(raw.credits?.cast ?? [])]
       .sort((a, b) => a.order - b.order)
       .slice(0, this.CAST_LIMIT)
@@ -335,6 +387,7 @@ export class MovieService {
       backdrops: this.mapImages(raw.images?.backdrops, 'w780'),
       posters: this.mapImages(raw.images?.posters, 'w500'),
       similar: this.mapSimilar(raw.recommendations?.results),
+      collection,
     }
   }
 }

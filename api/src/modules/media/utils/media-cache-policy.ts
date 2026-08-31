@@ -30,8 +30,10 @@ export const buildSearchCacheKey = (
   language?: string,
 ) => `search:${kind}:${normalizeSearchQuery(query)}:p${page}${language ? `:${language}` : ''}`
 
+const DETAIL_CACHE_VERSION = 2
+
 export const buildDetailCacheKey = (kind: DetailCacheKind, id: string, language?: string) =>
-  `${kind}:${id}${language ? `:${language}` : ''}`
+  `${kind}:v${DETAIL_CACHE_VERSION}:${id}${language ? `:${language}` : ''}`
 
 export const parsePartialDateToMs = (value?: string | null): number | null => {
   if (!value?.trim()) return null

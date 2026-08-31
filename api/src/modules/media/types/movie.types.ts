@@ -56,6 +56,20 @@ export interface MovieSimilarItem {
   rating: number
 }
 
+export interface MovieCollectionPart {
+  id: string
+  title: string
+  year: string
+  posterUrl: string | null
+  rating: number | null
+}
+
+export interface MovieCollection {
+  id: string
+  name: string
+  parts: MovieCollectionPart[]
+}
+
 export interface MovieDetail {
   id: string
   title: string
@@ -86,6 +100,7 @@ export interface MovieDetail {
   backdrops: MovieImage[]
   posters: MovieImage[]
   similar: MovieSimilarItem[]
+  collection: MovieCollection | null
 }
 
 export interface TmdbGenre {
@@ -153,6 +168,31 @@ export interface TmdbExternalIdsRaw {
   imdb_id: string | null
 }
 
+export interface TmdbBelongsToCollectionRaw {
+  id: number
+  name: string
+  poster_path: string | null
+  backdrop_path: string | null
+}
+
+export interface TmdbCollectionPartRaw {
+  id: number
+  title?: string
+  name?: string
+  poster_path: string | null
+  release_date?: string
+  vote_average: number
+}
+
+export interface TmdbCollectionRaw {
+  id: number
+  name: string
+  overview: string
+  poster_path: string | null
+  backdrop_path: string | null
+  parts: TmdbCollectionPartRaw[]
+}
+
 export interface TmdbMovieDetailRaw {
   id: number
   title: string
@@ -162,6 +202,7 @@ export interface TmdbMovieDetailRaw {
   release_date: string
   runtime: number | null
   status: string
+  belongs_to_collection: TmdbBelongsToCollectionRaw | null
   genres: TmdbGenre[]
   vote_average: number
   vote_count: number

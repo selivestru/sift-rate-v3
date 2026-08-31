@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 import { Star } from 'reicon-react'
 
+import ImdbLogo from '~/common/assets/icons/imdb.svg?react'
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
 import { useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
@@ -76,7 +77,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
           <span className="text-foreground text-sm font-bold tabular-nums sm:text-base">
             {show.imdbRating.toFixed(1)}
           </span>
-          <span className="text-muted-foreground text-[11px] font-medium">IMDB</span>
+          <ImdbLogo className="h-auto w-10" />
           {show.imdbVoteCount > 0 && (
             <>
               <span className="text-muted-foreground" aria-hidden>
