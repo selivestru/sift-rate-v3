@@ -18,9 +18,6 @@ export const FeedReviewCardSkeleton = () => {
             <Skeleton className="h-5 w-40 rounded-md" />
           </div>
         </div>
-
-        <Skeleton className="h-4 w-full rounded-md" />
-        <Skeleton className="h-4 w-5/6 rounded-md" />
       </div>
     </article>
   )
