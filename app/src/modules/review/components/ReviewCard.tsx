@@ -171,7 +171,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           )}
         >
           {hasContent ? (
-            <p className="text-foreground leading-relaxed break-all whitespace-pre-wrap italic">
+            <p className="text-foreground leading-relaxed hyphens-auto whitespace-pre-wrap italic">
               {review.content}
             </p>
           ) : (
