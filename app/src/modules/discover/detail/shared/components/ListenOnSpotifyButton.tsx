@@ -8,13 +8,21 @@ interface ListenOnSpotifyButtonProps {
 
 export const ListenOnSpotifyButton = ({ spotifyUrl }: ListenOnSpotifyButtonProps) => {
   const content = useIntlayer('discover-detail')
+
   if (!spotifyUrl) return
 
+  const openSpotify = () => {
+    const { pathname } = new URL(spotifyUrl)
+
+    window.location.href = `spotify://${pathname.slice(1)}`
+
+    setTimeout(() => {
+      window.open(spotifyUrl, '_blank')
+    }, 1000)
+  }
+
   return (
-    <Button
-      render={<a href={spotifyUrl} target="_blank" rel="noopener noreferrer" />}
-      variant="secondary"
-    >
+    <Button variant="secondary" onClick={openSpotify}>
       {content.listenOnSpotify.value}
     </Button>
   )
