@@ -72,7 +72,7 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
       )}
 
       {show.imdbRating > 0 && (
-        <div className="border-border bg-card absolute top-3 right-3 z-20 flex items-center gap-1.5 rounded-full border px-3 py-1.5 shadow-sm backdrop-blur-lg sm:top-4 sm:right-4">
+        <div className="border-border bg-card z-px absolute top-3 right-3 flex items-center gap-1.5 rounded-full border px-3 py-1.5 shadow-sm backdrop-blur-lg sm:top-4 sm:right-4">
           <Star weight="Filled" className="text-rating size-4 sm:size-4.5" aria-hidden />
           <span className="text-foreground text-sm font-bold tabular-nums sm:text-base">
             {show.imdbRating.toFixed(1)}

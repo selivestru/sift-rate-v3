@@ -1,61 +1,34 @@
 import { useState } from 'react'
-import { useIntlayer } from 'react-intlayer'
-import { Play } from 'reicon-react'
+import ReactPlayer from 'react-player'
 
 import { Button } from '~/common/ui/Button'
-import { cn } from '~/common/utils/cn'
 
+import { useYoutubeThumbnail } from '../hooks/useYoutubeThumbnail'
 import type { MediaVideo } from '../types/media-detail.types'
 
 interface TrailerEmbedProps {
   videos: MediaVideo[]
-  className?: string
 }
 
-export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
-  const content = useIntlayer('discover-detail')
+export const TrailerEmbed = ({ videos }: TrailerEmbedProps) => {
   const [activeId, setActiveId] = useState(() => videos[0]?.id ?? '')
-  const [playing, setPlaying] = useState(false)
+  const active = videos.find((v) => v.id === activeId) ?? videos[0]
+  const thumbUrl = useYoutubeThumbnail(active?.key)
 
   if (videos.length === 0) return null
 
-  const active = videos.find((v) => v.id === activeId) ?? videos[0]
-  const thumbUrl = `https://i.ytimg.com/vi/${active.key}/hqdefault.jpg`
-
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
-      <div className="bg-muted ring-border relative aspect-video w-full overflow-hidden rounded-2xl ring-1">
-        <div key={`${active.id}-${playing ? 'play' : 'idle'}`} className="size-full">
-          {playing ? (
-            <iframe
-              sandbox="allow-popups"
-              src={`https://www.youtube-nocookie.com/embed/${active.key}?autoplay=1&rel=0`}
-              title={active.name}
-              className="size-full"
-              allow="autoplay"
-              allowFullScreen
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setPlaying(true)}
-              className="group relative size-full cursor-pointer"
-              aria-label={content.playTrailer({ name: active.name })}
-            >
-              <img
-                src={thumbUrl}
-                alt=""
-                aria-hidden
-                className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover:bg-black/30" />
-              <span className="bg-card text-foreground ring-border absolute top-1/2 left-1/2 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg ring-1 backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
-                <Play className="size-6 fill-current" aria-hidden />
-              </span>
-            </button>
-          )}
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="bg-muted ring-border relative aspect-video overflow-hidden rounded-2xl ring-1">
+        <ReactPlayer
+          controls
+          autoPlay
+          light={<img loading="lazy" src={thumbUrl} title={active.name} className="size-full" />}
+          src={`https://www.youtube-nocookie.com/embed/${active.key}`}
+          title={active.name}
+          width="100%"
+          height="100%"
+        />
       </div>
 
       {videos.length > 1 && (
@@ -70,7 +43,6 @@ export const TrailerEmbed = ({ videos, className }: TrailerEmbedProps) => {
                 variant={isActive ? 'secondary' : 'outline'}
                 onClick={() => {
                   setActiveId(video.id)
-                  setPlaying(false)
                 }}
               >
                 {video.name}
