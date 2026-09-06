@@ -1,5 +1,15 @@
 import { Transform, Type } from 'class-transformer'
-import { IsEnum, IsInt, IsString, Max, MaxLength, Min, MinLength } from 'class-validator'
+import {
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator'
 import { Content } from '~/common/decorators/content.decorator'
 import { Trim } from '~/common/decorators/trim.decorator'
 import { MediaType } from '~/generated/prisma/enums'
@@ -24,4 +34,9 @@ export class UpsertReviewDto {
 
   @Content({ optional: true })
   content!: string | null
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAt?: Date
 }

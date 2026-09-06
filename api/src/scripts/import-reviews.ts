@@ -57,9 +57,9 @@ async function main(): Promise<void> {
           externalId: item.externalId,
           rating: item.rating,
           content: item.review,
+          createdAt: new Date(item.createdAt),
         },
         DEFAULT_MEDIA_LANGUAGE,
-        item.createdAt,
       )
       ok += 1
       logger.log(`[ok] ${label}`)

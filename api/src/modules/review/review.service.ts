@@ -6,6 +6,7 @@ import { UpsertReviewDto } from './dto/upsert-review.dto'
 import { ReviewItem, ReviewsResponse, ReviewStatsResponse } from './types/review.types'
 import { getCreatedAtFilter } from './utils/getCreatedAtFilter'
 import { DEFAULT_PAGE_SIZE } from '~/common/constants/pagination'
+import { omit } from '~/common/utils/omit'
 import { MediaLanguage } from '~/generated/prisma/enums'
 import { PrismaService } from '~/infrastructure/prisma/prisma.service'
 import { MediaService } from '~/modules/media/media.service'
@@ -147,9 +148,10 @@ export class ReviewService {
     userId: string,
     dto: UpsertReviewDto,
     language: MediaLanguage,
-    createdAt?: string,
   ): Promise<ReviewItem> {
     const media = await this.mediaService.ensureMedia(dto.mediaType, dto.externalId)
+
+    const upsertData = omit(dto, ['mediaType', 'externalId'])
 
     const review = await this.prisma.$transaction(async (tx) => {
       const hasReview = await tx.review.findUnique({
@@ -169,20 +171,14 @@ export class ReviewService {
                 mediaId: media.id,
               },
             },
-            data: {
-              rating: dto.rating,
-              content: dto.content,
-              ...(createdAt && { createdAt: new Date(createdAt) }),
-            },
+            data: upsertData,
             include: { media: true },
           })
         : await tx.review.create({
             data: {
               userId,
               mediaId: media.id,
-              rating: dto.rating,
-              content: dto.content ?? null,
-              ...(createdAt && { createdAt: new Date(createdAt) }),
+              ...upsertData,
             },
             include: { media: true },
           })

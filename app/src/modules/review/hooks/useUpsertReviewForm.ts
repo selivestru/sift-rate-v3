@@ -9,6 +9,7 @@ import { objectKeys } from '~/common/utils/typedObject'
 
 import { rateFormSchema, type RateFormValues } from '../schema/rate.schema'
 import { type Review } from '../types/review.types'
+import { dateKeyToISOStartOfDayUTC, toDateKey, todayKey } from '../utils/review-date'
 import { useUpsertReviewMutation } from './useUpsertReviewMutation'
 
 export const useUpsertReviewForm = (
@@ -23,6 +24,7 @@ export const useUpsertReviewForm = (
     defaultValues: {
       rating: initialData?.rating ?? 5,
       content: initialData?.content ?? '',
+      createdAt: initialData ? toDateKey(initialData.createdAt) : todayKey(),
     },
     resolver: zodResolver(rateFormSchema),
   })
@@ -32,6 +34,7 @@ export const useUpsertReviewForm = (
       reset({
         rating: initialData.rating ?? 5,
         content: initialData.content ?? '',
+        createdAt: toDateKey(initialData.createdAt),
       })
     }
   }, [reset, initialData])
@@ -40,11 +43,14 @@ export const useUpsertReviewForm = (
     setServerError(null)
 
     const content = values.content?.trim()
+    const initialKey = initialData ? toDateKey(initialData.createdAt) : todayKey()
+    const createdAtKey = values.createdAt ?? initialKey
 
     const sameRating = initialData?.rating === values.rating
     const sameContent = initialData?.content === content
+    const sameDate = createdAtKey === initialKey
 
-    if (sameRating && sameContent) {
+    if (sameRating && sameContent && sameDate) {
       onClose()
       return
     }
@@ -55,6 +61,7 @@ export const useUpsertReviewForm = (
         externalId: media.externalId,
         rating: values.rating,
         content: content && content.length > 0 ? content : null,
+        createdAt: sameDate ? undefined : dateKeyToISOStartOfDayUTC(createdAtKey),
         previousReview: initialData ? { id: initialData.id, rating: initialData.rating } : null,
       })
 

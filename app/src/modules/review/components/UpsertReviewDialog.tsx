@@ -14,6 +14,7 @@ import { cn } from '~/common/utils/cn'
 
 import { useUpsertReviewForm } from '../hooks/useUpsertReviewForm'
 import type { Review } from '../types/review.types'
+import { ReviewDatePicker } from './ReviewDatePicker'
 
 interface UpsertReviewDialogProps {
   initialData?: Review | null
@@ -23,6 +24,7 @@ interface UpsertReviewDialogProps {
 
 export const UpsertReviewDialog = ({ initialData, media, children }: UpsertReviewDialogProps) => {
   const content = useIntlayer('upsert-review-dialog')
+  const dateContent = useIntlayer('review-date-picker')
   const shared = useIntlayer('shared')
   const { opened, open, close } = useDisclosure()
 
@@ -152,6 +154,21 @@ export const UpsertReviewDialog = ({ initialData, media, children }: UpsertRevie
                     placeholder={content.placeholder.value}
                     maxLength={CONTENT_MAX_LENGTH}
                     className="border-border h-50 scrollbar-none break-all"
+                  />
+                  {fieldState.error?.message && <FieldError>{fieldState.error.message}</FieldError>}
+                </Field>
+              )}
+            />
+            <Controller
+              name="createdAt"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel>{dateContent.dateLabel.value}</FieldLabel>
+                  <ReviewDatePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    isInvalid={Boolean(fieldState.error)}
                   />
                   {fieldState.error?.message && <FieldError>{fieldState.error.message}</FieldError>}
                 </Field>

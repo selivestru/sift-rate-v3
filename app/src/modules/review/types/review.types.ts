@@ -33,6 +33,7 @@ export interface RateMediaBody {
   externalId: string
   rating: number
   content: string | null
+  createdAt?: string
 }
 
 export type UpsertReviewVariables = RateMediaBody & {
