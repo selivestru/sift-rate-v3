@@ -4,7 +4,7 @@ import { Star } from 'reicon-react'
 
 import ImdbLogo from '~/common/assets/icons/imdb.svg?react'
 import { MEDIA_TYPES, mediaTypeMeta } from '~/common/constants/media-type'
-import { useMediaTypeSingularLabel } from '~/common/i18n'
+import { useAppLocale, useMediaTypeSingularLabel } from '~/common/i18n'
 import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
@@ -28,6 +28,7 @@ const formatYears = (start: string, end: string, inProduction: boolean) => {
 export const TvShowHero = ({ show }: TvShowHeroProps) => {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
   const shared = useIntlayer('shared')
+  const { locale } = useAppLocale()
   const content = useIntlayer('discover-detail')
   const typeLabel = useMediaTypeSingularLabel(MEDIA_TYPES.TV_SHOW)
   const accent = mediaTypeMeta[MEDIA_TYPES.TV_SHOW].color
@@ -155,7 +156,10 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
 
           <div className="flex flex-wrap gap-1.5">
             <MediaStateButtons externalId={show.id} mediaType={MEDIA_TYPES.TV_SHOW} />
-            <WatchMediaButton mediaType={MEDIA_TYPES.TV_SHOW} kinopoiskId={show.kinopoiskId} />
+            <WatchMediaButton
+              title={locale === 'uk' ? show.originalTitle : show.title}
+              kinopoiskId={show.kinopoiskId}
+            />
           </div>
 
           {show.genres.length > 0 && (

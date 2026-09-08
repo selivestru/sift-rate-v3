@@ -1,18 +1,18 @@
 import { useIntlayer } from 'react-intlayer'
 
-import type { MediaType } from '~/common/constants/media-type'
 import { Button } from '~/common/ui/Button'
 
 interface WatchMediaButtonProps {
-  mediaType: Extract<MediaType, 'MOVIE' | 'TV_SHOW'>
   kinopoiskId: string | null
+  title: string
 }
 
-export const WatchMediaButton = ({ kinopoiskId }: WatchMediaButtonProps) => {
+export const WatchMediaButton = ({ kinopoiskId, title }: WatchMediaButtonProps) => {
   const content = useIntlayer('discover-detail')
-  if (!kinopoiskId) return
 
-  const href = `https://kinobox.in/movie/${kinopoiskId}`
+  const href = kinopoiskId
+    ? `https://kinobox.in/movie/${kinopoiskId}`
+    : `https://kinobox.in/search?query=${encodeURIComponent(title)}`
 
   return (
     <Button

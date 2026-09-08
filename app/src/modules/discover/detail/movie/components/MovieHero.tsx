@@ -153,7 +153,10 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
 
           <div className="flex flex-wrap gap-1.5">
             <MediaStateButtons externalId={movie.id} mediaType={MEDIA_TYPES.MOVIE} />
-            <WatchMediaButton mediaType={MEDIA_TYPES.MOVIE} kinopoiskId={movie.kinopoiskId} />
+            <WatchMediaButton
+              title={locale === 'uk' ? movie.originalTitle : movie.title}
+              kinopoiskId={movie.kinopoiskId}
+            />
           </div>
 
           {movie.genres.length > 0 && (
