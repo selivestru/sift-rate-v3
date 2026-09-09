@@ -1,3 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_app/settings/danger-zone')({})
+import { DangerZoneSettings } from '~/modules/settings'
+
+export const Route = createFileRoute('/_app/settings/danger-zone')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return <DangerZoneSettings />
+}

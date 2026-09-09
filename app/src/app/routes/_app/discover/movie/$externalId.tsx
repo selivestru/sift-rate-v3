@@ -1,3 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_app/discover/movie/$externalId')({})
+import { MovieDetailPage } from '~/modules/discover'
+
+export const Route = createFileRoute('/_app/discover/movie/$externalId')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  const { externalId } = Route.useParams()
+  return <MovieDetailPage key={externalId} externalId={externalId} />
+}

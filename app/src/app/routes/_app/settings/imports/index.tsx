@@ -1,3 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_app/settings/imports/')({})
+import { ImportsSettings } from '~/modules/import'
+
+export const Route = createFileRoute('/_app/settings/imports/')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return <ImportsSettings />
+}

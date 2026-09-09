@@ -54,21 +54,17 @@ const CompleteProfileRoute = CompleteProfileRouteImport.update({
   id: '/complete-profile',
   path: '/complete-profile',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/complete-profile.lazy').then((d) => d.Route),
-)
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() => import('./routes/_app/index.lazy').then((d) => d.Route))
+} as any)
 const AppUsernameRoute = AppUsernameRouteImport.update({
   id: '/$username',
   path: '/$username',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/$username.lazy').then((d) => d.Route),
-)
+} as any)
 const AppLibraryRouteRoute = AppLibraryRouteRouteImport.update({
   id: '/library',
   path: '/library',
@@ -83,42 +79,32 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthRouteRoute,
-} as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
+} as any)
 const AppDiscoverIndexRoute = AppDiscoverIndexRouteImport.update({
   id: '/discover/',
   path: '/discover/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppLibraryIndexRoute = AppLibraryIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppLibraryRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/library/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppLibraryPlannedRoute = AppLibraryPlannedRouteImport.update({
   id: '/planned',
   path: '/planned',
   getParentRoute: () => AppLibraryRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/library/planned.lazy').then((d) => d.Route),
-)
+} as any)
 const AppLibraryRankedListRoute = AppLibraryRankedListRouteImport.update({
   id: '/ranked-list',
   path: '/ranked-list',
   getParentRoute: () => AppLibraryRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/library/ranked-list.lazy').then((d) => d.Route),
-)
+} as any)
 const AppLibraryReviewsRoute = AppLibraryReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
   getParentRoute: () => AppLibraryRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/library/reviews.lazy').then((d) => d.Route),
-)
+} as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -128,135 +114,93 @@ const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AppSettingsRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/settings/account.lazy').then((d) => d.Route),
-)
+} as any)
 const AppSettingsDangerZoneRoute = AppSettingsDangerZoneRouteImport.update({
   id: '/danger-zone',
   path: '/danger-zone',
   getParentRoute: () => AppSettingsRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/settings/danger-zone.lazy').then((d) => d.Route),
-)
+} as any)
 const AuthGoogleCallbackRoute = AuthGoogleCallbackRouteImport.update({
   id: '/google/callback',
   path: '/google/callback',
   getParentRoute: () => AuthRouteRoute,
-} as any).lazy(() =>
-  import('./routes/auth/google.callback.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverAlbumIndexRoute = AppDiscoverAlbumIndexRouteImport.update({
   id: '/discover/album/',
   path: '/discover/album/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/album/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverAlbumExternalIdRoute =
   AppDiscoverAlbumExternalIdRouteImport.update({
     id: '/discover/album/$externalId',
     path: '/discover/album/$externalId',
     getParentRoute: () => AppRoute,
-  } as any).lazy(() =>
-    import('./routes/_app/discover/album/$externalId.lazy').then(
-      (d) => d.Route,
-    ),
-  )
+  } as any)
 const AppDiscoverBookIndexRoute = AppDiscoverBookIndexRouteImport.update({
   id: '/discover/book/',
   path: '/discover/book/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/book/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverBookExternalIdRoute =
   AppDiscoverBookExternalIdRouteImport.update({
     id: '/discover/book/$externalId',
     path: '/discover/book/$externalId',
     getParentRoute: () => AppRoute,
-  } as any).lazy(() =>
-    import('./routes/_app/discover/book/$externalId.lazy').then((d) => d.Route),
-  )
+  } as any)
 const AppDiscoverGameIndexRoute = AppDiscoverGameIndexRouteImport.update({
   id: '/discover/game/',
   path: '/discover/game/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/game/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverGameExternalIdRoute =
   AppDiscoverGameExternalIdRouteImport.update({
     id: '/discover/game/$externalId',
     path: '/discover/game/$externalId',
     getParentRoute: () => AppRoute,
-  } as any).lazy(() =>
-    import('./routes/_app/discover/game/$externalId.lazy').then((d) => d.Route),
-  )
+  } as any)
 const AppDiscoverMovieIndexRoute = AppDiscoverMovieIndexRouteImport.update({
   id: '/discover/movie/',
   path: '/discover/movie/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/movie/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverMovieExternalIdRoute =
   AppDiscoverMovieExternalIdRouteImport.update({
     id: '/discover/movie/$externalId',
     path: '/discover/movie/$externalId',
     getParentRoute: () => AppRoute,
-  } as any).lazy(() =>
-    import('./routes/_app/discover/movie/$externalId.lazy').then(
-      (d) => d.Route,
-    ),
-  )
+  } as any)
 const AppDiscoverTrackIndexRoute = AppDiscoverTrackIndexRouteImport.update({
   id: '/discover/track/',
   path: '/discover/track/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/track/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverTrackExternalIdRoute =
   AppDiscoverTrackExternalIdRouteImport.update({
     id: '/discover/track/$externalId',
     path: '/discover/track/$externalId',
     getParentRoute: () => AppRoute,
-  } as any).lazy(() =>
-    import('./routes/_app/discover/track/$externalId.lazy').then(
-      (d) => d.Route,
-    ),
-  )
+  } as any)
 const AppDiscoverTv_showIndexRoute = AppDiscoverTv_showIndexRouteImport.update({
   id: '/discover/tv_show/',
   path: '/discover/tv_show/',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/_app/discover/tv_show/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppDiscoverTv_showExternalIdRoute =
   AppDiscoverTv_showExternalIdRouteImport.update({
     id: '/discover/tv_show/$externalId',
     path: '/discover/tv_show/$externalId',
     getParentRoute: () => AppRoute,
-  } as any).lazy(() =>
-    import('./routes/_app/discover/tv_show/$externalId.lazy').then(
-      (d) => d.Route,
-    ),
-  )
+  } as any)
 const AppSettingsImportsIndexRoute = AppSettingsImportsIndexRouteImport.update({
   id: '/imports/',
   path: '/imports/',
   getParentRoute: () => AppSettingsRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/settings/imports/index.lazy').then((d) => d.Route),
-)
+} as any)
 const AppSettingsImportsImdbRoute = AppSettingsImportsImdbRouteImport.update({
   id: '/imports/imdb',
   path: '/imports/imdb',
   getParentRoute: () => AppSettingsRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_app/settings/imports/imdb.lazy').then((d) => d.Route),
-)
+} as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren

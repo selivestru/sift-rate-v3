@@ -1,3 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_app/discover/')({})
+import { DiscoverPage } from '~/modules/discover'
+
+export const Route = createFileRoute('/_app/discover/')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return <DiscoverPage />
+}
