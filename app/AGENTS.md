@@ -6,7 +6,7 @@ Product filter: when decisions are ambiguous, prefer what serves a personal arch
 
 ## Monorepo structure
 
-Repository root: `siftrate/` (parent of this `app/` package).
+Repository root: `sift-rate-v3/` (parent of this `app/` package).
 
 | Path                      | Role                                                  |
 | ------------------------- | ----------------------------------------------------- |

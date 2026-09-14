@@ -1,6 +1,14 @@
 {
   "name": "siftrate",
+  "version": "1.0.1",
   "private": true,
+  "description": "Your media life archive — track, rate and remember the movies, shows, games, books and music you've lived through.",
+  "license": "MIT",
+  "author": "selivestru",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selivestru/sift-rate-v3.git"
+  },
   "workspaces": [
     "api",
     "app"

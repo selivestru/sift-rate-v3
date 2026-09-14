@@ -1,98 +1,104 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# SiftRate API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS 11 backend for [SiftRate](../README.md) — the personal media-life archive. It exposes a REST API under the global `/api` prefix and talks to PostgreSQL through Prisma, Redis for sessions/queues, and S3-compatible storage for media assets.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Stack
 
-## Description
+- **NestJS 11** + Express
+- **Prisma 7** with the `@prisma/adapter-pg` driver
+- **PostgreSQL** — primary datastore
+- **Redis** — cookie sessions (`connect-redis`) and BullMQ queues, plus the throttler storage
+- **S3 / MinIO** — poster and asset storage
+- **Zod** — environment validation at boot
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Requirements
 
-## Project setup
+- [Bun](https://bun.sh)
+- PostgreSQL, Redis and an S3-compatible endpoint (use the root `docker-compose.yml` for local infra)
+
+## Setup
 
 ```bash
-$ npm install
+# from the repository root
+bun install
+
+cp api/.env.example api/.env   # then fill in the values
+cd api
+bun run db:generate            # generate the Prisma client into src/generated/prisma
+bun run db:migrate             # apply migrations
+bun run dev                    # watch mode
 ```
 
-## Compile and run the project
+The server listens on `PORT` from `.env` (default `5000`) and serves all routes under `/api`. A public health check is available at `GET /api/health`.
 
-```bash
-# development
-$ npm run start
+## Environment
 
-# watch mode
-$ npm run start:dev
+All variables are required unless noted and are validated at startup by the zod schema in [`src/app/config/env.config.ts`](src/app/config/env.config.ts). See [`api/.env.example`](.env.example) for a template.
 
-# production mode
-$ npm run start:prod
+| Variable                                                            | Purpose                                        |
+| ------------------------------------------------------------------- | ---------------------------------------------- |
+| `PORT`                                                              | HTTP port                                      |
+| `NODE_ENV`                                                          | `development` \| `production` \| `test`        |
+| `ORIGIN`                                                            | Web app origin, used for CORS                  |
+| `DATABASE_URL`                                                      | PostgreSQL connection string                   |
+| `REDIS_URL`                                                         | Redis connection string                        |
+| `SESSION_SECRET`                                                    | Session signing secret (min 32 chars)          |
+| `SESSION_PREFIX`                                                    | Redis session key prefix (default `sessions:`) |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` | Google OAuth credentials                       |
+| `TMDB_API_KEY`                                                      | Movies and TV metadata                         |
+| `OMDB_API_KEY`                                                      | Ratings metadata                               |
+| `IGDB_CLIENT_ID` / `IGDB_CLIENT_SECRET`                             | Game metadata                                  |
+| `GOOGLE_BOOKS_API_KEY`                                              | Book metadata                                  |
+| `TINYFISH_API_KEY`                                                  | Metadata scraping                              |
+| `SPOTIFY_CLIENT_ID` / `SPOTIFY_CLIENT_SECRET`                       | Album and track metadata                       |
+| `S3_ENDPOINT` / `S3_BUCKET` / `S3_REGION`                           | Object storage connection                      |
+| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY`                         | Object storage credentials                     |
+| `S3_PUBLIC_BASE_URL`                                                | Public base URL for stored assets              |
+
+## Commands
+
+| Command                | Action                               |
+| ---------------------- | ------------------------------------ |
+| `bun run dev`          | Dev server in watch mode             |
+| `bun run build`        | Compile to `dist/`                   |
+| `bun run start`        | Build, then run the compiled server  |
+| `bun run lint:check`   | ESLint                               |
+| `bun run lint:fix`     | ESLint with `--fix`                  |
+| `bun run format:check` | Prettier check                       |
+| `bun run format:fix`   | Prettier write                       |
+| `bun run db:generate`  | Regenerate the Prisma client         |
+| `bun run db:migrate`   | Prisma `migrate dev`                 |
+| `bun run db:deploy`    | Prisma `migrate deploy` (production) |
+| `bun run db:push`      | Push the schema without a migration  |
+| `bun run db:reset`     | Force-reset the database             |
+| `bun run db:studio`    | Open Prisma Studio                   |
+
+The Prisma client is generated into `src/generated/prisma` (gitignored), so fresh clones must run `bun run db:generate` before building.
+
+## Architecture
+
+```
+src/
+  app/               # bootstrap + env config
+  common/            # decorators, guards, filters, shared types/utilities
+  infrastructure/    # prisma, redis, s3 modules
+  modules/           # feature modules
+  generated/prisma/  # generated Prisma client (gitignored)
 ```
 
-## Run tests
+Feature modules live under `src/modules/`: `auth`, `feed`, `import`, `media`, `planned`, `ranked-list`, `review`, `session`, `user`.
 
-```bash
-# unit tests
-$ npm run test
+## Auth
 
-# e2e tests
-$ npm run test:e2e
+Google-only OAuth with server-side cookie sessions (`express-session` + Redis). A global `AuthGuard` protects every route by default; routes opt out with the `@Public()` decorator. `@CurrentUser('userId')` reads the authenticated user from the request. Deleted accounts have their sessions revoked immediately.
 
-# test coverage
-$ npm run test:cov
-```
+## Media & data
 
-## Deployment
+- Per-type provider services sit under `src/modules/media/services/` (TMDB, OMDb, IGDB, Google Books, Spotify).
+- Poster ingestion runs asynchronously through BullMQ on Redis.
+- Prisma models: `User`, `Media`, `MediaTranslation`, `Review`, `PlannedItem`, `RankedList`, `RankedItem`, `ImportJob`, `ImportJobRow` — see [`prisma/schema.prisma`](prisma/schema.prisma).
+- Prisma errors are mapped to HTTP responses by `PrismaClientExceptionFilter` (`P2002` → 409, `P2025` → 404).
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Conventions
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+See [`AGENTS.md`](AGENTS.md) for coding conventions and [`../app/DESIGN.md`](../app/DESIGN.md) for the design system shared with the web app. There are currently no automated tests.
