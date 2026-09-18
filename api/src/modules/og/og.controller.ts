@@ -22,4 +22,13 @@ export class OgController {
   ) {
     return this.ogService.renderDiscoverDocument(params, language)
   }
+
+  @Public()
+  @SkipThrottle()
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @Header('Cache-Control', 'public, max-age=600')
+  @Get('profile/:username')
+  getProfileDocument(@Param('username') username: string) {
+    return this.ogService.renderProfileDocument(username)
+  }
 }

@@ -1,3 +1,7 @@
+(linkPreviewBots) {
+	header_regexp User-Agent "(?i)telegram|whatsapp|facebookexternalhit|twitterbot|discordbot|slackbot|linkedinbot|skypeuripreview|embedly|redditbot|pinterest|vkshare|googlebot|bingbot|applebot|yandexbot|duckduckbot|baiduspider|ahrefsbot|semrushbot"
+}
+
 api.siftrate.com {
 	reverse_proxy api:5000
 }
@@ -9,14 +13,26 @@ s3.siftrate.com {
 siftrate.com {
 	root * /srv
 
-	@linkPreview {
-		header_regexp User-Agent "(?i)telegram|whatsapp|facebookexternalhit|twitterbot|discordbot|slackbot|linkedinbot|skypeuripreview|embedly|redditbot|pinterest|vkshare|googlebot|bingbot|applebot|yandexbot|duckduckbot|baiduspider|ahrefsbot|semrushbot"
-		path_regexp detail ^/discover/(movie|tv_show|game|book|album|track)/[^/]+$
+	@mediaPreview {
+		import linkPreviewBots
+		path_regexp media ^/discover/(movie|tv_show|game|book|album|track)/[^/]+$
 	}
 
-	handle @linkPreview {
+	@profilePreview {
+		import linkPreviewBots
+		path_regexp profile ^/[a-zA-Z0-9_]{4,25}$
+		not path /auth /discover /library /settings
+	}
+
+	handle @mediaPreview {
 		reverse_proxy api:5000 {
 			rewrite /api/og{uri}
+		}
+	}
+
+	handle @profilePreview {
+		reverse_proxy api:5000 {
+			rewrite /api/og/profile{uri}
 		}
 	}
 
