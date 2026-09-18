@@ -8,6 +8,20 @@ s3.siftrate.com {
 
 siftrate.com {
 	root * /srv
-	try_files {path} /index.html
-	file_server
+
+	@linkPreview {
+		header_regexp User-Agent "(?i)telegram|whatsapp|facebookexternalhit|twitterbot|discordbot|slackbot|linkedinbot|skypeuripreview|embedly|redditbot|pinterest|vkshare|googlebot|bingbot|applebot|yandexbot|duckduckbot|baiduspider|ahrefsbot|semrushbot"
+		path_regexp detail ^/discover/(movie|tv_show|game|book|album|track)/[^/]+$
+	}
+
+	handle @linkPreview {
+		reverse_proxy api:5000 {
+			rewrite /api/og{uri}
+		}
+	}
+
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
 }

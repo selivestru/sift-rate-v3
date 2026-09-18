@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { FeedModule } from './modules/feed/feed.module'
 import { ImportModule } from './modules/import/import.module'
 import { MediaModule } from './modules/media/media.module'
+import { OgModule } from './modules/og/og.module'
 import { PlannedModule } from './modules/planned/planned.module'
 import { RankedListModule } from './modules/ranked-list/ranked-list.module'
 import { ReviewModule } from './modules/review/review.module'
@@ -57,6 +58,7 @@ import Redis from 'ioredis'
     S3Module,
     AuthModule,
     MediaModule,
+    OgModule,
     ImportModule,
     UserModule,
     ReviewModule,
