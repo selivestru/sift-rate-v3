@@ -1,0 +1,37 @@
+x-siftrate-logging: &siftrate-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    ports: !reset []
+    logging: *siftrate-logging
+  redis:
+    ports: !reset []
+    logging: *siftrate-logging
+  minio:
+    ports: !reset []
+    logging: *siftrate-logging
+  api:
+    image: ghcr.io/selivestru/siftrate-api:latest
+    pull_policy: never
+    environment:
+      DATABASE_URL: "postgres://${APP_DB_USER:?APP_DB_USER is required}:${APP_DB_PASSWORD:?APP_DB_PASSWORD is required}@db:5432/${POSTGRES_DB:?POSTGRES_DB is required}"
+    logging: *siftrate-logging
+  caddy:
+    image: ghcr.io/selivestru/siftrate-app:latest
+    pull_policy: never
+    ports: !override
+      - "80:80/tcp"
+      - "443:443/tcp"
+    volumes: !override
+      - ./docker/Caddyfile.production:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging: *siftrate-logging
+  db-migrate:
+    image: ghcr.io/selivestru/siftrate-migrate:latest
+    pull_policy: never
+    logging: *siftrate-logging

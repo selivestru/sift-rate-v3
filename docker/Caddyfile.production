@@ -1,0 +1,49 @@
+(linkPreviewBots) {
+	header_regexp User-Agent "(?i)telegram|whatsapp|facebookexternalhit|twitterbot|discordbot|slackbot|linkedinbot|skypeuripreview|embedly|redditbot|pinterest|vkshare|googlebot|bingbot|applebot|yandexbot|duckduckbot|baiduspider|ahrefsbot|semrushbot"
+}
+
+api.siftrate.com {
+	reverse_proxy api:5000
+}
+
+s3.siftrate.com {
+	@storage {
+		method GET HEAD
+		path /storage/*
+	}
+	handle @storage {
+		reverse_proxy minio:9000
+	}
+	handle {
+		respond "Not Found" 404
+	}
+}
+
+siftrate.com {
+	root * /srv
+
+	@mediaPreview {
+		import linkPreviewBots
+		path_regexp media ^/discover/(movie|tv_show|game|book|album|track)/[^/]+$
+	}
+	@profilePreview {
+		import linkPreviewBots
+		path_regexp profile ^/[a-zA-Z0-9_]{4,25}$
+		not path /auth /discover /library /settings
+	}
+
+	handle @mediaPreview {
+		reverse_proxy api:5000 {
+			rewrite /api/og{uri}
+		}
+	}
+	handle @profilePreview {
+		reverse_proxy api:5000 {
+			rewrite /api/og/profile{uri}
+		}
+	}
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+}
