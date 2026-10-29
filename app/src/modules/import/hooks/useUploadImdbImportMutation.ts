@@ -10,11 +10,11 @@ export const useUploadImdbImportMutation = () => {
   return useMutation({
     mutationKey: ['upload-imdb-import'],
     mutationFn: importApi.uploadImdbImport,
-    onSuccess: (job) => {
-      queryClient.setQueryData(QUERIES_KEYS.imdbImport(job.id), job)
-      queryClient.setQueryData(QUERIES_KEYS.imdbImportActive, job)
-
-      queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.imdbImportHistory })
-    },
+    onSuccess: (job) =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.imdbImport(job.id) }),
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.imdbImportActive }),
+        queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.imdbImportHistory }),
+      ]),
   })
 }

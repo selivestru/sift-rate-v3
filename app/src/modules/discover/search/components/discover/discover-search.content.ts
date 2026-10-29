@@ -4,6 +4,13 @@ const discoverSearchUiContent = {
   key: 'discover-search-ui',
   content: {
     noResults: t({ en: 'No results', uk: 'Немає результатів', ru: 'Нет результатов' }),
+    dataSource: insert(
+      t({
+        en: 'Data provided by {{source}}',
+        uk: 'Дані надані {{source}}',
+        ru: 'Данные предоставлены {{source}}',
+      }),
+    ),
     resultCount: plural({
       one: t({ en: '{{count}} result', uk: '{{count}} результат', ru: '{{count}} результат' }),
       other: t({

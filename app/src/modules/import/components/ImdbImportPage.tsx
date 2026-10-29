@@ -48,7 +48,7 @@ export const ImdbImportPage = () => {
     queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.imdbImportHistory })
 
     if (jobId !== null && jobId === activeJob?.id) {
-      queryClient.setQueryData(QUERIES_KEYS.imdbImportActive, null)
+      queryClient.invalidateQueries({ queryKey: QUERIES_KEYS.imdbImportActive })
     }
 
     if (jobStatus === 'COMPLETED') {

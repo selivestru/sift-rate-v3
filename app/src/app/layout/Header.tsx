@@ -5,9 +5,11 @@ import { GoogleAuthButton, useAuthStore } from '~/modules/auth'
 
 import { NavDrawer } from './NavDrawer'
 import { Profile } from './Profile'
+import { GuestLocaleSwitcher } from './ProfileLocaleSwitcher'
 
 export const Header = () => {
   const user = useAuthStore((state) => state.user)
+  const isLoading = useAuthStore((state) => state.isLoading)
   const shared = useIntlayer('shared')
 
   return (
@@ -21,12 +23,16 @@ export const Header = () => {
           <img src="/logo.png" alt="SiftRate" className="size-10" />
           SiftRate
         </Link>
-        {user ? (
+        {user && (
           <div className="flex items-center gap-3">
             <Profile />
           </div>
-        ) : (
-          <GoogleAuthButton size="sm" fullWidth={false} label={shared.signIn.value} />
+        )}
+        {!user && !isLoading && (
+          <div className="flex shrink-0 items-center gap-1">
+            <GuestLocaleSwitcher />
+            <GoogleAuthButton size="sm" fullWidth={false} label={shared.signIn.value} />
+          </div>
         )}
       </div>
     </header>

@@ -1,50 +1,24 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { useAuthStore } from '~/modules/auth'
+import { QUERIES_KEYS } from '~/common/constants/queries-keys'
 
 import { reviewApi } from '../api/review.api'
 import type { DeleteReviewVariables } from '../types/review.types'
-import { removeReviewFromFeedCaches, removeReviewFromListCaches } from '../utils/review-list-cache'
-import {
-  applyProfileReviewDeleted,
-  bumpUserActivity,
-  patchProfileReviewStats,
-  patchUserActivity,
-} from '../utils/review-profile-cache'
-import { applyReviewDeleted } from '../utils/review-stats'
-import { clearMediaStateReview, patchMyReviewStats } from '../utils/review-stats-cache'
 
 export const useDeleteReviewMutation = () => {
-  const user = useAuthStore((state) => state.user)
-
   return useMutation({
     mutationKey: ['delete-review'],
     mutationFn: ({ id }: DeleteReviewVariables) => reviewApi.deleteReview({ id }),
-    onSuccess: (data, _variables, _, context) => {
-      patchMyReviewStats(context.client, data.createdAt, (stats) =>
-        applyReviewDeleted(stats, {
-          mediaType: data.media.mediaType,
-          rating: data.rating,
-        }),
-      )
-      clearMediaStateReview(context.client, data.media)
-      removeReviewFromListCaches(context.client, data)
-      removeReviewFromFeedCaches(context.client, data, user?.username)
-
-      if (user?.username) {
-        patchUserActivity(
-          context.client,
-          user.username,
-          new Date(data.createdAt).getFullYear(),
-          (activity) => bumpUserActivity(activity, data.createdAt, -1),
-        )
-        patchProfileReviewStats(context.client, user.username, (profile) =>
-          applyProfileReviewDeleted(profile, {
-            mediaType: data.media.mediaType,
-            rating: data.rating,
-          }),
-        )
-      }
-    },
+    onSuccess: (data, _variables, _, context) =>
+      Promise.all([
+        context.client.invalidateQueries({ queryKey: ['my-review-stats'] }),
+        context.client.invalidateQueries({ queryKey: QUERIES_KEYS.mediaState(data.media) }),
+        context.client.invalidateQueries({ queryKey: QUERIES_KEYS.myReviews }),
+        context.client.invalidateQueries({ queryKey: QUERIES_KEYS.mediaReviews(data.media) }),
+        context.client.invalidateQueries({ queryKey: QUERIES_KEYS.feed }),
+        context.client.invalidateQueries({ queryKey: ['user-feed'] }),
+        context.client.invalidateQueries({ queryKey: ['user-activity'] }),
+        context.client.invalidateQueries({ queryKey: ['profile'] }),
+      ]),
   })
 }
