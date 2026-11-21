@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 import { Calendar, CrownStar, Pen, Star, Trash6 } from 'reicon-react'
 
@@ -35,15 +34,6 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
   const hasContent = Boolean(review.content?.trim())
   const isPerfect = review.rating === 10
   const isShowGroupHeader = review.seasonNumber != null
-  const REVIEW_TEXT_LIMIT = 280
-
-  const [mainExpanded, setMainExpanded] = useState(false)
-  const mainLong = hasContent && (review.content?.trim().length ?? 0) > REVIEW_TEXT_LIMIT
-
-  const [expandedSeasons, setExpandedSeasons] = useState<Record<string, boolean>>({})
-  const isSeasonExpanded = (seasonReviewId: string) => expandedSeasons[seasonReviewId] ?? false
-  const toggleSeasonExpanded = (seasonReviewId: string) =>
-    setExpandedSeasons((prev) => ({ ...prev, [seasonReviewId]: !prev[seasonReviewId] }))
 
   return (
     <article
@@ -146,7 +136,7 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
         )}
       </Link>
 
-      <div className="z-px relative flex flex-1 flex-col gap-2 sm:gap-2.5">
+      <div className="z-px relative flex min-w-0 flex-1 flex-col gap-2 sm:gap-2.5">
         <div className="flex flex-wrap items-center gap-1.5">
           <MediaTypeBadge mediaType={media.mediaType} />
 
@@ -204,33 +194,21 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
 
         <blockquote
           className={cn(
-            'bg-muted rounded-r-lg border-l-2 py-2.5 pr-3 pl-3.5',
-            'text-sm leading-relaxed',
+            'bg-muted rounded-r-lg border-l-2 py-2.5 pr-3 pl-3.5 text-sm leading-relaxed',
             hasContent && isPerfect ? 'border-l-rating' : 'border-(--card-accent)/40',
           )}
         >
           {hasContent ? (
-            <>
-              <p
-                className={cn(
-                  'text-foreground leading-relaxed break-all hyphens-auto italic',
-                  mainLong && !mainExpanded && 'line-clamp-5',
-                )}
-              >
-                {review.content}
-              </p>
-              {mainLong && (
-                <button
-                  type="button"
-                  onClick={() => setMainExpanded((prev) => !prev)}
-                  className="text-muted-foreground mt-1 ml-auto block w-fit cursor-pointer self-start text-xs font-medium underline-offset-2 hover:underline"
-                >
-                  {mainExpanded ? shared.showLess.value : shared.showMore.value}
-                </button>
+            <p
+              className={cn(
+                'text-foreground leading-relaxed hyphens-auto wrap-anywhere whitespace-pre-wrap italic',
+                isPerfect && 'text-rating',
               )}
-            </>
+            >
+              {review.content}
+            </p>
           ) : (
-            <p className="text-muted-foreground leading-relaxed break-all italic">
+            <p className="text-muted-foreground leading-relaxed wrap-break-word italic">
               {content.noWrittenReview.value}
             </p>
           )}
@@ -244,9 +222,6 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
             <div className="divide-border divide-y">
               {seasonReviews.map((seasonReview) => {
                 const seasonText = seasonReview.content?.trim() ?? ''
-                const seasonHasText = Boolean(seasonText)
-                const seasonLong = seasonHasText && seasonText.length > REVIEW_TEXT_LIMIT
-                const seasonExpanded = isSeasonExpanded(seasonReview.id)
 
                 return (
                   <UpsertReviewDialog
@@ -270,7 +245,7 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
                         <span className="flex items-center justify-between gap-2">
                           <span
                             className={cn(
-                              'text-foreground text-sm font-semibold tabular-nums',
+                              'text-sm font-semibold tabular-nums',
                               seasonReview.rating === 10 && 'text-rating',
                             )}
                           >
@@ -281,32 +256,23 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
                             variant={seasonReview.rating === 10 ? 'rating' : 'default'}
                           />
                         </span>
-                        {seasonHasText && (
+                        {seasonText && (
                           <span
-                            onClick={(event) => {
-                              if (seasonLong) {
-                                event.stopPropagation()
-                                toggleSeasonExpanded(seasonReview.id)
-                              }
-                            }}
                             className={cn(
-                              'text-foreground border-(--card-accent)/40 border-l-2 py-0.5 pl-2.5 text-sm leading-relaxed break-all italic',
-                              seasonLong && !seasonExpanded && 'line-clamp-5',
-                              seasonLong && 'cursor-pointer',
+                              'bg-muted rounded-r-lg border-l-2 py-2.5 pr-3 pl-3.5 text-sm leading-relaxed',
+                              seasonReview.rating === 10
+                                ? 'border-l-rating'
+                                : 'border-(--card-accent)/40',
                             )}
                           >
-                            {seasonText}
-                          </span>
-                        )}
-                        {seasonLong && (
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              toggleSeasonExpanded(seasonReview.id)
-                            }}
-                            className="text-muted-foreground ml-auto cursor-pointer self-start text-xs font-medium underline-offset-2 hover:underline"
-                          >
-                            {seasonExpanded ? shared.showLess.value : shared.showMore.value}
+                            <span
+                              className={cn(
+                                'block leading-relaxed hyphens-auto wrap-anywhere whitespace-pre-wrap italic',
+                                seasonReview.rating === 10 ? 'text-rating' : 'text-foreground',
+                              )}
+                            >
+                              {seasonText}
+                            </span>
                           </span>
                         )}
                       </button>
