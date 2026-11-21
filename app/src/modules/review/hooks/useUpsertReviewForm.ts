@@ -20,7 +20,7 @@ export const useUpsertReviewForm = (
   const mutation = useUpsertReviewMutation()
   const [serverError, setServerError] = useState<string | null>(null)
 
-  const { handleSubmit, reset, setError, ...form } = useForm<RateFormValues>({
+  const { handleSubmit, reset, setError, watch, ...form } = useForm<RateFormValues>({
     defaultValues: {
       rating: review?.rating ?? 5,
       content: review?.content ?? '',
@@ -29,6 +29,10 @@ export const useUpsertReviewForm = (
   })
 
   const reviewId = review?.id ?? null
+  const reviewRating = review?.rating ?? null
+  const reviewContent = review?.content ?? null
+  const defaultRating = reviewRating ?? 5
+  const defaultContent = reviewContent ?? ''
 
   useEffect(() => {
     reset({
@@ -36,7 +40,11 @@ export const useUpsertReviewForm = (
       content: review?.content ?? '',
     })
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [reset, reviewId, seasonNumber])
+  }, [reset, reviewId, seasonNumber, reviewRating, reviewContent])
+
+  const current = watch()
+  const isDirty =
+    (current.rating ?? 5) !== defaultRating || (current.content ?? '') !== defaultContent
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null)
@@ -73,10 +81,20 @@ export const useUpsertReviewForm = (
     }
   })
 
+  const resetForm = () => {
+    reset({
+      rating: defaultRating,
+      content: defaultContent,
+    })
+    setServerError(null)
+  }
+
   return {
     onSubmit,
     isLoading: mutation.isPending,
     reset,
+    isDirty,
+    resetForm,
     serverError,
     setError,
     ...form,

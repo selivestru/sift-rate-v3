@@ -98,6 +98,11 @@ const sharedContent = {
       uk: 'Показати більше',
       ru: 'Показать больше',
     }),
+    showLess: t({
+      en: 'Show less',
+      uk: 'Показати менше',
+      ru: 'Свернуть',
+    }),
     browseDiscover: t({
       en: 'Browse Discover',
       uk: 'Відкрити Каталог',

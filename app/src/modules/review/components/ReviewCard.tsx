@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useState } from 'react'
 import { useIntlayer } from 'react-intlayer'
 import { Calendar, CrownStar, Pen, Star, Trash6 } from 'reicon-react'
 
@@ -34,6 +35,15 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
   const hasContent = Boolean(review.content?.trim())
   const isPerfect = review.rating === 10
   const isShowGroupHeader = review.seasonNumber != null
+  const REVIEW_TEXT_LIMIT = 280
+
+  const [mainExpanded, setMainExpanded] = useState(false)
+  const mainLong = hasContent && (review.content?.trim().length ?? 0) > REVIEW_TEXT_LIMIT
+
+  const [expandedSeasons, setExpandedSeasons] = useState<Record<string, boolean>>({})
+  const isSeasonExpanded = (seasonReviewId: string) => expandedSeasons[seasonReviewId] ?? false
+  const toggleSeasonExpanded = (seasonReviewId: string) =>
+    setExpandedSeasons((prev) => ({ ...prev, [seasonReviewId]: !prev[seasonReviewId] }))
 
   return (
     <article
@@ -151,7 +161,7 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
           to={detailTo}
           params={{ externalId: media.externalId }}
           className={cn(
-            'text-foreground line-clamp-2 w-fit text-lg font-semibold tracking-tight outline-none transition-colors duration-200',
+            'text-foreground line-clamp-5 w-fit text-lg font-semibold tracking-tight outline-none transition-colors duration-200',
             'sm:text-xl',
             'hover:text-primary focus-visible:text-primary focus-visible:underline',
           )}
@@ -194,17 +204,33 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
 
         <blockquote
           className={cn(
-            'bg-muted rounded-r-lg border-l-2 border-border py-2.5 pr-3 pl-3.5',
+            'bg-muted rounded-r-lg border-l-2 py-2.5 pr-3 pl-3.5',
             'text-sm leading-relaxed',
-            isPerfect && hasContent && 'border-l-rating',
+            hasContent && isPerfect ? 'border-l-rating' : 'border-(--card-accent)/40',
           )}
         >
           {hasContent ? (
-            <p className="text-foreground leading-relaxed hyphens-auto whitespace-pre-wrap italic">
-              {review.content}
-            </p>
+            <>
+              <p
+                className={cn(
+                  'text-foreground leading-relaxed break-all hyphens-auto italic',
+                  mainLong && !mainExpanded && 'line-clamp-5',
+                )}
+              >
+                {review.content}
+              </p>
+              {mainLong && (
+                <button
+                  type="button"
+                  onClick={() => setMainExpanded((prev) => !prev)}
+                  className="text-muted-foreground mt-1 ml-auto block w-fit cursor-pointer self-start text-xs font-medium underline-offset-2 hover:underline"
+                >
+                  {mainExpanded ? shared.showLess.value : shared.showMore.value}
+                </button>
+              )}
+            </>
           ) : (
-            <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap italic">
+            <p className="text-muted-foreground leading-relaxed break-all italic">
               {content.noWrittenReview.value}
             </p>
           )}
@@ -217,8 +243,10 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
             </p>
             <div className="divide-border divide-y">
               {seasonReviews.map((seasonReview) => {
-                const seasonText = seasonReview.content?.trim()
+                const seasonText = seasonReview.content?.trim() ?? ''
                 const seasonHasText = Boolean(seasonText)
+                const seasonLong = seasonHasText && seasonText.length > REVIEW_TEXT_LIMIT
+                const seasonExpanded = isSeasonExpanded(seasonReview.id)
 
                 return (
                   <UpsertReviewDialog
@@ -240,7 +268,12 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
                         aria-label={content.editReviewFor({ title: media.title })}
                       >
                         <span className="flex items-center justify-between gap-2">
-                          <span className="text-foreground text-sm font-semibold tabular-nums">
+                          <span
+                            className={cn(
+                              'text-foreground text-sm font-semibold tabular-nums',
+                              seasonReview.rating === 10 && 'text-rating',
+                            )}
+                          >
                             {content.seasonChip({ season: seasonReview.seasonNumber ?? 0 })}
                           </span>
                           <RatingBadge
@@ -249,8 +282,31 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
                           />
                         </span>
                         {seasonHasText && (
-                          <span className="text-foreground line-clamp-3 border-l-2 border-(--card-accent)/40 py-0.5 pl-2.5 text-sm leading-relaxed italic">
+                          <span
+                            onClick={(event) => {
+                              if (seasonLong) {
+                                event.stopPropagation()
+                                toggleSeasonExpanded(seasonReview.id)
+                              }
+                            }}
+                            className={cn(
+                              'text-foreground border-(--card-accent)/40 border-l-2 py-0.5 pl-2.5 text-sm leading-relaxed break-all italic',
+                              seasonLong && !seasonExpanded && 'line-clamp-5',
+                              seasonLong && 'cursor-pointer',
+                            )}
+                          >
                             {seasonText}
+                          </span>
+                        )}
+                        {seasonLong && (
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              toggleSeasonExpanded(seasonReview.id)
+                            }}
+                            className="text-muted-foreground ml-auto cursor-pointer self-start text-xs font-medium underline-offset-2 hover:underline"
+                          >
+                            {seasonExpanded ? shared.showLess.value : shared.showMore.value}
                           </span>
                         )}
                       </button>

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useIntlayer } from 'react-intlayer'
-import { Star, Trash6, XCircle } from 'reicon-react'
+import { ArrowRotate, Star, Trash6, XCircle } from 'reicon-react'
 
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 import { QUERIES_KEYS } from '~/common/constants/queries-keys'
@@ -57,6 +57,13 @@ export const UpsertReviewDialog = ({
     lockedSeasonNumber ?? initialData?.seasonNumber ?? null,
   )
 
+  useEffect(() => {
+    if (opened) {
+      setSeasonNumber(lockedSeasonNumber ?? initialData?.seasonNumber ?? null)
+    }
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [opened])
+
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   const { data: state } = useQuery({
@@ -87,32 +94,31 @@ export const UpsertReviewDialog = ({
     if (seasonNumber == null) return showReview
 
     return (
+      (initialData?.seasonNumber === seasonNumber ? initialData : null) ??
       seasonReviews.find((review) => review.seasonNumber === seasonNumber) ??
-      (initialData?.seasonNumber === seasonNumber ? initialData : null)
+      null
     )
     // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [seasonNumber, showReview, seasonReviews, initialData])
 
-  const { onSubmit, control, reset, isLoading, serverError } = useUpsertReviewForm(
+  const { onSubmit, control, isLoading, isDirty, resetForm, serverError } = useUpsertReviewForm(
     media,
     activeReview,
     seasonNumber,
     () => {
       close()
-      setTimeout(reset, 200)
     },
   )
 
   const onClose = () => {
     close()
-    setTimeout(reset, 200)
   }
 
   return (
     <>
       {children({ open })}
-      <Dialog open={opened} onOpenChange={onClose} disablePointerDismissal>
-        <DialogContent showCloseButton className="gap-2 sm:max-w-xl">
+      <Dialog open={opened} onOpenChange={onClose}>
+        <DialogContent showCloseButton className="h-[90dvh] gap-2 sm:max-w-xl">
           <form
             onSubmit={onSubmit}
             className={cn('flex flex-col gap-4', isLoading && 'pointer-events-none')}
@@ -249,7 +255,7 @@ export const UpsertReviewDialog = ({
               name="content"
               control={control}
               render={({ field, fieldState }) => (
-                <Field className="flex flex-col gap-4">
+                <Field className="flex flex-1 flex-col gap-4">
                   <div className="flex items-center justify-between gap-2">
                     <FieldLabel htmlFor="review-content">{content.reviewOptional.value}</FieldLabel>
                     <span
@@ -271,7 +277,7 @@ export const UpsertReviewDialog = ({
                     onBlur={field.onBlur}
                     placeholder={content.placeholder.value}
                     maxLength={CONTENT_MAX_LENGTH}
-                    className="border-border h-50 scrollbar-none break-all"
+                    className="border-border flex-1 scrollbar-none break-all"
                   />
                   {fieldState.error?.message && <FieldError>{fieldState.error.message}</FieldError>}
                 </Field>
@@ -291,7 +297,7 @@ export const UpsertReviewDialog = ({
                       variant="destructive-soft"
                       startIcon={<Trash6 weight="Filled" />}
                       onClick={openDelete}
-                      className="mr-auto"
+                      className="mr-auto max-sm:w-full"
                       aria-label={content.deleteReview.value}
                     >
                       {shared.delete.value}
@@ -301,11 +307,22 @@ export const UpsertReviewDialog = ({
               ) : (
                 <span />
               )}
+              {isDirty && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  startIcon={<ArrowRotate aria-hidden />}
+                  onClick={resetForm}
+                  aria-label={content.resetForm.value}
+                >
+                  {content.resetForm.value}
+                </Button>
+              )}
               <div className="flex gap-2">
-                <Button type="button" variant="outline" onClick={onClose}>
+                <Button type="button" variant="outline" className="max-sm:flex-1" onClick={onClose}>
                   {shared.cancel.value}
                 </Button>
-                <Button type="submit" isLoading={isLoading}>
+                <Button type="submit" className="max-sm:flex-1" isLoading={isLoading}>
                   {content.saveRating.value}
                 </Button>
               </div>

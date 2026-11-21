@@ -50,6 +50,11 @@ const upsertReviewDialogContent = {
       uk: 'Зберегти оцінку',
       ru: 'Сохранить оценку',
     }),
+    resetForm: t({
+      en: 'Reset form',
+      uk: 'Скинути форму',
+      ru: 'Сбросить форму',
+    }),
     deleteReview: t({
       en: 'Delete rating',
       uk: 'Видалити оцінку',
