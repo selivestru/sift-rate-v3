@@ -199,12 +199,7 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
           )}
         >
           {hasContent ? (
-            <p
-              className={cn(
-                'text-foreground leading-relaxed hyphens-auto wrap-anywhere whitespace-pre-wrap italic',
-                isPerfect && 'text-rating',
-              )}
-            >
+            <p className="text-foreground leading-relaxed wrap-anywhere hyphens-auto whitespace-pre-wrap italic">
               {review.content}
             </p>
           ) : (
@@ -265,12 +260,7 @@ export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
                                 : 'border-(--card-accent)/40',
                             )}
                           >
-                            <span
-                              className={cn(
-                                'block leading-relaxed hyphens-auto wrap-anywhere whitespace-pre-wrap italic',
-                                seasonReview.rating === 10 ? 'text-rating' : 'text-foreground',
-                              )}
-                            >
+                            <span className="text-foreground block leading-relaxed wrap-anywhere hyphens-auto whitespace-pre-wrap italic">
                               {seasonText}
                             </span>
                           </span>
