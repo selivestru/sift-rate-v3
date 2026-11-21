@@ -55,6 +55,7 @@ export interface EnsureMediaResult {
 
 export interface MediaStateResponse {
   review: Review | null
+  seasonReviews: Review[]
   plannedItem: PlannedItem | null
 }
 

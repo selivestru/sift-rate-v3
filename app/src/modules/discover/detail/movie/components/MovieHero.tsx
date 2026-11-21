@@ -13,6 +13,7 @@ import { formatRuntime } from '~/common/utils/formatRuntime'
 
 import { MediaCoverLightbox, WatchMediaButton } from '../../shared'
 import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
+import { useKinopoiskId } from '../../shared/hooks/useKinopoiskId'
 import type { MovieDetail } from '../types/movie-detail.types'
 
 interface MovieHeroProps {
@@ -20,6 +21,11 @@ interface MovieHeroProps {
 }
 
 export const MovieHero = ({ movie }: MovieHeroProps) => {
+  const { kinopoiskId, isLoading: isKinopoiskLoading } = useKinopoiskId({
+    mediaType: MEDIA_TYPES.MOVIE,
+    externalId: movie.id,
+    enabled: true,
+  })
   const [overviewExpanded, setOverviewExpanded] = useState(false)
   const { locale } = useAppLocale()
   const shared = useIntlayer('shared')
@@ -155,7 +161,8 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
             <MediaStateButtons externalId={movie.id} mediaType={MEDIA_TYPES.MOVIE} />
             <WatchMediaButton
               title={locale === 'uk' ? movie.originalTitle : movie.title}
-              kinopoiskId={movie.kinopoiskId}
+              kinopoiskId={kinopoiskId}
+              isLoading={isKinopoiskLoading}
             />
           </div>
 

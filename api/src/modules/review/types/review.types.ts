@@ -13,6 +13,7 @@ export interface ReviewMediaCard {
 
 export interface ReviewItem {
   id: string
+  seasonNumber: number | null
   rating: number
   content: string | null
   createdAt: Date

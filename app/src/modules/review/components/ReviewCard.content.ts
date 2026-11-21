@@ -34,6 +34,23 @@ const reviewCardContent = {
       uk: 'Без письмової рецензії',
       ru: 'Без письменной рецензии',
     }),
+    seasons: t({
+      en: 'Seasons',
+      uk: 'Сезони',
+      ru: 'Сезоны',
+    }),
+    seasonChip: insert(
+      t({
+        en: 'Season {{season}}',
+        uk: 'Сезон {{season}}',
+        ru: 'Сезон {{season}}',
+      }),
+    ),
+    rateShow: t({
+      en: 'Rate the show',
+      uk: 'Оцінити серіал',
+      ru: 'Оценить сериал',
+    }),
   },
 } satisfies Dictionary
 

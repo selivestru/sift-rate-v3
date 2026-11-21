@@ -3,6 +3,16 @@ import { insert, t, type Dictionary } from 'intlayer'
 const upsertReviewDialogContent = {
   key: 'upsert-review-dialog',
   content: {
+    rateTarget: t({
+      en: 'What to rate',
+      uk: 'Що оцінити',
+      ru: 'Что оценить',
+    }),
+    wholeShow: t({
+      en: 'Show',
+      uk: 'Серіал',
+      ru: 'Сериал',
+    }),
     pickScore: t({
       en: 'Pick a score',
       uk: 'Оберіть оцінку',
@@ -39,6 +49,11 @@ const upsertReviewDialogContent = {
       en: 'Save rating',
       uk: 'Зберегти оцінку',
       ru: 'Сохранить оценку',
+    }),
+    deleteReview: t({
+      en: 'Delete rating',
+      uk: 'Видалити оцінку',
+      ru: 'Удалить оценку',
     }),
   },
 } satisfies Dictionary

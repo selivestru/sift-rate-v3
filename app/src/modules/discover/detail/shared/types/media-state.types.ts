@@ -3,6 +3,7 @@ import type { Review } from '~/modules/review'
 
 export interface MediaStateResponse {
   review: Review | null
+  seasonReviews: Review[]
   plannedItem: PlannedListItem | null
 }
 

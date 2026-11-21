@@ -72,18 +72,19 @@ model MediaTranslation {
 }
 
 model Review {
-  id        String   @id @default(uuid(7))
-  userId    String
-  mediaId   String
-  rating    Int
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid(7))
+  userId       String
+  mediaId      String
+  seasonNumber Int?
+  rating       Int
+  content      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   media Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, mediaId])
+  @@unique([userId, mediaId, seasonNumber])
   @@index([userId, createdAt])
   @@index([mediaId, createdAt(sort: Desc), id(sort: Desc)])
 }

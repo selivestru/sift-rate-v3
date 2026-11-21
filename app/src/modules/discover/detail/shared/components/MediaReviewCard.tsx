@@ -4,6 +4,7 @@ import { Star } from 'reicon-react'
 
 import { useAppLocale } from '~/common/i18n'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
+import { Badge } from '~/common/ui/Badge'
 import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
@@ -30,6 +31,11 @@ export const MediaReviewCard = ({ review }: MediaReviewCardProps) => {
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">
+              {review.seasonNumber != null && (
+                <Badge variant="default">
+                  {content.seasonChip({ season: review.seasonNumber })}
+                </Badge>
+              )}
               {user.username ? (
                 <Link
                   to="/$username"

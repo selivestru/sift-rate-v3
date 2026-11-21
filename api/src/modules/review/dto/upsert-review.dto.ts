@@ -1,6 +1,5 @@
 import { Transform, Type } from 'class-transformer'
 import {
-  IsDate,
   IsEnum,
   IsInt,
   IsOptional,
@@ -32,11 +31,12 @@ export class UpsertReviewDto {
   @Max(10)
   rating!: number
 
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  seasonNumber?: number
+
   @Content({ optional: true })
   content!: string | null
-
-  @IsOptional()
-  @Type(() => Date)
-  @IsDate()
-  createdAt?: Date
 }

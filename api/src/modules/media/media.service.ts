@@ -5,6 +5,7 @@ import { SearchMediaQueryDto } from './dto/search-media.query'
 import { AlbumService } from './services/album.service'
 import { BookService } from './services/book.service'
 import { GameService } from './services/game.service'
+import { KinopoiskService } from './services/kinopoisk.service'
 import { MovieService } from './services/movie.service'
 import { TmdbLocalizationService } from './services/tmdb-localization.service'
 import { TrackService } from './services/track.service'
@@ -47,6 +48,7 @@ export class MediaService {
     private readonly gameService: GameService,
     private readonly bookService: BookService,
     private readonly tmdbLocalizationService: TmdbLocalizationService,
+    private readonly kinopoiskService: KinopoiskService,
   ) {}
 
   searchMedia(mediaType: MediaType, query: SearchMediaQueryDto, language: MediaLanguage) {
@@ -70,7 +72,7 @@ export class MediaService {
 
   async getMediaById({ mediaType, externalId }: MediaByIdParamsDto, language: MediaLanguage) {
     const detail = await this.fetchMediaById(mediaType, externalId, language)
-    await this.syncLocalizationsIfNeeded(mediaType, externalId)
+    this.syncLocalizationsInBackground(mediaType, externalId)
     return detail
   }
 
@@ -91,16 +93,27 @@ export class MediaService {
     if (!media) {
       return {
         review: null,
+        seasonReviews: [],
         plannedItem: null,
       }
     }
 
-    const [review, plannedItem] = await Promise.all([
+    const [review, seasonReviews, plannedItem] = await Promise.all([
       this.prisma.review.findFirst({
         where: {
           mediaId: media.id,
           userId,
+          seasonNumber: null,
         },
+        include: { media: true },
+      }),
+      this.prisma.review.findMany({
+        where: {
+          mediaId: media.id,
+          userId,
+          seasonNumber: { not: null },
+        },
+        orderBy: { seasonNumber: 'asc' },
         include: { media: true },
       }),
       this.prisma.plannedItem.findFirst({
@@ -112,7 +125,52 @@ export class MediaService {
       }),
     ])
 
-    return this.localizeMediaRelations({ review, plannedItem }, language)
+    return this.localizeMediaRelations({ review, seasonReviews, plannedItem }, language)
+  }
+
+  async getKinopoiskId({
+    mediaType,
+    externalId,
+  }: MediaByIdParamsDto): Promise<{ kinopoiskId: string | null }> {
+    if (mediaType !== MediaType.MOVIE && mediaType !== MediaType.TV_SHOW) {
+      throw new BadRequestException('Kinopoisk lookup is only available for movies and TV shows')
+    }
+
+    if (mediaType === MediaType.MOVIE) {
+      const detail = await this.movieService.getById(externalId)
+      const kinopoiskId = await this.kinopoiskService.getId(
+        'movie',
+        externalId,
+        detail.originalTitle,
+        detail.year,
+      )
+      return { kinopoiskId }
+    }
+
+    const detail = await this.tvShowService.getById(externalId)
+    const kinopoiskId = await this.kinopoiskService.getId(
+      'tv',
+      externalId,
+      detail.originalTitle,
+      detail.yearEnd ? `${detail.yearStart}-${detail.yearEnd}` : detail.yearStart,
+    )
+    return { kinopoiskId }
+  }
+
+  async assertSeasonExists(
+    mediaType: MediaType,
+    externalId: string,
+    seasonNumber: number,
+  ): Promise<void> {
+    if (mediaType !== MediaType.TV_SHOW) {
+      throw new BadRequestException('Season ratings are only available for TV shows')
+    }
+
+    const detail = await this.tvShowService.getById(externalId)
+
+    if (!detail.seasons.some((season) => season.seasonNumber === seasonNumber)) {
+      throw new BadRequestException('Season not found')
+    }
   }
 
   async getMediaReviews(
@@ -289,6 +347,16 @@ export class MediaService {
     }
   }
 
+  private syncLocalizationsInBackground(mediaType: MediaType, externalId: string): void {
+    void (async () => {
+      try {
+        await this.syncLocalizationsIfNeeded(mediaType, externalId)
+      } catch {
+        // ignore
+      }
+    })()
+  }
+
   private async syncLocalizationsIfNeeded(mediaType: MediaType, externalId: string): Promise<void> {
     if (!isLocalizableMediaType(mediaType)) {
       return
@@ -366,7 +434,6 @@ export class MediaService {
       coverUrl?: string | null
       spotifyUrl?: string | null
       imdbId?: string | null
-      kinopoiskId?: string | null
     },
   ): MediaSnapshot {
     if (!detail.title) {
@@ -380,10 +447,6 @@ export class MediaService {
 
         if (detail.imdbId) {
           metadata.imdbId = detail.imdbId
-        }
-
-        if (detail.kinopoiskId) {
-          metadata.kinopoiskId = detail.kinopoiskId
         }
 
         return {

@@ -2,6 +2,7 @@ import type { MediaType } from '~/common/constants/media-type'
 
 export interface Review {
   id: string
+  seasonNumber: number | null
   rating: number
   content: string | null
   createdAt: string
@@ -33,7 +34,7 @@ export interface RateMediaBody {
   externalId: string
   rating: number
   content: string | null
-  createdAt?: string
+  seasonNumber?: number
 }
 
 export type UpsertReviewVariables = RateMediaBody & {

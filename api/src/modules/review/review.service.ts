@@ -149,28 +149,26 @@ export class ReviewService {
     dto: UpsertReviewDto,
     language: MediaLanguage,
   ): Promise<ReviewItem> {
+    if (dto.seasonNumber != null) {
+      await this.mediaService.assertSeasonExists(dto.mediaType, dto.externalId, dto.seasonNumber)
+    }
+
     const media = await this.mediaService.ensureMedia(dto.mediaType, dto.externalId)
 
     const upsertData = omit(dto, ['mediaType', 'externalId'])
 
     const review = await this.prisma.$transaction(async (tx) => {
-      const hasReview = await tx.review.findUnique({
+      const hasReview = await tx.review.findFirst({
         where: {
-          userId_mediaId: {
-            userId,
-            mediaId: media.id,
-          },
+          userId,
+          mediaId: media.id,
+          seasonNumber: dto.seasonNumber ?? null,
         },
       })
 
       const nextReview = hasReview
         ? await tx.review.update({
-            where: {
-              userId_mediaId: {
-                userId,
-                mediaId: media.id,
-              },
-            },
+            where: { id: hasReview.id },
             data: upsertData,
             include: { media: true },
           })

@@ -46,7 +46,7 @@ import Redis from 'ioredis'
         throttlers: [
           {
             ttl: seconds(60),
-            limit: 10,
+            limit: 20,
           },
         ],
         storage: new ThrottlerStorageRedisService(

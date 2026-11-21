@@ -52,7 +52,7 @@ export class UserController {
     return this.userService.getUserFeed(username, language, query?.cursor)
   }
 
-  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
   @Patch('avatar')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -69,7 +69,7 @@ export class UserController {
     return this.userService.updateUsername(userId, dto.username)
   }
 
-  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 6, ttl: seconds(60) } })
   @Post('delete')
   @HttpCode(204)
   deleteAccount(

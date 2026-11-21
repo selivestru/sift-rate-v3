@@ -11,6 +11,7 @@ import { formatCompactNumber } from '~/common/utils/formatCompactNumber'
 
 import { MediaCoverLightbox, WatchMediaButton } from '../../shared'
 import { MediaStateButtons } from '../../shared/components/MediaStateButtons'
+import { useKinopoiskId } from '../../shared/hooks/useKinopoiskId'
 import type { TvShowDetail } from '../types/tv-show-detail.types'
 
 interface TvShowHeroProps {
@@ -26,6 +27,11 @@ const formatYears = (start: string, end: string, inProduction: boolean) => {
 }
 
 export const TvShowHero = ({ show }: TvShowHeroProps) => {
+  const { kinopoiskId, isLoading: isKinopoiskLoading } = useKinopoiskId({
+    mediaType: MEDIA_TYPES.TV_SHOW,
+    externalId: show.id,
+    enabled: true,
+  })
   const [overviewExpanded, setOverviewExpanded] = useState(false)
   const shared = useIntlayer('shared')
   const { locale } = useAppLocale()
@@ -158,7 +164,8 @@ export const TvShowHero = ({ show }: TvShowHeroProps) => {
             <MediaStateButtons externalId={show.id} mediaType={MEDIA_TYPES.TV_SHOW} />
             <WatchMediaButton
               title={locale === 'uk' ? show.originalTitle : show.title}
-              kinopoiskId={show.kinopoiskId}
+              kinopoiskId={kinopoiskId}
+              isLoading={isKinopoiskLoading}
             />
           </div>
 

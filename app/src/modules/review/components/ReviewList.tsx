@@ -4,6 +4,7 @@ import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 
 import { useReviewList } from '../hooks/useReviewList'
+import { groupReviewsByMedia } from '../utils/group-reviews'
 import { ReviewCard } from './ReviewCard'
 import { ReviewListEmpty } from './ReviewListEmpty'
 import { ReviewListFilters } from './ReviewListFilters'
@@ -72,8 +73,12 @@ export const ReviewList = () => {
             isListFetching && 'opacity-70',
           )}
         >
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
+          {groupReviewsByMedia(reviews).map((group) => (
+            <ReviewCard
+              key={group.item.id}
+              review={group.item}
+              seasonReviews={group.seasonReviews}
+            />
           ))}
         </div>
       )}

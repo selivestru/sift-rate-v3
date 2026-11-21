@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { useIntlayer } from 'react-intlayer'
-import { Calendar, CrownStar, Pen, Trash6 } from 'reicon-react'
+import { Calendar, CrownStar, Pen, Star, Trash6 } from 'reicon-react'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
 import { useAppLocale } from '~/common/i18n'
@@ -18,9 +18,10 @@ import { UpsertReviewDialog } from './UpsertReviewDialog'
 
 interface ReviewCardProps {
   review: Review
+  seasonReviews?: Review[]
 }
 
-export const ReviewCard = ({ review }: ReviewCardProps) => {
+export const ReviewCard = ({ review, seasonReviews }: ReviewCardProps) => {
   const { locale } = useAppLocale()
   const content = useIntlayer('review-card')
   const shared = useIntlayer('shared')
@@ -32,11 +33,12 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
   const detailTo = mediaDetailRouteByType[media.mediaType]
   const hasContent = Boolean(review.content?.trim())
   const isPerfect = review.rating === 10
+  const isShowGroupHeader = review.seasonNumber != null
 
   return (
     <article
       style={{
-        '--card-accent': isPerfect ? 'var(--rating)' : accent,
+        '--card-accent': isPerfect && !isShowGroupHeader ? 'var(--rating)' : accent,
       }}
       className={cn(
         'bg-card group hover:border-(--card-accent)/40 border-(--card-accent)/20 relative flex flex-col gap-3 overflow-hidden rounded-xl border p-3 transition-colors duration-300',
@@ -53,41 +55,47 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
       />
       {isPerfect && <PerfectStardust />}
 
-      <div className="absolute top-3 right-3 z-10 flex gap-1 opacity-0 sm:opacity-100">
-        <UpsertReviewDialog
-          media={{
-            mediaType: media.mediaType,
-            externalId: media.externalId,
-          }}
-          initialData={review}
-        >
-          {({ open }) => (
-            <Button
-              isIconOnly
-              type="button"
-              variant="secondary"
-              onClick={open}
-              aria-label={content.editReviewFor({ title: media.title })}
-            >
-              <Pen weight="Filled" />
-            </Button>
-          )}
-        </UpsertReviewDialog>
+      {!isShowGroupHeader && (
+        <div className="absolute top-3 right-3 z-10 flex gap-1 opacity-0 sm:opacity-100">
+          <UpsertReviewDialog
+            media={{
+              mediaType: media.mediaType,
+              externalId: media.externalId,
+            }}
+            initialData={review}
+          >
+            {({ open }) => (
+              <Button
+                isIconOnly
+                type="button"
+                variant="secondary"
+                onClick={open}
+                aria-label={content.editReviewFor({ title: media.title })}
+              >
+                <Pen weight="Filled" />
+              </Button>
+            )}
+          </UpsertReviewDialog>
 
-        <DeleteReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
-          {({ open }) => (
-            <Button
-              isIconOnly
-              type="button"
-              variant="destructive-soft"
-              onClick={open}
-              aria-label={content.deleteReviewFor({ title: media.title })}
-            >
-              <Trash6 weight="Filled" />
-            </Button>
-          )}
-        </DeleteReviewDialog>
-      </div>
+          <DeleteReviewDialog
+            reviewId={review.id}
+            rating={review.rating}
+            mediaType={media.mediaType}
+          >
+            {({ open }) => (
+              <Button
+                isIconOnly
+                type="button"
+                variant="destructive-soft"
+                onClick={open}
+                aria-label={content.deleteReviewFor({ title: media.title })}
+              >
+                <Trash6 weight="Filled" />
+              </Button>
+            )}
+          </DeleteReviewDialog>
+        </div>
+      )}
 
       <Link
         to={detailTo}
@@ -132,7 +140,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         <div className="flex flex-wrap items-center gap-1.5">
           <MediaTypeBadge mediaType={media.mediaType} />
 
-          {isPerfect && (
+          {isPerfect && !isShowGroupHeader && (
             <Badge variant="rating" startIcon={<CrownStar />}>
               {content.perfect.value}
             </Badge>
@@ -152,11 +160,32 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         </Link>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-          <RatingBadge
-            size="md"
-            rating={review.rating}
-            variant={isPerfect ? 'rating' : 'default'}
-          />
+          {isShowGroupHeader ? (
+            <UpsertReviewDialog
+              media={{
+                mediaType: media.mediaType,
+                externalId: media.externalId,
+              }}
+            >
+              {({ open }) => (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="text-rating"
+                  startIcon={<Star weight="Filled" className="text-rating" aria-hidden />}
+                  onClick={open}
+                >
+                  {content.rateShow.value}
+                </Button>
+              )}
+            </UpsertReviewDialog>
+          ) : (
+            <RatingBadge
+              size="md"
+              rating={review.rating}
+              variant={isPerfect ? 'rating' : 'default'}
+            />
+          )}
           <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs">
             <Calendar className="size-3.5 shrink-0" aria-hidden />
             <time dateTime={review.createdAt}>{formatDate(review.createdAt, locale)}</time>
@@ -180,43 +209,101 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             </p>
           )}
         </blockquote>
+
+        {seasonReviews && seasonReviews.length > 0 && (
+          <div className="bg-muted/60 border-border rounded-lg border p-2">
+            <p className="text-muted-foreground mb-1 px-1 text-xs font-semibold tracking-wide uppercase">
+              {content.seasons.value}
+            </p>
+            <div className="divide-border divide-y">
+              {seasonReviews.map((seasonReview) => {
+                const seasonText = seasonReview.content?.trim()
+                const seasonHasText = Boolean(seasonText)
+
+                return (
+                  <UpsertReviewDialog
+                    key={seasonReview.id}
+                    media={{
+                      mediaType: media.mediaType,
+                      externalId: media.externalId,
+                    }}
+                    initialData={seasonReview}
+                    lockedSeasonNumber={seasonReview.seasonNumber ?? undefined}
+                  >
+                    {({ open }) => (
+                      <button
+                        type="button"
+                        onClick={open}
+                        className={cn(
+                          'hover:bg-accent focus-visible:ring-ring/40 flex w-full cursor-pointer flex-col gap-1 px-1.5 py-2 text-left outline-none transition-colors duration-200 focus-visible:ring-2',
+                        )}
+                        aria-label={content.editReviewFor({ title: media.title })}
+                      >
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="text-foreground text-sm font-semibold tabular-nums">
+                            {content.seasonChip({ season: seasonReview.seasonNumber ?? 0 })}
+                          </span>
+                          <RatingBadge
+                            rating={seasonReview.rating}
+                            variant={seasonReview.rating === 10 ? 'rating' : 'default'}
+                          />
+                        </span>
+                        {seasonHasText && (
+                          <span className="text-foreground line-clamp-3 border-l-2 border-(--card-accent)/40 py-0.5 pl-2.5 text-sm leading-relaxed italic">
+                            {seasonText}
+                          </span>
+                        )}
+                      </button>
+                    )}
+                  </UpsertReviewDialog>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:hidden">
-        <UpsertReviewDialog
-          media={{
-            mediaType: media.mediaType,
-            externalId: media.externalId,
-          }}
-          initialData={review}
-        >
-          {({ open }) => (
-            <Button
-              type="button"
-              variant="secondary"
-              startIcon={<Pen weight="Filled" />}
-              onClick={open}
-              aria-label={content.editReviewFor({ title: media.title })}
-            >
-              {shared.edit.value}
-            </Button>
-          )}
-        </UpsertReviewDialog>
+      {!isShowGroupHeader && (
+        <div className="grid grid-cols-2 gap-2 sm:hidden">
+          <UpsertReviewDialog
+            media={{
+              mediaType: media.mediaType,
+              externalId: media.externalId,
+            }}
+            initialData={review}
+          >
+            {({ open }) => (
+              <Button
+                type="button"
+                variant="secondary"
+                startIcon={<Pen weight="Filled" />}
+                onClick={open}
+                aria-label={content.editReviewFor({ title: media.title })}
+              >
+                {shared.edit.value}
+              </Button>
+            )}
+          </UpsertReviewDialog>
 
-        <DeleteReviewDialog reviewId={review.id} rating={review.rating} mediaType={media.mediaType}>
-          {({ open }) => (
-            <Button
-              type="button"
-              variant="destructive-soft"
-              startIcon={<Trash6 weight="Filled" />}
-              onClick={open}
-              aria-label={content.deleteReviewFor({ title: media.title })}
-            >
-              {shared.delete.value}
-            </Button>
-          )}
-        </DeleteReviewDialog>
-      </div>
+          <DeleteReviewDialog
+            reviewId={review.id}
+            rating={review.rating}
+            mediaType={media.mediaType}
+          >
+            {({ open }) => (
+              <Button
+                type="button"
+                variant="destructive-soft"
+                startIcon={<Trash6 weight="Filled" />}
+                onClick={open}
+                aria-label={content.deleteReviewFor({ title: media.title })}
+              >
+                {shared.delete.value}
+              </Button>
+            )}
+          </DeleteReviewDialog>
+        </div>
+      )}
     </article>
   )
 }

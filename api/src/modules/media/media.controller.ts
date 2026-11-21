@@ -30,6 +30,12 @@ export class MediaController {
     return this.mediaService.getMediaById(params, language)
   }
 
+  @Public()
+  @Get(':mediaType/:externalId/kinopoisk')
+  getKinopoiskId(@Param() params: MediaByIdParamsDto) {
+    return this.mediaService.getKinopoiskId(params)
+  }
+
   @Get(':mediaType/:externalId/state')
   getMediaState(
     @CurrentUser('userId') userId: string,

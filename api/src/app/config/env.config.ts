@@ -21,6 +21,7 @@ export const envSchema = z.object({
   IGDB_CLIENT_SECRET: z.string(),
   GOOGLE_BOOKS_API_KEY: z.string(),
   TINYFISH_API_KEY: z.string(),
+  POISKKINO_API_KEY: z.string(),
 
   SPOTIFY_CLIENT_ID: z.string().min(1),
   SPOTIFY_CLIENT_SECRET: z.string().min(1),

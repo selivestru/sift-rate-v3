@@ -2,31 +2,45 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { MediaCacheService } from './media-cache.service'
-import { TmdbLocalizationService } from './tmdb-localization.service'
 import ky from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
-import { MediaLanguage, MediaType } from '~/generated/prisma/enums'
 
-const TINYFISH_SEARCH_URL = 'https://api.search.tinyfish.ai'
-const KINOPOISK_URL_PATTERN = /^https:\/\/www\.kinopoisk\.ru\/(film|series)\/(\d+)\/?$/
+const POISKKINO_API_URL = 'https://api.poiskkino.dev'
 const KINOPOISK_NEGATIVE_CACHE_TTL_SECONDS = 7 * 24 * 3600
+const SEARCH_LIMIT = 10
+const REQUEST_TIMEOUT_MS = 10_000
 
 export type KinopoiskKind = 'movie' | 'tv'
 
-interface TinyFishSearchResult {
-  url?: string
+interface PoiskkinoSearchItem {
+  id: number
+  name?: string | null
+  alternativeName?: string | null
+  year?: number | null
+  isSeries?: boolean | null
 }
 
-interface TinyFishSearchResponse {
-  results?: TinyFishSearchResult[]
+interface PoiskkinoSearchResponse {
+  docs?: PoiskkinoSearchItem[]
 }
+
+const normalizeTitle = (value: string | null | undefined): string => {
+  const normalized = (value ?? '')
+    .toLowerCase()
+    .replaceAll('ё', 'е')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+
+  return normalized
+}
+
+const normalizeYear = (value: string): number => Number(value.split('-')[0])
 
 @Injectable()
 export class KinopoiskService {
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly cache: MediaCacheService,
-    private readonly tmdbLocalizationService: TmdbLocalizationService,
   ) {}
 
   async getId(
@@ -40,14 +54,7 @@ export class KinopoiskService {
     const cached = await this.cache.get<string | null>(cacheKey)
     if (cached !== undefined) return cached
 
-    const mediaType = kind === 'movie' ? MediaType.MOVIE : MediaType.TV_SHOW
-    const localizations = await this.tmdbLocalizationService.getLocalizations(mediaType, tmdbId)
-    const localizationTitle = (language: MediaLanguage) =>
-      localizations.find((item) => item.language === language)?.title
-    const title =
-      localizationTitle(MediaLanguage.RU) ?? localizationTitle(MediaLanguage.EN) ?? originalTitle
-
-    const kinopoiskId = await this.searchId(title, year)
+    const kinopoiskId = await this.searchId(kind, originalTitle, year)
 
     await this.cache.set(
       cacheKey,
@@ -58,47 +65,51 @@ export class KinopoiskService {
     return kinopoiskId
   }
 
-  private async searchId(title: string, year?: string): Promise<string | null> {
-    if (!title.trim()) return null
+  private async searchId(
+    kind: KinopoiskKind,
+    title: string,
+    year?: string,
+  ): Promise<string | null> {
+    const query = title.trim()
+
+    if (!query) return null
+
+    const url = new URL(`${POISKKINO_API_URL}/v1.5/movie/search`)
+    url.searchParams.set('query', query)
+    url.searchParams.set('limit', String(SEARCH_LIMIT))
+
+    let docs: PoiskkinoSearchItem[]
 
     try {
-      const url = new URL(TINYFISH_SEARCH_URL)
-      url.searchParams.set('query', `"${title}"${year ? ` ${year}` : ''}`)
-      url.searchParams.set(
-        'purpose',
-        'Find the official Kinopoisk film or series page for this title',
-      )
-      url.searchParams.set('include_domains', 'kinopoisk.ru')
-      url.searchParams.set('location', 'RU')
-      url.searchParams.set('language', 'ru')
-
       const response = await ky
-        .get(url, {
-          headers: {
-            'X-API-Key': this.config.get('TINYFISH_API_KEY', { infer: true }),
-            'X-TF-Request-Origin': 'api',
-            'X-TF-Client-Name': 'siftrate-api',
-          },
+        .get(url.toString(), {
+          headers: { 'X-API-KEY': this.config.get('POISKKINO_API_KEY', { infer: true }) },
+          timeout: REQUEST_TIMEOUT_MS,
         })
-        .json<TinyFishSearchResponse>()
+        .json<PoiskkinoSearchResponse>()
 
-      for (const result of response.results ?? []) {
-        if (!result.url) continue
-        const id = this.extractId(result.url)
-        if (id) return id
-      }
+      docs = response.docs ?? []
     } catch {
       return null
     }
 
-    return null
-  }
+    const targetYear = year ? normalizeYear(year) : null
+    const isSeries = kind === 'tv'
 
-  private extractId(link: string): string | null {
-    const normalized = link
-      .split(/[?#]/)[0]
-      .replace(/^https:\/\/kinopoisk\.ru/, 'https://www.kinopoisk.ru')
-    const match = KINOPOISK_URL_PATTERN.exec(normalized)
-    return match ? match[2] : null
+    for (const doc of docs) {
+      if (doc.isSeries !== isSeries) continue
+
+      if (targetYear && doc.year !== targetYear) continue
+
+      const nameMatches =
+        normalizeTitle(doc.name) === normalizeTitle(query) ||
+        normalizeTitle(doc.alternativeName) === normalizeTitle(query)
+
+      if (nameMatches) {
+        return String(doc.id)
+      }
+    }
+
+    return null
   }
 }

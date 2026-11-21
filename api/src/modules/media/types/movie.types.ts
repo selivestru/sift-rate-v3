@@ -82,7 +82,6 @@ export interface MovieDetail {
   status: string
   genres: string[]
   imdbId: string | null
-  kinopoiskId: string | null
   imdbRating: number | null
   imdbVoteCount: number | null
   posterUrl: string | null

@@ -33,14 +33,14 @@ export class AuthController {
   }
 
   @Public()
-  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 20, ttl: seconds(60) } })
   @Get('google/url')
   getGoogleAuthUrl() {
     return this.authService.getGoogleAuthUrl()
   }
 
   @Public()
-  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 20, ttl: seconds(60) } })
   @Get('google/callback')
   async googleCallback(
     @Req() req: Request,

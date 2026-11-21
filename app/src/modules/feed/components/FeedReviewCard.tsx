@@ -1,22 +1,31 @@
+import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { useIntlayer } from 'react-intlayer'
 
 import { MEDIA_TYPES, mediaDetailRouteByType, mediaTypeMeta } from '~/common/constants/media-type'
 import { useAppLocale } from '~/common/i18n'
 import { Avatar, AvatarFallback, AvatarImage } from '~/common/ui/Avatar'
+import { Badge } from '~/common/ui/Badge'
 import { MediaTypeBadge } from '~/common/ui/MediaTypeBadge'
 import { RatingBadge } from '~/common/ui/RatingBadge'
 import { cn } from '~/common/utils/cn'
 import { formatRelativeTime } from '~/common/utils/formatRelativeTime'
 import { getFirstLetter } from '~/common/utils/getFirstLetter'
+import { tvShowDetailApi } from '~/modules/discover/detail/tv_show/api/tv-show-detail.api'
 
 import type { FeedItem } from '../types/feed.types'
 
 interface FeedReviewCardProps {
   item: FeedItem
+  seasonItems?: FeedItem[]
+  showSeasonPoster?: boolean
 }
 
-export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
+export const FeedReviewCard = ({
+  item,
+  seasonItems,
+  showSeasonPoster = false,
+}: FeedReviewCardProps) => {
   const { locale } = useAppLocale()
   const shared = useIntlayer('shared')
   const content = useIntlayer('feed')
@@ -26,6 +35,20 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
   const isMusic = media.mediaType === MEDIA_TYPES.ALBUM || media.mediaType === MEDIA_TYPES.TRACK
   const detailTo = mediaDetailRouteByType[media.mediaType]
   const isPerfect = item.rating === 10
+  const isSeasonEvent = item.seasonNumber != null
+
+  const { data: tvDetail } = useQuery({
+    queryKey: ['discover', 'detail', 'tv_show', locale, media.externalId],
+    queryFn: () => tvShowDetailApi.getTvShow(media.externalId),
+    enabled: showSeasonPoster && isSeasonEvent,
+  })
+
+  const seasonPosterUrl =
+    showSeasonPoster && isSeasonEvent
+      ? (tvDetail?.seasons.find((season) => season.seasonNumber === item.seasonNumber)?.posterUrl ??
+        null)
+      : null
+  const posterUrl = seasonPosterUrl ?? media.posterUrl
 
   const avatar = (
     <Avatar size="lg">
@@ -82,9 +105,9 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
                 isMusic ? 'aspect-square w-20 sm:w-24' : 'aspect-2/3 w-20 sm:w-24',
               )}
             >
-              {media.posterUrl ? (
+              {posterUrl ? (
                 <img
-                  src={media.posterUrl}
+                  src={posterUrl}
                   alt={media.title}
                   className="size-full object-cover"
                   loading="lazy"
@@ -99,6 +122,11 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
             <div className="flex flex-1 flex-col gap-1.5">
               <div className="flex flex-wrap items-center gap-1.5">
                 <MediaTypeBadge mediaType={media.mediaType} />
+                {item.seasonNumber != null && (
+                  <Badge variant="default">
+                    {content.seasonChip({ season: item.seasonNumber })}
+                  </Badge>
+                )}
                 <RatingBadge rating={item.rating} variant={isPerfect ? 'rating' : 'default'} />
               </div>
 
@@ -112,6 +140,19 @@ export const FeedReviewCard = ({ item }: FeedReviewCardProps) => {
               >
                 {media.title}
               </Link>
+
+              {seasonItems && seasonItems.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {seasonItems.map((seasonItem) => (
+                    <RatingBadge
+                      key={seasonItem.id}
+                      rating={seasonItem.rating}
+                      variant={seasonItem.rating === 10 ? 'rating' : 'default'}
+                      label={`S${seasonItem.seasonNumber}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

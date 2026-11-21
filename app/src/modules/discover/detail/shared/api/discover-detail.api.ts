@@ -10,6 +10,13 @@ export const discoverDetailApi = {
       .get<MediaStateResponse>(`/media/${mediaType.toLowerCase()}/${externalId}/state`)
       .json()
   },
+  getKinopoiskId: (mediaType: MediaType, externalId: string) => {
+    return api
+      .get<{ kinopoiskId: string | null }>(
+        `/media/${mediaType.toLowerCase()}/${externalId}/kinopoisk`,
+      )
+      .json()
+  },
   getMediaReviews: ({ mediaType, externalId }: MediaRef, cursor?: string) => {
     const searchParams = new URLSearchParams()
 

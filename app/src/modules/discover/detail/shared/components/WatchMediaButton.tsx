@@ -1,14 +1,24 @@
 import { useIntlayer } from 'react-intlayer'
 
 import { Button } from '~/common/ui/Button'
+import { Skeleton } from '~/common/ui/Skeleton'
 
 interface WatchMediaButtonProps {
   kinopoiskId: string | null
   title: string
+  isLoading?: boolean
 }
 
-export const WatchMediaButton = ({ kinopoiskId, title }: WatchMediaButtonProps) => {
+export const WatchMediaButton = ({
+  kinopoiskId,
+  title,
+  isLoading = false,
+}: WatchMediaButtonProps) => {
   const content = useIntlayer('discover-detail')
+
+  if (isLoading) {
+    return <Skeleton className="h-10 w-32 rounded-xl" aria-hidden />
+  }
 
   const href = kinopoiskId
     ? `https://kinobox.in/movie/${kinopoiskId}`

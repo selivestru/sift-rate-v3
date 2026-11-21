@@ -13,13 +13,13 @@ export class SessionController {
     return this.sessionService.getAllForUser(userId, sessionId)
   }
 
-  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 20, ttl: seconds(60) } })
   @Delete()
   revokeAll(@CurrentUser('userId') userId: string, @CurrentUser('sessionId') sessionId: string) {
     return this.sessionService.destroyAllForUser(userId, sessionId)
   }
 
-  @Throttle({ default: { limit: 10, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 20, ttl: seconds(60) } })
   @Delete(':sid')
   revoke(
     @CurrentUser('userId') userId: string,

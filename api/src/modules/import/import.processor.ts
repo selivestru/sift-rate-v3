@@ -139,12 +139,11 @@ export class ImportProcessor extends WorkerHost implements OnModuleInit {
         return
       }
 
-      const existing = await this.prisma.review.findUnique({
+      const existing = await this.prisma.review.findFirst({
         where: {
-          userId_mediaId: {
-            userId,
-            mediaId: media.id,
-          },
+          userId,
+          mediaId: media.id,
+          seasonNumber: null,
         },
         select: { id: true },
       })

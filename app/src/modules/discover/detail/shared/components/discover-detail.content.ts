@@ -151,6 +151,20 @@ const discoverDetailContent = {
     }),
     seasons: t({ en: 'Seasons', uk: 'Сезони', ru: 'Сезоны' }),
     specials: t({ en: 'Specials', uk: 'Спецвипуски', ru: 'Спецвыпуски' }),
+    rateSeason: insert(
+      t({
+        en: 'Rate season {{season}}',
+        uk: 'Оцінити сезон {{season}}',
+        ru: 'Оценить сезон {{season}}',
+      }),
+    ),
+    seasonChip: insert(
+      t({
+        en: 'Season {{season}}',
+        uk: 'Сезон {{season}}',
+        ru: 'Сезон {{season}}',
+      }),
+    ),
     episodes: t({ en: 'Episodes', uk: 'Епізоди', ru: 'Эпизоды' }),
     seasonCount: plural({
       one: t({ en: '{{count}} season', uk: '{{count}} сезон', ru: '{{count}} сезон' }),

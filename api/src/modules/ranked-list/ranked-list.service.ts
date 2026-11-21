@@ -81,12 +81,11 @@ export class RankedListService {
           id: mediaId,
         },
       }),
-      this.prisma.review.findUnique({
+      this.prisma.review.findFirst({
         where: {
-          userId_mediaId: {
-            userId,
-            mediaId,
-          },
+          userId,
+          mediaId,
+          seasonNumber: null,
         },
       }),
     ])

@@ -31,7 +31,6 @@ import {
   SEARCH_CACHE_TTL_SECONDS,
 } from '../utils/media-cache-policy'
 import { toTmdbLanguage } from '../utils/media-localization'
-import { KinopoiskService } from './kinopoisk.service'
 import { MediaCacheService } from './media-cache.service'
 import ky, { HTTPError } from 'ky'
 import { EnvConfig } from '~/app/config/env.config'
@@ -49,7 +48,6 @@ export class TvShowService {
   constructor(
     private readonly config: ConfigService<EnvConfig, true>,
     private readonly cache: MediaCacheService,
-    private readonly kinopoiskService: KinopoiskService,
   ) {}
 
   async search(
@@ -117,30 +115,7 @@ export class TvShowService {
     const cacheKey = buildDetailCacheKey('tv', id, language)
 
     const cached = await this.cache.get<TvShowDetail>(cacheKey)
-    if (cached?.kinopoiskId) return cached
-
-    if (cached) {
-      const kinopoiskId = await this.kinopoiskService.getId(
-        'tv',
-        id,
-        cached.originalTitle,
-        cached.yearEnd ? `${cached.yearStart}-${cached.yearEnd}` : cached.yearStart,
-      )
-      if (!kinopoiskId) return cached
-
-      const result = { ...cached, kinopoiskId }
-      await this.cache.set(
-        cacheKey,
-        result,
-        resolveDetailTtlSeconds({
-          kind: 'tv',
-          releaseDate: result.lastAirDate || result.firstAirDate,
-          status: result.status,
-          inProduction: result.inProduction,
-        }),
-      )
-      return result
-    }
+    if (cached) return cached
 
     const url = new URL(`${this.TMDB_API_URL}/tv/${id}`)
     url.searchParams.set('api_key', this.config.get('TMDB_API_KEY', { infer: true }))
@@ -170,13 +145,6 @@ export class TvShowService {
       result.imdbRating = imdbRating?.rating ?? null
       result.imdbVoteCount = imdbRating?.votes ?? null
     }
-
-    result.kinopoiskId = await this.kinopoiskService.getId(
-      'tv',
-      id,
-      result.originalTitle,
-      result.yearEnd ? `${result.yearStart}-${result.yearEnd}` : result.yearStart,
-    )
 
     await this.cache.set(
       cacheKey,
@@ -314,7 +282,6 @@ export class TvShowService {
       episodeCount: raw.number_of_episodes,
       genres: raw.genres.map((g) => g.name),
       imdbId: raw.external_ids?.imdb_id ?? null,
-      kinopoiskId: null,
       imdbRating: null,
       imdbVoteCount: null,
       posterUrl: this.buildImageUrl(raw.poster_path, 'w780'),

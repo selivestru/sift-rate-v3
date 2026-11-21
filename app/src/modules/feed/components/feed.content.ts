@@ -15,6 +15,13 @@ const feedContent = {
         ru: 'Открыть профиль {{name}}',
       }),
     ),
+    seasonChip: insert(
+      t({
+        en: 'Season {{season}}',
+        uk: 'Сезон {{season}}',
+        ru: 'Сезон {{season}}',
+      }),
+    ),
   },
 } satisfies Dictionary
 

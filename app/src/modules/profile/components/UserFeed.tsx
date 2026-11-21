@@ -8,6 +8,7 @@ import { ErrorState } from '~/common/ui/ErrorState'
 import { Spinner } from '~/common/ui/Spinner'
 import { cn } from '~/common/utils/cn'
 import { FeedListSkeleton, FeedReviewCard } from '~/modules/feed'
+import { groupReviewsByMedia } from '~/modules/review'
 
 import { useGetUserFeedQuery } from '../hooks/useGetUserFeedQuery'
 
@@ -41,6 +42,7 @@ const UserFeedList = ({ username }: UserFeedProps) => {
     useGetUserFeedQuery(username)
 
   const items = data.pages.flatMap((page) => page.data)
+  const groups = groupReviewsByMedia(items)
   const isEmpty = !isFetching && items.length === 0
 
   const loadMoreRef = useIntersectionObserver(
@@ -62,8 +64,8 @@ const UserFeedList = ({ username }: UserFeedProps) => {
       )}
 
       <div className="divide-border divide-y">
-        {items.map((item) => (
-          <FeedReviewCard key={item.id} item={item} />
+        {groups.map((group) => (
+          <FeedReviewCard key={group.item.id} item={group.item} seasonItems={group.seasonReviews} />
         ))}
       </div>
 

@@ -22,19 +22,19 @@ import { CurrentUser } from '~/common/decorators/current-user.decorator'
 export class ImportController {
   constructor(private readonly importService: ImportService) {}
 
-  @Throttle({ default: { limit: 60, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 120, ttl: seconds(60) } })
   @Get('active')
   getActive(@CurrentUser('userId') userId: string) {
     return this.importService.getActiveJob(userId)
   }
 
-  @Throttle({ default: { limit: 60, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 120, ttl: seconds(60) } })
   @Get('history')
   getHistory(@CurrentUser('userId') userId: string, @Query() query: ImportHistoryQueryDto) {
     return this.importService.getHistory(userId, query.cursor)
   }
 
-  @Throttle({ default: { limit: 60, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 120, ttl: seconds(60) } })
   @Get(':id/rows')
   getRows(
     @CurrentUser('userId') userId: string,
@@ -44,13 +44,13 @@ export class ImportController {
     return this.importService.getRows(userId, params.id, query.cursor, query.status)
   }
 
-  @Throttle({ default: { limit: 60, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 120, ttl: seconds(60) } })
   @Get(':id')
   getJob(@CurrentUser('userId') userId: string, @Param() params: ImportJobParamsDto) {
     return this.importService.getJob(userId, params.id)
   }
 
-  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 6, ttl: seconds(60) } })
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -62,7 +62,7 @@ export class ImportController {
     return this.importService.createImdbImport(userId, file)
   }
 
-  @Throttle({ default: { limit: 3, ttl: seconds(60) } })
+  @Throttle({ default: { limit: 6, ttl: seconds(60) } })
   @Post(':id/retry')
   @HttpCode(200)
   retry(@CurrentUser('userId') userId: string, @Param() params: ImportJobParamsDto) {

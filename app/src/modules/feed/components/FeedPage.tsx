@@ -46,7 +46,7 @@ const FeedList = () => {
   return (
     <>
       {items.map((item) => (
-        <FeedReviewCard key={item.id} item={item} />
+        <FeedReviewCard key={item.id} item={item} showSeasonPoster />
       ))}
 
       <div ref={loadMoreRef} className={cn(isFetching && 'py-5 text-center')}>

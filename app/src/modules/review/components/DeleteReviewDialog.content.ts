@@ -1,18 +1,49 @@
-import { t, type Dictionary } from 'intlayer'
+import { insert, t, type Dictionary } from 'intlayer'
 
 const deleteReviewDialogContent = {
   key: 'delete-review-dialog',
   content: {
-    title: t({
-      en: 'Delete review?',
-      uk: 'Видалити рецензію?',
-      ru: 'Удалить рецензию?',
+    deleteTitle: t({
+      en: 'Delete rating?',
+      uk: 'Видалити оцінку?',
+      ru: 'Удалить оценку?',
     }),
-    description: t({
-      en: 'Your review for this title will be permanently removed.',
-      uk: 'Вашу рецензію на цей матеріал буде назавжди видалено.',
-      ru: 'Ваша рецензия на этот материал будет удалена навсегда.',
+    deleteTitleDescription: t({
+      en: 'Your rating will be permanently removed.',
+      uk: 'Вашу оцінку буде назавжди видалено.',
+      ru: 'Ваша оценка будет удалена навсегда.',
     }),
+    deleteShowTitle: t({
+      en: 'Delete show rating?',
+      uk: 'Видалити оцінку серіалу?',
+      ru: 'Удалить оценку сериала?',
+    }),
+    deleteShowDescription: t({
+      en: 'Your rating for the show will be permanently removed.',
+      uk: 'Вашу оцінку серіалу буде назавжди видалено.',
+      ru: 'Ваша оценка сериала будет удалена навсегда.',
+    }),
+    seasonLabel: insert(
+      t({
+        en: 'Season {{season}}',
+        uk: 'Сезон {{season}}',
+        ru: 'Сезон {{season}}',
+      }),
+    ),
+    deleteSeasonTitle: insert(
+      t({
+        en: 'Delete rating for {{season}}?',
+        uk: 'Видалити оцінку для {{season}}?',
+        ru: 'Удалить оценку для {{season}}?',
+      }),
+    ),
+    deleteSeasonDescription: insert(
+      t({
+        en: 'Your rating for {{season}} will be permanently removed.',
+        uk: 'Вашу оцінку для {{season}} буде назавжди видалено.',
+        ru: 'Ваша оценка для {{season}} будет удалена навсегда.',
+      }),
+    ),
   },
 } satisfies Dictionary
 

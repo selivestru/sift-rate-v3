@@ -9,6 +9,7 @@ import {
   CarouselPrevious,
 } from '~/common/ui/Carousel'
 import { cn } from '~/common/utils/cn'
+import type { Review } from '~/modules/review'
 
 import type { TvSeasonSummary } from '../types/tv-show-detail.types'
 import { TvSeasonCard } from './TvSeasonCard'
@@ -18,10 +19,19 @@ const carouselNavClassName =
 
 interface TvShowSeasonsProps {
   seasons: TvSeasonSummary[]
+  externalId: string
+  seasonReviews: Review[]
+  showPosterUrl: string | null
   className?: string
 }
 
-export const TvShowSeasons = ({ seasons, className }: TvShowSeasonsProps) => {
+export const TvShowSeasons = ({
+  seasons,
+  externalId,
+  seasonReviews,
+  showPosterUrl,
+  className,
+}: TvShowSeasonsProps) => {
   const content = useIntlayer('discover-detail')
   const accent = mediaTypeMeta[MEDIA_TYPES.TV_SHOW].color
 
@@ -54,7 +64,16 @@ export const TvShowSeasons = ({ seasons, className }: TvShowSeasonsProps) => {
               key={season.seasonNumber}
               className="basis-[32%] pl-3 sm:basis-[24%] md:basis-1/5"
             >
-              <TvSeasonCard season={season} accent={accent} />
+              <TvSeasonCard
+                season={season}
+                accent={accent}
+                externalId={externalId}
+                showPosterUrl={showPosterUrl}
+                seasonReview={
+                  seasonReviews.find((review) => review.seasonNumber === season.seasonNumber) ??
+                  null
+                }
+              />
             </CarouselItem>
           ))}
         </CarouselContent>

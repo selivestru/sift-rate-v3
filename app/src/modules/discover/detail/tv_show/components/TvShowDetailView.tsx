@@ -1,6 +1,7 @@
 import { MEDIA_TYPES } from '~/common/constants/media-type'
 
 import { MediaReviews } from '../../shared/components/MediaReviews'
+import { useGetMediaState } from '../../shared/hooks/useGetMediaState'
 import type { TvShowDetail } from '../types/tv-show-detail.types'
 import { TvShowCast } from './TvShowCast'
 import { TvShowFacts } from './TvShowFacts'
@@ -15,6 +16,10 @@ interface TvShowDetailViewProps {
 }
 
 export const TvShowDetailView = ({ show }: TvShowDetailViewProps) => {
+  const { data: state } = useGetMediaState({
+    mediaType: MEDIA_TYPES.TV_SHOW,
+    externalId: show.id,
+  })
   const hasCast = show.cast.length > 0
   const hasVideos = show.videos.length > 0
   const hasGallery = show.backdrops.length > 0 || show.posters.length > 0
@@ -38,7 +43,12 @@ export const TvShowDetailView = ({ show }: TvShowDetailViewProps) => {
       <TvShowHero show={show} />
 
       <div className="flex flex-col gap-8 p-3 pb-8 md:p-6 md:pb-10">
-        <TvShowSeasons seasons={show.seasons} />
+        <TvShowSeasons
+          seasons={show.seasons}
+          externalId={show.id}
+          seasonReviews={state?.seasonReviews ?? []}
+          showPosterUrl={show.posterUrl}
+        />
 
         {hasCast && <TvShowCast cast={show.cast} />}
 

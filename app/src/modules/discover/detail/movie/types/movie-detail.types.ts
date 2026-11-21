@@ -30,7 +30,6 @@ export interface MovieDetail {
   runtimeMinutes: number | null
   status: string
   genres: string[]
-  kinopoiskId: string | null
   imdbRating: number
   imdbVoteCount: number
   posterUrl: string | null

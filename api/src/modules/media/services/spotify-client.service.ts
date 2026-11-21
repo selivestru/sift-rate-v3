@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ServiceUnavailableException,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import ky, { HTTPError } from 'ky'
@@ -9,6 +14,10 @@ const SPOTIFY_ACCOUNTS_URL = 'https://accounts.spotify.com/api/token'
 const SPOTIFY_API_URL = 'https://api.spotify.com/v1'
 const REDIS_TOKEN_KEY = 'spotify:access_token'
 const TOKEN_EXPIRY_BUFFER_MS = 60_000
+
+const GET_MAX_ATTEMPTS = 3
+const RATE_LIMIT_MAX_WAIT_MS = 5_000
+const RETRY_DELAY_MS = 500
 
 export interface SpotifyImage {
   url: string
@@ -22,6 +31,15 @@ interface SpotifyTokenResponse {
   expires_in: number
 }
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const readRetryAfterMs = (response?: Response): number => {
+  const seconds = Number(response?.headers.get('retry-after'))
+  if (!Number.isFinite(seconds) || seconds < 0) return RETRY_DELAY_MS
+
+  return Math.min(seconds * 1000, RATE_LIMIT_MAX_WAIT_MS)
+}
+
 @Injectable()
 export class SpotifyClientService {
   private cachedToken: { value: string; expiresAtMs: number } | null = null
@@ -32,22 +50,59 @@ export class SpotifyClientService {
   ) {}
 
   async get<T>(path: string): Promise<T> {
-    const token = await this.getAccessToken()
+    let lastError: unknown
+    let tokenRefreshed = false
 
-    try {
-      return await ky(`${SPOTIFY_API_URL}${path}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      }).json<T>()
-    } catch (error) {
-      if (error instanceof HTTPError) {
-        if (error.response.status === 400 || error.response.status === 404) {
-          throw new NotFoundException('Resource not found')
+    for (let attempt = 1; attempt <= GET_MAX_ATTEMPTS; attempt += 1) {
+      const token = await this.getAccessToken()
+
+      try {
+        return await ky(`${SPOTIFY_API_URL}${path}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          retry: { limit: 0 },
+        }).json<T>()
+      } catch (error) {
+        lastError = error
+
+        if (error instanceof HTTPError) {
+          const status = error.response.status
+
+          if (status === 400 || status === 404) {
+            throw new NotFoundException('Resource not found')
+          }
+
+          if (status === 401 && !tokenRefreshed) {
+            tokenRefreshed = true
+            await this.invalidateToken()
+            continue
+          }
+
+          if (status === 429) {
+            await delay(readRetryAfterMs(error.response))
+            continue
+          }
         }
 
-        throw new InternalServerErrorException(`Spotify API error: ${error.message}`)
+        if (attempt < GET_MAX_ATTEMPTS) {
+          await delay(RETRY_DELAY_MS)
+        }
       }
+    }
 
-      throw error
+    if (lastError instanceof HTTPError) {
+      throw new InternalServerErrorException(`Spotify API error: ${lastError.message}`)
+    }
+
+    throw new ServiceUnavailableException('Spotify API is temporarily unavailable')
+  }
+
+  private async invalidateToken(): Promise<void> {
+    this.cachedToken = null
+
+    try {
+      await this.redis.del(REDIS_TOKEN_KEY)
+    } catch {
+      // ignore
     }
   }
 
@@ -65,7 +120,12 @@ export class SpotifyClientService {
     this.cachedToken = token
 
     const ttlSeconds = Math.max(1, Math.floor((token.expiresAtMs - now) / 1000))
-    await this.redis.set(REDIS_TOKEN_KEY, JSON.stringify(token), 'EX', ttlSeconds)
+
+    try {
+      await this.redis.set(REDIS_TOKEN_KEY, JSON.stringify(token), 'EX', ttlSeconds)
+    } catch {
+      // ignore
+    }
 
     return token.value
   }
@@ -91,28 +151,43 @@ export class SpotifyClientService {
     const clientId = this.config.get('SPOTIFY_CLIENT_ID', { infer: true })
     const clientSecret = this.config.get('SPOTIFY_CLIENT_SECRET', { infer: true })
 
-    try {
-      const response = await ky
-        .post(SPOTIFY_ACCOUNTS_URL, {
-          headers: {
-            Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'grant_type=client_credentials',
-        })
-        .json<SpotifyTokenResponse>()
+    let lastError: unknown
 
-      return {
-        value: response.access_token,
-        expiresAtMs: Date.now() + response.expires_in * 1000 - TOKEN_EXPIRY_BUFFER_MS,
-      }
-    } catch (error) {
-      if (error instanceof HTTPError) {
-        throw new InternalServerErrorException(`Spotify auth error: ${error.message}`)
-      }
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await ky
+          .post(SPOTIFY_ACCOUNTS_URL, {
+            headers: {
+              Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'grant_type=client_credentials',
+            retry: { limit: 0 },
+          })
+          .json<SpotifyTokenResponse>()
 
-      throw error
+        return {
+          value: response.access_token,
+          expiresAtMs: Date.now() + response.expires_in * 1000 - TOKEN_EXPIRY_BUFFER_MS,
+        }
+      } catch (error) {
+        lastError = error
+
+        if (error instanceof HTTPError && error.response.status < 500) {
+          break
+        }
+
+        if (attempt === 0) {
+          await delay(RETRY_DELAY_MS)
+        }
+      }
     }
+
+    if (lastError instanceof HTTPError) {
+      throw new InternalServerErrorException(`Spotify auth error: ${lastError.message}`)
+    }
+
+    throw new ServiceUnavailableException('Spotify API is temporarily unavailable')
   }
 }
 

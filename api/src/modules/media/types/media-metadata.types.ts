@@ -2,12 +2,10 @@ import { MediaType } from '~/generated/prisma/enums'
 
 export interface MovieMetadata {
   imdbId?: string
-  kinopoiskId?: string
 }
 
 export interface TvShowMetadata {
   imdbId?: string
-  kinopoiskId?: string
 }
 
 export interface TrackMetadata {
